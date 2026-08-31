@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Planning Shift Management (44H)</title>
+  <title>Planning Hebdomadaire - 44H Auto Rotation</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #f4f6f9;
-      --header-bg: #2d3b55;
-      --text: #1e293b;
+      --header-bg: #1e293b;
+      --text: #0f172a;
       --border: #e2e8f0;
-      --shift-matin: #e6f9ed;
+      --shift-matin: #dcfce7;
       --shift-matin-txt: #166534;
       --shift-aprem: #fef9c3;
       --shift-aprem-txt: #854d0e;
@@ -20,86 +20,92 @@
       --shift-off: #f1f5f9;
       --shift-off-txt: #64748b;
       --danger: #ef4444;
-      --success: #22c55e;
+      --success: #16a34a;
     }
 
     * { box-sizing: border-box; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); padding: 25px; }
+    body { background: var(--bg); color: var(--text); padding: 20px; }
 
-    .container { max-width: 1450px; margin: 0 auto; }
+    .container { max-width: 1500px; margin: 0 auto; }
     
     .top-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      background: #fff; padding: 18px 25px; border-radius: 12px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+      background: #fff; padding: 16px 24px; border-radius: 12px;
       box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 20px;
     }
-    .top-bar h1 { font-size: 22px; font-weight: 800; color: #1e293b; display: flex; align-items: center; gap: 10px; }
-    .btn-group { display: flex; gap: 10px; }
+    .top-bar h1 { font-size: 20px; font-weight: 800; color: #0f172a; }
+    
+    .week-nav {
+      display: flex; align-items: center; gap: 12px; background: #f8fafc;
+      padding: 6px 14px; border-radius: 10px; border: 1px solid var(--border);
+    }
+    .week-nav span { font-weight: 700; font-size: 14px; color: #334155; }
+    
+    .btn-group { display: flex; gap: 8px; }
     button {
-      padding: 9px 16px; border: none; border-radius: 8px; font-weight: 600;
+      padding: 8px 14px; border: none; border-radius: 8px; font-weight: 600;
       font-size: 13px; cursor: pointer; transition: all 0.2s;
     }
-    .btn-primary { background: #3b82f6; color: #fff; }
-    .btn-primary:hover { background: #2563eb; }
-    .btn-reset { background: #e2e8f0; color: #475569; }
-    .btn-reset:hover { background: #cbd5e1; }
+    .btn-nav { background: #e2e8f0; color: #334155; }
+    .btn-nav:hover { background: #cbd5e1; }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-reset { background: #f1f5f9; color: #64748b; border: 1px solid var(--border); }
+    .btn-reset:hover { background: #e2e8f0; }
 
     .table-container {
       background: #fff; border-radius: 12px; overflow-x: auto;
       box-shadow: 0 4px 12px rgba(0,0,0,0.04);
     }
-    table { width: 100%; border-collapse: collapse; min-width: 1200px; text-align: center; }
+    table { width: 100%; border-collapse: collapse; min-width: 1250px; text-align: center; }
 
     thead th {
-      background: var(--header-bg); color: #fff; padding: 14px 10px;
-      font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+      background: var(--header-bg); color: #fff; padding: 12px 8px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
     }
+    th .day-name { display: block; font-size: 13px; font-weight: 800; }
+    th .day-date { display: block; font-size: 11px; font-weight: 500; color: #94a3b8; margin-top: 2px; }
+
     th.col-agent { width: 180px; text-align: left; padding-left: 20px; }
     th.col-zone { width: 180px; text-align: left; padding-left: 15px; }
-    th.col-total { width: 130px; }
+    th.col-total { width: 120px; }
 
     tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
     tbody tr:hover { background: #f8fafc; }
 
-    td { padding: 8px 6px; font-size: 13px; }
-    td.cell-agent { text-align: left; padding-left: 20px; font-weight: 600; }
+    td { padding: 8px 4px; font-size: 13px; }
+    td.cell-agent { text-align: left; padding-left: 20px; }
     td.cell-zone { text-align: left; padding-left: 15px; }
 
     .agent-input, .zone-input {
-      width: 90%; padding: 6px 10px; border: 1px solid transparent;
-      border-radius: 6px; font-size: 13px; font-weight: 600; color: #334155;
+      width: 95%; padding: 6px 8px; border: 1px solid transparent;
+      border-radius: 6px; font-size: 13px; font-weight: 600; color: #1e293b;
       background: transparent; outline: none; transition: 0.2s;
     }
     .agent-input:focus, .zone-input:focus {
-      background: #fff; border-color: #93c5fd; box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+      background: #fff; border-color: #93c5fd; box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
     }
 
     select.shift-select {
-      width: 100%; padding: 8px 4px; border-radius: 6px; font-size: 12px;
+      width: 100%; padding: 8px 2px; border-radius: 6px; font-size: 11.5px;
       font-weight: 700; border: 1px solid transparent; cursor: pointer;
       outline: none; transition: 0.2s; text-align-last: center;
     }
     
-    /* Dynamic shift colors */
-    select.matin { background: var(--shift-matin); color: var(--shift-matin-txt); border-color: #bbf7d0; }
-    select.aprem { background: var(--shift-aprem); color: var(--shift-aprem-txt); border-color: #fef08a; }
-    select.soir { background: var(--shift-soir); color: var(--shift-soir-txt); border-color: #e9d5ff; }
+    select.matin { background: var(--shift-matin); color: var(--shift-matin-txt); border-color: #86efac; }
+    select.aprem { background: var(--shift-aprem); color: var(--shift-aprem-txt); border-color: #fde047; }
+    select.soir { background: var(--shift-soir); color: var(--shift-soir-txt); border-color: #d8b4fe; }
     select.off { background: var(--shift-off); color: var(--shift-off-txt); border-color: #cbd5e1; }
 
     .hours-badge {
       display: inline-flex; align-items: center; justify-content: center;
-      gap: 5px; padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 12px;
+      padding: 5px 10px; border-radius: 16px; font-weight: 700; font-size: 11.5px;
     }
     .badge-ok { background: #dcfce7; color: var(--success); border: 1px solid #86efac; }
-    .badge-alert { background: #fee2e2; color: var(--danger); border: 1px solid #fca5a5; animation: pulse 1.5s infinite; }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.04); }
-    }
+    .badge-alert { background: #fee2e2; color: var(--danger); border: 1px solid #fca5a5; font-weight: 800; }
 
     .btn-del {
-      background: transparent; color: #94a3b8; font-size: 16px; cursor: pointer;
+      background: transparent; color: #94a3b8; font-size: 15px; cursor: pointer;
       padding: 4px 8px; border-radius: 4px; border: none;
     }
     .btn-del:hover { color: #ef4444; background: #fee2e2; }
@@ -110,9 +116,17 @@
 <div class="container">
   <div class="top-bar">
     <div>
-      <h1>📋 Operational Shift Planning</h1>
-      <span style="font-size: 13px; color: #64748b;">Suivi dynamique des shifts & Calcul automatique des 44h hebdomadaires</span>
+      <h1>📋 Planning Hebdomadaire (44H)</h1>
+      <span style="font-size: 12px; color: #64748b;">Rotation automatique Salé & Calcul d'heures (7h Dim-Jeu / 8h Ven-Sam)</span>
     </div>
+
+    <div class="week-nav">
+      <button class="btn-nav" onclick="changeWeek(-1)">◀ Précédent</button>
+      <span id="current-week-label">Semaine ...</span>
+      <button class="btn-nav" onclick="changeWeek(1)">Suivant ▶</button>
+      <button class="btn-nav" style="margin-left: 5px;" onclick="goToCurrentWeek()">Aujourd'hui</button>
+    </div>
+
     <div class="btn-group">
       <button class="btn-primary" onclick="addNewAgent()">+ Ajouter Agent</button>
       <button class="btn-reset" onclick="resetToDefault()">🔄 Réinitialiser</button>
@@ -122,19 +136,7 @@
   <div class="table-container">
     <table>
       <thead>
-        <tr>
-          <th class="col-agent">Agent</th>
-          <th class="col-zone">Zone</th>
-          <th>LUN</th>
-          <th>MAR</th>
-          <th>MER</th>
-          <th>JEU</th>
-          <th>VEN</th>
-          <th>SAM</th>
-          <th>DIM</th>
-          <th class="col-total">Total H</th>
-          <th></th>
-        </tr>
+        <tr id="table-header"></tr>
       </thead>
       <tbody id="planning-body"></tbody>
     </table>
@@ -142,45 +144,128 @@
 </div>
 
 <script>
-  // Shift definitions with exact working hours
+  let currentWeekOffset = 0;
+
   const SHIFTS = {
     "OFF": { hours: 0, class: "off" },
     "10:00-17:00": { hours: 7, class: "matin" },
     "10:00-18:00": { hours: 8, class: "matin" },
-    "12:00-19:00": { hours: 7, class: "soir" },
-    "12:00-20:00": { hours: 8, class: "soir" },
     "17:00-00:00": { hours: 7, class: "aprem" },
     "17:00-01:00": { hours: 8, class: "aprem" },
+    "19:00-02:00": { hours: 7, class: "soir" },
     "18:00-02:00": { hours: 8, class: "soir" },
-    "19:00-02:00": { hours: 7, class: "soir" }
+    "12:00-19:00": { hours: 7, class: "soir" },
+    "12:00-20:00": { hours: 8, class: "soir" }
   };
 
-  const initialData = [
-    { name: "Yahya Rhallab", zone: "Temara - Oulad Mtaa", shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "10:00-17:00"] },
-    { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", shifts: ["10:00-17:00", "OFF", "17:00-00:00", "17:00-00:00", "17:00-01:00", "17:00-01:00", "17:00-00:00"] },
-    { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", shifts: ["19:00-02:00", "19:00-02:00", "OFF", "19:00-02:00", "18:00-02:00", "18:00-02:00", "19:00-02:00"] },
-    { name: "Mourad Cherradi", zone: "Agdal - Carrousel", shifts: ["10:00-17:00", "OFF", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "10:00-17:00"] },
-    { name: "Youssef Derkaoui", zone: "Agdal - Carrousel", shifts: ["OFF", "10:00-17:00", "17:00-00:00", "17:00-00:00", "17:00-01:00", "17:00-01:00", "17:00-00:00"] },
-    { name: "Ayoub Abssi", zone: "Agdal - Carrousel", shifts: ["19:00-02:00", "19:00-02:00", "19:00-02:00", "OFF", "18:00-02:00", "18:00-02:00", "19:00-02:00"] },
-    { name: "Charaf Loummihi", zone: "Salé - Medina", shifts: ["10:00-17:00", "OFF", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "10:00-17:00"] },
-    { name: "Hassan Azgoune", zone: "Salé - Medina", shifts: ["17:00-00:00", "10:00-17:00", "OFF", "17:00-00:00", "17:00-01:00", "17:00-01:00", "17:00-00:00"] },
-    { name: "Ayoub Ben Malek", zone: "Salé - Medina", shifts: ["OFF", "19:00-02:00", "19:00-02:00", "19:00-02:00", "18:00-02:00", "18:00-02:00", "19:00-02:00"] },
-    { name: "Achraf Akhlij", zone: "Hay Riad - Soussi", shifts: ["10:00-17:00", "10:00-17:00", "10:00-17:00", "OFF", "10:00-18:00", "10:00-18:00", "10:00-17:00"] },
-    { name: "Oussama El Atrach", zone: "Hay Riad - Soussi", shifts: ["OFF", "19:00-02:00", "19:00-02:00", "10:00-17:00", "18:00-02:00", "18:00-02:00", "19:00-02:00"] },
-    { name: "Islam Elmardi", zone: "Hay Riad - Soussi", shifts: ["17:00-00:00", "17:00-00:00", "OFF", "17:00-00:00", "17:00-01:00", "17:00-01:00", "17:00-00:00"] },
-    { name: "Zakariae Benali", zone: "Technopolis", shifts: ["OFF", "12:00-19:00", "12:00-19:00", "12:00-19:00", "12:00-20:00", "12:00-20:00", "12:00-19:00"] }
+  const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
+
+  // Default Agents structure
+  const defaultAgents = [
+    { name: "Yahya Rhallab", zone: "Temara - Oulad Mtaa", offDay: 0, shiftType: "matin" },
+    { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "aprem" },
+    { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir" },
+    { name: "Mourad Cherradi", zone: "Agdal - Carrousel", offDay: 1, shiftType: "matin" },
+    { name: "Youssef Derkaoui", zone: "Agdal - Carrousel", offDay: 0, shiftType: "aprem" },
+    { name: "Ayoub Abssi", zone: "Agdal - Carrousel", offDay: 3, shiftType: "soir" },
+    // Salé - Medina (Auto Rotation)
+    { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftBaseIndex: 0 },
+    { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftBaseIndex: 1 },
+    { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftBaseIndex: 2 },
+    { name: "Achraf Akhlij", zone: "Hay Riad - Soussi", offDay: 3, shiftType: "matin" },
+    { name: "Islam Elmardi", zone: "Hay Riad - Soussi", offDay: 2, shiftType: "aprem" },
+    { name: "Oussama El Atrach", zone: "Hay Riad - Soussi", offDay: 0, shiftType: "soir" },
+    { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno" }
   ];
 
-  let agents = JSON.parse(localStorage.getItem('shift_planning_data')) || initialData;
+  let agents = JSON.parse(localStorage.getItem('shift_planning_v2')) || defaultAgents;
+
+  function getMonday(d) {
+    d = new Date(d);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+  }
+
+  function getWeekNumber(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  }
+
+  function getShiftForDay(type, dayIdx) {
+    const is8h = (dayIdx === 4 || dayIdx === 5); // Vendredi (4) ou Samedi (5)
+    if (type === "matin") return is8h ? "10:00-18:00" : "10:00-17:00";
+    if (type === "aprem") return is8h ? "17:00-01:00" : "17:00-00:00";
+    if (type === "soir")  return is8h ? "18:00-02:00" : "19:00-02:00";
+    if (type === "techno") return is8h ? "12:00-20:00" : "12:00-19:00";
+    return "OFF";
+  }
+
+  function renderHeader(monday) {
+    const headerRow = document.getElementById('table-header');
+    let html = `
+      <th class="col-agent">Agent</th>
+      <th class="col-zone">Zone</th>
+    `;
+
+    for (let i = 0; i < 7; i++) {
+      const current = new Date(monday);
+      current.setDate(monday.getDate() + i);
+      const dateStr = current.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+      html += `
+        <th>
+          <span class="day-name">${DAYS[i]}</span>
+          <span class="day-date">${dateStr}</span>
+        </th>
+      `;
+    }
+
+    html += `<th class="col-total">Total H</th><th></th>`;
+    headerRow.innerHTML = html;
+  }
 
   function renderTable() {
+    const now = new Date();
+    const monday = getMonday(now);
+    monday.setDate(monday.getDate() + (currentWeekOffset * 7));
+    
+    const weekNumber = getWeekNumber(monday);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+
+    document.getElementById('current-week-label').innerText = 
+      `Semaine ${weekNumber} (${monday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit'})} - ${sunday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric'})})`;
+
+    renderHeader(monday);
+
     const tbody = document.getElementById('planning-body');
     tbody.innerHTML = '';
 
-    agents.forEach((agent, agentIdx) => {
-      const tr = document.createElement('tr');
+    const rotationTypes = ["matin", "aprem", "soir"];
 
-      // 1. Agent Name Input
+    agents.forEach((agent, agentIdx) => {
+      // Automatic rotation calculation for Salé
+      let currentShiftType = agent.shiftType;
+      if (agent.zone && agent.zone.includes("Salé") && agent.shiftBaseIndex !== undefined) {
+        const rotatedIndex = (agent.shiftBaseIndex + weekNumber) % 3;
+        currentShiftType = rotationTypes[rotatedIndex];
+      }
+
+      // Initialize shifts array if not exists or override for dynamic days
+      if (!agent.shifts || agent.customWeek !== weekNumber) {
+        agent.shifts = [];
+        for (let day = 0; day < 7; day++) {
+          if (day === agent.offDay) {
+            agent.shifts.push("OFF");
+          } else {
+            agent.shifts.push(getShiftForDay(currentShiftType, day));
+          }
+        }
+      }
+
+      const tr = document.createElement('tr');
       let html = `
         <td class="cell-agent">
           <input class="agent-input" type="text" value="${agent.name}" onchange="updateAgentName(${agentIdx}, this.value)" />
@@ -190,19 +275,17 @@
         </td>
       `;
 
-      // 2. 7 Days Selects
       agent.shifts.forEach((shift, dayIdx) => {
         const shiftClass = SHIFTS[shift] ? SHIFTS[shift].class : 'off';
         html += `
           <td>
-            <select class="shift-select ${shiftClass}" onchange="updateShift(${agentIdx}, ${dayIdx}, this.value)">
+            <select class="shift-select ${shiftClass}" onchange="updateShift(${agentIdx}, ${dayIdx}, this.value, ${weekNumber})">
               ${Object.keys(SHIFTS).map(s => `<option value="${s}" ${s === shift ? 'selected' : ''}>${s}</option>`).join('')}
             </select>
           </td>
         `;
       });
 
-      // 3. Total calculation & status
       const totalHours = agent.shifts.reduce((sum, s) => sum + (SHIFTS[s] ? SHIFTS[s].hours : 0), 0);
       const isExact44 = totalHours === 44;
       const diff = totalHours - 44;
@@ -210,12 +293,8 @@
       const badgeText = isExact44 ? '44h (OK)' : (diff > 0 ? `${totalHours}h (+${diff}h)` : `${totalHours}h (${diff}h)`);
 
       html += `
-        <td>
-          <span class="hours-badge ${badgeClass}">${badgeText}</span>
-        </td>
-        <td>
-          <button class="btn-del" title="Supprimer" onclick="deleteAgent(${agentIdx})">✕</button>
-        </td>
+        <td><span class="hours-badge ${badgeClass}">${badgeText}</span></td>
+        <td><button class="btn-del" title="Supprimer" onclick="deleteAgent(${agentIdx})">✕</button></td>
       `;
 
       tr.innerHTML = html;
@@ -225,8 +304,9 @@
     saveData();
   }
 
-  function updateShift(agentIdx, dayIdx, val) {
+  function updateShift(agentIdx, dayIdx, val, weekNumber) {
     agents[agentIdx].shifts[dayIdx] = val;
+    agents[agentIdx].customWeek = weekNumber; // lock custom changes
     renderTable();
   }
 
@@ -240,10 +320,22 @@
     saveData();
   }
 
+  function changeWeek(direction) {
+    currentWeekOffset += direction;
+    renderTable();
+  }
+
+  function goToCurrentWeek() {
+    currentWeekOffset = 0;
+    renderTable();
+  }
+
   function addNewAgent() {
     agents.push({
       name: "Nouvel Agent",
-      zone: "Zone",
+      zone: "Nouvelle Zone",
+      offDay: 0,
+      shiftType: "matin",
       shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "10:00-17:00"]
     });
     renderTable();
@@ -257,17 +349,18 @@
   }
 
   function resetToDefault() {
-    if(confirm("Réinitialiser avec le planning par défaut ?")) {
-      agents = JSON.parse(JSON.stringify(initialData));
+    if(confirm("Réinitialiser le planning avec les paramètres par défaut ?")) {
+      localStorage.removeItem('shift_planning_v2');
+      agents = JSON.parse(JSON.stringify(defaultAgents));
       renderTable();
     }
   }
 
   function saveData() {
-    localStorage.setItem('shift_planning_data', JSON.stringify(agents));
+    localStorage.setItem('shift_planning_v2', JSON.stringify(agents));
   }
 
-  // Initial load
+  // Lancement initial
   renderTable();
 </script>
 
