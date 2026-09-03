@@ -51,7 +51,7 @@
     }
 
     .container {
-      max-width: 1600px;
+      max-width: 1650px;
       margin: 0 auto;
     }
 
@@ -206,7 +206,7 @@
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
-      min-width: 1400px;
+      min-width: 1450px;
       text-align: center;
     }
 
@@ -227,8 +227,8 @@
     th .day-name { display: block; font-size: 13px; font-weight: 800; }
     th .day-date { display: block; font-size: 11px; font-weight: 500; color: #e9d5ff; margin-top: 3px; }
 
-    th.col-agent { width: 190px; text-align: left; padding-left: 24px; }
-    th.col-zone { width: 190px; text-align: left; padding-left: 16px; }
+    th.col-agent { width: 190px; text-align: left; padding-left: 20px; }
+    th.col-zone { width: 190px; text-align: left; padding-left: 14px; }
     th.col-total { width: 230px; }
 
     tbody tr {
@@ -249,33 +249,39 @@
       border-bottom: 1px solid #f3e8ff;
     }
 
-    td.cell-agent { text-align: left; padding-left: 24px; }
-    td.cell-zone { text-align: left; padding-left: 16px; }
+    td.cell-agent { text-align: left; padding-left: 18px; }
+    td.cell-zone { text-align: left; padding-left: 12px; }
 
-    .agent-input, .zone-input {
+    /* Custom selects for Agent & Zone */
+    .smart-select {
       width: 95%;
-      padding: 7px 10px;
-      border: 1px solid transparent;
+      padding: 7px 8px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
+      border: 1px solid #e9d5ff;
+      background: #ffffff;
       color: var(--text-main);
-      background: transparent;
+      cursor: pointer;
       outline: none;
       transition: all 0.2s;
     }
-    .agent-input:focus, .zone-input:focus {
-      background: #ffffff;
-      border-color: #a78bfa;
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+    .smart-select:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15);
+    }
+    .smart-select:disabled {
+      background: #faf5ff;
+      cursor: not-allowed;
+      border-color: transparent;
     }
 
-    .zone-input {
-      color: var(--text-sub);
+    .smart-select.zone-sel {
+      color: #6b21a8;
       font-weight: 600;
-      font-size: 12.5px;
     }
 
+    /* Shift Dropdowns */
     select.shift-select {
       width: 100%;
       padding: 9px 4px;
@@ -390,7 +396,7 @@
       <div class="brand-icon">⚡</div>
       <div>
         <h1>Operational Shift Planning (44H)</h1>
-        <p>Thème Electric Violet • Sauvegarde Permanente • 7h Dim-Jeu / 8h Ven-Sam</p>
+        <p>Thème Electric Violet • Sélecteurs Agents & Zones • Sauvegarde Permanente</p>
       </div>
     </div>
 
@@ -410,7 +416,7 @@
 
   <div id="lock-banner">
     <div>
-      🔒 <strong>Semaine en cours verrouillée :</strong> Cliquez sur <strong>(Suivant ▶)</strong> pour modifier la semaine prochaine.
+      🔒 <strong>Semaine en cours verrouillée :</strong> Cliquez sur <strong>(Suivant ▶)</strong> pour modifier le planning de la semaine prochaine.
     </div>
     <button class="btn-nav" onclick="forceUnlockCurrentWeek()" style="background:#fff; font-size:11px;">🔓 Déverrouiller Exceptionnellement</button>
   </div>
@@ -449,6 +455,33 @@
     { label: "⚡ AUTRES", items: ["12:00-19:00", "12:00-20:00"] }
   ];
 
+  const KNOWN_ZONES = [
+    "Temara - Oulad Mtaa",
+    "Temara - Fouarat",
+    "Agdal - Carrousel",
+    "Salé - Medina",
+    "Hay Riad - Soussi",
+    "Technopolis",
+    "Harhoura",
+    "El Wifaq"
+  ];
+
+  const KNOWN_AGENTS = [
+    "Yahya Rhallab",
+    "Mehdi Ait Jebour",
+    "Ayman Chlifane",
+    "Mourad Cherradi",
+    "Youssef Derkaoui",
+    "Ayoub Abssi",
+    "Charaf Loummihi",
+    "Hassan Azgoune",
+    "Ayoub Ben Malek",
+    "Achraf Akhlij",
+    "Islam Elmardi",
+    "Oussama El Atrach",
+    "Zakariae Benali"
+  ];
+
   const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 
   const defaultAgents = [
@@ -467,8 +500,7 @@
     { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno" }
   ];
 
-  // Load database of saved weeks from localStorage
-  let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v1')) || {};
+  let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v2')) || {};
 
   function getMonday(d) {
     d = new Date(d);
@@ -525,7 +557,6 @@
       return planningDB[weekKey];
     }
 
-    // Initialize with auto-rotation if fresh week
     const rotationTypes = ["matin", "soir17", "soir19"];
     const generated = defaultAgents.map(a => {
       let currentShiftType = a.shiftType;
@@ -595,12 +626,35 @@
 
     agents.forEach((agent, agentIdx) => {
       const tr = document.createElement('tr');
+
+      // 1. Agent Select Dropdown + Option to enter custom name
+      let agentOptions = `<option value="${agent.name}" selected>${agent.name}</option>`;
+      KNOWN_AGENTS.forEach(name => {
+        if (name !== agent.name) {
+          agentOptions += `<option value="${name}">${name}</option>`;
+        }
+      });
+      agentOptions += `<option value="__custom__">✏️ Autre Nom...</option>`;
+
+      // 2. Zone Select Dropdown + Option to enter custom zone
+      let zoneOptions = `<option value="${agent.zone}" selected>${agent.zone}</option>`;
+      KNOWN_ZONES.forEach(z => {
+        if (z !== agent.zone) {
+          zoneOptions += `<option value="${z}">${z}</option>`;
+        }
+      });
+      zoneOptions += `<option value="__custom__">✏️ Autre Zone...</option>`;
+
       let html = `
         <td class="cell-agent">
-          <input class="agent-input" type="text" value="${agent.name}" ${isLocked ? 'readonly' : ''} onchange="updateAgentName('${weekKey}', ${agentIdx}, this.value)" />
+          <select class="smart-select" ${isLocked ? 'disabled' : ''} onchange="handleAgentChange('${weekKey}', ${agentIdx}, this.value)">
+            ${agentOptions}
+          </select>
         </td>
         <td class="cell-zone">
-          <input class="zone-input" type="text" value="${agent.zone}" ${isLocked ? 'readonly' : ''} onchange="updateAgentZone('${weekKey}', ${agentIdx}, this.value)" />
+          <select class="smart-select zone-sel" ${isLocked ? 'disabled' : ''} onchange="handleZoneChange('${weekKey}', ${agentIdx}, this.value)">
+            ${zoneOptions}
+          </select>
         </td>
       `;
 
@@ -658,6 +712,38 @@
     });
   }
 
+  function handleAgentChange(weekKey, agentIdx, val) {
+    if (val === "__custom__") {
+      const customName = prompt("Entrez le nom du nouvel agent :");
+      if (customName && customName.trim() !== "") {
+        planningDB[weekKey][agentIdx].name = customName.trim();
+        if (!KNOWN_AGENTS.includes(customName.trim())) {
+          KNOWN_AGENTS.push(customName.trim());
+        }
+      }
+    } else {
+      planningDB[weekKey][agentIdx].name = val;
+    }
+    saveDB();
+    renderTable();
+  }
+
+  function handleZoneChange(weekKey, agentIdx, val) {
+    if (val === "__custom__") {
+      const customZone = prompt("Entrez le nom de la nouvelle zone :");
+      if (customZone && customZone.trim() !== "") {
+        planningDB[weekKey][agentIdx].zone = customZone.trim();
+        if (!KNOWN_ZONES.includes(customZone.trim())) {
+          KNOWN_ZONES.push(customZone.trim());
+        }
+      }
+    } else {
+      planningDB[weekKey][agentIdx].zone = val;
+    }
+    saveDB();
+    renderTable();
+  }
+
   function applyShiftChoice(weekKey, agentIdx, shiftType) {
     if (currentWeekOffset === 0 && !manualUnlock) {
       alert("⚠️ La semaine en cours est verrouillée ! Cliquez sur (Suivant ▶) pour modifier la semaine prochaine.");
@@ -682,16 +768,6 @@
     planningDB[weekKey][agentIdx].shifts[dayIdx] = val;
     saveDB();
     renderTable();
-  }
-
-  function updateAgentName(weekKey, agentIdx, val) {
-    planningDB[weekKey][agentIdx].name = val;
-    saveDB();
-  }
-
-  function updateAgentZone(weekKey, agentIdx, val) {
-    planningDB[weekKey][agentIdx].zone = val;
-    saveDB();
   }
 
   function changeWeek(direction) {
@@ -726,7 +802,7 @@
 
     planningDB[weekKey].push({
       name: "Nouvel Agent",
-      zone: "Zone",
+      zone: "Temara - Oulad Mtaa",
       shiftType: "matin",
       shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "10:00-17:00"]
     });
@@ -744,14 +820,14 @@
 
   function resetToDefault() {
     if (confirm("Réinitialiser toutes les modifications enregistrées ?")) {
-      localStorage.removeItem('shift_db_permanent_v1');
+      localStorage.removeItem('shift_db_permanent_v2');
       planningDB = {};
       renderTable();
     }
   }
 
   function saveDB() {
-    localStorage.setItem('shift_db_permanent_v1', JSON.stringify(planningDB));
+    localStorage.setItem('shift_db_permanent_v2', JSON.stringify(planningDB));
   }
 
   renderTable();
