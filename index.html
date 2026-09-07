@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpsControl - Dashboard & Shift Management (44H)</title>
+  <title>OpsControl - Dashboard, Planning & Absences (Base 26J)</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -836,6 +836,206 @@
     }
     .btn-del:hover { color: #ef4444; background: #fee2e2; }
 
+    /* ================= STYLES MODULE ABSENCES (THEME BEIGE/CREME NATUREL) ================= */
+    .abs-module-container {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .abs-top-card {
+      background: #fbf8f2;
+      border: 1px solid #eddcc6;
+      border-radius: 16px;
+      padding: 22px 26px;
+      box-shadow: 0 4px 15px rgba(180, 130, 70, 0.05);
+    }
+
+    .abs-cycle-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid #ebd8bf;
+      padding-bottom: 16px;
+    }
+
+    .abs-cycle-header h2 {
+      font-size: 19px;
+      font-weight: 800;
+      color: #3b2a1a;
+    }
+
+    .abs-cycle-dates {
+      font-size: 13px;
+      font-weight: 700;
+      color: #8c6840;
+      background: #f2e7d5;
+      padding: 6px 14px;
+      border-radius: 10px;
+    }
+
+    .abs-form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      align-items: flex-end;
+    }
+
+    .abs-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .abs-form-group label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #785a37;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .abs-input, .abs-select {
+      padding: 10px 12px;
+      background: #fdf3de;
+      border: 1.5px solid #ebd29f;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #2b1f14;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .abs-input:focus, .abs-select:focus {
+      border-color: #059669;
+      background: #ffffff;
+    }
+
+    .btn-add-absence {
+      background: #059669;
+      color: white;
+      padding: 11px 20px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 13px;
+      height: 42px;
+    }
+    .btn-add-absence:hover { background: #047857; }
+
+    .btn-export-excel {
+      background: #166534;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .btn-export-excel:hover { background: #14532d; }
+
+    /* Tables in Absences */
+    .abs-table-wrapper {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #eddcc6;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .abs-table-title {
+      background: #fdfaf5;
+      padding: 16px 22px;
+      border-bottom: 1px solid #eedecb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .abs-table-title h3 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #2b1f14;
+    }
+
+    table.abs-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+      text-align: center;
+    }
+
+    table.abs-table thead th {
+      background: #fbf8f2;
+      color: #634b32;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 13px 10px;
+      border-bottom: 2px solid #ecdac4;
+    }
+
+    table.abs-table th.th-agent, table.abs-table td.td-agent {
+      text-align: left;
+      padding-left: 20px;
+      width: 220px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    table.abs-table tbody tr {
+      border-bottom: 1px solid #f6eee3;
+      transition: background 0.15s;
+    }
+
+    table.abs-table tbody tr:hover {
+      background: #fdfaf5;
+    }
+
+    table.abs-table td {
+      padding: 12px 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .td-red { color: #dc2626; font-weight: 800; }
+    .td-presence { color: #059669; font-weight: 800; }
+    .td-total { font-weight: 800; color: #1e293b; }
+
+    /* Badge styles for details */
+    .badge-abs-type {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .b-maladie { background: #fee2e2; color: #991b1b; }
+    .b-injustifiee { background: #f1f5f9; color: #475569; }
+    .b-conge { background: #ccfbf1; color: #0f766e; }
+    .b-ferie { background: #dcfce7; color: #166534; }
+    .b-double { background: #fef3c7; color: #92400e; }
+    .b-off-travaille { background: #e0e7ff; color: #3730a3; }
+
+    .btn-table-del {
+      background: transparent;
+      color: #94a3b8;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .btn-table-del:hover {
+      color: #dc2626;
+      background: #fee2e2;
+    }
+
     .empty-state-view {
       background: #ffffff;
       border-radius: 16px;
@@ -855,14 +1055,14 @@
     <div class="logo-icon">⚡</div>
     <div>
       <div class="logo-text">FieldOps</div>
-      <div class="logo-sub">Shift Control (44H)</div>
+      <div class="logo-sub">Shift & Absence Control</div>
     </div>
   </div>
 
   <div class="nav-section-title">Principal</div>
   <ul class="nav-menu">
     <li>
-      <div class="nav-item active" onclick="switchTab('dashboard')">
+      <div class="nav-item" onclick="switchTab('dashboard')">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
         <span>Dashboard</span>
       </div>
@@ -874,15 +1074,15 @@
       </div>
     </li>
     <li>
-      <div class="nav-item" onclick="switchTab('pointage')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span>Pointage</span>
+      <div class="nav-item active" onclick="switchTab('absences')">
+        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        <span>Absences (26J)</span>
       </div>
     </li>
     <li>
-      <div class="nav-item" onclick="switchTab('absences')">
-        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-        <span>Absences</span>
+      <div class="nav-item" onclick="switchTab('pointage')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span>Pointage</span>
       </div>
     </li>
   </ul>
@@ -913,8 +1113,124 @@
 <!-- MAIN CONTENT -->
 <main class="main-content">
 
+  <!-- ================= TAB: ABSENCES (BASE 26J CYCLE 21 AU 21) ================= -->
+  <div id="view-absences" class="view-container active-view">
+    <div class="abs-module-container">
+
+      <!-- Formulaire d'ajout & Sélecteur de Cycle -->
+      <div class="abs-top-card">
+        <div class="abs-cycle-header">
+          <div>
+            <h2>Gestion des Absences & Ajustements (Cycle 21 au 21)</h2>
+            <p style="font-size:12.5px; color:#785a37; margin-top:2px;">Calcul automatique de la paie sur base de 26 jours de travail</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="abs-cycle-dates" id="abs-cycle-label">Cycle : 21/08/2026 ➔ 21/09/2026</div>
+            <button class="btn-export-excel" onclick="exportCycleToExcel()">📥 Télécharger Fichier Excel</button>
+          </div>
+        </div>
+
+        <form id="absence-form" onsubmit="handleAbsenceSubmit(event)">
+          <div class="abs-form-grid">
+            <div class="abs-form-group">
+              <label>Agent</label>
+              <select class="abs-select" id="abs-input-agent" required>
+                <option value="" disabled selected>-- Choisir un agent --</option>
+              </select>
+            </div>
+
+            <div class="abs-form-group">
+              <label>Type</label>
+              <select class="abs-select" id="abs-input-type" required>
+                <option value="Absence maladie (-1 jour)">Absence maladie (-1 jour)</option>
+                <option value="Absence injustifiée (-1 jour)">Absence injustifiée (-1 jour)</option>
+                <option value="Congé payé (-1 jour)">Congé payé (-1 jour)</option>
+                <option value="Jour férié travaillé (+1 jour)">Jour férié travaillé (+1 jour)</option>
+                <option value="Jour doublé (+1 jour)">Jour doublé (+1 jour)</option>
+                <option value="Jour OFF travaillé (+1 jour)">Jour OFF travaillé (+1 jour)</option>
+              </select>
+            </div>
+
+            <div class="abs-form-group">
+              <label>Date Début</label>
+              <input type="date" class="abs-input" id="abs-input-start" required />
+            </div>
+
+            <div class="abs-form-group">
+              <label>Date Fin (Optionnel pour période)</label>
+              <input type="date" class="abs-input" id="abs-input-end" placeholder="Optionnel" />
+            </div>
+
+            <div class="abs-form-group">
+              <label>Note (Optionnel)</label>
+              <input type="text" class="abs-input" id="abs-input-note" placeholder="Ex: certificat médical..." />
+            </div>
+
+            <div>
+              <button type="submit" class="btn-add-absence">➕ Ajouter Enregistrement</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- TABLEAU 1 : Résumé du cycle (base 26 jours) -->
+      <div class="abs-table-wrapper">
+        <div class="abs-table-title">
+          <h3>Résumé du cycle (base 26 jours)</h3>
+          <span style="font-size:12px; font-weight:700; color:#059669;">Base standard : 26 Jours</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="abs-table">
+            <thead>
+              <tr>
+                <th class="th-agent">AGENT</th>
+                <th>MALADIE</th>
+                <th>INJUSTIFIÉE</th>
+                <th>CONGÉ</th>
+                <th>TOTAL ABSENCES</th>
+                <th>JOURS PRÉSENCE</th>
+                <th>FÉRIÉ</th>
+                <th>DOUBLÉ</th>
+                <th>OFF TRAVAILLÉ</th>
+                <th>TOTAL AJUSTÉ</th>
+              </tr>
+            </thead>
+            <tbody id="abs-summary-body">
+              <!-- Injected by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TABLEAU 2 : Détail du cycle -->
+      <div class="abs-table-wrapper">
+        <div class="abs-table-title">
+          <h3>Détail du cycle</h3>
+          <span style="font-size:12px; font-weight:600; color:#64748b;" id="abs-records-count">0 enregistrements</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="abs-table">
+            <thead>
+              <tr>
+                <th class="th-agent">AGENT</th>
+                <th>DATE</th>
+                <th>TYPE</th>
+                <th>NOTE</th>
+                <th style="width: 80px;">ACTION</th>
+              </tr>
+            </thead>
+            <tbody id="abs-details-body">
+              <!-- Injected by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ================= TAB: DASHBOARD ================= -->
-  <div id="view-dashboard" class="view-container active-view">
+  <div id="view-dashboard" class="view-container">
     <div class="dashboard-header">
       <div class="dash-title">
         <h1>Dashboard Temps Réel (En Direct)</h1>
@@ -1032,14 +1348,7 @@
   <div id="view-pointage" class="view-container">
     <div class="empty-state-view">
       <h2>🕒 Module de Pointage</h2>
-      <p>Bientôt disponible pour enregistrer les heures réelles d'entrée et de sortie des agents.</p>
-    </div>
-  </div>
-
-  <div id="view-absences" class="view-container">
-    <div class="empty-state-view">
-      <h2>📁 Gestion des Absences & Congés</h2>
-      <p>Suivi des motifs d'absence, justifications médicales et remplacements d'urgence.</p>
+      <p>Synchronisation directe avec les shifts du cycle 21 au 21.</p>
     </div>
   </div>
 
@@ -1053,7 +1362,7 @@
   <div id="view-paie" class="view-container">
     <div class="empty-state-view">
       <h2>💵 Calcul des Salaires & Primes</h2>
-      <p>Bordereaux de paie basés sur les heures effectuées et les shifts de nuit.</p>
+      <p>Bordereaux de paie calculés à partir du total ajusté des 26 jours.</p>
     </div>
   </div>
 
@@ -1067,6 +1376,227 @@
 </main>
 
 <script>
+  /* ================= LISTE DES AGENTS ================= */
+  const KNOWN_AGENTS = [
+    "Achraf Akhlij",
+    "Aymane Chlifane",
+    "Ayoub Abssi",
+    "Ayoub Ben Malek",
+    "Charaf Loummihi",
+    "Hassan Azgoune",
+    "Islam Elmardi",
+    "Mehdi Ait Jebour",
+    "Mourad Cherradi",
+    "Oussama El Atrach",
+    "Yahya Rhallah",
+    "Youssef Derkaoui",
+    "Zakariae Benali"
+  ];
+
+  /* ================= MODULE ABSENCES (CYCLE 21 AU 21) ================= */
+  const DEFAULT_ABSENCES_DATA = [
+    { id: 1, agent: "Achraf Akhlij", startDate: "2026-08-25", endDate: "2026-08-26", days: 2, type: "Absence injustifiée (-1 jour)", note: "" },
+    { id: 2, agent: "Ayoub Abssi", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" },
+    { id: 3, agent: "Ayoub Abssi", startDate: "2026-08-22", endDate: "2026-08-22", days: 1, type: "Absence injustifiée (-1 jour)", note: "" },
+    { id: 4, agent: "Charaf Loummihi", startDate: "2026-09-02", endDate: "2026-09-04", days: 3, type: "Congé payé (-1 jour)", note: "" },
+    { id: 5, agent: "Charaf Loummihi", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" },
+    { id: 6, agent: "Hassan Azgoune", startDate: "2026-08-24", endDate: "2026-08-24", days: 1, type: "Absence injustifiée (-1 jour)", note: "" },
+    { id: 7, agent: "Hassan Azgoune", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Absence maladie (-1 jour)", note: "" },
+    { id: 8, agent: "Islam Elmardi", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" },
+    { id: 9, agent: "Islam Elmardi", startDate: "2026-08-30", endDate: "2026-08-30", days: 1, type: "Absence injustifiée (-1 jour)", note: "" },
+    { id: 10, agent: "Mehdi Ait Jebour", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Absence injustifiée (-1 jour)", note: "" },
+    { id: 11, agent: "Mourad Cherradi", startDate: "2026-08-22", endDate: "2026-08-22", days: 1, type: "Congé payé (-1 jour)", note: "CONGE" },
+    { id: 12, agent: "Mourad Cherradi", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" },
+    { id: 13, agent: "Oussama El Atrach", startDate: "2026-08-23", endDate: "2026-09-01", days: 10, type: "Congé payé (-1 jour)", note: "" },
+    { id: 14, agent: "Oussama El Atrach", startDate: "2026-08-22", endDate: "2026-08-22", days: 1, type: "Absence injustifiée (-1 jour)", note: "" },
+    { id: 15, agent: "Yahya Rhallah", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" },
+    { id: 16, agent: "Zakariae Benali", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" }
+  ];
+
+  let absencesDB = JSON.parse(localStorage.getItem('absences_db_cycle_26j_v1')) || DEFAULT_ABSENCES_DATA;
+
+  function saveAbsencesDB() {
+    localStorage.setItem('absences_db_cycle_26j_v1', JSON.stringify(absencesDB));
+  }
+
+  function initAbsenceAgentDropdown() {
+    const sel = document.getElementById('abs-input-agent');
+    sel.innerHTML = '<option value="" disabled selected>-- Choisir un agent --</option>';
+    KNOWN_AGENTS.forEach(name => {
+      sel.innerHTML += `<option value="${name}">${name}</option>`;
+    });
+  }
+
+  function calculateDays(startStr, endStr) {
+    if (!endStr || endStr === startStr) return 1;
+    const start = new Date(startStr);
+    const end = new Date(endStr);
+    const diff = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
+    return diff > 0 ? diff : 1;
+  }
+
+  function handleAbsenceSubmit(e) {
+    e.preventDefault();
+    const agent = document.getElementById('abs-input-agent').value;
+    const type = document.getElementById('abs-input-type').value;
+    const startDate = document.getElementById('abs-input-start').value;
+    const endDate = document.getElementById('abs-input-end').value || startDate;
+    const note = document.getElementById('abs-input-note').value.trim();
+
+    const daysCount = calculateDays(startDate, endDate);
+
+    absencesDB.unshift({
+      id: Date.now(),
+      agent,
+      type,
+      startDate,
+      endDate,
+      days: daysCount,
+      note
+    });
+
+    saveAbsencesDB();
+    renderAbsencesModule();
+    document.getElementById('absence-form').reset();
+  }
+
+  function deleteAbsenceRecord(id) {
+    if (confirm("Supprimer cet enregistrement ?")) {
+      absencesDB = absencesDB.filter(item => item.id !== id);
+      saveAbsencesDB();
+      renderAbsencesModule();
+    }
+  }
+
+  function getTypeBadgeClass(type) {
+    if (type.includes('maladie')) return 'badge-abs-type b-maladie';
+    if (type.includes('injustifiée')) return 'badge-abs-type b-injustifiee';
+    if (type.includes('Congé')) return 'badge-abs-type b-conge';
+    if (type.includes('férié')) return 'badge-abs-type b-ferie';
+    if (type.includes('doublé')) return 'badge-abs-type b-double';
+    if (type.includes('OFF')) return 'badge-abs-type b-off-travaille';
+    return 'badge-abs-type';
+  }
+
+  function renderAbsencesModule() {
+    initAbsenceAgentDropdown();
+
+    // 1. Calculer les cumuls par agent
+    const summaryData = {};
+    KNOWN_AGENTS.forEach(agent => {
+      summaryData[agent] = {
+        maladie: 0,
+        injustifiee: 0,
+        conge: 0,
+        ferie: 0,
+        double: 0,
+        offTravaille: 0
+      };
+    });
+
+    absencesDB.forEach(rec => {
+      if (!summaryData[rec.agent]) {
+        summaryData[rec.agent] = { maladie: 0, injustifiee: 0, conge: 0, ferie: 0, double: 0, offTravaille: 0 };
+      }
+      const count = rec.days || 1;
+
+      if (rec.type.includes('maladie')) summaryData[rec.agent].maladie += count;
+      else if (rec.type.includes('injustifiée')) summaryData[rec.agent].injustifiee += count;
+      else if (rec.type.includes('Congé')) summaryData[rec.agent].conge += count;
+      else if (rec.type.includes('férié')) summaryData[rec.agent].ferie += count;
+      else if (rec.type.includes('doublé')) summaryData[rec.agent].double += count;
+      else if (rec.type.includes('OFF')) summaryData[rec.agent].offTravaille += count;
+    });
+
+    // 2. Remplir le Tableau de Résumé (Base 26 jours)
+    const summaryBody = document.getElementById('abs-summary-body');
+    summaryBody.innerHTML = '';
+
+    KNOWN_AGENTS.forEach(agent => {
+      const s = summaryData[agent];
+      const totalAbsences = s.maladie + s.injustifiee + s.conge;
+      const joursPresence = 26 - totalAbsences;
+      const totalBonus = s.ferie + s.double + s.offTravaille;
+      const totalAjuste = joursPresence + totalBonus;
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="td-agent">${agent}</td>
+        <td>${s.maladie > 0 ? s.maladie : ''}</td>
+        <td>${s.injustifiee > 0 ? s.injustifiee : ''}</td>
+        <td>${s.conge > 0 ? s.conge : ''}</td>
+        <td class="${totalAbsences > 0 ? 'td-red' : ''}">${totalAbsences > 0 ? totalAbsences : ''}</td>
+        <td class="td-presence">${joursPresence}j</td>
+        <td>${s.ferie > 0 ? s.ferie : ''}</td>
+        <td>${s.double > 0 ? s.double : ''}</td>
+        <td>${s.offTravaille > 0 ? s.offTravaille : ''}</td>
+        <td class="td-total">${totalAjuste}j</td>
+      `;
+      summaryBody.appendChild(tr);
+    });
+
+    // 3. Remplir le Tableau de Détails
+    const detailsBody = document.getElementById('abs-details-body');
+    detailsBody.innerHTML = '';
+    document.getElementById('abs-records-count').innerText = `${absencesDB.length} enregistrements`;
+
+    absencesDB.forEach(rec => {
+      const dateDisplay = (rec.startDate === rec.endDate || !rec.endDate)
+        ? rec.startDate
+        : `${rec.startDate} ➔ ${rec.endDate} (${rec.days} jours)`;
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="td-agent">${rec.agent}</td>
+        <td style="color:#64748b; font-weight:700;">${dateDisplay}</td>
+        <td><span class="${getTypeBadgeClass(rec.type)}">${rec.type.split(' (')[0]}</span></td>
+        <td style="color:#475569;">${rec.note || '—'}</td>
+        <td><button class="btn-table-del" title="Supprimer" onclick="deleteAbsenceRecord(${rec.id})">🗑️</button></td>
+      `;
+      detailsBody.appendChild(tr);
+    });
+  }
+
+  function exportCycleToExcel() {
+    let csv = "AGENT;MALADIE;INJUSTIFIEE;CONGE;TOTAL ABSENCES;JOURS PRESENCE (BASE 26J);FERIE;DOUBLE;OFF TRAVAILLE;TOTAL AJUSTE\n";
+
+    const summaryData = {};
+    KNOWN_AGENTS.forEach(agent => {
+      summaryData[agent] = { maladie: 0, injustifiee: 0, conge: 0, ferie: 0, double: 0, offTravaille: 0 };
+    });
+
+    absencesDB.forEach(rec => {
+      if (!summaryData[rec.agent]) summaryData[rec.agent] = { maladie: 0, injustifiee: 0, conge: 0, ferie: 0, double: 0, offTravaille: 0 };
+      const count = rec.days || 1;
+      if (rec.type.includes('maladie')) summaryData[rec.agent].maladie += count;
+      else if (rec.type.includes('injustifiée')) summaryData[rec.agent].injustifiee += count;
+      else if (rec.type.includes('Congé')) summaryData[rec.agent].conge += count;
+      else if (rec.type.includes('férié')) summaryData[rec.agent].ferie += count;
+      else if (rec.type.includes('doublé')) summaryData[rec.agent].double += count;
+      else if (rec.type.includes('OFF')) summaryData[rec.agent].offTravaille += count;
+    });
+
+    KNOWN_AGENTS.forEach(agent => {
+      const s = summaryData[agent];
+      const totalAbsences = s.maladie + s.injustifiee + s.conge;
+      const joursPresence = 26 - totalAbsences;
+      const totalBonus = s.ferie + s.double + s.offTravaille;
+      const totalAjuste = joursPresence + totalBonus;
+
+      csv += `"${agent}";${s.maladie};${s.injustifiee};${s.conge};${totalAbsences};${joursPresence};${s.ferie};${s.double};${s.offTravaille};${totalAjuste}\n`;
+    });
+
+    const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Recapitulatif_Absences_Cycle_26J_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  /* ================= NAVIGATION ================= */
   function switchTab(tabId) {
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active-view'));
@@ -1081,9 +1611,12 @@
       renderDashboard();
     } else if (tabId === 'planning') {
       renderTable();
+    } else if (tabId === 'absences') {
+      renderAbsencesModule();
     }
   }
 
+  /* ================= DASHBOARD & PLANNING ENGINES ================= */
   let currentWeekOffset = 0;
   let manualUnlock = false;
   let currentFilter = 'all';
@@ -1119,25 +1652,8 @@
     "El Wifaq"
   ];
 
-  const KNOWN_AGENTS = [
-    "Yahya Rhallab",
-    "Mehdi Ait Jebour",
-    "Ayman Chlifane",
-    "Mourad Cherradi",
-    "Youssef Derkaoui",
-    "Ayoub Abssi",
-    "Charaf Loummihi",
-    "Hassan Azgoune",
-    "Ayoub Ben Malek",
-    "Achraf Akhlij",
-    "Islam Elmardi",
-    "Oussama El Atrach",
-    "Zakariae Benali"
-  ];
-
   const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 
-  // Rotation des 3 zones tournantes (Temara -> Hay Riad -> Agdal)
   const ROTATING_ZONES = [
     "Temara - Oulad Mtaa",
     "Hay Riad - Soussi",
@@ -1145,27 +1661,18 @@
   ];
 
   const defaultAgents = [
-    // Groupe A (démarre en Témara)
-    { name: "Yahya Rhallab", zoneBaseIndex: 0, offDay: 0, shiftType: "matin" },
+    { name: "Yahya Rhallah", zoneBaseIndex: 0, offDay: 0, shiftType: "matin" },
     { name: "Mehdi Ait Jebour", zoneBaseIndex: 0, offDay: 1, shiftType: "soir17" },
-    { name: "Ayman Chlifane", zoneBaseIndex: 0, offDay: 2, shiftType: "soir19" },
-
-    // Groupe B (démarre en Hay Riad)
+    { name: "Aymane Chlifane", zoneBaseIndex: 0, offDay: 2, shiftType: "soir19" },
     { name: "Achraf Akhlij", zoneBaseIndex: 1, offDay: 3, shiftType: "matin" },
     { name: "Islam Elmardi", zoneBaseIndex: 1, offDay: 2, shiftType: "soir17" },
     { name: "Oussama El Atrach", zoneBaseIndex: 1, offDay: 0, shiftType: "soir19" },
-
-    // Groupe C (démarre en Agdal)
     { name: "Mourad Cherradi", zoneBaseIndex: 2, offDay: 1, shiftType: "matin" },
     { name: "Youssef Derkaoui", zoneBaseIndex: 2, offDay: 0, shiftType: "soir17" },
     { name: "Ayoub Abssi", zoneBaseIndex: 2, offDay: 3, shiftType: "soir19" },
-
-    // Zone FIXE : Salé - Medina (Tournante shifts uniquement)
     { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftBaseIndex: 0 },
     { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftBaseIndex: 1 },
     { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftBaseIndex: 2 },
-
-    // Zone FIXE : Technopolis
     { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno" }
   ];
 
@@ -1209,13 +1716,11 @@
       let currentShiftType = a.shiftType;
       let currentZone = a.zone;
 
-      // 1. Rotation cyclique des zones : Temara -> Hay Riad -> Agdal
       if (a.zoneBaseIndex !== undefined) {
         const rotatedZoneIdx = (a.zoneBaseIndex + weekNumber) % ROTATING_ZONES.length;
         currentZone = ROTATING_ZONES[rotatedZoneIdx];
       }
 
-      // 2. Rotation cyclique des shifts de Salé
       if (a.zone && a.zone.includes("Salé") && a.shiftBaseIndex !== undefined) {
         const rotatedShiftIdx = (a.shiftBaseIndex + weekNumber) % 3;
         currentShiftType = rotationShifts[rotatedShiftIdx];
@@ -1239,31 +1744,26 @@
     });
 
     planningDB[weekKey] = generated;
-    saveDB();
+    savePlanningDB();
     return generated;
   }
 
-  function saveDB() {
+  function savePlanningDB() {
     localStorage.setItem('shift_db_permanent_v3', JSON.stringify(planningDB));
   }
 
   function parseShiftTimes(shiftStr, baseDate) {
     if (!shiftStr || shiftStr === "OFF" || !shiftStr.includes('-')) return null;
-
     const parts = shiftStr.split('-');
     const [startH, startM] = parts[0].split(':').map(Number);
     const [endH, endM] = parts[1].split(':').map(Number);
-
     const startDate = new Date(baseDate);
     startDate.setHours(startH, startM, 0, 0);
-
     const endDate = new Date(baseDate);
     endDate.setHours(endH, endM, 0, 0);
-
     if (endH < startH || (endH === startH && endM < startM) || endH === 0) {
       endDate.setDate(endDate.getDate() + 1);
     }
-
     return { startDate, endDate, startStr: parts[0], endStr: parts[1] };
   }
 
@@ -1350,7 +1850,6 @@
 
   function renderDashboard() {
     const now = new Date();
-    
     const hours = String(now.getHours()).padStart(2, '0');
     const mins = String(now.getMinutes()).padStart(2, '0');
     const secs = String(now.getSeconds()).padStart(2, '0');
@@ -1504,25 +2003,16 @@
     });
   }
 
+  /* ================= TABLE PLANNING ================= */
   function renderHeader(monday) {
     const headerRow = document.getElementById('table-header');
-    let html = `
-      <th class="col-agent">Agent</th>
-      <th class="col-zone">Zone</th>
-    `;
-
+    let html = `<th class="col-agent">Agent</th><th class="col-zone">Zone</th>`;
     for (let i = 0; i < 7; i++) {
       const current = new Date(monday);
       current.setDate(monday.getDate() + i);
       const dateStr = current.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
-      html += `
-        <th>
-          <span class="day-name">${DAYS[i]}</span>
-          <span class="day-date">${dateStr}</span>
-        </th>
-      `;
+      html += `<th><span class="day-name">${DAYS[i]}</span><span class="day-date">${dateStr}</span></th>`;
     }
-
     html += `<th class="col-total">Total & Action Ligne</th><th></th>`;
     headerRow.innerHTML = html;
   }
@@ -1571,13 +2061,11 @@
       KNOWN_AGENTS.forEach(name => {
         if (name !== agent.name) agentOptions += `<option value="${name}">${name}</option>`;
       });
-      agentOptions += `<option value="__custom__">✏️ Autre Nom...</option>`;
 
       let zoneOptions = `<option value="${agent.zone}" selected>${agent.zone}</option>`;
       KNOWN_ZONES.forEach(z => {
         if (z !== agent.zone) zoneOptions += `<option value="${z}">${z}</option>`;
       });
-      zoneOptions += `<option value="__custom__">✏️ Autre Zone...</option>`;
 
       let html = `
         <td class="cell-agent">
@@ -1594,7 +2082,6 @@
 
       agent.shifts.forEach((shift, dayIdx) => {
         const shiftClass = SHIFTS[shift] ? SHIFTS[shift].class : 'off';
-        
         let selectOptions = '';
         SHIFT_GROUPS.forEach(grp => {
           selectOptions += `<optgroup label="${grp.label}">`;
@@ -1647,40 +2134,20 @@
   }
 
   function handleAgentChange(weekKey, agentIdx, val) {
-    if (val === "__custom__") {
-      const customName = prompt("Entrez le nom du nouvel agent :");
-      if (customName && customName.trim() !== "") {
-        planningDB[weekKey][agentIdx].name = customName.trim();
-        if (!KNOWN_AGENTS.includes(customName.trim())) {
-          KNOWN_AGENTS.push(customName.trim());
-        }
-      }
-    } else {
-      planningDB[weekKey][agentIdx].name = val;
-    }
-    saveDB();
+    planningDB[weekKey][agentIdx].name = val;
+    savePlanningDB();
     renderTable();
   }
 
   function handleZoneChange(weekKey, agentIdx, val) {
-    if (val === "__custom__") {
-      const customZone = prompt("Entrez le nom de la nouvelle zone :");
-      if (customZone && customZone.trim() !== "") {
-        planningDB[weekKey][agentIdx].zone = customZone.trim();
-        if (!KNOWN_ZONES.includes(customZone.trim())) {
-          KNOWN_ZONES.push(customZone.trim());
-        }
-      }
-    } else {
-      planningDB[weekKey][agentIdx].zone = val;
-    }
-    saveDB();
+    planningDB[weekKey][agentIdx].zone = val;
+    savePlanningDB();
     renderTable();
   }
 
   function applyShiftChoice(weekKey, agentIdx, shiftType) {
     if (currentWeekOffset === 0 && !manualUnlock) {
-      alert("⚠️ La semaine en cours est verrouillée ! Cliquez sur (Suivant ▶) pour modifier la semaine prochaine.");
+      alert("⚠️ La semaine en cours est verrouillée !");
       return;
     }
     const agent = planningDB[weekKey][agentIdx];
@@ -1690,7 +2157,7 @@
       if (agent.shifts[day] === "OFF") continue;
       agent.shifts[day] = getShiftForDay(shiftType, day);
     }
-    saveDB();
+    savePlanningDB();
     renderTable();
   }
 
@@ -1700,7 +2167,7 @@
       return;
     }
     planningDB[weekKey][agentIdx].shifts[dayIdx] = val;
-    saveDB();
+    savePlanningDB();
     renderTable();
   }
 
@@ -1740,14 +2207,14 @@
       shiftType: "matin",
       shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "10:00-17:00"]
     });
-    saveDB();
+    savePlanningDB();
     renderTable();
   }
 
   function deleteAgent(weekKey, idx) {
     if (confirm("Supprimer cet agent ?")) {
       planningDB[weekKey].splice(idx, 1);
-      saveDB();
+      savePlanningDB();
       renderTable();
     }
   }
@@ -1761,7 +2228,10 @@
     }
   }
 
+  // Démarrage initial
+  renderAbsencesModule();
   renderDashboard();
+
   setInterval(renderDashboard, 30000);
   setInterval(() => {
     const n = new Date();
