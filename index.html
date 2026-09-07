@@ -836,7 +836,6 @@
     }
     .btn-del:hover { color: #ef4444; background: #fee2e2; }
 
-    /* MODAL OR GENERIC TAB PLACEHOLDER */
     .empty-state-view {
       background: #ffffff;
       border-radius: 16px;
@@ -916,7 +915,6 @@
 
   <!-- ================= TAB: DASHBOARD ================= -->
   <div id="view-dashboard" class="view-container active-view">
-    <!-- Header -->
     <div class="dashboard-header">
       <div class="dash-title">
         <h1>Dashboard Temps Réel (En Direct)</h1>
@@ -931,7 +929,6 @@
       </div>
     </div>
 
-    <!-- KPI Grid -->
     <div class="kpi-grid">
       <div class="kpi-card">
         <div class="kpi-icon green">⚡</div>
@@ -966,7 +963,6 @@
       </div>
     </div>
 
-    <!-- Filter & Search Controls -->
     <div class="filter-bar">
       <div class="filter-group">
         <button class="filter-btn active" onclick="setDashboardFilter('all', this)">Tous les Agents</button>
@@ -982,21 +978,15 @@
       </div>
     </div>
 
-    <!-- Cards Container -->
-    <div class="agent-status-grid" id="agent-cards-container">
-      <!-- Injected via JavaScript -->
-    </div>
+    <div class="agent-status-grid" id="agent-cards-container"></div>
 
-    <!-- Coverage by Zone -->
     <div class="section-title">
       <span>📍 Couverture Opérationnelle par Zone (Aujourd'hui)</span>
     </div>
-    <div class="zone-summary-grid" id="zone-summary-container">
-      <!-- Injected via JavaScript -->
-    </div>
+    <div class="zone-summary-grid" id="zone-summary-container"></div>
   </div>
 
-  <!-- ================= TAB: PLANNING (YOUR 44H ENGINE) ================= -->
+  <!-- ================= TAB: PLANNING ================= -->
   <div id="view-planning" class="view-container">
     <div class="top-bar-planning">
       <div class="planning-title">
@@ -1038,7 +1028,7 @@
     </div>
   </div>
 
-  <!-- ================= TAB PLACEHOLDERS ================= -->
+  <!-- ================= PLACEHOLDERS ================= -->
   <div id="view-pointage" class="view-container">
     <div class="empty-state-view">
       <h2>🕒 Module de Pointage</h2>
@@ -1077,7 +1067,6 @@
 </main>
 
 <script>
-  /* ================= NAVIGATION LOGIC ================= */
   function switchTab(tabId) {
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active-view'));
@@ -1095,7 +1084,6 @@
     }
   }
 
-  /* ================= DATA & CORE ENGINE ================= */
   let currentWeekOffset = 0;
   let manualUnlock = false;
   let currentFilter = 'all';
@@ -1149,23 +1137,39 @@
 
   const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 
+  // Rotation des 3 zones tournantes (Temara -> Hay Riad -> Agdal)
+  const ROTATING_ZONES = [
+    "Temara - Oulad Mtaa",
+    "Hay Riad - Soussi",
+    "Agdal - Carrousel"
+  ];
+
   const defaultAgents = [
-    { name: "Yahya Rhallab", zone: "Temara - Oulad Mtaa", offDay: 0, shiftType: "matin" },
-    { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir17" },
-    { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir19" },
-    { name: "Mourad Cherradi", zone: "Agdal - Carrousel", offDay: 1, shiftType: "matin" },
-    { name: "Youssef Derkaoui", zone: "Agdal - Carrousel", offDay: 0, shiftType: "soir17" },
-    { name: "Ayoub Abssi", zone: "Agdal - Carrousel", offDay: 3, shiftType: "soir19" },
+    // Groupe A (démarre en Témara)
+    { name: "Yahya Rhallab", zoneBaseIndex: 0, offDay: 0, shiftType: "matin" },
+    { name: "Mehdi Ait Jebour", zoneBaseIndex: 0, offDay: 1, shiftType: "soir17" },
+    { name: "Ayman Chlifane", zoneBaseIndex: 0, offDay: 2, shiftType: "soir19" },
+
+    // Groupe B (démarre en Hay Riad)
+    { name: "Achraf Akhlij", zoneBaseIndex: 1, offDay: 3, shiftType: "matin" },
+    { name: "Islam Elmardi", zoneBaseIndex: 1, offDay: 2, shiftType: "soir17" },
+    { name: "Oussama El Atrach", zoneBaseIndex: 1, offDay: 0, shiftType: "soir19" },
+
+    // Groupe C (démarre en Agdal)
+    { name: "Mourad Cherradi", zoneBaseIndex: 2, offDay: 1, shiftType: "matin" },
+    { name: "Youssef Derkaoui", zoneBaseIndex: 2, offDay: 0, shiftType: "soir17" },
+    { name: "Ayoub Abssi", zoneBaseIndex: 2, offDay: 3, shiftType: "soir19" },
+
+    // Zone FIXE : Salé - Medina (Tournante shifts uniquement)
     { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftBaseIndex: 0 },
     { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftBaseIndex: 1 },
     { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftBaseIndex: 2 },
-    { name: "Achraf Akhlij", zone: "Hay Riad - Soussi", offDay: 3, shiftType: "matin" },
-    { name: "Islam Elmardi", zone: "Hay Riad - Soussi", offDay: 2, shiftType: "soir17" },
-    { name: "Oussama El Atrach", zone: "Hay Riad - Soussi", offDay: 0, shiftType: "soir19" },
+
+    // Zone FIXE : Technopolis
     { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno" }
   ];
 
-  let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v2')) || {};
+  let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v3')) || {};
 
   function getMonday(d) {
     d = new Date(d);
@@ -1199,12 +1203,22 @@
       return planningDB[weekKey];
     }
 
-    const rotationTypes = ["matin", "soir17", "soir19"];
+    const rotationShifts = ["matin", "soir17", "soir19"];
+
     const generated = defaultAgents.map(a => {
       let currentShiftType = a.shiftType;
+      let currentZone = a.zone;
+
+      // 1. Rotation cyclique des zones : Temara -> Hay Riad -> Agdal
+      if (a.zoneBaseIndex !== undefined) {
+        const rotatedZoneIdx = (a.zoneBaseIndex + weekNumber) % ROTATING_ZONES.length;
+        currentZone = ROTATING_ZONES[rotatedZoneIdx];
+      }
+
+      // 2. Rotation cyclique des shifts de Salé
       if (a.zone && a.zone.includes("Salé") && a.shiftBaseIndex !== undefined) {
-        const rotatedIndex = (a.shiftBaseIndex + weekNumber) % 3;
-        currentShiftType = rotationTypes[rotatedIndex];
+        const rotatedShiftIdx = (a.shiftBaseIndex + weekNumber) % 3;
+        currentShiftType = rotationShifts[rotatedShiftIdx];
       }
 
       const shifts = [];
@@ -1218,7 +1232,7 @@
 
       return {
         name: a.name,
-        zone: a.zone,
+        zone: currentZone,
         shiftType: currentShiftType,
         shifts: shifts
       };
@@ -1230,10 +1244,9 @@
   }
 
   function saveDB() {
-    localStorage.setItem('shift_db_permanent_v2', JSON.stringify(planningDB));
+    localStorage.setItem('shift_db_permanent_v3', JSON.stringify(planningDB));
   }
 
-  /* ================= DASHBOARD CALCULATION LOGIC ================= */
   function parseShiftTimes(shiftStr, baseDate) {
     if (!shiftStr || shiftStr === "OFF" || !shiftStr.includes('-')) return null;
 
@@ -1247,7 +1260,6 @@
     const endDate = new Date(baseDate);
     endDate.setHours(endH, endM, 0, 0);
 
-    // If end hour is past midnight (e.g. 00:00, 01:00, 02:00), end is on the next day
     if (endH < startH || (endH === startH && endM < startM) || endH === 0) {
       endDate.setDate(endDate.getDate() + 1);
     }
@@ -1299,7 +1311,6 @@
     const endMs = timing.endDate.getTime();
 
     if (nowMs < startMs) {
-      // Waiting to start
       const diff = startMs - nowMs;
       return {
         status: "waiting",
@@ -1312,7 +1323,6 @@
         rawShift: todayShift
       };
     } else if (nowMs >= startMs && nowMs <= endMs) {
-      // Currently working
       const diff = endMs - nowMs;
       return {
         status: "active",
@@ -1325,7 +1335,6 @@
         rawShift: todayShift
       };
     } else {
-      // Finished today
       return {
         status: "done",
         label: "Terminé",
@@ -1342,7 +1351,6 @@
   function renderDashboard() {
     const now = new Date();
     
-    // Live Clock update
     const hours = String(now.getHours()).padStart(2, '0');
     const mins = String(now.getMinutes()).padStart(2, '0');
     const secs = String(now.getSeconds()).padStart(2, '0');
@@ -1351,13 +1359,11 @@
     const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
     document.getElementById('dash-live-date').innerText = now.toLocaleDateString('fr-FR', options);
 
-    // Current Monday & Week data
     const currentMonday = getMonday(now);
     const weekNumber = getWeekNumber(currentMonday);
     const weekKey = getWeekKey(currentMonday);
     const agents = getCurrentWeekAgents(weekKey, weekNumber);
 
-    // Day index: Monday is 0, Sunday is 6
     const jsDay = now.getDay();
     const dayIdx = jsDay === 0 ? 6 : jsDay - 1;
 
@@ -1379,12 +1385,10 @@
       else if (liveInfo.status === "off") countOff++;
       else if (liveInfo.status === "done") countDone++;
 
-      // Zone grouping
       const zName = agent.zone || "Zone Non Définie";
       if (!zoneGroups[zName]) zoneGroups[zName] = [];
       zoneGroups[zName].push({ name: agent.name, status: liveInfo });
 
-      // Create Agent Card
       const card = document.createElement('div');
       card.className = `agent-status-card status-filter-${liveInfo.status}`;
       card.setAttribute('data-name', agent.name.toLowerCase());
@@ -1426,13 +1430,11 @@
       cardsContainer.appendChild(card);
     });
 
-    // Update KPI counters
     document.getElementById('kpi-active-count').innerText = countActive;
     document.getElementById('kpi-waiting-count').innerText = countWaiting;
     document.getElementById('kpi-off-count').innerText = countOff;
     document.getElementById('kpi-done-count').innerText = countDone;
 
-    // Render Zone Summary Cards
     const zoneContainer = document.getElementById('zone-summary-container');
     zoneContainer.innerHTML = '';
 
@@ -1502,7 +1504,6 @@
     });
   }
 
-  /* ================= PLANNING TABLE FUNCTIONS ================= */
   function renderHeader(monday) {
     const headerRow = document.getElementById('table-header');
     let html = `
@@ -1753,18 +1754,16 @@
 
   function resetToDefault() {
     if (confirm("Réinitialiser toutes les modifications enregistrées ?")) {
-      localStorage.removeItem('shift_db_permanent_v2');
+      localStorage.removeItem('shift_db_permanent_v3');
       planningDB = {};
       renderTable();
       renderDashboard();
     }
   }
 
-  // Initial Boot
   renderDashboard();
-  setInterval(renderDashboard, 30000); // refresh countdowns and times every 30s
+  setInterval(renderDashboard, 30000);
   setInterval(() => {
-    // live seconds update
     const n = new Date();
     const h = String(n.getHours()).padStart(2, '0');
     const m = String(n.getMinutes()).padStart(2, '0');
