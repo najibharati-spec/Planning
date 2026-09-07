@@ -37,7 +37,6 @@
       --badge-done-text: #86198f;
       --badge-done-border: #f5d0fe;
       
-      /* Planning styles */
       --matin-bg: #ede9fe;
       --matin-txt: #6d28d9;
       --matin-border: #c4b5fd;
@@ -165,9 +164,7 @@
       box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
     }
 
-    .nav-item.active svg {
-      stroke: #ffffff;
-    }
+    .nav-item.active svg { stroke: #ffffff; }
 
     .nav-item svg {
       width: 19px;
@@ -178,11 +175,8 @@
       transition: stroke 0.2s;
     }
 
-    .nav-item:hover svg {
-      stroke: #0f172a;
-    }
+    .nav-item:hover svg { stroke: #0f172a; }
 
-    /* MAIN WRAPPER */
     .main-content {
       flex: 1;
       padding: 24px 30px;
@@ -190,15 +184,10 @@
       max-width: calc(100vw - 250px);
     }
 
-    .view-container {
-      display: none;
-    }
+    .view-container { display: none; }
+    .view-container.active-view { display: block; }
 
-    .view-container.active-view {
-      display: block;
-    }
-
-    /* HEADER */
+    /* DASHBOARD */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
@@ -213,18 +202,8 @@
       margin-bottom: 24px;
     }
 
-    .dash-title h1 {
-      font-size: 22px;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .dash-title p {
-      font-size: 13px;
-      color: #64748b;
-      font-weight: 600;
-      margin-top: 3px;
-    }
+    .dash-title h1 { font-size: 22px; font-weight: 800; color: #0f172a; }
+    .dash-title p { font-size: 13px; color: #64748b; font-weight: 600; margin-top: 3px; }
 
     .live-clock-badge {
       display: flex;
@@ -250,19 +229,9 @@
       100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
 
-    .time-display {
-      font-size: 16px;
-      font-weight: 800;
-      color: #0f172a;
-    }
+    .time-display { font-size: 16px; font-weight: 800; color: #0f172a; }
+    .date-display { font-size: 12px; font-weight: 600; color: #64748b; }
 
-    .date-display {
-      font-size: 12px;
-      font-weight: 600;
-      color: #64748b;
-    }
-
-    /* KPI STATS ROW */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -302,21 +271,9 @@
     .kpi-icon.purple { background: #ede9fe; color: #6d28d9; }
     .kpi-icon.gray { background: #f1f5f9; color: #475569; }
 
-    .kpi-info .val {
-      font-size: 26px;
-      font-weight: 800;
-      color: #0f172a;
-      line-height: 1.1;
-    }
+    .kpi-info .val { font-size: 26px; font-weight: 800; color: #0f172a; line-height: 1.1; }
+    .kpi-info .lbl { font-size: 12.5px; font-weight: 700; color: #64748b; margin-top: 4px; }
 
-    .kpi-info .lbl {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: #64748b;
-      margin-top: 4px;
-    }
-
-    /* CONTROLS ROW */
     .filter-bar {
       display: flex;
       justify-content: space-between;
@@ -326,12 +283,7 @@
       margin-bottom: 20px;
     }
 
-    .filter-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .filter-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
     .filter-btn {
       padding: 8px 16px;
@@ -351,10 +303,7 @@
       border-color: #0f172a;
     }
 
-    .search-box {
-      position: relative;
-    }
-
+    .search-box { position: relative; }
     .search-box input {
       padding: 9px 14px 9px 36px;
       border-radius: 10px;
@@ -364,12 +313,10 @@
       width: 260px;
       background: #ffffff;
     }
-
     .search-box input:focus {
       border-color: #059669;
       box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.15);
     }
-
     .search-box svg {
       position: absolute;
       left: 11px;
@@ -380,7 +327,6 @@
       stroke: #94a3b8;
     }
 
-    /* AGENT LIVE STATUS GRID */
     .agent-status-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -426,11 +372,7 @@
       margin-bottom: 12px;
     }
 
-    .agent-profile {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .agent-profile { display: flex; align-items: center; gap: 12px; }
 
     .agent-avatar {
       width: 44px;
@@ -445,11 +387,7 @@
       justify-content: center;
     }
 
-    .agent-name {
-      font-size: 15px;
-      font-weight: 800;
-      color: #0f172a;
-    }
+    .agent-name { font-size: 15px; font-weight: 800; color: #0f172a; }
 
     .agent-zone-tag {
       font-size: 12px;
@@ -497,11 +435,7 @@
       text-transform: uppercase;
     }
 
-    .shift-time-val {
-      font-size: 13px;
-      font-weight: 800;
-      color: #1e293b;
-    }
+    .shift-time-val { font-size: 13px; font-weight: 800; color: #1e293b; }
 
     .countdown-box {
       display: flex;
@@ -527,7 +461,6 @@
       font-weight: 600;
     }
 
-    /* ZONE BREAKDOWN SECTION */
     .section-title {
       font-size: 17px;
       font-weight: 800;
@@ -560,11 +493,7 @@
       margin-bottom: 12px;
     }
 
-    .zone-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #0f172a;
-    }
+    .zone-title { font-size: 14px; font-weight: 800; color: #0f172a; }
 
     .zone-badge-count {
       padding: 3px 8px;
@@ -575,11 +504,7 @@
       font-weight: 800;
     }
 
-    .zone-agents-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    .zone-agents-list { display: flex; flex-direction: column; gap: 6px; }
 
     .zone-agent-row {
       display: flex;
@@ -593,7 +518,7 @@
     .zone-agent-row .z-name { font-weight: 700; color: #1e293b; }
     .zone-agent-row .z-status { font-weight: 800; }
 
-    /* PLANNING VIEW INTEGRATION */
+    /* ================= PLANNING ENGINE ================= */
     .top-bar-planning {
       display: flex;
       justify-content: space-between;
@@ -608,11 +533,7 @@
       margin-bottom: 22px;
     }
 
-    .planning-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .planning-title { display: flex; align-items: center; gap: 12px; }
 
     .planning-icon {
       width: 42px;
@@ -626,17 +547,8 @@
       font-size: 20px;
     }
 
-    .planning-title h1 {
-      font-size: 20px;
-      font-weight: 800;
-      color: #4c1d95;
-    }
-
-    .planning-title p {
-      font-size: 12px;
-      color: #7c3aed;
-      font-weight: 600;
-    }
+    .planning-title h1 { font-size: 20px; font-weight: 800; color: #4c1d95; }
+    .planning-title p { font-size: 12px; color: #7c3aed; font-weight: 600; }
 
     .week-nav {
       display: flex;
@@ -648,11 +560,7 @@
       border: 1px solid #e9d5ff;
     }
 
-    .week-nav span {
-      font-weight: 700;
-      font-size: 13.5px;
-      color: #581c87;
-    }
+    .week-nav span { font-weight: 700; font-size: 13.5px; color: #581c87; }
 
     .status-pill {
       font-size: 11px;
@@ -759,11 +667,7 @@
     }
     tbody tr:hover { background: #faf5ff; }
 
-    td {
-      padding: 10px 4px;
-      font-size: 13px;
-      border-bottom: 1px solid #f3e8ff;
-    }
+    td { padding: 10px 4px; font-size: 13px; border-bottom: 1px solid #f3e8ff; }
     td.cell-agent { text-align: left; padding-left: 18px; }
     td.cell-zone { text-align: left; padding-left: 12px; }
 
@@ -836,7 +740,7 @@
     }
     .btn-del:hover { color: #ef4444; background: #fee2e2; }
 
-    /* ================= STYLES MODULE ABSENCES (THEME BEIGE/CREME NATUREL) ================= */
+    /* ================= MODULE ABSENCES (BEIGE NATUREL) ================= */
     .abs-module-container {
       display: flex;
       flex-direction: column;
@@ -849,6 +753,7 @@
       border-radius: 16px;
       padding: 22px 26px;
       box-shadow: 0 4px 15px rgba(180, 130, 70, 0.05);
+      position: relative;
     }
 
     .abs-cycle-header {
@@ -862,11 +767,7 @@
       padding-bottom: 16px;
     }
 
-    .abs-cycle-header h2 {
-      font-size: 19px;
-      font-weight: 800;
-      color: #3b2a1a;
-    }
+    .abs-cycle-header h2 { font-size: 19px; font-weight: 800; color: #3b2a1a; }
 
     .abs-cycle-dates {
       font-size: 13px;
@@ -884,11 +785,7 @@
       align-items: flex-end;
     }
 
-    .abs-form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    .abs-form-group { display: flex; flex-direction: column; gap: 6px; }
 
     .abs-form-group label {
       font-size: 11px;
@@ -918,13 +815,26 @@
     .btn-add-absence {
       background: #059669;
       color: white;
-      padding: 11px 20px;
+      padding: 11px 18px;
       border-radius: 10px;
       font-weight: 800;
       font-size: 13px;
       height: 42px;
+      width: 100%;
     }
     .btn-add-absence:hover { background: #047857; }
+
+    .btn-cancel-edit {
+      background: #64748b;
+      color: white;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      height: 42px;
+      display: none;
+    }
+    .btn-cancel-edit:hover { background: #475569; }
 
     .btn-export-excel {
       background: #166534;
@@ -936,7 +846,18 @@
     }
     .btn-export-excel:hover { background: #14532d; }
 
-    /* Tables in Absences */
+    .edit-mode-indicator {
+      display: none;
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      color: #b45309;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
     .abs-table-wrapper {
       background: #ffffff;
       border-radius: 16px;
@@ -955,11 +876,7 @@
       align-items: center;
     }
 
-    .abs-table-title h3 {
-      font-size: 15px;
-      font-weight: 800;
-      color: #2b1f14;
-    }
+    .abs-table-title h3 { font-size: 15px; font-weight: 800; color: #2b1f14; }
 
     table.abs-table {
       width: 100%;
@@ -992,21 +909,13 @@
       transition: background 0.15s;
     }
 
-    table.abs-table tbody tr:hover {
-      background: #fdfaf5;
-    }
-
-    table.abs-table td {
-      padding: 12px 10px;
-      font-size: 13px;
-      font-weight: 600;
-    }
+    table.abs-table tbody tr:hover { background: #fdfaf5; }
+    table.abs-table td { padding: 12px 10px; font-size: 13px; font-weight: 600; }
 
     .td-red { color: #dc2626; font-weight: 800; }
     .td-presence { color: #059669; font-weight: 800; }
     .td-total { font-weight: 800; color: #1e293b; }
 
-    /* Badge styles for details */
     .badge-abs-type {
       display: inline-block;
       padding: 4px 10px;
@@ -1022,19 +931,19 @@
     .b-double { background: #fef3c7; color: #92400e; }
     .b-off-travaille { background: #e0e7ff; color: #3730a3; }
 
-    .btn-table-del {
+    .btn-table-action {
       background: transparent;
-      color: #94a3b8;
       border: none;
       cursor: pointer;
       font-size: 15px;
-      padding: 4px 8px;
+      padding: 4px 6px;
       border-radius: 6px;
+      transition: all 0.2s;
     }
-    .btn-table-del:hover {
-      color: #dc2626;
-      background: #fee2e2;
-    }
+    .btn-table-edit { color: #d97706; }
+    .btn-table-edit:hover { background: #fef3c7; }
+    .btn-table-del { color: #94a3b8; }
+    .btn-table-del:hover { color: #dc2626; background: #fee2e2; }
 
     .empty-state-view {
       background: #ffffff;
@@ -1113,11 +1022,10 @@
 <!-- MAIN CONTENT -->
 <main class="main-content">
 
-  <!-- ================= TAB: ABSENCES (BASE 26J CYCLE 21 AU 21) ================= -->
+  <!-- ================= TAB: ABSENCES ================= -->
   <div id="view-absences" class="view-container active-view">
     <div class="abs-module-container">
 
-      <!-- Formulaire d'ajout & Sélecteur de Cycle -->
       <div class="abs-top-card">
         <div class="abs-cycle-header">
           <div>
@@ -1130,7 +1038,12 @@
           </div>
         </div>
 
+        <div class="edit-mode-indicator" id="edit-indicator">
+          ✏️ Mode Modification : Vous modifiez un enregistrement existant.
+        </div>
+
         <form id="absence-form" onsubmit="handleAbsenceSubmit(event)">
+          <input type="hidden" id="edit-record-id" value="" />
           <div class="abs-form-grid">
             <div class="abs-form-group">
               <label>Agent</label>
@@ -1157,7 +1070,7 @@
             </div>
 
             <div class="abs-form-group">
-              <label>Date Fin (Optionnel pour période)</label>
+              <label>Date Fin (Optionnel)</label>
               <input type="date" class="abs-input" id="abs-input-end" placeholder="Optionnel" />
             </div>
 
@@ -1166,8 +1079,9 @@
               <input type="text" class="abs-input" id="abs-input-note" placeholder="Ex: certificat médical..." />
             </div>
 
-            <div>
-              <button type="submit" class="btn-add-absence">➕ Ajouter Enregistrement</button>
+            <div style="display:flex; gap:6px;">
+              <button type="submit" class="btn-add-absence" id="btn-submit-form">➕ Ajouter</button>
+              <button type="button" class="btn-cancel-edit" id="btn-cancel-edit" onclick="cancelEditMode()">Annuler</button>
             </div>
           </div>
         </form>
@@ -1195,9 +1109,7 @@
                 <th>TOTAL AJUSTÉ</th>
               </tr>
             </thead>
-            <tbody id="abs-summary-body">
-              <!-- Injected by JS -->
-            </tbody>
+            <tbody id="abs-summary-body"></tbody>
           </table>
         </div>
       </div>
@@ -1216,12 +1128,10 @@
                 <th>DATE</th>
                 <th>TYPE</th>
                 <th>NOTE</th>
-                <th style="width: 80px;">ACTION</th>
+                <th style="width: 100px;">ACTIONS</th>
               </tr>
             </thead>
-            <tbody id="abs-details-body">
-              <!-- Injected by JS -->
-            </tbody>
+            <tbody id="abs-details-body"></tbody>
           </table>
         </div>
       </div>
@@ -1413,18 +1323,20 @@
     { id: 16, agent: "Zakariae Benali", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" }
   ];
 
-  let absencesDB = JSON.parse(localStorage.getItem('absences_db_cycle_26j_v1')) || DEFAULT_ABSENCES_DATA;
+  let absencesDB = JSON.parse(localStorage.getItem('absences_db_cycle_26j_v2')) || DEFAULT_ABSENCES_DATA;
 
   function saveAbsencesDB() {
-    localStorage.setItem('absences_db_cycle_26j_v1', JSON.stringify(absencesDB));
+    localStorage.setItem('absences_db_cycle_26j_v2', JSON.stringify(absencesDB));
   }
 
   function initAbsenceAgentDropdown() {
     const sel = document.getElementById('abs-input-agent');
+    const currentVal = sel.value;
     sel.innerHTML = '<option value="" disabled selected>-- Choisir un agent --</option>';
     KNOWN_AGENTS.forEach(name => {
       sel.innerHTML += `<option value="${name}">${name}</option>`;
     });
+    if (currentVal) sel.value = currentVal;
   }
 
   function calculateDays(startStr, endStr) {
@@ -1435,34 +1347,115 @@
     return diff > 0 ? diff : 1;
   }
 
+  // Verification de conflit de dates pour éviter d'enregistrer deux fois le même jour
+  function hasDateConflict(agent, newStart, newEnd, excludeId = null) {
+    const nStart = new Date(newStart).getTime();
+    const nEnd = new Date(newEnd || newStart).getTime();
+
+    return absencesDB.some(rec => {
+      if (excludeId && rec.id === excludeId) return false;
+      if (rec.agent !== agent) return false;
+
+      const rStart = new Date(rec.startDate).getTime();
+      const rEnd = new Date(rec.endDate || rec.startDate).getTime();
+
+      // Vérifie le chevauchement (Overlap)
+      return (nStart <= rEnd && nEnd >= rStart);
+    });
+  }
+
   function handleAbsenceSubmit(e) {
     e.preventDefault();
+    const editId = document.getElementById('edit-record-id').value;
     const agent = document.getElementById('abs-input-agent').value;
     const type = document.getElementById('abs-input-type').value;
     const startDate = document.getElementById('abs-input-start').value;
     const endDate = document.getElementById('abs-input-end').value || startDate;
     const note = document.getElementById('abs-input-note').value.trim();
 
+    // 1. Validation des dates
+    if (new Date(endDate) < new Date(startDate)) {
+      alert("⚠️ La date de fin ne peut pas être antérieure à la date de début !");
+      return;
+    }
+
+    // 2. Protection Doublon / Chevauchement
+    const conflict = hasDateConflict(agent, startDate, endDate, editId ? Number(editId) : null);
+    if (conflict) {
+      alert(`⚠️ Attention ! ${agent} a déjà un enregistrement prévu sur cette période (${startDate} au ${endDate}). Vous ne pouvez pas enregistrer deux fois le même jour.`);
+      return;
+    }
+
     const daysCount = calculateDays(startDate, endDate);
 
-    absencesDB.unshift({
-      id: Date.now(),
-      agent,
-      type,
-      startDate,
-      endDate,
-      days: daysCount,
-      note
-    });
+    if (editId) {
+      // Modification
+      const idx = absencesDB.findIndex(r => r.id === Number(editId));
+      if (idx !== -1) {
+        absencesDB[idx] = {
+          ...absencesDB[idx],
+          agent,
+          type,
+          startDate,
+          endDate,
+          days: daysCount,
+          note
+        };
+      }
+      cancelEditMode();
+    } else {
+      // Nouvel Ajout
+      absencesDB.unshift({
+        id: Date.now(),
+        agent,
+        type,
+        startDate,
+        endDate,
+        days: daysCount,
+        note
+      });
+      document.getElementById('absence-form').reset();
+    }
 
     saveAbsencesDB();
     renderAbsencesModule();
+  }
+
+  // Activer le mode modification (Tssahih)
+  function editAbsenceRecord(id) {
+    const record = absencesDB.find(r => r.id === id);
+    if (!record) return;
+
+    document.getElementById('edit-record-id').value = record.id;
+    document.getElementById('abs-input-agent').value = record.agent;
+    document.getElementById('abs-input-type').value = record.type;
+    document.getElementById('abs-input-start').value = record.startDate;
+    document.getElementById('abs-input-end').value = record.endDate || record.startDate;
+    document.getElementById('abs-input-note').value = record.note || '';
+
+    // UI Feedback
+    document.getElementById('edit-indicator').style.display = 'block';
+    document.getElementById('btn-submit-form').innerText = '💾 Mettre à jour';
+    document.getElementById('btn-cancel-edit').style.display = 'inline-flex';
+
+    // Scroll smoothly to form
+    document.querySelector('.abs-top-card').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function cancelEditMode() {
+    document.getElementById('edit-record-id').value = '';
     document.getElementById('absence-form').reset();
+    document.getElementById('edit-indicator').style.display = 'none';
+    document.getElementById('btn-submit-form').innerText = '➕ Ajouter';
+    document.getElementById('btn-cancel-edit').style.display = 'none';
   }
 
   function deleteAbsenceRecord(id) {
-    if (confirm("Supprimer cet enregistrement ?")) {
+    if (confirm("Voulez-vous vraiment supprimer cet enregistrement ?")) {
       absencesDB = absencesDB.filter(item => item.id !== id);
+      if (document.getElementById('edit-record-id').value == id) {
+        cancelEditMode();
+      }
       saveAbsencesDB();
       renderAbsencesModule();
     }
@@ -1481,17 +1474,9 @@
   function renderAbsencesModule() {
     initAbsenceAgentDropdown();
 
-    // 1. Calculer les cumuls par agent
     const summaryData = {};
     KNOWN_AGENTS.forEach(agent => {
-      summaryData[agent] = {
-        maladie: 0,
-        injustifiee: 0,
-        conge: 0,
-        ferie: 0,
-        double: 0,
-        offTravaille: 0
-      };
+      summaryData[agent] = { maladie: 0, injustifiee: 0, conge: 0, ferie: 0, double: 0, offTravaille: 0 };
     });
 
     absencesDB.forEach(rec => {
@@ -1508,7 +1493,7 @@
       else if (rec.type.includes('OFF')) summaryData[rec.agent].offTravaille += count;
     });
 
-    // 2. Remplir le Tableau de Résumé (Base 26 jours)
+    // TABLEAU 1: Résumé
     const summaryBody = document.getElementById('abs-summary-body');
     summaryBody.innerHTML = '';
 
@@ -1535,7 +1520,7 @@
       summaryBody.appendChild(tr);
     });
 
-    // 3. Remplir le Tableau de Détails
+    // TABLEAU 2: Détails avec boutons Modifier et Supprimer
     const detailsBody = document.getElementById('abs-details-body');
     detailsBody.innerHTML = '';
     document.getElementById('abs-records-count').innerText = `${absencesDB.length} enregistrements`;
@@ -1551,7 +1536,10 @@
         <td style="color:#64748b; font-weight:700;">${dateDisplay}</td>
         <td><span class="${getTypeBadgeClass(rec.type)}">${rec.type.split(' (')[0]}</span></td>
         <td style="color:#475569;">${rec.note || '—'}</td>
-        <td><button class="btn-table-del" title="Supprimer" onclick="deleteAbsenceRecord(${rec.id})">🗑️</button></td>
+        <td>
+          <button class="btn-table-action btn-table-edit" title="Modifier / Corriger" onclick="editAbsenceRecord(${rec.id})">✏️</button>
+          <button class="btn-table-action btn-table-del" title="Supprimer" onclick="deleteAbsenceRecord(${rec.id})">🗑️</button>
+        </td>
       `;
       detailsBody.appendChild(tr);
     });
@@ -1616,7 +1604,7 @@
     }
   }
 
-  /* ================= DASHBOARD & PLANNING ENGINES ================= */
+  /* ================= PLANNING & DASHBOARD ENGINE ================= */
   let currentWeekOffset = 0;
   let manualUnlock = false;
   let currentFilter = 'all';
@@ -1706,12 +1694,9 @@
   }
 
   function getCurrentWeekAgents(weekKey, weekNumber) {
-    if (planningDB[weekKey]) {
-      return planningDB[weekKey];
-    }
+    if (planningDB[weekKey]) return planningDB[weekKey];
 
     const rotationShifts = ["matin", "soir17", "soir19"];
-
     const generated = defaultAgents.map(a => {
       let currentShiftType = a.shiftType;
       let currentZone = a.zone;
@@ -2228,7 +2213,6 @@
     }
   }
 
-  // Démarrage initial
   renderAbsencesModule();
   renderDashboard();
 
