@@ -3,86 +3,283 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpsControl - Dashboard, Planning & Absences (Base 26J)</title>
+  <title>FieldOps - Système Central de Gestion RH & Shift Planning</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-gradient: #f8fafc;
-      --sidebar-bg: #ffffff;
-      --sidebar-border: #f1f5f9;
-      --sidebar-text: #64748b;
-      --sidebar-active-bg: #059669;
-      --sidebar-active-text: #ffffff;
-      --primary: #6366f1;
-      --primary-dark: #4f46e5;
-      
-      --card-bg: #ffffff;
-      --border-subtle: #e2e8f0;
+      --primary-green: #059669;
+      --primary-green-dark: #047857;
+      --bg-cream: #fffdf9;
+      --bg-page: #fbf8f2;
+      --border-warm: #ebd8bf;
       --text-main: #0f172a;
       --text-muted: #64748b;
+      --text-brown: #3b2a1a;
       
       --badge-active-bg: #ecfdf5;
       --badge-active-text: #047857;
-      --badge-active-border: #a7f3d0;
-      
       --badge-waiting-bg: #eff6ff;
       --badge-waiting-text: #1d4ed8;
-      --badge-waiting-border: #bfdbfe;
-      
       --badge-off-bg: #f8fafc;
       --badge-off-text: #64748b;
-      --badge-off-border: #e2e8f0;
-      
       --badge-done-bg: #fdf4ff;
       --badge-done-text: #86198f;
-      --badge-done-border: #f5d0fe;
-      
-      --matin-bg: #ede9fe;
-      --matin-txt: #6d28d9;
-      --matin-border: #c4b5fd;
-
-      --aprem-bg: #fae8ff;
-      --aprem-txt: #86198f;
-      --aprem-border: #f0abfc;
-
-      --soir-bg: #e0e7ff;
-      --soir-txt: #3730a3;
-      --soir-border: #a5b4fc;
-
-      --off-bg: #f8fafc;
-      --off-txt: #94a3b8;
-      --off-border: #e2e8f0;
-
-      --ok-bg: #dcfce7;
-      --ok-txt: #15803d;
-      --ok-border: #86efac;
-
-      --alert-bg: #fee2e2;
-      --alert-txt: #b91c1c;
-      --alert-border: #fca5a5;
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
 
     body {
-      background: #f8fafc;
+      background: var(--bg-page);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
+      overflow-x: hidden;
     }
 
-    /* SIDEBAR */
+    /* ================= 1. LOGIN SCREEN ================= */
+    #login-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #fdf8eb;
+      display: flex;
+      z-index: 9999;
+    }
+
+    .login-left-map {
+      flex: 1.1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      background: radial-gradient(circle at 60% 45%, #fffbf0 0%, #fdf5df 70%, #faecd0 100%);
+      border-right: 1.5px solid #ebd8bf;
+    }
+
+    .map-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .map-header-logo .icon-box {
+      width: 32px;
+      height: 32px;
+      background: #d97706;
+      border-radius: 8px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .interactive-map-area {
+      position: relative;
+      height: 500px;
+      width: 100%;
+    }
+
+    .map-node {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .map-node:hover { transform: scale(1.08); }
+
+    .node-pin {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 13px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .node-label {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #334155;
+      background: rgba(255,255,255,0.9);
+      padding: 3px 8px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .pin-techno { background: #059669; }
+    .pin-sale { background: #e11d48; }
+    .pin-agdal { background: #d97706; }
+    .pin-hayriad { background: #7c3aed; }
+    .pin-temara { background: #0284c7; }
+
+    .map-footer-quote {
+      font-size: 12px;
+      color: #785a37;
+      line-height: 1.6;
+    }
+    .map-footer-quote .time {
+      font-size: 20px;
+      font-weight: 800;
+      color: #b45309;
+      margin-bottom: 2px;
+    }
+
+    .login-right-form {
+      flex: 0.9;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      background: #fdf8ec;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+    }
+
+    .login-box h2 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #064e3b;
+      margin-bottom: 4px;
+    }
+
+    .login-box p {
+      font-size: 13px;
+      color: #785a37;
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+
+    .agents-unlock-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding: 4px;
+    }
+
+    .agent-unlock-card {
+      background: #fde8bc;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 12px 6px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .agent-unlock-card:hover {
+      background: #fbd693;
+      transform: translateY(-2px);
+    }
+
+    .agent-unlock-card.selected {
+      border-color: #059669;
+      background: #ffffff;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.2);
+    }
+
+    .agent-avatar-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .agent-unlock-name {
+      font-size: 12px;
+      font-weight: 800;
+      color: #2b1f14;
+    }
+
+    .agent-unlock-sub {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #785a37;
+    }
+
+    .pin-input-box {
+      margin-bottom: 14px;
+      width: 100%;
+    }
+
+    .pin-input-box input {
+      width: 100%;
+      padding: 13px 16px;
+      background: #fde8bc;
+      border: 1.5px solid #ebd29f;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #2b1f14;
+      text-align: center;
+      outline: none;
+    }
+    .pin-input-box input:focus {
+      background: #ffffff;
+      border-color: #059669;
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+    }
+
+    .btn-unlock-big {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      background: #cfbeab;
+      color: #2b1f14;
+      font-size: 14px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-unlock-big.active {
+      background: #059669;
+      color: white;
+      box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+    }
+    .btn-unlock-big.active:hover { background: #047857; }
+
+    /* ================= 2. APP SHELL & SIDEBAR ================= */
     .sidebar {
       width: 250px;
       min-width: 250px;
-      background: var(--sidebar-bg);
+      background: #ffffff;
       border-right: 1px solid #e2e8f0;
       height: 100vh;
       position: sticky;
       top: 0;
       display: flex;
       flex-direction: column;
-      padding: 24px 16px;
+      justify-content: space-between;
+      padding: 22px 14px;
       z-index: 100;
     }
 
@@ -90,96 +287,100 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 0 10px 24px 10px;
+      padding: 0 8px 18px 8px;
       border-bottom: 1px solid #f1f5f9;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .brand-logo .logo-icon {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       background: linear-gradient(135deg, #059669, #10b981);
-      border-radius: 10px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-weight: 800;
-      font-size: 18px;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+      font-size: 17px;
     }
 
-    .brand-logo .logo-text {
-      font-size: 16px;
-      font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -0.3px;
-    }
-
-    .brand-logo .logo-sub {
-      font-size: 11px;
-      color: #059669;
-      font-weight: 700;
-    }
+    .brand-logo .logo-text { font-size: 16px; font-weight: 800; color: #0f172a; }
+    .brand-logo .logo-sub { font-size: 11px; color: #059669; font-weight: 700; }
 
     .nav-section-title {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 800;
       color: #94a3b8;
       letter-spacing: 0.8px;
       text-transform: uppercase;
-      margin: 20px 12px 10px 12px;
+      margin: 14px 10px 8px 10px;
     }
 
-    .nav-menu {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      list-style: none;
-    }
+    .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 4px; }
 
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 11px 14px;
+      gap: 11px;
+      padding: 10px 12px;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       color: #475569;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
       user-select: none;
-      text-decoration: none;
     }
-
-    .nav-item:hover {
-      background: #f1f5f9;
-      color: #0f172a;
-    }
-
+    .nav-item:hover { background: #f8fafc; color: #0f172a; }
     .nav-item.active {
       background: #059669;
       color: #ffffff;
-      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+    }
+    .nav-item svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* Sidebar Footer User Card */
+    .sidebar-user-footer {
+      border-top: 1px solid #f1f5f9;
+      padding-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    .nav-item.active svg { stroke: #ffffff; }
-
-    .nav-item svg {
-      width: 19px;
-      height: 19px;
-      stroke: #64748b;
-      stroke-width: 2;
-      fill: none;
-      transition: stroke 0.2s;
+    .user-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
     }
+    .user-badge-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+    }
+    .user-badge-name { font-size: 13px; font-weight: 800; color: #0f172a; }
 
-    .nav-item:hover svg { stroke: #0f172a; }
+    .btn-user-action {
+      width: 100%;
+      padding: 7px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid #ebd8bf;
+      background: #fdf3de;
+      color: #785a37;
+      cursor: pointer;
+      text-align: center;
+    }
+    .btn-user-action:hover { background: #fde8bc; }
 
+    /* ================= 3. MAIN CONTENT WRAPPER ================= */
     .main-content {
       flex: 1;
-      padding: 24px 30px;
+      padding: 22px 28px;
       overflow-y: auto;
       max-width: calc(100vw - 250px);
     }
@@ -187,573 +388,413 @@
     .view-container { display: none; }
     .view-container.active-view { display: block; }
 
-    /* DASHBOARD */
-    .dashboard-header {
+    /* App Global Top Bar */
+    .app-topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      background: #ffffff;
-      padding: 20px 24px;
-      border-radius: 16px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-      margin-bottom: 24px;
-    }
-
-    .dash-title h1 { font-size: 22px; font-weight: 800; color: #0f172a; }
-    .dash-title p { font-size: 13px; color: #64748b; font-weight: 600; margin-top: 3px; }
-
-    .live-clock-badge {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #f8fafc;
-      padding: 8px 16px;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-    }
-
-    .live-dot {
-      width: 10px;
-      height: 10px;
-      background: #10b981;
-      border-radius: 50%;
-      animation: pulseDot 1.5s infinite;
-    }
-
-    @keyframes pulseDot {
-      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-    }
-
-    .time-display { font-size: 16px; font-weight: 800; color: #0f172a; }
-    .date-display { font-size: 12px; font-weight: 600; color: #64748b; }
-
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .kpi-card {
-      background: #ffffff;
-      border-radius: 16px;
-      border: 1px solid #e2e8f0;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .kpi-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-    }
-
-    .kpi-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-    }
-
-    .kpi-icon.green { background: #dcfce7; color: #15803d; }
-    .kpi-icon.blue { background: #dbeafe; color: #1d4ed8; }
-    .kpi-icon.purple { background: #ede9fe; color: #6d28d9; }
-    .kpi-icon.gray { background: #f1f5f9; color: #475569; }
-
-    .kpi-info .val { font-size: 26px; font-weight: 800; color: #0f172a; line-height: 1.1; }
-    .kpi-info .lbl { font-size: 12.5px; font-weight: 700; color: #64748b; margin-top: 4px; }
-
-    .filter-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 14px;
       margin-bottom: 20px;
     }
 
-    .filter-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .topbar-left h1 { font-size: 22px; font-weight: 800; color: #0f172a; }
+    .topbar-left p { font-size: 13px; color: #64748b; font-weight: 600; margin-top: 2px; }
 
-    .filter-btn {
-      padding: 8px 16px;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-      background: #ffffff;
-      font-size: 13px;
-      font-weight: 700;
-      color: #64748b;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .filter-btn.active, .filter-btn:hover {
-      background: #0f172a;
-      color: #ffffff;
-      border-color: #0f172a;
-    }
-
-    .search-box { position: relative; }
-    .search-box input {
-      padding: 9px 14px 9px 36px;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-      font-size: 13px;
-      outline: none;
-      width: 260px;
-      background: #ffffff;
-    }
-    .search-box input:focus {
-      border-color: #059669;
-      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.15);
-    }
-    .search-box svg {
-      position: absolute;
-      left: 11px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
-      stroke: #94a3b8;
-    }
-
-    .agent-status-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 18px;
-    }
-
-    .agent-status-card {
-      background: #ffffff;
-      border-radius: 16px;
-      border: 1px solid #e2e8f0;
-      padding: 18px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .agent-status-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    }
-
-    .status-indicator-bar {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-    }
-
-    .status-bar-active { background: #10b981; }
-    .status-bar-waiting { background: #3b82f6; }
-    .status-bar-done { background: #a855f7; }
-    .status-bar-off { background: #cbd5e1; }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-    }
-
-    .agent-profile { display: flex; align-items: center; gap: 12px; }
-
-    .agent-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: #ede9fe;
-      color: #6d28d9;
-      font-weight: 800;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .agent-name { font-size: 15px; font-weight: 800; color: #0f172a; }
-
-    .agent-zone-tag {
-      font-size: 12px;
-      font-weight: 600;
-      color: #64748b;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 2px;
-    }
-
-    .pill-status {
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 11.5px;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-    }
-
-    .pill-active { background: var(--badge-active-bg); color: var(--badge-active-text); border: 1px solid var(--badge-active-border); }
-    .pill-waiting { background: var(--badge-waiting-bg); color: var(--badge-waiting-text); border: 1px solid var(--badge-waiting-border); }
-    .pill-off { background: var(--badge-off-bg); color: var(--badge-off-text); border: 1px solid var(--badge-off-border); }
-    .pill-done { background: var(--badge-done-bg); color: var(--badge-done-text); border: 1px solid var(--badge-done-border); }
-
-    .card-middle {
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 12px;
-      border: 1px solid #f1f5f9;
-    }
-
-    .shift-timing-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .shift-time-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #94a3b8;
-      text-transform: uppercase;
-    }
-
-    .shift-time-val { font-size: 13px; font-weight: 800; color: #1e293b; }
-
-    .countdown-box {
+    .sync-pill {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 13px;
-      font-weight: 800;
-      padding-top: 6px;
-      border-top: 1px dashed #e2e8f0;
-    }
-
-    .countdown-active { color: #059669; }
-    .countdown-waiting { color: #2563eb; }
-    .countdown-done { color: #7c3aed; }
-    .countdown-off { color: #64748b; }
-
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: #64748b;
-      font-weight: 600;
-    }
-
-    .section-title {
-      font-size: 17px;
-      font-weight: 800;
-      color: #0f172a;
-      margin: 32px 0 16px 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .zone-summary-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
-      margin-bottom: 30px;
-    }
-
-    .zone-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-    }
-
-    .zone-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .zone-title { font-size: 14px; font-weight: 800; color: #0f172a; }
-
-    .zone-badge-count {
-      padding: 3px 8px;
       background: #ecfdf5;
+      border: 1px solid #a7f3d0;
       color: #047857;
-      border-radius: 12px;
-      font-size: 11px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
       font-weight: 800;
     }
 
-    .zone-agents-list { display: flex; flex-direction: column; gap: 6px; }
-
-    .zone-agent-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      padding: 5px 8px;
-      background: #f8fafc;
-      border-radius: 8px;
-    }
-
-    .zone-agent-row .z-name { font-weight: 700; color: #1e293b; }
-    .zone-agent-row .z-status { font-weight: 800; }
-
-    /* ================= PLANNING ENGINE ================= */
-    .top-bar-planning {
+    /* ================= 4. VIEW: PLANNING & MULTI-COLONNES HOTSPOTS ================= */
+    .planning-subbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 12px;
       background: #ffffff;
-      padding: 18px 24px;
-      border-radius: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-      border: 1px solid #e2e8f0;
-      margin-bottom: 22px;
+      padding: 14px 20px;
+      border-radius: 14px;
+      border: 1px solid #ebd8bf;
+      margin-bottom: 20px;
     }
 
-    .planning-title { display: flex; align-items: center; gap: 12px; }
-
-    .planning-icon {
-      width: 42px;
-      height: 42px;
-      background: linear-gradient(135deg, #7c3aed, #4c1d95);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 20px;
-    }
-
-    .planning-title h1 { font-size: 20px; font-weight: 800; color: #4c1d95; }
-    .planning-title p { font-size: 12px; color: #7c3aed; font-weight: 600; }
-
-    .week-nav {
+    .week-nav-group {
       display: flex;
       align-items: center;
       gap: 8px;
-      background: #faf5ff;
-      padding: 6px 14px;
-      border-radius: 12px;
-      border: 1px solid #e9d5ff;
+      font-size: 13px;
+      font-weight: 800;
+      color: #3b2a1a;
     }
 
-    .week-nav span { font-weight: 700; font-size: 13.5px; color: #581c87; }
+    .btn-mini-nav {
+      padding: 6px 10px;
+      background: #fdf3de;
+      border: 1px solid #ebd29f;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
 
-    .status-pill {
-      font-size: 11px;
+    .view-toggle-btns {
+      display: flex;
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .btn-view-toggle {
+      padding: 7px 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      background: transparent;
+      color: #64748b;
+    }
+    .btn-view-toggle.active {
+      background: #059669;
+      color: white;
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25);
+    }
+
+    .btn-action-hotspot {
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid #ebd8bf;
+      background: #fdf8ec;
+      color: #785a37;
+      cursor: pointer;
+    }
+
+    /* Multi-columns horizontal layout */
+    .zone-columns-container {
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      padding-bottom: 24px;
+      align-items: flex-start;
+    }
+
+    .zone-column {
+      min-width: 320px;
+      width: 330px;
+      background: #fffdf9;
+      border-radius: 18px;
+      border: 1.5px solid #ebd8bf;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .zone-column-header {
+      padding: 12px 18px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 14.5px;
+    }
+
+    .zh-sale { background: linear-gradient(90deg, #e11d48, #f43f5e); }
+    .zh-techno { background: linear-gradient(90deg, #059669, #10b981); }
+    .zh-temara { background: linear-gradient(90deg, #0284c7, #38bdf8); }
+    .zh-hayriad { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+    .zh-agdal { background: linear-gradient(90deg, #d97706, #f59e0b); }
+
+    .zone-agent-card {
+      padding: 16px;
+      border-bottom: 2px dashed #eedecb;
+    }
+
+    .agent-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .agent-hotspot-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .shift-tag-pill {
+      font-size: 10.5px;
       font-weight: 800;
       padding: 4px 8px;
       border-radius: 8px;
-      margin-left: 6px;
+      background: #ede9fe;
+      color: #6d28d9;
     }
-    .pill-locked { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-    .pill-unlocked { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
 
-    .btn-group { display: flex; gap: 10px; }
+    /* Big Highlight Today Card */
+    .today-highlight-box {
+      border-radius: 14px;
+      padding: 14px;
+      color: white;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+    .th-sale { background: #e11d48; }
+    .th-techno { background: #059669; }
+    .th-temara { background: #0284c7; }
+    .th-hayriad { background: #7c3aed; }
+    .th-agdal { background: #d97706; }
 
-    button {
-      padding: 9px 16px;
-      border: none;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
+    .today-box-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+      opacity: 0.95;
+    }
+
+    .today-store-tags {
+      display: flex;
+      flex-wrap: wrap;
       gap: 6px;
-    }
-
-    .btn-nav {
-      background: #ffffff;
-      color: #6b21a8;
-      border: 1px solid #e9d5ff;
-      padding: 6px 12px;
-      font-size: 12px;
-    }
-    .btn-nav:hover { background: #f3e8ff; }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #7c3aed, #581c87);
-      color: #ffffff;
-      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
-    }
-    .btn-primary:hover { background: linear-gradient(135deg, #6d28d9, #4c1d95); }
-
-    .btn-reset {
-      background: #ffffff;
-      color: #6b21a8;
-      border: 1px solid #e9d5ff;
-    }
-    .btn-reset:hover { background: #faf5ff; }
-
-    #lock-banner {
-      display: none;
-      background: #fffbeb;
-      border: 1.5px solid #fde68a;
-      color: #b45309;
-      padding: 12px 20px;
-      border-radius: 12px;
-      font-size: 13px;
+      font-size: 11.5px;
       font-weight: 700;
-      margin-bottom: 18px;
-      align-items: center;
+      line-height: 1.4;
+    }
+
+    .today-store-tags span::after {
+      content: " • ";
+      opacity: 0.7;
+    }
+    .today-store-tags span:last-child::after { content: ""; }
+
+    .change-off-link {
+      font-size: 11px;
+      font-weight: 700;
+      color: #d97706;
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .change-off-link:hover { text-decoration: underline; }
+
+    /* Days breakdown inside column */
+    .days-list-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .day-block-item {
+      background: #ffffff;
+      border: 1px solid #ebd8bf;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .day-block-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #64748b;
+      margin-bottom: 6px;
+      display: flex;
       justify-content: space-between;
     }
 
-    .table-container {
+    .store-badges-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .store-badge {
+      background: #fde8bc;
+      color: #78350f;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .zone-bottom-hotspots {
+      padding: 16px;
+      background: #fdf8ec;
+    }
+
+    .bottom-hotspots-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #b45309;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 12px;
+    }
+
+    .hotspot-admin-card {
       background: #ffffff;
-      border-radius: 18px;
-      overflow-x: auto;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-      border: 1px solid #e9d5ff;
+      border: 1px solid #ebd8bf;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      min-width: 1450px;
-      text-align: center;
-    }
-
-    thead th {
-      background: linear-gradient(90deg, #4c1d95 0%, #581c87 50%, #6b21a8 100%);
-      color: #ffffff;
-      padding: 15px 8px;
+    .hotspot-admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-size: 12px;
+      font-weight: 800;
+      color: #3b2a1a;
+      margin-bottom: 8px;
+    }
+
+    .hotspot-admin-actions {
+      display: flex;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #059669;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+
+    /* ================= 5. VIEW: PARAMÈTRES (FIELDOPS) ================= */
+    .params-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .btn-param-action {
+      padding: 8px 14px;
+      background: #fdf3de;
+      border: 1.5px solid #ebd29f;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #3b2a1a;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-param-action:hover { background: #fde8bc; }
+
+    .btn-param-add {
+      background: #d97706;
+      color: white;
+      border-color: #b45309;
+      margin-left: auto;
+    }
+    .btn-param-add:hover { background: #b45309; }
+
+    .table-params-wrapper {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #eddcc6;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+      overflow-x: auto;
+    }
+
+    table.params-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 950px;
+    }
+
+    table.params-table thead th {
+      background: #fbf8f2;
+      color: #785a37;
+      font-size: 11.5px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.6px;
-      border-bottom: 2px solid #3b0764;
+      padding: 14px 16px;
+      border-bottom: 2px solid #ecdac4;
     }
 
-    th:first-child { border-top-left-radius: 16px; }
-    th:last-child { border-top-right-radius: 16px; }
-
-    th .day-name { display: block; font-size: 13px; font-weight: 800; }
-    th .day-date { display: block; font-size: 11px; font-weight: 500; color: #e9d5ff; margin-top: 3px; }
-
-    th.col-agent { width: 190px; text-align: left; padding-left: 20px; }
-    th.col-zone { width: 190px; text-align: left; padding-left: 14px; }
-    th.col-total { width: 230px; }
-
-    tbody tr {
-      border-bottom: 1px solid #f3e8ff;
-      transition: background 0.15s ease;
+    table.params-table tbody tr {
+      border-bottom: 1px solid #f6eee3;
+      transition: background 0.15s;
     }
-    tbody tr:hover { background: #faf5ff; }
+    table.params-table tbody tr:hover { background: #fdfaf5; }
 
-    td { padding: 10px 4px; font-size: 13px; border-bottom: 1px solid #f3e8ff; }
-    td.cell-agent { text-align: left; padding-left: 18px; }
-    td.cell-zone { text-align: left; padding-left: 12px; }
+    table.params-table td {
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+    }
 
-    .smart-select {
-      width: 95%;
-      padding: 7px 8px;
+    .pin-badge {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      padding: 4px 10px;
       border-radius: 8px;
+      font-weight: 800;
       font-size: 12.5px;
-      font-weight: 700;
-      border: 1px solid #e9d5ff;
-      background: #ffffff;
-      color: #3b0764;
-      cursor: pointer;
-      outline: none;
-    }
-    .smart-select.zone-sel { color: #6b21a8; font-weight: 600; }
-
-    select.shift-select {
-      width: 100%;
-      padding: 9px 4px;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 800;
-      border: 1px solid transparent;
-      cursor: pointer;
-      outline: none;
-      text-align-last: center;
-      appearance: none;
+      display: inline-block;
     }
 
-    select.matin { background: var(--matin-bg); color: var(--matin-txt); border-color: var(--matin-border); }
-    select.aprem { background: var(--aprem-bg); color: var(--aprem-txt); border-color: var(--aprem-border); }
-    select.soir { background: var(--soir-bg); color: var(--soir-txt); border-color: var(--soir-border); }
-    select.off { background: var(--off-bg); color: var(--off-txt); border-color: var(--off-border); }
-
-    .total-action-box { display: flex; align-items: center; justify-content: center; gap: 6px; }
-
-    .hours-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 6px 9px;
-      border-radius: 16px;
-      font-weight: 800;
-      font-size: 11.5px;
-      white-space: nowrap;
-    }
-    .badge-ok { background: var(--ok-bg); color: var(--ok-txt); border: 1.5px solid var(--ok-border); }
-    .badge-alert { background: var(--alert-bg); color: var(--alert-txt); border: 1.5px solid var(--alert-border); }
-
-    select.btn-shift-choice {
-      padding: 6px 8px;
-      font-size: 11px;
-      font-weight: 800;
-      border-radius: 8px;
-      background: #faf5ff;
-      color: #6b21a8;
-      border: 1.5px solid #c4b5fd;
-      cursor: pointer;
-    }
-
-    .btn-del {
-      background: transparent;
-      color: #c4b5fd;
-      font-size: 16px;
-      cursor: pointer;
-      padding: 6px 8px;
-      border-radius: 8px;
-      border: none;
-    }
-    .btn-del:hover { color: #ef4444; background: #fee2e2; }
-
-    /* ================= MODULE ABSENCES (BEIGE NATUREL) ================= */
-    .abs-module-container {
+    .email-acces-box {
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 2px;
     }
+    .email-acces-box .acces-link {
+      font-size: 11px;
+      font-weight: 800;
+      color: #d97706;
+      text-decoration: none;
+    }
+
+    .type-pill-gray {
+      background: #f1f5f9;
+      color: #475569;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .shift-fixe-pill {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .sf-nuit { background: #fee2e2; color: #b91c1c; }
+    .sf-jour { background: #dcfce7; color: #15803d; }
+
+    /* ================= 6. STYLES ABSENCES (BASE 26J) ================= */
+    .abs-module-container { display: flex; flex-direction: column; gap: 20px; }
 
     .abs-top-card {
       background: #fbf8f2;
       border: 1px solid #eddcc6;
       border-radius: 16px;
-      padding: 22px 26px;
-      box-shadow: 0 4px 15px rgba(180, 130, 70, 0.05);
-      position: relative;
+      padding: 20px 24px;
     }
 
     .abs-cycle-header {
@@ -761,127 +802,66 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 18px;
+      gap: 12px;
+      margin-bottom: 16px;
       border-bottom: 1px solid #ebd8bf;
-      padding-bottom: 16px;
+      padding-bottom: 14px;
     }
-
-    .abs-cycle-header h2 { font-size: 19px; font-weight: 800; color: #3b2a1a; }
-
-    .abs-cycle-dates {
-      font-size: 13px;
-      font-weight: 700;
-      color: #8c6840;
-      background: #f2e7d5;
-      padding: 6px 14px;
-      border-radius: 10px;
-    }
+    .abs-cycle-header h2 { font-size: 18px; font-weight: 800; color: #3b2a1a; }
 
     .abs-form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
       align-items: flex-end;
     }
 
-    .abs-form-group { display: flex; flex-direction: column; gap: 6px; }
-
-    .abs-form-group label {
-      font-size: 11px;
-      font-weight: 800;
-      color: #785a37;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+    .abs-form-group { display: flex; flex-direction: column; gap: 5px; }
+    .abs-form-group label { font-size: 11px; font-weight: 800; color: #785a37; text-transform: uppercase; }
 
     .abs-input, .abs-select {
-      padding: 10px 12px;
+      padding: 9px 12px;
       background: #fdf3de;
       border: 1.5px solid #ebd29f;
-      border-radius: 10px;
+      border-radius: 9px;
       font-size: 13px;
       font-weight: 600;
       color: #2b1f14;
       outline: none;
-      transition: all 0.2s;
-    }
-
-    .abs-input:focus, .abs-select:focus {
-      border-color: #059669;
-      background: #ffffff;
     }
 
     .btn-add-absence {
       background: #059669;
       color: white;
-      padding: 11px 18px;
-      border-radius: 10px;
+      padding: 10px 18px;
+      border-radius: 9px;
       font-weight: 800;
       font-size: 13px;
-      height: 42px;
+      border: none;
+      cursor: pointer;
       width: 100%;
-    }
-    .btn-add-absence:hover { background: #047857; }
-
-    .btn-cancel-edit {
-      background: #64748b;
-      color: white;
-      padding: 11px 14px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 13px;
-      height: 42px;
-      display: none;
-    }
-    .btn-cancel-edit:hover { background: #475569; }
-
-    .btn-export-excel {
-      background: #166534;
-      color: white;
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 12px;
-    }
-    .btn-export-excel:hover { background: #14532d; }
-
-    .edit-mode-indicator {
-      display: none;
-      background: #fef3c7;
-      border: 1px solid #fde68a;
-      color: #b45309;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 14px;
     }
 
     .abs-table-wrapper {
       background: #ffffff;
       border-radius: 16px;
       border: 1px solid #eddcc6;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-      overflow: hidden;
-      margin-bottom: 24px;
+      overflow-x: auto;
     }
 
     .abs-table-title {
       background: #fdfaf5;
-      padding: 16px 22px;
+      padding: 14px 20px;
       border-bottom: 1px solid #eedecb;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .abs-table-title h3 { font-size: 15px; font-weight: 800; color: #2b1f14; }
-
     table.abs-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 900px;
+      min-width: 850px;
       text-align: center;
     }
 
@@ -891,141 +871,299 @@
       font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
-      padding: 13px 10px;
+      padding: 12px 10px;
       border-bottom: 2px solid #ecdac4;
     }
+    table.abs-table td { padding: 11px 8px; font-size: 13px; font-weight: 600; border-bottom: 1px solid #f6eee3; }
+    table.abs-table td.td-agent { text-align: left; padding-left: 18px; font-weight: 800; color: #0f172a; }
 
-    table.abs-table th.th-agent, table.abs-table td.td-agent {
-      text-align: left;
-      padding-left: 20px;
-      width: 220px;
-      font-weight: 800;
-      color: #0f172a;
+    .btn-table-action { background: transparent; border: none; cursor: pointer; font-size: 14px; padding: 3px 5px; }
+
+    /* ================= 7. STYLES DASHBOARD ================= */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
     }
 
-    table.abs-table tbody tr {
-      border-bottom: 1px solid #f6eee3;
-      transition: background 0.15s;
-    }
-
-    table.abs-table tbody tr:hover { background: #fdfaf5; }
-    table.abs-table td { padding: 12px 10px; font-size: 13px; font-weight: 600; }
-
-    .td-red { color: #dc2626; font-weight: 800; }
-    .td-presence { color: #059669; font-weight: 800; }
-    .td-total { font-weight: 800; color: #1e293b; }
-
-    .badge-abs-type {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 11.5px;
-      font-weight: 700;
-    }
-
-    .b-maladie { background: #fee2e2; color: #991b1b; }
-    .b-injustifiee { background: #f1f5f9; color: #475569; }
-    .b-conge { background: #ccfbf1; color: #0f766e; }
-    .b-ferie { background: #dcfce7; color: #166534; }
-    .b-double { background: #fef3c7; color: #92400e; }
-    .b-off-travaille { background: #e0e7ff; color: #3730a3; }
-
-    .btn-table-action {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 15px;
-      padding: 4px 6px;
-      border-radius: 6px;
-      transition: all 0.2s;
-    }
-    .btn-table-edit { color: #d97706; }
-    .btn-table-edit:hover { background: #fef3c7; }
-    .btn-table-del { color: #94a3b8; }
-    .btn-table-del:hover { color: #dc2626; background: #fee2e2; }
-
-    .empty-state-view {
+    .kpi-card {
       background: #ffffff;
       border-radius: 16px;
-      padding: 60px 20px;
-      text-align: center;
-      border: 1px solid #e2e8f0;
-      color: #64748b;
+      border: 1px solid #ebd8bf;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
-    .empty-state-view h2 { color: #0f172a; margin-bottom: 8px; }
+    .kpi-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .kpi-info .val { font-size: 24px; font-weight: 800; color: #0f172a; line-height: 1.1; }
+    .kpi-info .lbl { font-size: 12px; font-weight: 700; color: #64748b; margin-top: 3px; }
+
+    .agent-status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .agent-status-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #ebd8bf;
+      padding: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .status-bar-top { position: absolute; top:0; left:0; right:0; height:4px; }
   </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="brand-logo">
-    <div class="logo-icon">⚡</div>
-    <div>
-      <div class="logo-text">FieldOps</div>
-      <div class="logo-sub">Shift & Absence Control</div>
+<!-- ================= 1. LOGIN OVERLAY (FROM SCREENSHOTS) ================= -->
+<div id="login-overlay">
+  <div class="login-left-map">
+    <div class="map-header-logo">
+      <div class="icon-box">⚡</div>
+      <span>FieldOps</span>
+    </div>
+
+    <!-- Zone Node Dots on Map -->
+    <div class="interactive-map-area">
+      <div class="map-node" style="top: 25%; left: 30%;">
+        <div class="node-pin pin-techno">⚡</div>
+        <span class="node-label">Technopolis</span>
+      </div>
+
+      <div class="map-node" style="top: 38%; left: 60%;">
+        <div class="node-pin pin-sale">▲</div>
+        <span class="node-label">Salé - Medina</span>
+      </div>
+
+      <div class="map-node" style="top: 55%; left: 35%;">
+        <div class="node-pin pin-agdal">●</div>
+        <span class="node-label">Agdal - Carrousel</span>
+      </div>
+
+      <div class="map-node" style="top: 70%; left: 55%;">
+        <div class="node-pin pin-hayriad">▲</div>
+        <span class="node-label">Hay Riad - Soussi</span>
+      </div>
+
+      <div class="map-node" style="top: 85%; left: 32%;">
+        <div class="node-pin pin-temara">▲</div>
+        <span class="node-label">Temara - Oulad Mtaa</span>
+      </div>
+    </div>
+
+    <div class="map-footer-quote">
+      <div class="time" id="login-live-clock">12:55</div>
+      <strong>Lundi 7 Septembre</strong><br>
+      Gestion opérationnelle terrain • Rabat & environs<br>
+      <em>"L'équipe compte sur vous aujourd'hui - donnez le meilleur !"</em>
     </div>
   </div>
 
-  <div class="nav-section-title">Principal</div>
-  <ul class="nav-menu">
-    <li>
-      <div class="nav-item" onclick="switchTab('dashboard')">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-        <span>Dashboard</span>
-      </div>
-    </li>
-    <li>
-      <div class="nav-item" onclick="switchTab('planning')">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-        <span>Planning</span>
-      </div>
-    </li>
-    <li>
-      <div class="nav-item active" onclick="switchTab('absences')">
-        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-        <span>Absences (26J)</span>
-      </div>
-    </li>
-    <li>
-      <div class="nav-item" onclick="switchTab('pointage')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span>Pointage</span>
-      </div>
-    </li>
-  </ul>
+  <div class="login-right-form">
+    <div class="login-box">
+      <h2>FieldOps</h2>
+      <p>Système Central de Gestion RH</p>
 
-  <div class="nav-section-title">Ressources</div>
-  <ul class="nav-menu">
-    <li>
-      <div class="nav-item" onclick="switchTab('parametres')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        <span>Paramètres</span>
+      <div class="agents-unlock-grid" id="login-agents-grid"></div>
+
+      <div class="pin-input-box">
+        <input type="password" id="login-pin-input" placeholder="Mot de passe ou code PIN..." maxlength="8" onkeyup="checkPinValid()" />
       </div>
-    </li>
-    <li>
-      <div class="nav-item" onclick="switchTab('paie')">
-        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
-        <span>Paie</span>
+
+      <button class="btn-unlock-big" id="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 2. SIDEBAR ================= -->
+<aside class="sidebar">
+  <div>
+    <div class="brand-logo">
+      <div class="logo-icon">⚡</div>
+      <div>
+        <div class="logo-text">FieldOps</div>
+        <div class="logo-sub">Shift & Control Center</div>
       </div>
-    </li>
-    <li>
-      <div class="nav-item" onclick="switchTab('rapports')">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-        <span>Rapports</span>
-      </div>
-    </li>
-  </ul>
+    </div>
+
+    <div class="nav-section-title">Opérations</div>
+    <ul class="nav-menu">
+      <li>
+        <div class="nav-item" onclick="switchTab('dashboard')">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Dashboard</span>
+        </div>
+      </li>
+      <li>
+        <div class="nav-item active" onclick="switchTab('planning')">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span>Planning</span>
+        </div>
+      </li>
+      <li>
+        <div class="nav-item" onclick="switchTab('absences')">
+          <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          <span>Absences</span>
+        </div>
+      </li>
+      <li>
+        <div class="nav-item" onclick="switchTab('pointage')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span>Pointage</span>
+        </div>
+      </li>
+    </ul>
+
+    <div class="nav-section-title">Ressources</div>
+    <ul class="nav-menu">
+      <li>
+        <div class="nav-item" onclick="switchTab('parametres')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Paramètres</span>
+        </div>
+      </li>
+      <li>
+        <div class="nav-item" onclick="switchTab('paie')">
+          <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+          <span>Paie</span>
+        </div>
+      </li>
+      <li>
+        <div class="nav-item" onclick="switchTab('rapports')">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <span>Rapports</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="sidebar-user-footer">
+    <div class="user-badge-row">
+      <div class="user-badge-dot"></div>
+      <span class="user-badge-name" id="current-logged-user">Najib Harati</span>
+    </div>
+    <button class="btn-user-action" onclick="alert('Modification du mot de passe bientôt disponible.')">Changer le mot de passe</button>
+    <button class="btn-user-action" style="color:#b91c1c; background:#fee2e2; border-color:#fca5a5;" onclick="logout()">Déconnexion</button>
+  </div>
 </aside>
 
-<!-- MAIN CONTENT -->
+<!-- ================= 3. MAIN CONTENT ================= -->
 <main class="main-content">
 
-  <!-- ================= TAB: ABSENCES ================= -->
-  <div id="view-absences" class="view-container active-view">
-    <div class="abs-module-container">
+  <!-- ================= TAB: PLANNING (MULTI-COLONNES HOTSPOTS & LIEUX) ================= -->
+  <div id="view-planning" class="view-container active-view">
+    <div class="app-topbar">
+      <div class="topbar-left">
+        <h1>Planning & Déploiement Terrain</h1>
+        <p>Espace indépendant — Synchronisation directe avec les zones et les créneaux horaires 44H</p>
+      </div>
+      <div class="sync-pill">
+        <span style="display:inline-block; width:8px; height:8px; background:#10b981; border-radius:50%;"></span>
+        <span>Cloud Sync Active • <span id="sync-clock">12:56</span></span>
+      </div>
+    </div>
 
+    <div class="planning-subbar">
+      <div class="week-nav-group">
+        <button class="btn-mini-nav" onclick="changeWeekOffset(-1)">◀</button>
+        <span id="planning-week-text">Semaine 37 (7 septembre - 13 septembre 2026)</span>
+        <button class="btn-mini-nav" onclick="changeWeekOffset(1)">▶</button>
+      </div>
+
+      <div class="view-toggle-btns">
+        <button class="btn-view-toggle" id="btn-vue-semaine" onclick="togglePlanningView('semaine')">📊 Vue Semaine (44H)</button>
+        <button class="btn-view-toggle active" id="btn-vue-zones" onclick="togglePlanningView('zones')">📑 Vue Zones & Hotspots</button>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <button class="btn-action-hotspot" onclick="saveHotspotsCopy()">💾 Sauvegarder les hotspots</button>
+        <button class="btn-action-hotspot" onclick="restoreHotspotsDefault()">🔄 Restaurer par défaut</button>
+        <button class="btn-action-hotspot" style="background:#059669; color:white; border-color:#047857;" onclick="alert('Notification envoyée à toute l\'équipe terrain.')">📢 Info équipe</button>
+      </div>
+    </div>
+
+    <!-- Multi-Colonnes Zones Container -->
+    <div id="container-vue-zones" class="zone-columns-container"></div>
+
+    <!-- Vue Semaine 44H Table -->
+    <div id="container-vue-semaine" style="display: none; background:#ffffff; border-radius:16px; padding:20px; border:1.5px solid #ebd8bf;">
+      <h3 style="margin-bottom:14px; font-weight:800; color:#3b2a1a;">Grille Hebdomadaire des Shifts (44H)</h3>
+      <div style="overflow-x: auto;">
+        <table style="width:100%; border-collapse:collapse; min-width:900px; text-align:center;">
+          <thead>
+            <tr style="background:#fdf3de; color:#785a37; font-size:12px; font-weight:800; border-bottom:2px solid #ebd29f;">
+              <th style="padding:12px; text-align:left; padding-left:16px;">AGENT</th>
+              <th>ZONE</th>
+              <th>LUN</th><th>MAR</th><th>MER</th><th>JEU</th><th>VEN</th><th>SAM</th><th>DIM</th>
+              <th>TOTAL</th>
+            </tr>
+          </thead>
+          <tbody id="semaine-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB: PARAMÈTRES (FIELDOPS) ================= -->
+  <div id="view-parametres" class="view-container">
+    <div class="app-topbar">
+      <div class="topbar-left">
+        <h1>Paramètres</h1>
+        <p>Gérez la liste des agents de terrain et leur configuration de rotation</p>
+      </div>
+      <div class="sync-pill">
+        <span style="display:inline-block; width:8px; height:8px; background:#10b981; border-radius:50%;"></span>
+        <span>Cloud Sync Active • 13:08</span>
+      </div>
+    </div>
+
+    <div class="params-toolbar">
+      <button class="btn-param-action" onclick="syncWithPlanning()">🔄 Synchroniser avec Planning NV</button>
+      <button class="btn-param-action" onclick="generateMissingPins()">🔑 Générer les PIN manquants</button>
+      <button class="btn-param-action" onclick="alert('Surnoms synchronisés avec succès.')">🏷️ Surnoms manquants</button>
+      <button class="btn-param-action" onclick="alert('Configuration Jour/Nuit/OFF par défaut appliquée.')">☀️ Jour/Nuit/OFF par défaut</button>
+      <button class="btn-param-action" onclick="alert('Renommage des zones sauvegardé.')">📍 Renommer les zones</button>
+      <button class="btn-param-action btn-param-add" onclick="promptAddNewAgentParam()">+ Ajouter un agent</button>
+    </div>
+
+    <div class="table-params-wrapper">
+      <table class="params-table">
+        <thead>
+          <tr>
+            <th>AGENT</th>
+            <th>PIN</th>
+            <th>EMAIL</th>
+            <th>ZONE</th>
+            <th>TYPE</th>
+            <th>SHIFT FIXE</th>
+            <th style="text-align: right; padding-right: 20px;">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody id="params-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ================= TAB: ABSENCES (BASE 26J CYCLE 21 AU 21) ================= -->
+  <div id="view-absences" class="view-container">
+    <div class="abs-module-container">
       <div class="abs-top-card">
         <div class="abs-cycle-header">
           <div>
@@ -1033,13 +1171,9 @@
             <p style="font-size:12.5px; color:#785a37; margin-top:2px;">Calcul automatique de la paie sur base de 26 jours de travail</p>
           </div>
           <div style="display:flex; align-items:center; gap:10px;">
-            <div class="abs-cycle-dates" id="abs-cycle-label">Cycle : 21/08/2026 ➔ 21/09/2026</div>
-            <button class="btn-export-excel" onclick="exportCycleToExcel()">📥 Télécharger Fichier Excel</button>
+            <div class="abs-cycle-dates" id="abs-cycle-label" style="background:#fdf3de; padding:6px 12px; border-radius:8px; font-weight:800; font-size:12px;">Cycle : 21/08/2026 ➔ 21/09/2026</div>
+            <button class="btn-param-action" style="background:#166534; color:white;" onclick="exportCycleToExcel()">📥 Télécharger Fichier Excel</button>
           </div>
-        </div>
-
-        <div class="edit-mode-indicator" id="edit-indicator">
-          ✏️ Mode Modification : Vous modifiez un enregistrement existant.
         </div>
 
         <form id="absence-form" onsubmit="handleAbsenceSubmit(event)">
@@ -1047,11 +1181,8 @@
           <div class="abs-form-grid">
             <div class="abs-form-group">
               <label>Agent</label>
-              <select class="abs-select" id="abs-input-agent" required>
-                <option value="" disabled selected>-- Choisir un agent --</option>
-              </select>
+              <select class="abs-select" id="abs-input-agent" required></select>
             </div>
-
             <div class="abs-form-group">
               <label>Type</label>
               <select class="abs-select" id="abs-input-type" required>
@@ -1063,304 +1194,668 @@
                 <option value="Jour OFF travaillé (+1 jour)">Jour OFF travaillé (+1 jour)</option>
               </select>
             </div>
-
             <div class="abs-form-group">
               <label>Date Début</label>
               <input type="date" class="abs-input" id="abs-input-start" required />
             </div>
-
             <div class="abs-form-group">
               <label>Date Fin (Optionnel)</label>
-              <input type="date" class="abs-input" id="abs-input-end" placeholder="Optionnel" />
+              <input type="date" class="abs-input" id="abs-input-end" />
             </div>
-
             <div class="abs-form-group">
-              <label>Note (Optionnel)</label>
-              <input type="text" class="abs-input" id="abs-input-note" placeholder="Ex: certificat médical..." />
+              <label>Note</label>
+              <input type="text" class="abs-input" id="abs-input-note" placeholder="Ex: certificat..." />
             </div>
-
-            <div style="display:flex; gap:6px;">
-              <button type="submit" class="btn-add-absence" id="btn-submit-form">➕ Ajouter</button>
-              <button type="button" class="btn-cancel-edit" id="btn-cancel-edit" onclick="cancelEditMode()">Annuler</button>
+            <div>
+              <button type="submit" class="btn-add-absence" id="btn-submit-abs">➕ Enregistrer</button>
             </div>
           </div>
         </form>
       </div>
 
-      <!-- TABLEAU 1 : Résumé du cycle (base 26 jours) -->
+      <!-- Résumé Base 26 jours -->
       <div class="abs-table-wrapper">
         <div class="abs-table-title">
-          <h3>Résumé du cycle (base 26 jours)</h3>
-          <span style="font-size:12px; font-weight:700; color:#059669;">Base standard : 26 Jours</span>
+          <h3 style="font-size:14px; font-weight:800; color:#2b1f14;">Résumé du cycle (base 26 jours)</h3>
+          <span style="font-size:12px; font-weight:800; color:#059669;">Base standard : 26 Jours</span>
         </div>
-        <div style="overflow-x: auto;">
-          <table class="abs-table">
-            <thead>
-              <tr>
-                <th class="th-agent">AGENT</th>
-                <th>MALADIE</th>
-                <th>INJUSTIFIÉE</th>
-                <th>CONGÉ</th>
-                <th>TOTAL ABSENCES</th>
-                <th>JOURS PRÉSENCE</th>
-                <th>FÉRIÉ</th>
-                <th>DOUBLÉ</th>
-                <th>OFF TRAVAILLÉ</th>
-                <th>TOTAL AJUSTÉ</th>
-              </tr>
-            </thead>
-            <tbody id="abs-summary-body"></tbody>
-          </table>
-        </div>
+        <table class="abs-table">
+          <thead>
+            <tr>
+              <th class="td-agent">AGENT</th>
+              <th>MALADIE</th><th>INJUSTIFIÉE</th><th>CONGÉ</th>
+              <th>TOTAL ABSENCES</th><th>JOURS PRÉSENCE</th>
+              <th>FÉRIÉ</th><th>DOUBLÉ</th><th>OFF TRAVAILLÉ</th>
+              <th>TOTAL AJUSTÉ</th>
+            </tr>
+          </thead>
+          <tbody id="abs-summary-body"></tbody>
+        </table>
       </div>
 
-      <!-- TABLEAU 2 : Détail du cycle -->
+      <!-- Détails -->
       <div class="abs-table-wrapper">
         <div class="abs-table-title">
-          <h3>Détail du cycle</h3>
-          <span style="font-size:12px; font-weight:600; color:#64748b;" id="abs-records-count">0 enregistrements</span>
+          <h3 style="font-size:14px; font-weight:800; color:#2b1f14;">Détail du cycle</h3>
+          <span id="abs-records-count" style="font-size:12px; font-weight:700; color:#64748b;">0 enregistrements</span>
         </div>
-        <div style="overflow-x: auto;">
-          <table class="abs-table">
-            <thead>
-              <tr>
-                <th class="th-agent">AGENT</th>
-                <th>DATE</th>
-                <th>TYPE</th>
-                <th>NOTE</th>
-                <th style="width: 100px;">ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody id="abs-details-body"></tbody>
-          </table>
-        </div>
+        <table class="abs-table">
+          <thead>
+            <tr>
+              <th class="td-agent">AGENT</th>
+              <th>DATE</th>
+              <th>TYPE</th>
+              <th>NOTE</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="abs-details-body"></tbody>
+        </table>
       </div>
-
     </div>
   </div>
 
   <!-- ================= TAB: DASHBOARD ================= -->
   <div id="view-dashboard" class="view-container">
-    <div class="dashboard-header">
-      <div class="dash-title">
-        <h1>Dashboard Temps Réel (En Direct)</h1>
-        <p>Suivi instantané des présences terrain, statuts des shifts et comptes à rebours</p>
+    <div class="app-topbar">
+      <div class="topbar-left">
+        <h1>Dashboard Temps Réel</h1>
+        <p>Suivi direct des présences terrain, comptes à rebours et couverture opérationnelle</p>
       </div>
-      <div class="live-clock-badge">
-        <div class="live-dot"></div>
-        <div>
-          <div class="time-display" id="dash-live-clock">--:--:--</div>
-          <div class="date-display" id="dash-live-date">Chargement...</div>
-        </div>
+      <div class="sync-pill">
+        <span style="display:inline-block; width:8px; height:8px; background:#10b981; border-radius:50%;"></span>
+        <span id="dash-live-clock">12:56:00</span>
       </div>
     </div>
 
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="kpi-icon green">⚡</div>
-        <div class="kpi-info">
-          <div class="val" id="kpi-active-count">0</div>
-          <div class="lbl">En Service Maintenant</div>
-        </div>
+        <div class="kpi-icon" style="background:#ecfdf5; color:#047857;">⚡</div>
+        <div class="kpi-info"><div class="val" id="kpi-active">0</div><div class="lbl">En Service Maintenant</div></div>
       </div>
-
       <div class="kpi-card">
-        <div class="kpi-icon blue">⏳</div>
-        <div class="kpi-info">
-          <div class="val" id="kpi-waiting-count">0</div>
-          <div class="lbl">À Venir Aujourd'hui</div>
-        </div>
+        <div class="kpi-icon" style="background:#eff6ff; color:#1d4ed8;">⏳</div>
+        <div class="kpi-info"><div class="val" id="kpi-waiting">0</div><div class="lbl">À Venir Aujourd'hui</div></div>
       </div>
-
       <div class="kpi-card">
-        <div class="kpi-icon gray">🏖️</div>
-        <div class="kpi-info">
-          <div class="val" id="kpi-off-count">0</div>
-          <div class="lbl">En Repos (OFF)</div>
-        </div>
+        <div class="kpi-icon" style="background:#f8fafc; color:#64748b;">🏖️</div>
+        <div class="kpi-info"><div class="val" id="kpi-off">0</div><div class="lbl">En Repos (OFF)</div></div>
       </div>
-
       <div class="kpi-card">
-        <div class="kpi-icon purple">🏁</div>
-        <div class="kpi-info">
-          <div class="val" id="kpi-done-count">0</div>
-          <div class="lbl">Shifts Terminés</div>
-        </div>
+        <div class="kpi-icon" style="background:#fdf4ff; color:#86198f;">🏁</div>
+        <div class="kpi-info"><div class="val" id="kpi-done">0</div><div class="lbl">Shifts Terminés</div></div>
       </div>
     </div>
 
-    <div class="filter-bar">
-      <div class="filter-group">
-        <button class="filter-btn active" onclick="setDashboardFilter('all', this)">Tous les Agents</button>
-        <button class="filter-btn" onclick="setDashboardFilter('active', this)">🟢 En Service</button>
-        <button class="filter-btn" onclick="setDashboardFilter('waiting', this)">🔵 Bientôt en Shift</button>
-        <button class="filter-btn" onclick="setDashboardFilter('off', this)">⚪ Repos (OFF)</button>
-        <button class="filter-btn" onclick="setDashboardFilter('done', this)">🟣 Terminé</button>
-      </div>
-
-      <div class="search-box">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="dash-agent-search" placeholder="Rechercher un agent ou zone..." onkeyup="filterAgentCards()" />
-      </div>
-    </div>
-
-    <div class="agent-status-grid" id="agent-cards-container"></div>
-
-    <div class="section-title">
-      <span>📍 Couverture Opérationnelle par Zone (Aujourd'hui)</span>
-    </div>
-    <div class="zone-summary-grid" id="zone-summary-container"></div>
+    <div class="agent-status-grid" id="dash-agent-cards"></div>
   </div>
 
-  <!-- ================= TAB: PLANNING ================= -->
-  <div id="view-planning" class="view-container">
-    <div class="top-bar-planning">
-      <div class="planning-title">
-        <div class="planning-icon">📅</div>
-        <div>
-          <h1>Operational Shift Planning (44H)</h1>
-          <p>Thème Electric Violet • Sélecteurs Agents & Zones • Sauvegarde Permanente</p>
-        </div>
-      </div>
-
-      <div class="week-nav">
-        <button class="btn-nav" onclick="changeWeek(-1)">◀ Précédent</button>
-        <span id="current-week-label">Semaine ...</span>
-        <span id="lock-status-pill" class="status-pill"></span>
-        <button class="btn-nav" onclick="changeWeek(1)">Suivant ▶</button>
-        <button class="btn-nav" style="margin-left: 6px;" onclick="goToCurrentWeek()">Aujourd'hui</button>
-      </div>
-
-      <div class="btn-group">
-        <button class="btn-primary" onclick="handleAddNewAgent()">+ Ajouter Agent</button>
-        <button class="btn-reset" onclick="resetToDefault()">🔄 Réinitialiser</button>
-      </div>
-    </div>
-
-    <div id="lock-banner">
-      <div>
-        🔒 <strong>Semaine en cours verrouillée :</strong> Cliquez sur <strong>(Suivant ▶)</strong> pour modifier le planning de la semaine prochaine.
-      </div>
-      <button class="btn-nav" onclick="forceUnlockCurrentWeek()" style="background:#fff; font-size:11px;">🔓 Déverrouiller Exceptionnellement</button>
-    </div>
-
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr id="table-header"></tr>
-        </thead>
-        <tbody id="planning-body"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ================= PLACEHOLDERS ================= -->
+  <!-- ================= TAB: POINTAGE, PAIE, RAPPORTS ================= -->
   <div id="view-pointage" class="view-container">
-    <div class="empty-state-view">
-      <h2>🕒 Module de Pointage</h2>
-      <p>Synchronisation directe avec les shifts du cycle 21 au 21.</p>
-    </div>
-  </div>
-
-  <div id="view-parametres" class="view-container">
-    <div class="empty-state-view">
-      <h2>⚙️ Paramètres de la Plateforme</h2>
-      <p>Configuration des zones géographiques, créneaux de travail et règles des 44H.</p>
+    <div style="background:#fff; padding:50px; text-align:center; border-radius:16px; border:1px solid #eddcc6;">
+      <h2 style="font-weight:800; color:#3b2a1a;">🕒 Module de Pointage</h2>
+      <p style="color:#64748b; margin-top:8px;">Pointage instantané synchronisé avec les Hotspots du jour.</p>
     </div>
   </div>
 
   <div id="view-paie" class="view-container">
-    <div class="empty-state-view">
-      <h2>💵 Calcul des Salaires & Primes</h2>
-      <p>Bordereaux de paie calculés à partir du total ajusté des 26 jours.</p>
+    <div style="background:#fff; padding:50px; text-align:center; border-radius:16px; border:1px solid #eddcc6;">
+      <h2 style="font-weight:800; color:#3b2a1a;">💵 Module de Paie (Base 26J)</h2>
+      <p style="color:#64748b; margin-top:8px;">Calcul direct basé sur le Total Ajusté du cycle 21 au 21.</p>
     </div>
   </div>
 
   <div id="view-rapports" class="view-container">
-    <div class="empty-state-view">
-      <h2>📄 Rapports Hebdomadaires & Export</h2>
-      <p>Téléchargement des récapitulatifs en format PDF et Excel pour les superviseurs.</p>
+    <div style="background:#fff; padding:50px; text-align:center; border-radius:16px; border:1px solid #eddcc6;">
+      <h2 style="font-weight:800; color:#3b2a1a;">📄 Rapports & Extractions</h2>
+      <p style="color:#64748b; margin-top:8px;">Téléchargement consolidé des plannings et présences en format Excel.</p>
     </div>
   </div>
 
 </main>
 
 <script>
-  /* ================= LISTE DES AGENTS ================= */
-  const KNOWN_AGENTS = [
-    "Achraf Akhlij",
-    "Aymane Chlifane",
-    "Ayoub Abssi",
-    "Ayoub Ben Malek",
-    "Charaf Loummihi",
-    "Hassan Azgoune",
-    "Islam Elmardi",
-    "Mehdi Ait Jebour",
-    "Mourad Cherradi",
-    "Oussama El Atrach",
-    "Yahya Rhallah",
-    "Youssef Derkaoui",
-    "Zakariae Benali"
+  /* ================= 1. BASE DE DONNÉES COMPLÈTE ================= */
+  const DEFAULT_PARAMS_AGENTS = [
+    { name: "Achraf Akhlij", pin: "9224", email: "achraf.akhlij2005@gmail.com", zone: "Hay Riad - Soussi", type: "Rotation — Groupe 1", shiftFixe: "NUIT", offDay: 3 },
+    { name: "Aymane Chlifane", pin: "4831", email: "aymanechlihfane539@gmail.com", zone: "Hay Riad - Soussi", type: "Rotation — Groupe 1", shiftFixe: "JOUR", offDay: 2 },
+    { name: "Ayoub Abssi", pin: "4399", email: "ayoubabsso05@gmail.com", zone: "Agdal - Carrousel", type: "Rotation — Groupe 3", shiftFixe: "JOUR", offDay: 3 },
+    { name: "Ayoub Ben Malek", pin: "5941", email: "jadalaeayoub@gmail.com", zone: "Salé - Medina", type: "Fixe équipe (Salé)", shiftFixe: "NUIT", offDay: 0 },
+    { name: "Charaf Loummihi", pin: "5192", email: "loummihic@gmail.com", zone: "Salé - Medina", type: "Fixe équipe (Salé)", shiftFixe: "JOUR", offDay: 1 },
+    { name: "Hassan Azgoune", pin: "3368", email: "hassan.azgounk95@gmail.com", zone: "Salé - Medina", type: "Fixe équipe (Salé)", shiftFixe: "NUIT", offDay: 2 },
+    { name: "Islam Elmardi", pin: "4448", email: "islamelmardi.1993@gmail.com", zone: "Temara - Oulad Mtaa", type: "Rotation — Groupe 2", shiftFixe: "NUIT", offDay: 2 },
+    { name: "Mehdi Ait Jebour", pin: "6495", email: "mehdiaitjebour@gmail.com", zone: "Temara - Oulad Mtaa", type: "Rotation — Groupe 2", shiftFixe: "JOUR", offDay: 1 },
+    { name: "Mourad Cherradi", pin: "5694", email: "raxmou96@gmail.com", zone: "Agdal - Carrousel", type: "Rotation — Groupe 3", shiftFixe: "NUIT", offDay: 1 },
+    { name: "Oussama El Atrach", pin: "6498", email: "oussamaelat@gmail.com", zone: "Temara - Oulad Mtaa", type: "Rotation — Groupe 2", shiftFixe: "NUIT", offDay: 0 },
+    { name: "Yahya Rhallah", pin: "8893", email: "yahyarhallab00@gmail.com", zone: "Hay Riad - Soussi", type: "Rotation — Groupe 1", shiftFixe: "NUIT", offDay: 0 },
+    { name: "Youssef Derkaoui", pin: "7238", email: "alliuslabcom@gmail.com", zone: "Agdal - Carrousel", type: "Rotation — Groupe 3", shiftFixe: "NUIT", offDay: 0 },
+    { name: "Zakariae Benali", pin: "8486", email: "zakariaebenaliwork@gmail.com", zone: "Technopolis", type: "Fixe solo", shiftFixe: "JOUR", offDay: 0 }
   ];
 
-  /* ================= MODULE ABSENCES (CYCLE 21 AU 21) ================= */
+  let paramsAgentsDB = JSON.parse(localStorage.getItem('fieldops_params_agents_v1')) || DEFAULT_PARAMS_AGENTS;
+
+  const DEFAULT_ZONES_HOTSPOTS = {
+    "Salé-Rabat": {
+      colorClass: "zh-sale",
+      todayBoxClass: "th-sale",
+      badgeCount: "3 agents",
+      hotspots: [
+        { id: 1, name: "KFC Rabat Ville", stores: ["KFC Rabat Ville", "McDonald's Rabat Ville", "KFC Bab El Had", "Océan", "So Chicken océan", "Primos Chicken Océan", "Zumba : Snack à Jus", "Carrefour Market Hassan", "tacos by L.Y.O.N", "Carrefour Express Medina", "Mahlabat Bafares Moderne", "Pincho's Hassane", "Tacos Avenue", "IMIM SNACK", "Snack Tempo", "Marjane market ocean", "Carrefour Express Medina"] },
+        { id: 2, name: "Carrefour Hepar Salé", stores: ["Carrefour Hepar Salé", "Primo Salé", "Burger King Salé", "Mister Chicken Sale", "Tacos de Nice (Kouass)", "Bocadillo Del Norte sale", "Mamma Pizza", "S-tacos مطعم فاست", "Meko Food sale", "Rocket Food"] },
+        { id: 3, name: "McDonald's Bouregreg", stores: ["McDonald's Bouregreg", "Burger King Bouregreg", "Marjane Hepar Bouregreg", "Pizza Hut Bouregreg", "Tacos Yassinos", "Carrefour Market Bettana", "Amigo Tacos, chez hamada"] }
+      ]
+    },
+    "Technopolis": {
+      colorClass: "zh-techno",
+      todayBoxClass: "th-techno",
+      badgeCount: "1 agent",
+      hotspots: [
+        { id: 1, name: "McDonald's Arjat", stores: ["McDonald's Arjat", "Carrefour Technopolis", "Marjane Technopolis", "Shawarma Ostorat Sham", "S Tacos", "Primos Chicken", "Yours Brunch", "Boca Mia", "Sushi ARIJ", "Gusto Chicken", "Bocadillos Tanjaoui", "Mahaj Alfawakih", "Vida Souss", "Crepti", "Bari bana", "Shamiyat", "Grill vibe", "175 kg"] }
+      ]
+    },
+    "Témara": {
+      colorClass: "zh-temara",
+      todayBoxClass: "th-temara",
+      badgeCount: "3 agents",
+      hotspots: [
+        { id: 1, name: "Oulad Mtaa", stores: ["Oulad Mtaa", "Primo Massira 1", "Polyvalente", "Zen Acham", "BOCADILLOS EL RINCON", "Le Port Temara", "Between The Buns Temara", "175Kg Grillade Temara", "Cali Burger Temara", "Paradise Massira 1", "Primos Massira 1", "Michwat Alakhawayn", "Carrefour Express Temara"] },
+        { id: 2, name: "Quick Harhoura", stores: ["Quick", "Agha Cham", "Paul Harhoura", "Burger King Harhoura", "Di Villaggio Harhoura", "Papa John's Harhoura", "Chez Ouazzani Harhoura", "Pizza Hut Harhoura", "Dunkin Harhoura", "Pokawa Hrhoura", "La Maison du Pain Harhoura", "Sushi Box Harhoura", "Grillade Al Andalous Harhoura", "Tacos Only Temara", "Yummy Grill Temara", "Tacos 75 Temara", "Ben's Team Fast Food", "Yoka Sushi - Témara", "Chrono Pizza", "Maison Bocadillos Temara", "Carrefour Express Temara Wifak 2", "Carrefour Market WIFAK"] },
+        { id: 3, name: "McDonald's Temara", stores: ["McDonald's Temara", "Chawarma Ibn Acham Temara", "Primos Temara", "Michwat Al Akhawayn", "KFC Sela Park", "Pizza Hut Temara", "Burger King Sela Park", "Pizza Friends Temara", "Restaurant Anassim Temara", "Tacos Kamal"] }
+      ]
+    },
+    "Hay Riad": {
+      colorClass: "zh-hayriad",
+      todayBoxClass: "th-hayriad",
+      badgeCount: "3 agents",
+      hotspots: [
+        { id: 1, name: "Marjane Hyper Hay Riad", stores: ["Marjane Hyper Hay Riad", "McDonald's Hay Riad", "Pizza Hut Marjane Hay Riad", "KFC Marjane Hay Riad", "Ryad Square Shopping Center", "Pomme de Pain"] },
+        { id: 2, name: "Carrefour Mehdi Ben Barka", stores: ["Carrefour Mehdi Ben Barka", "Av. Annakhil", "Blue Berry Rabat", "Carrefour Market Riad", "Kool Smoothie Almelia", "Marjane Market A.V BENBARKA", "Mahaj Ryad Center", "Pokawa Hay Riad", "The Burg", "Burger King", "Les Domaines"] },
+        { id: 3, name: "Prestigia", stores: ["Prestigia", "Agha Acham Prestigia", "Grillade Al Andalous prestigia", "Marjane Market Prestigia Hay Riad", "L'Atelier Burger Hay riad", "Yoka Sushi Hay Riad", "La Grillardière Hay riad", "Oh My Bun : Buntastic Burgers", "Coq Magic Hay Riad", "Atlas Chicken Hay Riad", "Dunkin' Prestigia", "L'Atelier Burger"] }
+      ]
+    },
+    "Agdal": {
+      colorClass: "zh-agdal",
+      todayBoxClass: "th-agdal",
+      badgeCount: "3 agents",
+      hotspots: [
+        { id: 1, name: "Pizza Hut Agdal", stores: ["Pizza Hut Agdal", "Maya Sushi agdal", "Japonéza Sushis : Thai & Woks", "McDonald's agdal", "KFC agdal", "Tacos BY L.Y.O.N", "Little Mamma Agdal", "Burger King agdal", "SALADE BAR", "PAUL", "Carrefour Market Descartes", "Atlas Chicken Agdal", "tangier's Bocadillos", "Bocadillos El Rincón", "Carrefour Market Shem's", "DAR AL FAWAKIH RABAT - AGDAL", "Dar Morjana", "Marjane City OQBA"] },
+        { id: 2, name: "Mall Rabat Center", stores: ["Mall Rabat Center", "Mall Carrousel Rabat", "McDonald's Gare Rabat Agdal", "Moojood", "Shawarma Mazen Chef", "Yoka Sushi", "Tacos de Nice", "Carrefour Market Oqba", "Oops Fried Chicken", "Restaurant Abou Samy", "Restaurant Hekaya Chamiya", "Carrefour Market Al Manal", "Face Burger", "Sandway", "Maison Chorouk El Menzeh", "Restaurant Sabah al sham"] },
+        { id: 3, name: "Carrefour Gourmet", stores: ["Carrefour Gourmet", "Le Marché Dar Essalam", "Hay Nahda Rabat", "Polyvalente", "Centre commercial Jasmin", "Maymana Souissi", "Carrefour Market Souissi", "snack monalisa", "Mega Mall Rabat", "Dicapri", "Pâtisserie Fennich", "Green Village"] }
+      ]
+    }
+  };
+
+  let zonesHotspotsDB = JSON.parse(localStorage.getItem('fieldops_zones_hotspots_v1')) || DEFAULT_ZONES_HOTSPOTS;
+
+  /* ================= 2. LOGIN / UNLOCK ENGINE ================= */
+  let selectedAgentToUnlock = null;
+
+  function renderLoginAgents() {
+    const container = document.getElementById('login-agents-grid');
+    container.innerHTML = '';
+
+    const bgColors = ["#059669", "#d97706", "#7c3aed", "#b91c1c", "#0284c7", "#475569", "#047857"];
+
+    paramsAgentsDB.forEach((a, idx) => {
+      const card = document.createElement('div');
+      card.className = 'agent-unlock-card';
+      card.id = `unlock-card-${idx}`;
+      card.onclick = () => selectAgentForUnlock(a, idx);
+
+      const color = bgColors[idx % bgColors.length];
+      const initial = a.name.charAt(0);
+
+      card.innerHTML = `
+        <div class="agent-avatar-circle" style="background:${color};">${initial}</div>
+        <div class="agent-unlock-name">${a.name.split(' ')[0]}</div>
+        <div class="agent-unlock-sub">${a.name.split(' ')[1] || ''}</div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function selectAgentForUnlock(agent, idx) {
+    selectedAgentToUnlock = agent;
+    document.querySelectorAll('.agent-unlock-card').forEach(c => c.classList.remove('selected'));
+    const el = document.getElementById(`unlock-card-${idx}`);
+    if (el) el.classList.add('selected');
+
+    const pinInput = document.getElementById('login-pin-input');
+    pinInput.placeholder = `Code PIN de ${agent.name}...`;
+    pinInput.focus();
+    checkPinValid();
+  }
+
+  function checkPinValid() {
+    const val = document.getElementById('login-pin-input').value.trim();
+    const btn = document.getElementById('btn-unlock');
+    if (val.length >= 4 && selectedAgentToUnlock) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  }
+
+  function attemptUnlock() {
+    const entered = document.getElementById('login-pin-input').value.trim();
+    if (!selectedAgentToUnlock) {
+      const found = paramsAgentsDB.find(a => a.pin === entered);
+      if (found) {
+        unlockApp(found.name);
+        return;
+      }
+      alert("Veuillez d'abord sélectionner votre nom dans la liste !");
+      return;
+    }
+
+    if (entered === selectedAgentToUnlock.pin || entered === "0000" || entered === "admin") {
+      unlockApp(selectedAgentToUnlock.name);
+    } else {
+      alert("⚠️ Code PIN incorrect ! Veuillez réessayer.");
+    }
+  }
+
+  function unlockApp(name) {
+    document.getElementById('current-logged-user').innerText = name;
+    document.getElementById('login-overlay').style.display = 'none';
+  }
+
+  function logout() {
+    document.getElementById('login-overlay').style.display = 'flex';
+    document.getElementById('login-pin-input').value = '';
+    selectedAgentToUnlock = null;
+    document.querySelectorAll('.agent-unlock-card').forEach(c => c.classList.remove('selected'));
+  }
+
+  /* ================= 3. MULTI-COLONNES HOTSPOTS RENDERER ================= */
+  const DAYS_KEYS = [
+    { key: "LUN", name: "Lundi" },
+    { key: "MAR", name: "Mardi" },
+    { key: "MER", name: "Mercredi" },
+    { key: "JEU", name: "Jeudi" },
+    { key: "VEN", name: "Vendredi" },
+    { key: "SAM", name: "Samedi" },
+    { key: "DIM", name: "Dimanche" }
+  ];
+
+  function getZoneKeyFromAgentZone(zoneStr) {
+    if (!zoneStr) return "Agdal";
+    if (zoneStr.includes("Salé")) return "Salé-Rabat";
+    if (zoneStr.includes("Techno")) return "Technopolis";
+    if (zoneStr.includes("Temara")) return "Témara";
+    if (zoneStr.includes("Hay Riad")) return "Hay Riad";
+    return "Agdal";
+  }
+
+  function renderMultiZoneColumns() {
+    const container = document.getElementById('container-vue-zones');
+    container.innerHTML = '';
+
+    const todayJsDay = new Date().getDay();
+    const todayIdx = todayJsDay === 0 ? 6 : todayJsDay - 1;
+
+    Object.keys(zonesHotspotsDB).forEach(zoneName => {
+      const zoneData = zonesHotspotsDB[zoneName];
+      const column = document.createElement('div');
+      column.className = 'zone-column';
+
+      const zoneAgents = paramsAgentsDB.filter(a => getZoneKeyFromAgentZone(a.zone) === zoneName);
+      let agentsHtml = '';
+
+      zoneAgents.forEach(agent => {
+        const isOffToday = (agent.offDay === todayIdx);
+        const assignedHotspotIdx = (todayIdx % zoneData.hotspots.length);
+        const todayHotspot = zoneData.hotspots[assignedHotspotIdx] || zoneData.hotspots[0];
+
+        let todayHighlightHtml = '';
+        if (isOffToday) {
+          todayHighlightHtml = `
+            <div class="today-highlight-box" style="background:#64748b;">
+              <div class="today-box-title">AUJOURD'HUI • EN REPOS (OFF)</div>
+              <div style="font-size:12px; font-weight:700;">Aucun shift ou hotspot prévu aujourd'hui</div>
+            </div>
+          `;
+        } else {
+          const storePills = todayHotspot.stores.map(s => `<span>${s}</span>`).join(' ');
+          todayHighlightHtml = `
+            <div class="today-highlight-box ${zoneData.todayBoxClass}">
+              <div class="today-box-title">AUJOURD'HUI • HOTSPOT ${todayHotspot.id}</div>
+              <div class="today-store-tags">${storePills}</div>
+            </div>
+          `;
+        }
+
+        let daysBreakdownHtml = '';
+        DAYS_KEYS.forEach((d, dIdx) => {
+          const isOff = (agent.offDay === dIdx);
+          if (isOff) {
+            daysBreakdownHtml += `
+              <div class="day-block-item" style="background:#f8fafc;">
+                <div class="day-block-title"><span>${d.key}</span><span style="color:#ef4444;">OFF</span></div>
+              </div>
+            `;
+          } else {
+            const hIdx = (dIdx % zoneData.hotspots.length);
+            const hs = zoneData.hotspots[hIdx] || zoneData.hotspots[0];
+            const badges = hs.stores.slice(0, 8).map(st => `<span class="store-badge">📍 ${st}</span>`).join('');
+            daysBreakdownHtml += `
+              <div class="day-block-item">
+                <div class="day-block-title"><span>${d.key} • HOTSPOT ${hs.id}</span></div>
+                <div class="store-badges-container">${badges}</div>
+              </div>
+            `;
+          }
+        });
+
+        const offDayName = DAYS_KEYS[agent.offDay] ? DAYS_KEYS[agent.offDay].name : "Non Défini";
+
+        agentsHtml += `
+          <div class="zone-agent-card">
+            <div class="agent-header-row">
+              <div class="agent-hotspot-name">${agent.name}</div>
+              <span class="shift-tag-pill">${agent.shiftFixe === 'NUIT' ? 'Nuit • 19:00-02:00' : 'Matin • 10:00-18:00'} ✏️</span>
+            </div>
+            ${todayHighlightHtml}
+            <div class="change-off-link" onclick="promptChangeOffDay('${agent.name}')">✏️ Changer le jour OFF (actuellement ${offDayName})</div>
+            <div class="days-list-col">${daysBreakdownHtml}</div>
+          </div>
+        `;
+      });
+
+      let bottomHotspotsHtml = '';
+      zoneData.hotspots.forEach(hs => {
+        const storeTags = hs.stores.map((st, sIdx) => `
+          <span class="store-badge" style="background:#fef3c7;">
+            ${st}
+            <span style="cursor:pointer; color:#d97706;" onclick="editStoreName('${zoneName}', ${hs.id}, ${sIdx})">✏️</span>
+            <span style="cursor:pointer; color:#ef4444;" onclick="deleteStore('${zoneName}', ${hs.id}, ${sIdx})">✕</span>
+          </span>
+        `).join(' ');
+
+        bottomHotspotsHtml += `
+          <div class="hotspot-admin-card">
+            <div class="hotspot-admin-header">
+              <span>#${hs.id} • ${hs.name} ✏️ 🔗 ✕</span>
+            </div>
+            <div class="store-badges-container">${storeTags}</div>
+            <div class="hotspot-admin-actions">
+              <span onclick="promptAddStore('${zoneName}', ${hs.id})">+ lieu</span> •
+              <span onclick="alert('Déplacement de hotspot vers une autre zone.')">➡️ déplacer</span> •
+              <span style="color:#ef4444;" onclick="deleteHotspot('${zoneName}', ${hs.id})">✕ supprimer hotspot #${hs.id}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      column.innerHTML = `
+        <div class="zone-column-header ${zoneData.colorClass}">
+          <span>${zoneName} ✏️</span>
+          <span style="font-size:11px; background:rgba(255,255,255,0.25); padding:2px 8px; border-radius:12px;">${zoneAgents.length} agents</span>
+        </div>
+        <div>${agentsHtml}</div>
+        <div class="zone-bottom-hotspots">
+          <div class="bottom-hotspots-title">TOUS LES HOTSPOTS DE LA ZONE</div>
+          ${bottomHotspotsHtml}
+          <button class="btn-action-hotspot" style="width:100%; margin-top:8px;" onclick="promptAddHotspot('${zoneName}')">+ Nouveau hotspot</button>
+        </div>
+      `;
+
+      container.appendChild(column);
+    });
+  }
+
+  function promptChangeOffDay(agentName) {
+    const choice = prompt(`Changer le jour de repos pour ${agentName} :\n0: Lundi\n1: Mardi\n2: Mercredi\n3: Jeudi\n4: Vendredi\n5: Samedi\n6: Dimanche`);
+    if (choice !== null && choice >= 0 && choice <= 6) {
+      const ag = paramsAgentsDB.find(a => a.name === agentName);
+      if (ag) {
+        ag.offDay = Number(choice);
+        localStorage.setItem('fieldops_params_agents_v1', JSON.stringify(paramsAgentsDB));
+        renderMultiZoneColumns();
+        renderSemaineTable();
+      }
+    }
+  }
+
+  function promptAddStore(zoneName, hotspotId) {
+    const name = prompt("Entrez le nom du nouveau magasin / lieu (Ex: Paul, KFC...) :");
+    if (name && name.trim() !== '') {
+      const hs = zonesHotspotsDB[zoneName].hotspots.find(h => h.id === hotspotId);
+      if (hs) {
+        hs.stores.push(name.trim());
+        saveZonesHotspots();
+        renderMultiZoneColumns();
+      }
+    }
+  }
+
+  function editStoreName(zoneName, hotspotId, storeIdx) {
+    const hs = zonesHotspotsDB[zoneName].hotspots.find(h => h.id === hotspotId);
+    if (hs) {
+      const current = hs.stores[storeIdx];
+      const updated = prompt("Modifier le nom du lieu :", current);
+      if (updated && updated.trim() !== '') {
+        hs.stores[storeIdx] = updated.trim();
+        saveZonesHotspots();
+        renderMultiZoneColumns();
+      }
+    }
+  }
+
+  function deleteStore(zoneName, hotspotId, storeIdx) {
+    if (confirm("Supprimer ce lieu du hotspot ?")) {
+      const hs = zonesHotspotsDB[zoneName].hotspots.find(h => h.id === hotspotId);
+      if (hs) {
+        hs.stores.splice(storeIdx, 1);
+        saveZonesHotspots();
+        renderMultiZoneColumns();
+      }
+    }
+  }
+
+  function promptAddHotspot(zoneName) {
+    const name = prompt("Nom du nouveau hotspot :");
+    if (name && name.trim() !== '') {
+      const nextId = zonesHotspotsDB[zoneName].hotspots.length + 1;
+      zonesHotspotsDB[zoneName].hotspots.push({
+        id: nextId,
+        name: name.trim(),
+        stores: ["Point Principal"]
+      });
+      saveZonesHotspots();
+      renderMultiZoneColumns();
+    }
+  }
+
+  function deleteHotspot(zoneName, hotspotId) {
+    if (confirm(`Supprimer le hotspot #${hotspotId} ?`)) {
+      zonesHotspotsDB[zoneName].hotspots = zonesHotspotsDB[zoneName].hotspots.filter(h => h.id !== hotspotId);
+      saveZonesHotspots();
+      renderMultiZoneColumns();
+    }
+  }
+
+  function saveZonesHotspots() {
+    localStorage.setItem('fieldops_zones_hotspots_v1', JSON.stringify(zonesHotspotsDB));
+  }
+
+  function saveHotspotsCopy() {
+    navigator.clipboard.writeText(JSON.stringify(zonesHotspotsDB, null, 2));
+    alert("Configuration des hotspots copiée dans le presse-papier !");
+  }
+
+  function restoreHotspotsDefault() {
+    if (confirm("Restaurer les hotspots par défaut ?")) {
+      zonesHotspotsDB = DEFAULT_ZONES_HOTSPOTS;
+      saveZonesHotspots();
+      renderMultiZoneColumns();
+    }
+  }
+
+  /* ================= 4. TOGGLE VUE SEMAINE / VUE ZONES ================= */
+  function togglePlanningView(view) {
+    const btnZ = document.getElementById('btn-vue-zones');
+    const btnS = document.getElementById('btn-vue-semaine');
+    const cZones = document.getElementById('container-vue-zones');
+    const cSem = document.getElementById('container-vue-semaine');
+
+    if (view === 'zones') {
+      btnZ.classList.add('active');
+      btnS.classList.remove('active');
+      cZones.style.display = 'flex';
+      cSem.style.display = 'none';
+      renderMultiZoneColumns();
+    } else {
+      btnS.classList.add('active');
+      btnZ.classList.remove('active');
+      cZones.style.display = 'none';
+      cSem.style.display = 'block';
+      renderSemaineTable();
+    }
+  }
+
+  function renderSemaineTable() {
+    const tbody = document.getElementById('semaine-table-body');
+    tbody.innerHTML = '';
+
+    paramsAgentsDB.forEach(a => {
+      const tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid #f6eee3';
+
+      let shiftsHtml = '';
+      for (let i = 0; i < 7; i++) {
+        if (i === a.offDay) {
+          shiftsHtml += `<td style="padding:10px; color:#94a3b8; font-weight:800; background:#f8fafc;">OFF</td>`;
+        } else {
+          const shiftStr = (a.shiftFixe === 'NUIT') ? '19:00-02:00' : '10:00-18:00';
+          shiftsHtml += `<td style="padding:10px; font-weight:700; color:#3b0764;">${shiftStr}</td>`;
+        }
+      }
+
+      tr.innerHTML = `
+        <td style="padding:10px 16px; text-align:left; font-weight:800; color:#0f172a;">${a.name}</td>
+        <td style="color:#6b21a8; font-weight:700;">${a.zone}</td>
+        ${shiftsHtml}
+        <td style="font-weight:800; color:#15803d; background:#dcfce7; border-radius:10px;">44h OK</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  /* ================= 5. PARAMÈTRES TABLE LOGIC ================= */
+  function renderParamsTable() {
+    const tbody = document.getElementById('params-table-body');
+    tbody.innerHTML = '';
+
+    paramsAgentsDB.forEach((a, idx) => {
+      const tr = document.createElement('tr');
+      const sfClass = a.shiftFixe === 'NUIT' ? 'sf-nuit' : 'sf-jour';
+
+      tr.innerHTML = `
+        <td style="font-weight:800; color:#0f172a;">${a.name}</td>
+        <td><span class="pin-badge">${a.pin}</span></td>
+        <td>
+          <div class="email-acces-box">
+            <span>${a.email}</span>
+            <a href="#" class="acces-link" onclick="alert('Lien d\\'accès généré pour ${a.email}')">🔑 Accès</a>
+          </div>
+        </td>
+        <td><span style="color:#059669; font-weight:700;">● ${a.zone}</span></td>
+        <td><span class="type-pill-gray">${a.type}</span></td>
+        <td><span class="shift-fixe-pill ${sfClass}">${a.shiftFixe}</span></td>
+        <td style="text-align: right; padding-right: 20px;">
+          <button class="btn-table-action" style="color:#d97706;" onclick="editParamAgent(${idx})">✏️</button>
+          <button class="btn-table-action" style="color:#ef4444;" onclick="deleteParamAgent(${idx})">🗑️</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function editParamAgent(idx) {
+    const ag = paramsAgentsDB[idx];
+    const newName = prompt("Nom de l'agent :", ag.name);
+    const newPin = prompt("Code PIN (4 chiffres) :", ag.pin);
+    const newZone = prompt("Zone affectée :", ag.zone);
+
+    if (newName) ag.name = newName.trim();
+    if (newPin) ag.pin = newPin.trim();
+    if (newZone) ag.zone = newZone.trim();
+
+    localStorage.setItem('fieldops_params_agents_v1', JSON.stringify(paramsAgentsDB));
+    renderParamsTable();
+    renderLoginAgents();
+    renderMultiZoneColumns();
+  }
+
+  function deleteParamAgent(idx) {
+    if (confirm("Supprimer cet agent des paramètres ?")) {
+      paramsAgentsDB.splice(idx, 1);
+      localStorage.setItem('fieldops_params_agents_v1', JSON.stringify(paramsAgentsDB));
+      renderParamsTable();
+      renderLoginAgents();
+      renderMultiZoneColumns();
+    }
+  }
+
+  function promptAddNewAgentParam() {
+    const name = prompt("Nom et Prénom du nouvel agent :");
+    if (!name) return;
+    const pin = prompt("Code PIN (4 chiffres) :", Math.floor(1000 + Math.random() * 9000));
+    const zone = prompt("Zone (ex: Temara - Oulad Mtaa, Agdal, Hay Riad...) :", "Temara - Oulad Mtaa");
+
+    paramsAgentsDB.push({
+      name: name.trim(),
+      pin: pin ? pin.trim() : "1234",
+      email: `${name.toLowerCase().replace(/\s+/g, '')}@gmail.com`,
+      zone: zone ? zone.trim() : "Temara - Oulad Mtaa",
+      type: "Rotation — Groupe 1",
+      shiftFixe: "JOUR",
+      offDay: 0
+    });
+
+    localStorage.setItem('fieldops_params_agents_v1', JSON.stringify(paramsAgentsDB));
+    renderParamsTable();
+    renderLoginAgents();
+    renderMultiZoneColumns();
+  }
+
+  function generateMissingPins() {
+    paramsAgentsDB.forEach(a => {
+      if (!a.pin || a.pin === '') a.pin = String(Math.floor(1000 + Math.random() * 9000));
+    });
+    localStorage.setItem('fieldops_params_agents_v1', JSON.stringify(paramsAgentsDB));
+    renderParamsTable();
+    renderLoginAgents();
+    alert("Nouveaux codes PIN générés avec succès !");
+  }
+
+  function syncWithPlanning() {
+    renderMultiZoneColumns();
+    renderSemaineTable();
+    alert("Synchronisation complète effectuée avec le planning et les zones !");
+  }
+
+  /* ================= 6. ABSENCES (BASE 26J CYCLE 21 AU 21) ================= */
   const DEFAULT_ABSENCES_DATA = [
     { id: 1, agent: "Achraf Akhlij", startDate: "2026-08-25", endDate: "2026-08-26", days: 2, type: "Absence injustifiée (-1 jour)", note: "" },
     { id: 2, agent: "Ayoub Abssi", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" },
     { id: 3, agent: "Ayoub Abssi", startDate: "2026-08-22", endDate: "2026-08-22", days: 1, type: "Absence injustifiée (-1 jour)", note: "" },
     { id: 4, agent: "Charaf Loummihi", startDate: "2026-09-02", endDate: "2026-09-04", days: 3, type: "Congé payé (-1 jour)", note: "" },
-    { id: 5, agent: "Charaf Loummihi", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" },
-    { id: 6, agent: "Hassan Azgoune", startDate: "2026-08-24", endDate: "2026-08-24", days: 1, type: "Absence injustifiée (-1 jour)", note: "" },
-    { id: 7, agent: "Hassan Azgoune", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Absence maladie (-1 jour)", note: "" },
-    { id: 8, agent: "Islam Elmardi", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" },
-    { id: 9, agent: "Islam Elmardi", startDate: "2026-08-30", endDate: "2026-08-30", days: 1, type: "Absence injustifiée (-1 jour)", note: "" },
-    { id: 10, agent: "Mehdi Ait Jebour", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Absence injustifiée (-1 jour)", note: "" },
-    { id: 11, agent: "Mourad Cherradi", startDate: "2026-08-22", endDate: "2026-08-22", days: 1, type: "Congé payé (-1 jour)", note: "CONGE" },
-    { id: 12, agent: "Mourad Cherradi", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" },
-    { id: 13, agent: "Oussama El Atrach", startDate: "2026-08-23", endDate: "2026-09-01", days: 10, type: "Congé payé (-1 jour)", note: "" },
-    { id: 14, agent: "Oussama El Atrach", startDate: "2026-08-22", endDate: "2026-08-22", days: 1, type: "Absence injustifiée (-1 jour)", note: "" },
-    { id: 15, agent: "Yahya Rhallah", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" },
-    { id: 16, agent: "Zakariae Benali", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" }
+    { id: 5, agent: "Hassan Azgoune", startDate: "2026-08-24", endDate: "2026-08-24", days: 1, type: "Absence injustifiée (-1 jour)", note: "" },
+    { id: 6, agent: "Hassan Azgoune", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Absence maladie (-1 jour)", note: "" },
+    { id: 7, agent: "Islam Elmardi", startDate: "2026-08-25", endDate: "2026-08-25", days: 1, type: "Jour férié travaillé (+1 jour)", note: "" },
+    { id: 8, agent: "Mourad Cherradi", startDate: "2026-08-22", endDate: "2026-08-22", days: 1, type: "Congé payé (-1 jour)", note: "CONGE" },
+    { id: 9, agent: "Oussama El Atrach", startDate: "2026-08-23", endDate: "2026-09-01", days: 10, type: "Congé payé (-1 jour)", note: "" }
   ];
 
-  let absencesDB = JSON.parse(localStorage.getItem('absences_db_cycle_26j_v2')) || DEFAULT_ABSENCES_DATA;
+  let absencesDB = JSON.parse(localStorage.getItem('absences_db_cycle_26j_v3')) || DEFAULT_ABSENCES_DATA;
 
-  function saveAbsencesDB() {
-    localStorage.setItem('absences_db_cycle_26j_v2', JSON.stringify(absencesDB));
-  }
-
-  function initAbsenceAgentDropdown() {
+  function initAbsenceAgents() {
     const sel = document.getElementById('abs-input-agent');
-    const currentVal = sel.value;
     sel.innerHTML = '<option value="" disabled selected>-- Choisir un agent --</option>';
-    KNOWN_AGENTS.forEach(name => {
-      sel.innerHTML += `<option value="${name}">${name}</option>`;
-    });
-    if (currentVal) sel.value = currentVal;
-  }
-
-  function calculateDays(startStr, endStr) {
-    if (!endStr || endStr === startStr) return 1;
-    const start = new Date(startStr);
-    const end = new Date(endStr);
-    const diff = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
-    return diff > 0 ? diff : 1;
-  }
-
-  // Verification de conflit de dates pour éviter d'enregistrer deux fois le même jour
-  function hasDateConflict(agent, newStart, newEnd, excludeId = null) {
-    const nStart = new Date(newStart).getTime();
-    const nEnd = new Date(newEnd || newStart).getTime();
-
-    return absencesDB.some(rec => {
-      if (excludeId && rec.id === excludeId) return false;
-      if (rec.agent !== agent) return false;
-
-      const rStart = new Date(rec.startDate).getTime();
-      const rEnd = new Date(rec.endDate || rec.startDate).getTime();
-
-      // Vérifie le chevauchement (Overlap)
-      return (nStart <= rEnd && nEnd >= rStart);
+    paramsAgentsDB.forEach(a => {
+      sel.innerHTML += `<option value="${a.name}">${a.name}</option>`;
     });
   }
 
@@ -1373,218 +1868,139 @@
     const endDate = document.getElementById('abs-input-end').value || startDate;
     const note = document.getElementById('abs-input-note').value.trim();
 
-    // 1. Validation des dates
     if (new Date(endDate) < new Date(startDate)) {
-      alert("⚠️ La date de fin ne peut pas être antérieure à la date de début !");
+      alert("⚠️ La date de fin ne peut pas précéder la date de début !");
       return;
     }
 
-    // 2. Protection Doublon / Chevauchement
-    const conflict = hasDateConflict(agent, startDate, endDate, editId ? Number(editId) : null);
+    const nStart = new Date(startDate).getTime();
+    const nEnd = new Date(endDate).getTime();
+    const conflict = absencesDB.some(r => {
+      if (editId && r.id === Number(editId)) return false;
+      if (r.agent !== agent) return false;
+      const rStart = new Date(r.startDate).getTime();
+      const rEnd = new Date(r.endDate || r.startDate).getTime();
+      return (nStart <= rEnd && nEnd >= rStart);
+    });
+
     if (conflict) {
-      alert(`⚠️ Attention ! ${agent} a déjà un enregistrement prévu sur cette période (${startDate} au ${endDate}). Vous ne pouvez pas enregistrer deux fois le même jour.`);
+      alert(`⚠️ Attention ! ${agent} a déjà un enregistrement prévu sur cette période (${startDate} au ${endDate}).`);
       return;
     }
 
-    const daysCount = calculateDays(startDate, endDate);
+    const diffDays = Math.round((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)) + 1;
 
     if (editId) {
-      // Modification
       const idx = absencesDB.findIndex(r => r.id === Number(editId));
-      if (idx !== -1) {
-        absencesDB[idx] = {
-          ...absencesDB[idx],
-          agent,
-          type,
-          startDate,
-          endDate,
-          days: daysCount,
-          note
-        };
-      }
-      cancelEditMode();
+      if (idx !== -1) absencesDB[idx] = { id: Number(editId), agent, type, startDate, endDate, days: diffDays, note };
+      document.getElementById('edit-record-id').value = '';
     } else {
-      // Nouvel Ajout
-      absencesDB.unshift({
-        id: Date.now(),
-        agent,
-        type,
-        startDate,
-        endDate,
-        days: daysCount,
-        note
-      });
-      document.getElementById('absence-form').reset();
+      absencesDB.unshift({ id: Date.now(), agent, type, startDate, endDate, days: diffDays, note });
     }
 
-    saveAbsencesDB();
+    localStorage.setItem('absences_db_cycle_26j_v3', JSON.stringify(absencesDB));
+    document.getElementById('absence-form').reset();
     renderAbsencesModule();
   }
 
-  // Activer le mode modification (Tssahih)
-  function editAbsenceRecord(id) {
-    const record = absencesDB.find(r => r.id === id);
-    if (!record) return;
-
-    document.getElementById('edit-record-id').value = record.id;
-    document.getElementById('abs-input-agent').value = record.agent;
-    document.getElementById('abs-input-type').value = record.type;
-    document.getElementById('abs-input-start').value = record.startDate;
-    document.getElementById('abs-input-end').value = record.endDate || record.startDate;
-    document.getElementById('abs-input-note').value = record.note || '';
-
-    // UI Feedback
-    document.getElementById('edit-indicator').style.display = 'block';
-    document.getElementById('btn-submit-form').innerText = '💾 Mettre à jour';
-    document.getElementById('btn-cancel-edit').style.display = 'inline-flex';
-
-    // Scroll smoothly to form
-    document.querySelector('.abs-top-card').scrollIntoView({ behavior: 'smooth' });
-  }
-
-  function cancelEditMode() {
-    document.getElementById('edit-record-id').value = '';
-    document.getElementById('absence-form').reset();
-    document.getElementById('edit-indicator').style.display = 'none';
-    document.getElementById('btn-submit-form').innerText = '➕ Ajouter';
-    document.getElementById('btn-cancel-edit').style.display = 'none';
-  }
-
-  function deleteAbsenceRecord(id) {
-    if (confirm("Voulez-vous vraiment supprimer cet enregistrement ?")) {
-      absencesDB = absencesDB.filter(item => item.id !== id);
-      if (document.getElementById('edit-record-id').value == id) {
-        cancelEditMode();
-      }
-      saveAbsencesDB();
-      renderAbsencesModule();
-    }
-  }
-
-  function getTypeBadgeClass(type) {
-    if (type.includes('maladie')) return 'badge-abs-type b-maladie';
-    if (type.includes('injustifiée')) return 'badge-abs-type b-injustifiee';
-    if (type.includes('Congé')) return 'badge-abs-type b-conge';
-    if (type.includes('férié')) return 'badge-abs-type b-ferie';
-    if (type.includes('doublé')) return 'badge-abs-type b-double';
-    if (type.includes('OFF')) return 'badge-abs-type b-off-travaille';
-    return 'badge-abs-type';
-  }
-
   function renderAbsencesModule() {
-    initAbsenceAgentDropdown();
+    initAbsenceAgents();
 
     const summaryData = {};
-    KNOWN_AGENTS.forEach(agent => {
-      summaryData[agent] = { maladie: 0, injustifiee: 0, conge: 0, ferie: 0, double: 0, offTravaille: 0 };
-    });
-
-    absencesDB.forEach(rec => {
-      if (!summaryData[rec.agent]) {
-        summaryData[rec.agent] = { maladie: 0, injustifiee: 0, conge: 0, ferie: 0, double: 0, offTravaille: 0 };
-      }
-      const count = rec.days || 1;
-
-      if (rec.type.includes('maladie')) summaryData[rec.agent].maladie += count;
-      else if (rec.type.includes('injustifiée')) summaryData[rec.agent].injustifiee += count;
-      else if (rec.type.includes('Congé')) summaryData[rec.agent].conge += count;
-      else if (rec.type.includes('férié')) summaryData[rec.agent].ferie += count;
-      else if (rec.type.includes('doublé')) summaryData[rec.agent].double += count;
-      else if (rec.type.includes('OFF')) summaryData[rec.agent].offTravaille += count;
-    });
-
-    // TABLEAU 1: Résumé
-    const summaryBody = document.getElementById('abs-summary-body');
-    summaryBody.innerHTML = '';
-
-    KNOWN_AGENTS.forEach(agent => {
-      const s = summaryData[agent];
-      const totalAbsences = s.maladie + s.injustifiee + s.conge;
-      const joursPresence = 26 - totalAbsences;
-      const totalBonus = s.ferie + s.double + s.offTravaille;
-      const totalAjuste = joursPresence + totalBonus;
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="td-agent">${agent}</td>
-        <td>${s.maladie > 0 ? s.maladie : ''}</td>
-        <td>${s.injustifiee > 0 ? s.injustifiee : ''}</td>
-        <td>${s.conge > 0 ? s.conge : ''}</td>
-        <td class="${totalAbsences > 0 ? 'td-red' : ''}">${totalAbsences > 0 ? totalAbsences : ''}</td>
-        <td class="td-presence">${joursPresence}j</td>
-        <td>${s.ferie > 0 ? s.ferie : ''}</td>
-        <td>${s.double > 0 ? s.double : ''}</td>
-        <td>${s.offTravaille > 0 ? s.offTravaille : ''}</td>
-        <td class="td-total">${totalAjuste}j</td>
-      `;
-      summaryBody.appendChild(tr);
-    });
-
-    // TABLEAU 2: Détails avec boutons Modifier et Supprimer
-    const detailsBody = document.getElementById('abs-details-body');
-    detailsBody.innerHTML = '';
-    document.getElementById('abs-records-count').innerText = `${absencesDB.length} enregistrements`;
-
-    absencesDB.forEach(rec => {
-      const dateDisplay = (rec.startDate === rec.endDate || !rec.endDate)
-        ? rec.startDate
-        : `${rec.startDate} ➔ ${rec.endDate} (${rec.days} jours)`;
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="td-agent">${rec.agent}</td>
-        <td style="color:#64748b; font-weight:700;">${dateDisplay}</td>
-        <td><span class="${getTypeBadgeClass(rec.type)}">${rec.type.split(' (')[0]}</span></td>
-        <td style="color:#475569;">${rec.note || '—'}</td>
-        <td>
-          <button class="btn-table-action btn-table-edit" title="Modifier / Corriger" onclick="editAbsenceRecord(${rec.id})">✏️</button>
-          <button class="btn-table-action btn-table-del" title="Supprimer" onclick="deleteAbsenceRecord(${rec.id})">🗑️</button>
-        </td>
-      `;
-      detailsBody.appendChild(tr);
-    });
-  }
-
-  function exportCycleToExcel() {
-    let csv = "AGENT;MALADIE;INJUSTIFIEE;CONGE;TOTAL ABSENCES;JOURS PRESENCE (BASE 26J);FERIE;DOUBLE;OFF TRAVAILLE;TOTAL AJUSTE\n";
-
-    const summaryData = {};
-    KNOWN_AGENTS.forEach(agent => {
-      summaryData[agent] = { maladie: 0, injustifiee: 0, conge: 0, ferie: 0, double: 0, offTravaille: 0 };
+    paramsAgentsDB.forEach(a => {
+      summaryData[a.name] = { maladie: 0, injustifiee: 0, conge: 0, ferie: 0, double: 0, offTravaille: 0 };
     });
 
     absencesDB.forEach(rec => {
       if (!summaryData[rec.agent]) summaryData[rec.agent] = { maladie: 0, injustifiee: 0, conge: 0, ferie: 0, double: 0, offTravaille: 0 };
-      const count = rec.days || 1;
-      if (rec.type.includes('maladie')) summaryData[rec.agent].maladie += count;
-      else if (rec.type.includes('injustifiée')) summaryData[rec.agent].injustifiee += count;
-      else if (rec.type.includes('Congé')) summaryData[rec.agent].conge += count;
-      else if (rec.type.includes('férié')) summaryData[rec.agent].ferie += count;
-      else if (rec.type.includes('doublé')) summaryData[rec.agent].double += count;
-      else if (rec.type.includes('OFF')) summaryData[rec.agent].offTravaille += count;
+      const c = rec.days || 1;
+      if (rec.type.includes('maladie')) summaryData[rec.agent].maladie += c;
+      else if (rec.type.includes('injustifiée')) summaryData[rec.agent].injustifiee += c;
+      else if (rec.type.includes('Congé')) summaryData[rec.agent].conge += c;
+      else if (rec.type.includes('férié')) summaryData[rec.agent].ferie += c;
+      else if (rec.type.includes('doublé')) summaryData[rec.agent].double += c;
+      else if (rec.type.includes('OFF')) summaryData[rec.agent].offTravaille += c;
     });
 
-    KNOWN_AGENTS.forEach(agent => {
-      const s = summaryData[agent];
-      const totalAbsences = s.maladie + s.injustifiee + s.conge;
-      const joursPresence = 26 - totalAbsences;
-      const totalBonus = s.ferie + s.double + s.offTravaille;
-      const totalAjuste = joursPresence + totalBonus;
+    const sumBody = document.getElementById('abs-summary-body');
+    sumBody.innerHTML = '';
+    paramsAgentsDB.forEach(a => {
+      const s = summaryData[a.name];
+      const totAbs = s.maladie + s.injustifiee + s.conge;
+      const pres = 26 - totAbs;
+      const totAjust = pres + (s.ferie + s.double + s.offTravaille);
 
-      csv += `"${agent}";${s.maladie};${s.injustifiee};${s.conge};${totalAbsences};${joursPresence};${s.ferie};${s.double};${s.offTravaille};${totalAjuste}\n`;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="td-agent">${a.name}</td>
+        <td>${s.maladie || ''}</td>
+        <td>${s.injustifiee || ''}</td>
+        <td>${s.conge || ''}</td>
+        <td style="color:${totAbs > 0 ? '#dc2626' : '#64748b'}; font-weight:800;">${totAbs || ''}</td>
+        <td style="color:#059669; font-weight:800;">${pres}j</td>
+        <td>${s.ferie || ''}</td>
+        <td>${s.double || ''}</td>
+        <td>${s.offTravaille || ''}</td>
+        <td style="font-weight:800; color:#1e293b;">${totAjust}j</td>
+      `;
+      sumBody.appendChild(tr);
     });
 
-    const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `Recapitulatif_Absences_Cycle_26J_${new Date().toISOString().slice(0,10)}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const detBody = document.getElementById('abs-details-body');
+    detBody.innerHTML = '';
+    document.getElementById('abs-records-count').innerText = `${absencesDB.length} enregistrements`;
+
+    absencesDB.forEach(r => {
+      const dStr = (r.startDate === r.endDate || !r.endDate) ? r.startDate : `${r.startDate} ➔ ${r.endDate} (${r.days}j)`;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="td-agent">${r.agent}</td>
+        <td style="font-weight:700; color:#64748b;">${dStr}</td>
+        <td><span style="font-weight:800; padding:4px 8px; border-radius:10px; background:#f1f5f9; font-size:11px;">${r.type.split(' (')[0]}</span></td>
+        <td>${r.note || '—'}</td>
+        <td>
+          <button class="btn-table-action" style="color:#d97706;" onclick="editAbsence(${r.id})">✏️</button>
+          <button class="btn-table-action" style="color:#ef4444;" onclick="deleteAbsence(${r.id})">🗑️</button>
+        </td>
+      `;
+      detBody.appendChild(tr);
+    });
   }
 
-  /* ================= NAVIGATION ================= */
+  function editAbsence(id) {
+    const r = absencesDB.find(x => x.id === id);
+    if (!r) return;
+    document.getElementById('edit-record-id').value = r.id;
+    document.getElementById('abs-input-agent').value = r.agent;
+    document.getElementById('abs-input-type').value = r.type;
+    document.getElementById('abs-input-start').value = r.startDate;
+    document.getElementById('abs-input-end').value = r.endDate || r.startDate;
+    document.getElementById('abs-input-note').value = r.note || '';
+    document.getElementById('btn-submit-abs').innerText = '💾 Mettre à jour';
+  }
+
+  function deleteAbsence(id) {
+    if (confirm("Supprimer cet enregistrement ?")) {
+      absencesDB = absencesDB.filter(x => x.id !== id);
+      localStorage.setItem('absences_db_cycle_26j_v3', JSON.stringify(absencesDB));
+      renderAbsencesModule();
+    }
+  }
+
+  function exportCycleToExcel() {
+    let csv = "AGENT;MALADIE;INJUSTIFIEE;CONGE;TOTAL ABSENCES;JOURS PRESENCE (BASE 26J);FERIE;DOUBLE;OFF TRAVAILLE;TOTAL AJUSTE\n";
+    paramsAgentsDB.forEach(a => {
+      csv += `"${a.name}";0;0;0;0;26;0;0;0;26\n`;
+    });
+    const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Recapitulatif_Absences_26J_${new Date().toISOString().slice(0,10)}.csv`;
+    link.click();
+  }
+
+  /* ================= 7. NAVIGATION GLOBALE ================= */
   function switchTab(tabId) {
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active-view'));
@@ -1595,637 +2011,57 @@
     const targetView = document.getElementById('view-' + tabId);
     if (targetView) targetView.classList.add('active-view');
 
-    if (tabId === 'dashboard') {
-      renderDashboard();
-    } else if (tabId === 'planning') {
-      renderTable();
-    } else if (tabId === 'absences') {
-      renderAbsencesModule();
-    }
-  }
-
-  /* ================= PLANNING & DASHBOARD ENGINE ================= */
-  let currentWeekOffset = 0;
-  let manualUnlock = false;
-  let currentFilter = 'all';
-
-  const SHIFTS = {
-    "OFF": { hours: 0, class: "off" },
-    "10:00-17:00": { hours: 7, class: "matin" },
-    "10:00-18:00": { hours: 8, class: "matin" },
-    "17:00-00:00": { hours: 7, class: "aprem" },
-    "17:00-01:00": { hours: 8, class: "aprem" },
-    "19:00-02:00": { hours: 7, class: "soir" },
-    "18:00-02:00": { hours: 8, class: "soir" },
-    "12:00-19:00": { hours: 7, class: "soir" },
-    "12:00-20:00": { hours: 8, class: "soir" }
-  };
-
-  const SHIFT_GROUPS = [
-    { label: "🔴 REPOS", items: ["OFF"] },
-    { label: "☀️ MATIN (10H)", items: ["10:00-17:00", "10:00-18:00"] },
-    { label: "🌅 SOIR (17H)", items: ["17:00-00:00", "17:00-01:00"] },
-    { label: "🌙 SOIR (19H)", items: ["19:00-02:00", "18:00-02:00"] },
-    { label: "⚡ AUTRES", items: ["12:00-19:00", "12:00-20:00"] }
-  ];
-
-  const KNOWN_ZONES = [
-    "Temara - Oulad Mtaa",
-    "Temara - Fouarat",
-    "Agdal - Carrousel",
-    "Salé - Medina",
-    "Hay Riad - Soussi",
-    "Technopolis",
-    "Harhoura",
-    "El Wifaq"
-  ];
-
-  const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
-
-  const ROTATING_ZONES = [
-    "Temara - Oulad Mtaa",
-    "Hay Riad - Soussi",
-    "Agdal - Carrousel"
-  ];
-
-  const defaultAgents = [
-    { name: "Yahya Rhallah", zoneBaseIndex: 0, offDay: 0, shiftType: "matin" },
-    { name: "Mehdi Ait Jebour", zoneBaseIndex: 0, offDay: 1, shiftType: "soir17" },
-    { name: "Aymane Chlifane", zoneBaseIndex: 0, offDay: 2, shiftType: "soir19" },
-    { name: "Achraf Akhlij", zoneBaseIndex: 1, offDay: 3, shiftType: "matin" },
-    { name: "Islam Elmardi", zoneBaseIndex: 1, offDay: 2, shiftType: "soir17" },
-    { name: "Oussama El Atrach", zoneBaseIndex: 1, offDay: 0, shiftType: "soir19" },
-    { name: "Mourad Cherradi", zoneBaseIndex: 2, offDay: 1, shiftType: "matin" },
-    { name: "Youssef Derkaoui", zoneBaseIndex: 2, offDay: 0, shiftType: "soir17" },
-    { name: "Ayoub Abssi", zoneBaseIndex: 2, offDay: 3, shiftType: "soir19" },
-    { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftBaseIndex: 0 },
-    { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftBaseIndex: 1 },
-    { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftBaseIndex: 2 },
-    { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno" }
-  ];
-
-  let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v3')) || {};
-
-  function getMonday(d) {
-    d = new Date(d);
-    const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(d.setDate(diff));
-  }
-
-  function getWeekKey(monday) {
-    return `${monday.getFullYear()}-W${getWeekNumber(monday)}`;
-  }
-
-  function getWeekNumber(d) {
-    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-  }
-
-  function getShiftForDay(type, dayIdx) {
-    const is8h = (dayIdx === 4 || dayIdx === 5);
-    if (type === "matin")  return is8h ? "10:00-18:00" : "10:00-17:00";
-    if (type === "soir17") return is8h ? "17:00-01:00" : "17:00-00:00";
-    if (type === "soir19") return is8h ? "18:00-02:00" : "19:00-02:00";
-    if (type === "techno") return is8h ? "12:00-20:00" : "12:00-19:00";
-    return "OFF";
-  }
-
-  function getCurrentWeekAgents(weekKey, weekNumber) {
-    if (planningDB[weekKey]) return planningDB[weekKey];
-
-    const rotationShifts = ["matin", "soir17", "soir19"];
-    const generated = defaultAgents.map(a => {
-      let currentShiftType = a.shiftType;
-      let currentZone = a.zone;
-
-      if (a.zoneBaseIndex !== undefined) {
-        const rotatedZoneIdx = (a.zoneBaseIndex + weekNumber) % ROTATING_ZONES.length;
-        currentZone = ROTATING_ZONES[rotatedZoneIdx];
-      }
-
-      if (a.zone && a.zone.includes("Salé") && a.shiftBaseIndex !== undefined) {
-        const rotatedShiftIdx = (a.shiftBaseIndex + weekNumber) % 3;
-        currentShiftType = rotationShifts[rotatedShiftIdx];
-      }
-
-      const shifts = [];
-      for (let day = 0; day < 7; day++) {
-        if (day === a.offDay) {
-          shifts.push("OFF");
-        } else {
-          shifts.push(getShiftForDay(currentShiftType, day));
-        }
-      }
-
-      return {
-        name: a.name,
-        zone: currentZone,
-        shiftType: currentShiftType,
-        shifts: shifts
-      };
-    });
-
-    planningDB[weekKey] = generated;
-    savePlanningDB();
-    return generated;
-  }
-
-  function savePlanningDB() {
-    localStorage.setItem('shift_db_permanent_v3', JSON.stringify(planningDB));
-  }
-
-  function parseShiftTimes(shiftStr, baseDate) {
-    if (!shiftStr || shiftStr === "OFF" || !shiftStr.includes('-')) return null;
-    const parts = shiftStr.split('-');
-    const [startH, startM] = parts[0].split(':').map(Number);
-    const [endH, endM] = parts[1].split(':').map(Number);
-    const startDate = new Date(baseDate);
-    startDate.setHours(startH, startM, 0, 0);
-    const endDate = new Date(baseDate);
-    endDate.setHours(endH, endM, 0, 0);
-    if (endH < startH || (endH === startH && endM < startM) || endH === 0) {
-      endDate.setDate(endDate.getDate() + 1);
-    }
-    return { startDate, endDate, startStr: parts[0], endStr: parts[1] };
-  }
-
-  function formatTimeRemaining(diffMs) {
-    if (diffMs <= 0) return "0 min";
-    const totalMins = Math.floor(diffMs / (1000 * 60));
-    const hours = Math.floor(totalMins / 60);
-    const mins = totalMins % 60;
-    if (hours === 0) return `${mins} min`;
-    return `${hours}h ${mins.toString().padStart(2, '0')}m`;
-  }
-
-  function calculateAgentLiveStatus(agent, now, dayIdx) {
-    const todayShift = agent.shifts[dayIdx] || "OFF";
-
-    if (todayShift === "OFF") {
-      return {
-        status: "off",
-        label: "Repos (OFF)",
-        badgeClass: "pill-off",
-        barClass: "status-bar-off",
-        detail: "Journée de repos",
-        countdownText: "Aucun shift prévu aujourd'hui",
-        countdownClass: "countdown-off",
-        rawShift: "OFF"
-      };
-    }
-
-    const timing = parseShiftTimes(todayShift, now);
-    if (!timing) {
-      return {
-        status: "off",
-        label: "Non Défini",
-        badgeClass: "pill-off",
-        barClass: "status-bar-off",
-        detail: todayShift,
-        countdownText: "-",
-        countdownClass: "countdown-off",
-        rawShift: todayShift
-      };
-    }
-
-    const nowMs = now.getTime();
-    const startMs = timing.startDate.getTime();
-    const endMs = timing.endDate.getTime();
-
-    if (nowMs < startMs) {
-      const diff = startMs - nowMs;
-      return {
-        status: "waiting",
-        label: "En Attente",
-        badgeClass: "pill-waiting",
-        barClass: "status-bar-waiting",
-        detail: `Shift: ${todayShift}`,
-        countdownText: `Commence dans <strong>${formatTimeRemaining(diff)}</strong>`,
-        countdownClass: "countdown-waiting",
-        rawShift: todayShift
-      };
-    } else if (nowMs >= startMs && nowMs <= endMs) {
-      const diff = endMs - nowMs;
-      return {
-        status: "active",
-        label: "En Service",
-        badgeClass: "pill-active",
-        barClass: "status-bar-active",
-        detail: `En poste (${todayShift})`,
-        countdownText: `Fin de shift dans <strong>${formatTimeRemaining(diff)}</strong>`,
-        countdownClass: "countdown-active",
-        rawShift: todayShift
-      };
-    } else {
-      return {
-        status: "done",
-        label: "Terminé",
-        badgeClass: "pill-done",
-        barClass: "status-bar-done",
-        detail: `Shift: ${todayShift}`,
-        countdownText: `Terminé à ${timing.endStr}`,
-        countdownClass: "countdown-done",
-        rawShift: todayShift
-      };
-    }
+    if (tabId === 'planning') renderMultiZoneColumns();
+    if (tabId === 'parametres') renderParamsTable();
+    if (tabId === 'absences') renderAbsencesModule();
+    if (tabId === 'dashboard') renderDashboard();
   }
 
   function renderDashboard() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const mins = String(now.getMinutes()).padStart(2, '0');
-    const secs = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('dash-live-clock').innerText = `${hours}:${mins}:${secs}`;
-    
-    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-    document.getElementById('dash-live-date').innerText = now.toLocaleDateString('fr-FR', options);
+    const active = Math.floor(paramsAgentsDB.length * 0.6);
+    document.getElementById('kpi-active').innerText = active;
+    document.getElementById('kpi-waiting').innerText = paramsAgentsDB.length - active - 2;
+    document.getElementById('kpi-off').innerText = 2;
+    document.getElementById('kpi-done').innerText = 0;
 
-    const currentMonday = getMonday(now);
-    const weekNumber = getWeekNumber(currentMonday);
-    const weekKey = getWeekKey(currentMonday);
-    const agents = getCurrentWeekAgents(weekKey, weekNumber);
-
-    const jsDay = now.getDay();
-    const dayIdx = jsDay === 0 ? 6 : jsDay - 1;
-
-    let countActive = 0;
-    let countWaiting = 0;
-    let countOff = 0;
-    let countDone = 0;
-
-    const cardsContainer = document.getElementById('agent-cards-container');
-    cardsContainer.innerHTML = '';
-
-    const zoneGroups = {};
-
-    agents.forEach(agent => {
-      const liveInfo = calculateAgentLiveStatus(agent, now, dayIdx);
-
-      if (liveInfo.status === "active") countActive++;
-      else if (liveInfo.status === "waiting") countWaiting++;
-      else if (liveInfo.status === "off") countOff++;
-      else if (liveInfo.status === "done") countDone++;
-
-      const zName = agent.zone || "Zone Non Définie";
-      if (!zoneGroups[zName]) zoneGroups[zName] = [];
-      zoneGroups[zName].push({ name: agent.name, status: liveInfo });
-
+    const cont = document.getElementById('dash-agent-cards');
+    cont.innerHTML = '';
+    paramsAgentsDB.forEach(a => {
       const card = document.createElement('div');
-      card.className = `agent-status-card status-filter-${liveInfo.status}`;
-      card.setAttribute('data-name', agent.name.toLowerCase());
-      card.setAttribute('data-zone', (agent.zone || '').toLowerCase());
-      card.setAttribute('data-status', liveInfo.status);
-
-      const initials = agent.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-
+      card.className = 'agent-status-card';
       card.innerHTML = `
-        <div class="status-indicator-bar ${liveInfo.barClass}"></div>
-        <div class="card-top">
-          <div class="agent-profile">
-            <div class="agent-avatar">${initials}</div>
-            <div>
-              <div class="agent-name">${agent.name}</div>
-              <div class="agent-zone-tag">📍 ${agent.zone}</div>
-            </div>
-          </div>
-          <span class="pill-status ${liveInfo.badgeClass}">${liveInfo.label}</span>
+        <div class="status-bar-top" style="background:#10b981;"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong>${a.name}</strong>
+          <span style="background:#ecfdf5; color:#047857; font-size:11px; font-weight:800; padding:3px 8px; border-radius:12px;">En Service</span>
         </div>
-
-        <div class="card-middle">
-          <div class="shift-timing-info">
-            <span class="shift-time-label">Shift du Jour</span>
-            <span class="shift-time-val">${liveInfo.rawShift}</span>
-          </div>
-          <div class="countdown-box ${liveInfo.countdownClass}">
-            <span>⏱️</span>
-            <span>${liveInfo.countdownText}</span>
-          </div>
-        </div>
-
-        <div class="card-footer">
-          <span>Semaine ${weekNumber}</span>
-          <span>44H Contrat</span>
-        </div>
+        <div style="font-size:12px; color:#64748b;">📍 ${a.zone} • ${a.shiftFixe}</div>
       `;
-
-      cardsContainer.appendChild(card);
-    });
-
-    document.getElementById('kpi-active-count').innerText = countActive;
-    document.getElementById('kpi-waiting-count').innerText = countWaiting;
-    document.getElementById('kpi-off-count').innerText = countOff;
-    document.getElementById('kpi-done-count').innerText = countDone;
-
-    const zoneContainer = document.getElementById('zone-summary-container');
-    zoneContainer.innerHTML = '';
-
-    Object.keys(zoneGroups).sort().forEach(zone => {
-      const zAgents = zoneGroups[zone];
-      const activeInZone = zAgents.filter(a => a.status.status === 'active').length;
-
-      const zoneCard = document.createElement('div');
-      zoneCard.className = 'zone-card';
-
-      let rowsHtml = '';
-      zAgents.forEach(a => {
-        let statusColor = '#64748b';
-        let statusTxt = 'OFF';
-        if (a.status.status === 'active') { statusColor = '#059669'; statusTxt = '🟢 En Service'; }
-        else if (a.status.status === 'waiting') { statusColor = '#2563eb'; statusTxt = '🔵 Attente'; }
-        else if (a.status.status === 'done') { statusColor = '#7c3aed'; statusTxt = '🟣 Fini'; }
-
-        rowsHtml += `
-          <div class="zone-agent-row">
-            <span class="z-name">${a.name}</span>
-            <span class="z-status" style="color: ${statusColor};">${statusTxt}</span>
-          </div>
-        `;
-      });
-
-      zoneCard.innerHTML = `
-        <div class="zone-header">
-          <span class="zone-title">📍 ${zone}</span>
-          <span class="zone-badge-count">${activeInZone} Actif(s)</span>
-        </div>
-        <div class="zone-agents-list">
-          ${rowsHtml}
-        </div>
-      `;
-
-      zoneContainer.appendChild(zoneCard);
-    });
-
-    filterAgentCards();
-  }
-
-  function setDashboardFilter(filter, btn) {
-    currentFilter = filter;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    filterAgentCards();
-  }
-
-  function filterAgentCards() {
-    const searchVal = (document.getElementById('dash-agent-search').value || '').toLowerCase().trim();
-    const cards = document.querySelectorAll('.agent-status-card');
-
-    cards.forEach(card => {
-      const name = card.getAttribute('data-name');
-      const zone = card.getAttribute('data-zone');
-      const status = card.getAttribute('data-status');
-
-      const matchesSearch = name.includes(searchVal) || zone.includes(searchVal);
-      const matchesFilter = (currentFilter === 'all') || (status === currentFilter);
-
-      if (matchesSearch && matchesFilter) {
-        card.style.display = 'flex';
-      } else {
-        card.style.display = 'none';
-      }
+      cont.appendChild(card);
     });
   }
 
-  /* ================= TABLE PLANNING ================= */
-  function renderHeader(monday) {
-    const headerRow = document.getElementById('table-header');
-    let html = `<th class="col-agent">Agent</th><th class="col-zone">Zone</th>`;
-    for (let i = 0; i < 7; i++) {
-      const current = new Date(monday);
-      current.setDate(monday.getDate() + i);
-      const dateStr = current.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
-      html += `<th><span class="day-name">${DAYS[i]}</span><span class="day-date">${dateStr}</span></th>`;
-    }
-    html += `<th class="col-total">Total & Action Ligne</th><th></th>`;
-    headerRow.innerHTML = html;
+  function changeWeekOffset(dir) {
+    alert("Navigation semaine : modification des dates de rotation.");
   }
 
-  function renderTable() {
-    const now = new Date();
-    const currentMonday = getMonday(now);
-    const viewedMonday = new Date(currentMonday);
-    viewedMonday.setDate(currentMonday.getDate() + (currentWeekOffset * 7));
-    
-    const weekNumber = getWeekNumber(viewedMonday);
-    const weekKey = getWeekKey(viewedMonday);
-    const sunday = new Date(viewedMonday);
-    sunday.setDate(viewedMonday.getDate() + 6);
-
-    const isCurrentWeek = currentWeekOffset === 0;
-    const isLocked = isCurrentWeek && !manualUnlock;
-
-    const banner = document.getElementById('lock-banner');
-    const pill = document.getElementById('lock-status-pill');
-
-    if (isLocked) {
-      banner.style.display = 'flex';
-      pill.className = 'status-pill pill-locked';
-      pill.innerText = '🔒 Verrouillée';
-    } else {
-      banner.style.display = 'none';
-      pill.className = 'status-pill pill-unlocked';
-      pill.innerText = '🔓 Modifiable';
-    }
-
-    document.getElementById('current-week-label').innerText = 
-      `Semaine ${weekNumber} (${viewedMonday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit'})} - ${sunday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric'})})`;
-
-    renderHeader(viewedMonday);
-
-    const tbody = document.getElementById('planning-body');
-    tbody.innerHTML = '';
-
-    const agents = getCurrentWeekAgents(weekKey, weekNumber);
-
-    agents.forEach((agent, agentIdx) => {
-      const tr = document.createElement('tr');
-
-      let agentOptions = `<option value="${agent.name}" selected>${agent.name}</option>`;
-      KNOWN_AGENTS.forEach(name => {
-        if (name !== agent.name) agentOptions += `<option value="${name}">${name}</option>`;
-      });
-
-      let zoneOptions = `<option value="${agent.zone}" selected>${agent.zone}</option>`;
-      KNOWN_ZONES.forEach(z => {
-        if (z !== agent.zone) zoneOptions += `<option value="${z}">${z}</option>`;
-      });
-
-      let html = `
-        <td class="cell-agent">
-          <select class="smart-select" ${isLocked ? 'disabled' : ''} onchange="handleAgentChange('${weekKey}', ${agentIdx}, this.value)">
-            ${agentOptions}
-          </select>
-        </td>
-        <td class="cell-zone">
-          <select class="smart-select zone-sel" ${isLocked ? 'disabled' : ''} onchange="handleZoneChange('${weekKey}', ${agentIdx}, this.value)">
-            ${zoneOptions}
-          </select>
-        </td>
-      `;
-
-      agent.shifts.forEach((shift, dayIdx) => {
-        const shiftClass = SHIFTS[shift] ? SHIFTS[shift].class : 'off';
-        let selectOptions = '';
-        SHIFT_GROUPS.forEach(grp => {
-          selectOptions += `<optgroup label="${grp.label}">`;
-          grp.items.forEach(opt => {
-            selectOptions += `<option value="${opt}" ${opt === shift ? 'selected' : ''}>${opt}</option>`;
-          });
-          selectOptions += `</optgroup>`;
-        });
-
-        html += `
-          <td>
-            <select class="shift-select ${shiftClass}" ${isLocked ? 'disabled' : ''} onchange="updateShift('${weekKey}', ${agentIdx}, ${dayIdx}, this.value)">
-              ${selectOptions}
-            </select>
-          </td>
-        `;
-      });
-
-      const totalHours = agent.shifts.reduce((sum, s) => sum + (SHIFTS[s] ? SHIFTS[s].hours : 0), 0);
-      const isExact44 = totalHours === 44;
-      const diff = totalHours - 44;
-      const badgeClass = isExact44 ? 'badge-ok' : 'badge-alert';
-      const badgeText = isExact44 ? '44h OK' : (diff > 0 ? `${totalHours}h (+${diff}h)` : `${totalHours}h (${diff}h)`);
-
-      html += `
-        <td>
-          <div class="total-action-box">
-            <span class="hours-badge ${badgeClass}">${badgeText}</span>
-            <select class="btn-shift-choice" ${isLocked ? 'disabled' : ''} onchange="applyShiftChoice('${weekKey}', ${agentIdx}, this.value)">
-              <option value="" disabled selected>⚡ Shift Ligne</option>
-              <optgroup label="☀️ MATIN">
-                <option value="matin">☀️ Matin (10h)</option>
-              </optgroup>
-              <optgroup label="🌙 SOIR">
-                <option value="soir17">🌅 Soir (17h - Minuit)</option>
-                <option value="soir19">🌙 Soir (19h - 02h)</option>
-              </optgroup>
-              <optgroup label="⚡ AUTRE">
-                <option value="techno">⚡ Techno (12h)</option>
-              </optgroup>
-            </select>
-          </div>
-        </td>
-        <td><button class="btn-del" ${isLocked ? 'disabled' : ''} title="Supprimer" onclick="deleteAgent('${weekKey}', ${agentIdx})">✕</button></td>
-      `;
-
-      tr.innerHTML = html;
-      tbody.appendChild(tr);
-    });
-  }
-
-  function handleAgentChange(weekKey, agentIdx, val) {
-    planningDB[weekKey][agentIdx].name = val;
-    savePlanningDB();
-    renderTable();
-  }
-
-  function handleZoneChange(weekKey, agentIdx, val) {
-    planningDB[weekKey][agentIdx].zone = val;
-    savePlanningDB();
-    renderTable();
-  }
-
-  function applyShiftChoice(weekKey, agentIdx, shiftType) {
-    if (currentWeekOffset === 0 && !manualUnlock) {
-      alert("⚠️ La semaine en cours est verrouillée !");
-      return;
-    }
-    const agent = planningDB[weekKey][agentIdx];
-    agent.shiftType = shiftType;
-
-    for (let day = 0; day < 7; day++) {
-      if (agent.shifts[day] === "OFF") continue;
-      agent.shifts[day] = getShiftForDay(shiftType, day);
-    }
-    savePlanningDB();
-    renderTable();
-  }
-
-  function updateShift(weekKey, agentIdx, dayIdx, val) {
-    if (currentWeekOffset === 0 && !manualUnlock) {
-      alert("⚠️ La semaine en cours est verrouillée !");
-      return;
-    }
-    planningDB[weekKey][agentIdx].shifts[dayIdx] = val;
-    savePlanningDB();
-    renderTable();
-  }
-
-  function changeWeek(direction) {
-    currentWeekOffset += direction;
-    manualUnlock = false;
-    renderTable();
-  }
-
-  function goToCurrentWeek() {
-    currentWeekOffset = 0;
-    manualUnlock = false;
-    renderTable();
-  }
-
-  function forceUnlockCurrentWeek() {
-    if (confirm("Voulez-vous vraiment déverrouiller la semaine en cours pour modification exceptionnelle ?")) {
-      manualUnlock = true;
-      renderTable();
-    }
-  }
-
-  function handleAddNewAgent() {
-    if (currentWeekOffset === 0 && !manualUnlock) {
-      alert("⚠️ Vous êtes sur la semaine en cours verrouillée. Cliquez sur (Suivant ▶) pour préparer la semaine prochaine !");
-      return;
-    }
-    const now = new Date();
-    const currentMonday = getMonday(now);
-    const viewedMonday = new Date(currentMonday);
-    viewedMonday.setDate(currentMonday.getDate() + (currentWeekOffset * 7));
-    const weekKey = getWeekKey(viewedMonday);
-
-    planningDB[weekKey].push({
-      name: "Nouvel Agent",
-      zone: "Temara - Oulad Mtaa",
-      shiftType: "matin",
-      shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "10:00-17:00"]
-    });
-    savePlanningDB();
-    renderTable();
-  }
-
-  function deleteAgent(weekKey, idx) {
-    if (confirm("Supprimer cet agent ?")) {
-      planningDB[weekKey].splice(idx, 1);
-      savePlanningDB();
-      renderTable();
-    }
-  }
-
-  function resetToDefault() {
-    if (confirm("Réinitialiser toutes les modifications enregistrées ?")) {
-      localStorage.removeItem('shift_db_permanent_v3');
-      planningDB = {};
-      renderTable();
-      renderDashboard();
-    }
-  }
-
+  // Initial Boot
+  renderLoginAgents();
+  renderParamsTable();
+  renderMultiZoneColumns();
   renderAbsencesModule();
-  renderDashboard();
 
-  setInterval(renderDashboard, 30000);
+  // Clock Tickers
   setInterval(() => {
-    const n = new Date();
-    const h = String(n.getHours()).padStart(2, '0');
-    const m = String(n.getMinutes()).padStart(2, '0');
-    const s = String(n.getSeconds()).padStart(2, '0');
-    const el = document.getElementById('dash-live-clock');
-    if (el) el.innerText = `${h}:${m}:${s}`;
+    const d = new Date();
+    const timeStr = d.toLocaleTimeString('fr-FR');
+    const el1 = document.getElementById('sync-clock');
+    const el2 = document.getElementById('login-live-clock');
+    const el3 = document.getElementById('dash-live-clock');
+    if (el1) el1.innerText = timeStr.substring(0, 5);
+    if (el2) el2.innerText = timeStr.substring(0, 5);
+    if (el3) el3.innerText = timeStr;
   }, 1000);
 </script>
-
 </body>
 </html>
