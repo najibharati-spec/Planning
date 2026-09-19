@@ -3,807 +3,424 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ops Field - Planning & Réclamations HQ</title>
+  <title>FieldOps - System Central</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-gradient: linear-gradient(135deg, #fbf7ff 0%, #f3e8ff 100%);
-      --header-bg: linear-gradient(90deg, #4c1d95 0%, #581c87 50%, #6b21a8 100%);
-      --card-bg: #ffffff;
-      --border-color: #f3e8ff;
-      --border-subtle: #e9d5ff;
-      --text-main: #3b0764;
-      --text-muted: #6b21a8;
-      --text-sub: #86198f;
-      
-      --matin-bg: #ede9fe; --matin-txt: #6d28d9; --matin-border: #c4b5fd;
-      --aprem-bg: #fae8ff; --aprem-txt: #86198f; --aprem-border: #f0abfc;
-      --soir-bg: #e0e7ff; --soir-txt: #3730a3; --soir-border: #a5b4fc;
-      --off-bg: #f8fafc; --off-txt: #94a3b8; --off-border: #e2e8f0;
-      --ok-bg: #dcfce7; --ok-txt: #15803d; --ok-border: #86efac;
-      --alert-bg: #fee2e2; --alert-txt: #b91c1c; --alert-border: #fca5a5;
+      --sidebar-bg: #f8f6fc;
+      --main-bg: #fefcf6;
+      --primary-green: #00875a;
+      --primary-dark: #005a3c;
+      --card-yellow: #fde8ad;
+      --border-subtle: #e9e5f0;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
-    body { background: var(--bg-gradient); min-height: 100vh; color: var(--text-main); padding: 20px; }
-    .container { max-width: 1650px; margin: 0 auto; }
+    body { display: flex; min-height: 100vh; background: var(--main-bg); color: var(--text-dark); }
 
-    /* Login Modal */
-    #login-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(59, 7, 100, 0.65); backdrop-filter: blur(8px);
-      display: flex; justify-content: center; align-items: center; z-index: 1000;
+    /* Sidebar Layout */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-subtle);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      flex-shrink: 0;
     }
-    .login-card {
-      background: #fff; padding: 35px; border-radius: 24px; width: 400px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25); border: 1.5px solid var(--border-subtle); text-align: center;
-    }
-    .login-card h2 { color: #4c1d95; margin-bottom: 8px; font-weight: 800; }
-    .login-card p { font-size: 13px; color: #6b21a8; margin-bottom: 20px; font-weight: 600; }
 
-    .form-input-login {
-      width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 10px;
-      border: 1px solid var(--border-subtle); font-weight: 700; outline: none; font-size: 13.5px;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 8px;
     }
-    .form-input-login:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15); }
 
-    .role-btn {
-      width: 100%; padding: 12px; margin: 6px 0; border: none; border-radius: 10px;
-      font-weight: 800; font-size: 14px; cursor: pointer; transition: 0.2s;
-    }
-    .btn-agent-role { background: linear-gradient(135deg, #7c3aed, #581c87); color: #fff; box-shadow: 0 4px 12px rgba(124,58,237,0.3); }
-    .btn-admin-role { background: #3b0764; color: #fff; }
-
-    /* Top Bar */
-    .top-bar {
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
-      background: var(--card-bg); padding: 18px 28px; border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(76, 29, 149, 0.08); border: 1px solid var(--border-subtle); margin-bottom: 20px;
-    }
-    .brand-title { display: flex; align-items: center; gap: 12px; }
     .brand-icon {
-      width: 42px; height: 42px; background: linear-gradient(135deg, #7c3aed, #4c1d95);
-      border-radius: 12px; display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 20px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+      width: 40px; height: 40px;
+      background: var(--primary-green);
+      color: #fff;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 20px;
     }
-    .brand-title h1 { font-size: 20px; font-weight: 800; background: linear-gradient(90deg, #4c1d95, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .brand-title p { font-size: 12px; color: #7c3aed; font-weight: 600; }
 
-    /* Navigation Tabs */
-    .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-    .tab-btn {
-      padding: 11px 22px; border: none; border-radius: 12px; font-weight: 800; font-size: 13px;
-      cursor: pointer; background: #fff; color: #6b21a8; border: 1.5px solid var(--border-subtle); transition: 0.2s;
+    .brand-title {
+      font-size: 20px; font-weight: 800; color: #0f172a;
     }
-    .tab-btn.active { background: linear-gradient(135deg, #7c3aed, #581c87); color: #fff; border-color: #7c3aed; box-shadow: 0 4px 12px rgba(124,58,237,0.25); }
 
-    .week-nav { display: flex; align-items: center; gap: 8px; background: #faf5ff; padding: 6px 14px; border-radius: 12px; border: 1px solid var(--border-subtle); }
-    .week-nav span { font-weight: 700; font-size: 13.5px; color: #581c87; }
-    .status-pill { font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 8px; }
-    .pill-locked { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-    .pill-unlocked { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .menu-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-    .btn-group { display: flex; gap: 10px; }
-    button { padding: 9px 16px; border: none; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; }
-    .btn-nav { background: #ffffff; color: #6b21a8; border: 1px solid var(--border-subtle); padding: 6px 12px; font-size: 12px; }
-    .btn-primary { background: linear-gradient(135deg, #7c3aed, #581c87); color: #ffffff; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3); }
-    .btn-reset { background: #ffffff; color: #6b21a8; border: 1px solid var(--border-subtle); }
+    .menu-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0 12px;
+      margin-bottom: 4px;
+    }
 
-    /* Cards & Forms */
-    .card { background: #fff; padding: 25px; border-radius: 18px; border: 1px solid var(--border-subtle); box-shadow: 0 10px 25px -5px rgba(76, 29, 149, 0.05); margin-bottom: 20px; }
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 15px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group label { font-size: 12px; font-weight: 800; color: #4c1d95; }
-    .form-group input, .form-group select, .form-group textarea { padding: 11px; border-radius: 10px; border: 1px solid var(--border-subtle); outline: none; font-size: 13px; font-weight: 700; color: var(--text-main); }
-    .form-group input:focus, .form-group select:focus { border-color: #7c3aed; }
-    .btn-submit { background: linear-gradient(135deg, #7c3aed, #581c87); color: #fff; padding: 12px 28px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 18px; box-shadow: 0 4px 14px rgba(124,58,237,0.3); }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
 
-    /* Tables */
-    .table-container { background: var(--card-bg); border-radius: 18px; overflow-x: auto; box-shadow: 0 12px 35px -10px rgba(76, 29, 149, 0.1); border: 1px solid var(--border-subtle); }
-    table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1450px; text-align: center; }
-    thead th { background: var(--header-bg); color: #ffffff; padding: 15px 8px; font-size: 12px; font-weight: 800; text-transform: uppercase; border-bottom: 2px solid #3b0764; }
-    th:first-child { border-top-left-radius: 16px; } th:last-child { border-top-right-radius: 16px; }
-    th .day-name { display: block; font-size: 13px; font-weight: 800; }
-    th .day-date { display: block; font-size: 11px; font-weight: 500; color: #e9d5ff; margin-top: 3px; }
-    th.col-agent { width: 190px; text-align: left; padding-left: 20px; }
-    th.col-zone { width: 190px; text-align: left; padding-left: 14px; }
-    th.col-total { width: 230px; }
+    .nav-item:hover {
+      background: #eeeaf8;
+      color: var(--primary-dark);
+    }
 
-    tbody tr { border-bottom: 1px solid var(--border-color); }
-    tbody tr:hover { background: #faf5ff; }
-    td { padding: 10px 4px; font-size: 13px; border-bottom: 1px solid #f3e8ff; }
-    td.cell-agent { text-align: left; padding-left: 16px; }
-    td.cell-zone { text-align: left; padding-left: 12px; }
+    .nav-item.active {
+      background: var(--primary-green);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 135, 90, 0.25);
+    }
 
-    .field-box { display: flex; align-items: center; justify-content: space-between; background: #fbf7ff; border: 1px solid #f3e8ff; border-radius: 8px; padding: 5px 8px; gap: 6px; }
-    .field-text { font-size: 12.5px; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 135px; }
-    .field-text.zone-txt { color: #6b21a8; font-weight: 600; }
-    .btn-edit-small { background: #f3e8ff; color: #7c3aed; border: 1px solid #e9d5ff; font-size: 11px; padding: 3px 6px; border-radius: 6px; cursor: pointer; font-weight: 700; }
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto;
+    }
 
-    select.shift-select { width: 100%; padding: 9px 4px; border-radius: 10px; font-size: 12px; font-weight: 800; border: 1px solid transparent; cursor: pointer; outline: none; text-align-last: center; appearance: none; }
-    select.matin { background: var(--matin-bg); color: var(--matin-txt); border-color: var(--matin-border); }
-    select.aprem { background: var(--aprem-bg); color: var(--aprem-txt); border-color: var(--aprem-border); }
-    select.soir { background: var(--soir-bg); color: var(--soir-txt); border-color: var(--soir-border); }
-    select.off { background: var(--off-bg); color: var(--off-txt); border-color: var(--off-border); }
+    .header-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 24px;
+    }
 
-    .total-action-box { display: flex; align-items: center; justify-content: center; gap: 6px; }
-    .hours-badge { display: inline-flex; align-items: center; justify-content: center; padding: 6px 9px; border-radius: 16px; font-weight: 800; font-size: 11.5px; }
-    .badge-ok { background: var(--ok-bg); color: var(--ok-txt); border: 1.5px solid var(--ok-border); }
-    .badge-alert { background: var(--alert-bg); color: var(--alert-txt); border: 1.5px solid var(--alert-border); animation: pulseAlert 1.6s infinite; }
+    /* Agent Selector Cards Grid */
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
 
-    @keyframes pulseAlert { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    .agent-card {
+      background: var(--card-yellow);
+      border: 2px solid transparent;
+      border-radius: 18px;
+      padding: 20px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
 
-    select.btn-shift-choice { padding: 6px 8px; font-size: 11px; font-weight: 800; border-radius: 8px; background: #faf5ff; color: #6b21a8; border: 1.5px solid #c4b5fd; cursor: pointer; }
-    .btn-del { background: transparent; color: #c4b5fd; font-size: 16px; cursor: pointer; padding: 6px 8px; border-radius: 8px; border: none; }
+    .agent-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+    }
 
-    /* Admin Stats */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
-    .stat-card { background: #fff; padding: 20px; border-radius: 16px; border: 1px solid var(--border-subtle); text-align: center; }
-    .stat-card h3 { font-size: 28px; font-weight: 800; color: #4c1d95; }
-    .stat-card p { font-size: 12px; font-weight: 700; color: #6b21a8; margin-top: 4px; }
+    .agent-card.selected {
+      background: #ffffff;
+      border-color: var(--primary-green);
+    }
 
-    .badge-orange { background: #ffe0b2; color: #e65100; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
-    .badge-red { background: #ffcdd2; color: #b71c1c; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
-    .badge-green { background: #c8e6c9; color: #1b5e20; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
+    .avatar-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
 
-    .maps-link { display: inline-flex; align-items: center; gap: 4px; background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; text-decoration: none; }
-    .maps-link:hover { background: #bae6fd; }
+    .agent-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #1e293b;
+    }
+
+    .agent-subname {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    /* Views Containers */
+    .content-card {
+      background: #ffffff;
+      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
 
     .hidden { display: none !important; }
+
+    /* Form Styles */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 800;
+      color: #334155;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      outline: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .btn-action {
+      background: var(--primary-green);
+      color: #fff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+
+    /* Simple Table */
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th { background: #f8fafc; text-align: left; padding: 12px; font-size: 12px; color: #475569; }
+    td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; }
   </style>
 </head>
 <body>
 
-<!-- Login Modal -->
-<div id="login-overlay">
-  <div class="login-card">
-    <h2>🔑 Connexion System</h2>
-    <p>Choisissez votre profil d'accès :</p>
+  <!-- Sidebar Menu -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">O</div>
+      <div class="brand-title">FieldOps</div>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-label">Opérations</div>
+      <div class="nav-item active" onclick="showView('dashboard', this)">
+        <span>📊</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="showView('planning', this)">
+        <span>📅</span> Planning
+      </div>
+      <div class="nav-item" onclick="showView('reclamations', this)">
+        <span>🚨</span> Réclamations
+      </div>
+      <div class="nav-item" onclick="showView('pointage', this)">
+        <span>🕒</span> Pointage
+      </div>
+      <div class="nav-item" onclick="showView('absences', this)">
+        <span>📁</span> Absences
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-label">Ressources</div>
+      <div class="nav-item" onclick="showView('parametres', this)">
+        <span>⚙️</span> Paramètres
+      </div>
+      <div class="nav-item" onclick="showView('paie', this)">
+        <span>📷</span> Paie
+      </div>
+      <div class="nav-item" onclick="showView('rapports', this)">
+        <span>📄</span> Rapports
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Area -->
+  <div class="main-content">
     
-    <div style="text-align: left; margin-bottom: 15px;">
-      <label style="font-size:12px; font-weight:800; color:#4c1d95;">Sélectionner Agent :</label>
-      <select id="login-agent-select" class="form-input-login" style="margin-top:4px;">
-        <option value="Yahya Rhallab">Yahya Rhallab</option>
-        <option value="Mehdi Ait Jebour">Mehdi Ait Jebour</option>
-        <option value="Ayman Chlifane">Ayman Chlifane</option>
-        <option value="Mourad Cherradi">Mourad Cherradi</option>
-        <option value="Youssef Derkaoui">Youssef Derkaoui</option>
-        <option value="Ayoub Abssi">Ayoub Abssi</option>
-        <option value="Charaf Loummihi">Charaf Loummihi</option>
-        <option value="Hassan Azgoune">Hassan Azgoune</option>
-        <option value="Ayoub Ben Malek">Ayoub Ben Malek</option>
-        <option value="Achraf Akhlij">Achraf Akhlij</option>
-        <option value="Islam Elmardi">Islam Elmardi</option>
-        <option value="Oussama El Atrach">Oussama El Atrach</option>
-        <option value="Zakariae Benali">Zakariae Benali</option>
-      </select>
-
-      <label style="font-size:12px; font-weight:800; color:#4c1d95;">Entrer votre PIN (4 chiffres) :</label>
-      <input type="password" id="login-pin-input" class="form-input-login" placeholder="Ex: 1234" maxlength="4" style="margin-top:4px;">
-    </div>
-
-    <button class="role-btn btn-agent-role" onclick="loginAsAgent()">👨‍💻 Connexion Session AGENT</button>
-    <div style="margin: 10px 0; border-top: 1px solid #e9d5ff;"></div>
-    <button class="role-btn btn-admin-role" onclick="loginAsAdmin()">👑 Connexion ADMIN</button>
-  </div>
-</div>
-
-<div class="container">
-  <!-- Top Bar -->
-  <div class="top-bar">
-    <div class="brand-title">
-      <div class="brand-icon">⚡</div>
-      <div>
-        <h1>Ops Field HQ Platform</h1>
-        <p>Planning Shifts (44H) & Système Réclamations Terrain</p>
+    <!-- Top Agents Selector ( katchbah l-tsawer ) -->
+    <div class="header-title">Sélectionner un Agent / Session</div>
+    <div class="agents-grid">
+      <div class="agent-card selected" onclick="selectAgent('Najib HARATI', '#2563eb', this)">
+        <div class="avatar-circle" style="background:#2563eb;">👤</div>
+        <div class="agent-name">Najib</div>
+        <div class="agent-subname">HARATI</div>
       </div>
-    </div>
-    <div>
-      <span id="user-badge" style="font-weight: 800; font-size: 13.5px; color: #4c1d95; margin-right: 15px;"></span>
-      <button class="tab-btn" onclick="logout()" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">Déconnexion</button>
-    </div>
-  </div>
-
-  <!-- Navigation Tabs -->
-  <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('planning')">📅 Planning Shifts (44H)</button>
-    <button class="tab-btn" onclick="switchTab('partenaire')">🏬 Réclamation Partenaire</button>
-    <button class="tab-btn" onclick="switchTab('livreur')">🛵 Réclamation Livreur</button>
-    <button id="admin-tab-btn" class="tab-btn hidden" onclick="switchTab('admin')">📊 Dashboard ADMIN & Maps</button>
-  </div>
-
-  <!-- TAB 1: PLANNING SHIFTS (44H) -->
-  <div id="tab-planning">
-    <div class="top-bar" style="margin-bottom:15px; background:#fff;">
-      <div class="week-nav">
-        <button class="btn-nav" onclick="changeWeek(-1)">◀ Précédent</button>
-        <span id="current-week-label">Semaine ...</span>
-        <span id="lock-status-pill" class="status-pill"></span>
-        <button class="btn-nav" onclick="changeWeek(1)">Suivant ▶</button>
-        <button class="btn-nav" style="margin-left: 6px;" onclick="goToCurrentWeek()">Aujourd'hui</button>
+      <div class="agent-card" onclick="selectAgent('Oussama EL HAMALI', '#1e293b', this)">
+        <div class="avatar-circle" style="background:#1e293b;">👤</div>
+        <div class="agent-name">Oussama</div>
+        <div class="agent-subname">EL HAMALI</div>
       </div>
-
-      <div class="btn-group">
-        <button class="btn-primary" onclick="handleAddNewAgent()">+ Ajouter Agent</button>
-        <button class="btn-reset" onclick="resetToDefault()">🔄 Réinitialiser</button>
+      <div class="agent-card" onclick="selectAgent('Achraf AKHLIJ', '#059669', this)">
+        <div class="avatar-circle" style="background:#059669;">👤</div>
+        <div class="agent-name">Achraf</div>
+        <div class="agent-subname">AKHLIJ</div>
+      </div>
+      <div class="agent-card" onclick="selectAgent('Aymane CHLIFANE', '#b91c1c', this)">
+        <div class="avatar-circle" style="background:#b91c1c;">👤</div>
+        <div class="agent-name">Aymane</div>
+        <div class="agent-subname">CHLIFANE</div>
+      </div>
+      <div class="agent-card" onclick="selectAgent('Ayoub BEN MALEK', '#7c3aed', this)">
+        <div class="avatar-circle" style="background:#7c3aed;">👤</div>
+        <div class="agent-name">Ayoub</div>
+        <div class="agent-subname">BEN MALEK</div>
+      </div>
+      <div class="agent-card" onclick="selectAgent('Ayoub ABSSI', '#0284c7', this)">
+        <div class="avatar-circle" style="background:#0284c7;">👤</div>
+        <div class="agent-name">Ayoub</div>
+        <div class="agent-subname">ABSSI</div>
       </div>
     </div>
 
-    <div id="lock-banner" style="display:none; background:#fffbeb; border:1.5px solid #fde68a; color:#b45309; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; margin-bottom:18px; align-items:center; justify-content:space-between;">
-      <div>🔒 <strong>Semaine en cours verrouillée :</strong> Cliquez sur <strong>(Suivant ▶)</strong> pour modifier la semaine prochaine.</div>
-      <button class="btn-nav" onclick="forceUnlockCurrentWeek()" style="background:#fff; font-size:11px;">🔓 Déverrouiller Exceptionnellement</button>
+    <!-- VIEW 1: DASHBOARD -->
+    <div id="view-dashboard" class="content-card">
+      <h2>Tableau de Bord FieldOps</h2>
+      <p style="color:#64748b; margin-top:8px;">Bienvenue sur le système central de gestion RH & Operations.</p>
     </div>
 
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr id="table-header"></tr>
-        </thead>
-        <tbody id="planning-body"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- TAB 2: RÉCLAMATION PARTENAIRE -->
-  <div id="tab-partenaire" class="card hidden">
-    <h2 style="color:#4c1d95; font-size:18px;">Formulaire Réclamation Partenaire (Merchant)</h2>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Partenaire :</label>
-        <select id="p-name">
-          <option value="McDonald's">McDonald's</option>
-          <option value="KFC">KFC</option>
-          <option value="Burger King">Burger King</option>
-          <option value="Domino's Pizza">Domino's Pizza</option>
-          <option value="Koutoubia">Koutoubia</option>
-          <option value="Autre">Autre Partenaire...</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Motif de Réclamation :</label>
-        <select id="p-motif">
-          <option value="Commande non prête / Prêt">Commande non prête / Retard Prêt</option>
-          <option value="Commande Volée / Disparue">Commande Volée / Disparue</option>
-          <option value="Problème de comportement">Problème de comportement</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Localisation GPS (Google Maps) :</label>
-        <button type="button" onclick="getGPS()" style="padding:11px; background:#f3e8ff; border:1px solid #c4b5fd; border-radius:10px; cursor:pointer; font-weight:800; color:#581c87;">📍 Obtenir ma position GPS exacte</button>
-        <input type="text" id="p-gps" placeholder="Latitude, Longitude" readonly style="margin-top:4px;">
-      </div>
-
-      <div class="form-group">
-        <label>N° de Commande(s) :</label>
-        <input type="text" id="p-commande" placeholder="Ex: #10928, #10929">
-      </div>
-
-      <div class="form-group">
-        <label>ID Livreur impliqué :</label>
-        <input type="text" id="p-livreur-id" placeholder="Ex: 88412">
-      </div>
-
-      <div class="form-group">
-        <label>Photo / Justificatif :</label>
-        <input type="file" id="p-photo" accept="image/*">
-      </div>
-    </div>
-
-    <div class="form-group" style="margin-top:15px;">
-      <label>Commentaires / Détails :</label>
-      <textarea id="p-comment" rows="3" placeholder="Explications sur l'incident..."></textarea>
-    </div>
-
-    <button class="btn-submit" onclick="submitPartenaireRec()">Envoyer Réclamation Partenaire</button>
-  </div>
-
-  <!-- TAB 3: RÉCLAMATION LIVREUR -->
-  <div id="tab-livreur" class="card hidden">
-    <h2 style="color:#4c1d95; font-size:18px;">Formulaire Réclamation Livreur (Courier)</h2>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>ID Livreur :</label>
-        <input type="text" id="l-id" placeholder="Ex: 54932">
-      </div>
-
-      <div class="form-group">
-        <label>Motif de Réclamation :</label>
-        <select id="l-motif">
-          <option value="Vol de Commande">Vol de Commande</option>
-          <option value="Problème Boîte / Sac (Box)">Problème de Boîte / Sac Isotherme (Box)</option>
-          <option value="Assurance Non Conforme">Documents / Assurance non conformes</option>
-          <option value="Carte Auto-entrepreneur Expirée">Carte Auto-entrepreneur absente/expirée</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Photo / Justificatif :</label>
-        <input type="file" id="l-photo" accept="image/*">
-      </div>
-    </div>
-
-    <div class="form-group" style="margin-top:15px;">
-      <label>Commentaires / Détails :</label>
-      <textarea id="l-comment" rows="3" placeholder="Remarques spécifiques..."></textarea>
-    </div>
-
-    <button class="btn-submit" onclick="submitLivreurRec()">Envoyer Réclamation Livreur</button>
-  </div>
-
-  <!-- TAB 4: ADMIN DASHBOARD -->
-  <div id="tab-admin" class="hidden">
-    <div class="card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-      <div>
-        <label style="font-weight:800; font-size:13px; color:#4c1d95; margin-right:10px;">Période d'Analyse :</label>
-        <select id="filter-period" onchange="renderAdminStats()" style="padding:8px 12px; border-radius:10px; border:1px solid #c4b5fd; font-weight:800;">
-          <option value="day">Aujourd'hui</option>
-          <option value="week" selected>Cette Semaine</option>
-          <option value="month">Ce Mois</option>
-        </select>
-      </div>
-      <button onclick="exportToCSV()" style="background:#22c55e; color:#fff; border:none; padding:11px 20px; border-radius:10px; font-weight:800; cursor:pointer;">📥 Télécharger Fichier Excel / CSV</button>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-card"><h3 id="stat-total">0</h3><p>Total Réclamations</p></div>
-      <div class="stat-card"><h3 id="stat-partenaires" style="color:#7c3aed;">0</h3><p>Réclamations Partenaires</p></div>
-      <div class="stat-card"><h3 id="stat-livreurs" style="color:#0284c7;">0</h3><p>Réclamations Livreurs</p></div>
-      <div class="stat-card"><h3 id="stat-critical" style="color:#ef4444;">0</h3><p>Cas Critiques (Rouge)</p></div>
-    </div>
-
-    <div class="card">
-      <h3 style="color:#4c1d95; margin-bottom:15px;">📌 Réclamations Partenaires & Localisation Maps</h3>
+    <!-- VIEW 2: PLANNING -->
+    <div id="view-planning" class="content-card hidden">
+      <h2>Planning Shifts (44H)</h2>
+      <p style="color:#64748b; margin-bottom:16px;">Gestion des plannings de présence hebdomadaires.</p>
       <table>
         <thead>
           <tr>
             <th>Agent</th>
-            <th>Partenaire</th>
-            <th>Récurrence</th>
-            <th>Dernier Motif</th>
-            <th>Google Maps GPS</th>
-            <th>Date & Heure</th>
+            <th>Zone</th>
+            <th>Lun</th>
+            <th>Mar</th>
+            <th>Mer</th>
+            <th>Jeu</th>
+            <th>Ven</th>
+            <th>Sam</th>
+            <th>Dim</th>
           </tr>
         </thead>
-        <tbody id="table-partenaires-body"></tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <h3 style="color:#4c1d95; margin-bottom:15px;">🛵 Réclamations Livreurs & Récurents</h3>
-      <table>
-        <thead>
+        <tbody>
           <tr>
-            <th>Agent</th>
-            <th>ID Livreur</th>
-            <th>Récurrence</th>
-            <th>Dernier Motif</th>
-            <th>Commentaire</th>
-            <th>Date & Heure</th>
+            <td><strong>Najib Harati</strong></td>
+            <td>Temara - Oulad Mtaa</td>
+            <td>10:00-17:00</td>
+            <td>10:00-17:00</td>
+            <td>10:00-17:00</td>
+            <td>10:00-17:00</td>
+            <td>10:00-18:00</td>
+            <td>10:00-18:00</td>
+            <td>OFF</td>
           </tr>
-        </thead>
-        <tbody id="table-livreurs-body"></tbody>
+        </tbody>
       </table>
     </div>
+
+    <!-- VIEW 3: RECLAMATIONS (L-Jdid) -->
+    <div id="view-reclamations" class="content-card hidden">
+      <h2>Nouveau Formulaire de Réclamation</h2>
+      <p style="color:#64748b; margin-bottom:12px;">Agent actif: <strong id="active-agent-label" style="color:#00875a;">Najib HARATI</strong></p>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Type de Réclamation :</label>
+          <select id="rec-type">
+            <option value="Partenaire">Partenaire (Merchant)</option>
+            <option value="Livreur">Livreur (Courier)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Cible / Nom ou ID :</label>
+          <input type="text" id="rec-target" placeholder="Ex: McDonald's ou ID Livreur 5492">
+        </div>
+        <div class="form-group">
+          <label>Motif :</label>
+          <select id="rec-motif">
+            <option value="Commande Volée">Commande Volée / Disparue</option>
+            <option value="Retard Prêt">Retard Prêt / Non Prête</option>
+            <option value="Problème Box/Sac">Problème de Boîte / Sac (Box)</option>
+            <option value="Assurance/Papier">Problème Papiers / Assurance</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Position GPS (Google Maps) :</label>
+          <button type="button" onclick="getGPS()" style="padding:10px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer; font-weight:700;">📍 Détecter Position GPS</button>
+          <input type="text" id="rec-gps" placeholder="Lat, Long" readonly style="margin-top:4px;">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:16px;">
+        <label>Commentaire / Détails :</label>
+        <textarea id="rec-comment" rows="3" placeholder="Saisir les détails..."></textarea>
+      </div>
+
+      <button class="btn-action" onclick="saveReclamation()">Enregistrer la Réclamation</button>
+    </div>
+
   </div>
-</div>
 
-<script>
-  let currentLoggedUser = null;
-  let currentUserRole = null;
-  let currentWeekOffset = 0;
-  let manualUnlock = false;
+  <script>
+    let currentAgent = "Najib HARATI";
 
-  const SHIFTS = {
-    "OFF": { hours: 0, class: "off" },
-    "10:00-17:00": { hours: 7, class: "matin" },
-    "10:00-18:00": { hours: 8, class: "matin" },
-    "17:00-00:00": { hours: 7, class: "aprem" },
-    "17:00-01:00": { hours: 8, class: "aprem" },
-    "19:00-02:00": { hours: 7, class: "soir" },
-    "18:00-02:00": { hours: 8, class: "soir" },
-    "12:00-19:00": { hours: 7, class: "soir" },
-    "12:00-20:00": { hours: 8, class: "soir" }
-  };
-
-  const SHIFT_GROUPS = [
-    { label: "🔴 REPOS", items: ["OFF"] },
-    { label: "☀️ MATIN (10H)", items: ["10:00-17:00", "10:00-18:00"] },
-    { label: "🌅 SOIR (17H)", items: ["17:00-00:00", "17:00-01:00"] },
-    { label: "🌙 SOIR (19H)", items: ["19:00-02:00", "18:00-02:00"] },
-    { label: "⚡ AUTRES", items: ["12:00-19:00", "12:00-20:00"] }
-  ];
-
-  const KNOWN_ZONES = ["Temara - Oulad Mtaa", "Temara - Fouarat", "Agdal - Carrousel", "Salé - Medina", "Hay Riad - Soussi", "Technopolis", "Harhoura", "El Wifaq"];
-  const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
-
-  const defaultAgents = [
-    { name: "Yahya Rhallab", zone: "Temara - Oulad Mtaa", offDay: 0, shiftType: "matin" },
-    { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir17" },
-    { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir19" },
-    { name: "Mourad Cherradi", zone: "Agdal - Carrousel", offDay: 1, shiftType: "matin" },
-    { name: "Youssef Derkaoui", zone: "Agdal - Carrousel", offDay: 0, shiftType: "soir17" },
-    { name: "Ayoub Abssi", zone: "Agdal - Carrousel", offDay: 3, shiftType: "soir19" },
-    { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftBaseIndex: 0 },
-    { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftBaseIndex: 1 },
-    { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftBaseIndex: 2 },
-    { name: "Achraf Akhlij", zone: "Hay Riad - Soussi", offDay: 3, shiftType: "matin" },
-    { name: "Islam Elmardi", zone: "Hay Riad - Soussi", offDay: 2, shiftType: "soir17" },
-    { name: "Oussama El Atrach", zone: "Hay Riad - Soussi", offDay: 0, shiftType: "soir19" },
-    { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno" }
-  ];
-
-  let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v3')) || {};
-  let claimsDB = JSON.parse(localStorage.getItem('ops_reclamations_db_v2')) || [];
-
-  function loginAsAgent() {
-    const agent = document.getElementById('login-agent-select').value;
-    const pin = document.getElementById('login-pin-input').value;
-
-    if (!pin || pin.length < 4) {
-      alert("⚠️ Veuillez entrer un code PIN à 4 chiffres.");
-      return;
+    function selectAgent(name, color, element) {
+      document.querySelectorAll('.agent-card').forEach(c => c.classList.remove('selected'));
+      element.classList.add('selected');
+      currentAgent = name;
+      document.getElementById('active-agent-label').innerText = name;
     }
 
-    currentLoggedUser = agent;
-    currentUserRole = 'agent';
-    document.getElementById('login-overlay').classList.add('hidden');
-    document.getElementById('user-badge').innerText = `👨‍💻 Agent : ${agent}`;
-    document.getElementById('admin-tab-btn').classList.add('hidden');
-    switchTab('planning');
-  }
+    function showView(viewId, element) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      element.classList.add('active');
 
-  function loginAsAdmin() {
-    const pin = prompt("Entrez le code PIN Administrateur :");
-    if (pin === "1234" || pin === "0000" || pin === "2026") {
-      currentLoggedUser = "Admin HQ";
-      currentUserRole = 'admin';
-      document.getElementById('login-overlay').classList.add('hidden');
-      document.getElementById('user-badge').innerText = `👑 Mode : ADMIN HQ`;
-      document.getElementById('admin-tab-btn').classList.remove('hidden');
-      switchTab('admin');
-    } else {
-      alert("❌ Code PIN Admin incorrect !");
-    }
-  }
+      document.getElementById('view-dashboard').classList.add('hidden');
+      document.getElementById('view-planning').classList.add('hidden');
+      document.getElementById('view-reclamations').classList.add('hidden');
 
-  function logout() {
-    currentLoggedUser = null;
-    currentUserRole = null;
-    document.getElementById('login-pin-input').value = '';
-    document.getElementById('login-overlay').classList.remove('hidden');
-  }
-
-  function switchTab(tab) {
-    document.getElementById('tab-planning').classList.add('hidden');
-    document.getElementById('tab-partenaire').classList.add('hidden');
-    document.getElementById('tab-livreur').classList.add('hidden');
-    document.getElementById('tab-admin').classList.add('hidden');
-
-    const btns = document.querySelectorAll('.nav-tabs .tab-btn');
-    btns.forEach(b => b.classList.remove('active'));
-
-    if (tab === 'planning') {
-      document.getElementById('tab-planning').classList.remove('hidden');
-      btns[0].classList.add('active');
-      renderTable();
-    } else if (tab === 'partenaire') {
-      document.getElementById('tab-partenaire').classList.remove('hidden');
-      btns[1].classList.add('active');
-    } else if (tab === 'livreur') {
-      document.getElementById('tab-livreur').classList.remove('hidden');
-      btns[2].classList.add('active');
-    } else if (tab === 'admin') {
-      document.getElementById('tab-admin').classList.remove('hidden');
-      btns[3].classList.add('active');
-      renderAdminStats();
-    }
-  }
-
-  function getGPS() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        document.getElementById('p-gps').value = `${position.coords.latitude.toFixed(5)}, ${position.coords.longitude.toFixed(5)}`;
-      }, () => { alert("Activez la géolocalisation sur votre appareil."); });
-    }
-  }
-
-  function submitPartenaireRec() {
-    const pName = document.getElementById('p-name').value;
-    const pMotif = document.getElementById('p-motif').value;
-    const pGps = document.getElementById('p-gps').value;
-    const pCommande = document.getElementById('p-commande').value;
-    const pLivreurId = document.getElementById('p-livreur-id').value;
-    const pComment = document.getElementById('p-comment').value;
-
-    const rec = {
-      agent: currentLoggedUser || "Agent Inconnu",
-      type: 'partenaire',
-      target: pName,
-      motif: pMotif,
-      gps: pGps,
-      commande: pCommande,
-      livreurId: pLivreurId,
-      comment: pComment,
-      date: new Date().toLocaleString('fr-FR')
-    };
-
-    claimsDB.push(rec);
-    saveClaims();
-    alert("✅ Réclamation Partenaire enregistrée avec succès !");
-    document.getElementById('p-gps').value = '';
-    document.getElementById('p-commande').value = '';
-    document.getElementById('p-livreur-id').value = '';
-    document.getElementById('p-comment').value = '';
-  }
-
-  function submitLivreurRec() {
-    const lId = document.getElementById('l-id').value;
-    const lMotif = document.getElementById('l-motif').value;
-    const lComment = document.getElementById('l-comment').value;
-
-    if (!lId) { alert("Veuillez entrer l'ID du livreur."); return; }
-
-    const rec = {
-      agent: currentLoggedUser || "Agent Inconnu",
-      type: 'livreur',
-      target: lId,
-      motif: lMotif,
-      comment: lComment,
-      date: new Date().toLocaleString('fr-FR')
-    };
-
-    claimsDB.push(rec);
-    saveClaims();
-    alert("✅ Réclamation Livreur enregistrée avec succès !");
-    document.getElementById('l-id').value = '';
-    document.getElementById('l-comment').value = '';
-  }
-
-  function renderAdminStats() {
-    document.getElementById('stat-total').innerText = claimsDB.length;
-    document.getElementById('stat-partenaires').innerText = claimsDB.filter(x => x.type === 'partenaire').length;
-    document.getElementById('stat-livreurs').innerText = claimsDB.filter(x => x.type === 'livreur').length;
-
-    const pMap = {};
-    claimsDB.filter(x => x.type === 'partenaire').forEach(x => {
-      pMap[x.target] = pMap[x.target] || { count: 0, lastAgent: x.agent, lastMotif: x.motif, gps: x.gps, date: x.date };
-      pMap[x.target].count++;
-    });
-
-    const pTbody = document.getElementById('table-partenaires-body');
-    pTbody.innerHTML = '';
-    let criticalCount = 0;
-
-    Object.keys(pMap).forEach(target => {
-      const cnt = pMap[target].count;
-      let badge = `<span class="badge-green">${cnt} Normal</span>`;
-      if (cnt > 2 && cnt <= 5) badge = `<span class="badge-orange">⚠️ ${cnt} Réclamations (Orange)</span>`;
-      if (cnt > 5) { badge = `<span class="badge-red">🚨 ${cnt} Critiques (Rouge)</span>`; criticalCount++; }
-
-      const gpsBtn = pMap[target].gps ? `<a class="maps-link" href="https://maps.google.com/?q=${pMap[target].gps}" target="_blank">🗺️ Google Maps</a>` : '-';
-
-      pTbody.innerHTML += `<tr><td><strong>${pMap[target].lastAgent}</strong></td><td><strong>${target}</strong></td><td>${badge}</td><td>${pMap[target].lastMotif}</td><td>${gpsBtn}</td><td>${pMap[target].date}</td></tr>`;
-    });
-
-    const lMap = {};
-    claimsDB.filter(x => x.type === 'livreur').forEach(x => {
-      lMap[x.target] = lMap[x.target] || { count: 0, lastAgent: x.agent, lastMotif: x.motif, comment: x.comment, date: x.date };
-      lMap[x.target].count++;
-    });
-
-    const lTbody = document.getElementById('table-livreurs-body');
-    lTbody.innerHTML = '';
-
-    Object.keys(lMap).forEach(target => {
-      const cnt = lMap[target].count;
-      let badge = `<span class="badge-green">${cnt} Normal</span>`;
-      if (cnt > 2 && cnt < 4) badge = `<span class="badge-orange">⚠️ ${cnt} Réclamations (Orange)</span>`;
-      if (cnt >= 4) { badge = `<span class="badge-red">🚨 ${cnt} Critiques (Rouge)</span>`; criticalCount++; }
-
-      lTbody.innerHTML += `<tr><td><strong>${lMap[target].lastAgent}</strong></td><td><strong>ID: ${target}</strong></td><td>${badge}</td><td>${lMap[target].lastMotif}</td><td>${lMap[target].comment || '-'}</td><td>${lMap[target].date}</td></tr>`;
-    });
-
-    document.getElementById('stat-critical').innerText = criticalCount;
-  }
-
-  function exportToCSV() {
-    let csv = "Agent,Type,Cible/Name,Motif,GPS,Commande,LivreurID,Commentaire,Date\n";
-    claimsDB.forEach(r => {
-      csv += `"${r.agent}","${r.type}","${r.target}","${r.motif}","${r.gps || ''}","${r.commande || ''}","${r.livreurId || ''}","${r.comment || ''}","${r.date}"\n`;
-    });
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `Ops_Reclamations_Export_${new Date().toISOString().slice(0,10)}.csv`;
-    link.click();
-  }
-
-  // --- PLANNING FUNCTIONS ---
-  function getMonday(d) {
-    d = new Date(d);
-    const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(d.setDate(diff));
-  }
-
-  function getWeekKey(monday) { return `${monday.getFullYear()}-W${getWeekNumber(monday)}`; }
-
-  function getWeekNumber(d) {
-    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-  }
-
-  function getShiftForDay(type, dayIdx) {
-    const is8h = (dayIdx === 4 || dayIdx === 5);
-    if (type === "matin")  return is8h ? "10:00-18:00" : "10:00-17:00";
-    if (type === "soir17") return is8h ? "17:00-01:00" : "17:00-00:00";
-    if (type === "soir19") return is8h ? "18:00-02:00" : "19:00-02:00";
-    if (type === "techno") return is8h ? "12:00-20:00" : "12:00-19:00";
-    return "OFF";
-  }
-
-  function renderHeader(monday) {
-    const headerRow = document.getElementById('table-header');
-    let html = `<th class="col-agent">Agent</th><th class="col-zone">Zone</th>`;
-    for (let i = 0; i < 7; i++) {
-      const current = new Date(monday);
-      current.setDate(monday.getDate() + i);
-      const dateStr = current.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
-      html += `<th><span class="day-name">${DAYS[i]}</span><span class="day-date">${dateStr}</span></th>`;
-    }
-    html += `<th class="col-total">Total & Action Ligne</th><th></th>`;
-    headerRow.innerHTML = html;
-  }
-
-  function getCurrentWeekAgents(weekKey, weekNumber) {
-    if (planningDB[weekKey]) return planningDB[weekKey];
-    const rotationTypes = ["matin", "soir17", "soir19"];
-    const generated = defaultAgents.map(a => {
-      let currentShiftType = a.shiftType;
-      if (a.zone && a.zone.includes("Salé") && a.shiftBaseIndex !== undefined) {
-        currentShiftType = rotationTypes[(a.shiftBaseIndex + weekNumber) % 3];
+      const target = document.getElementById('view-' + viewId);
+      if (target) {
+        target.classList.remove('hidden');
       }
-      const shifts = [];
-      for (let day = 0; day < 7; day++) {
-        shifts.push(day === a.offDay ? "OFF" : getShiftForDay(currentShiftType, day));
-      }
-      return { name: a.name, zone: a.zone, shiftType: currentShiftType, shifts: shifts };
-    });
-    planningDB[weekKey] = generated;
-    savePlanningDB();
-    return generated;
-  }
-
-  function renderTable() {
-    const now = new Date();
-    const currentMonday = getMonday(now);
-    const viewedMonday = new Date(currentMonday);
-    viewedMonday.setDate(currentMonday.getDate() + (currentWeekOffset * 7));
-    
-    const weekNumber = getWeekNumber(viewedMonday);
-    const weekKey = getWeekKey(viewedMonday);
-    const sunday = new Date(viewedMonday);
-    sunday.setDate(viewedMonday.getDate() + 6);
-
-    const isCurrentWeek = currentWeekOffset === 0;
-    const isLocked = isCurrentWeek && !manualUnlock;
-
-    const banner = document.getElementById('lock-banner');
-    const pill = document.getElementById('lock-status-pill');
-
-    if (isLocked) {
-      banner.style.display = 'flex';
-      pill.className = 'status-pill pill-locked'; pill.innerText = '🔒 Verrouillée';
-    } else {
-      banner.style.display = 'none';
-      pill.className = 'status-pill pill-unlocked'; pill.innerText = '🔓 Modifiable';
     }
 
-    document.getElementById('current-week-label').innerText = `Semaine ${weekNumber} (${viewedMonday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit'})} - ${sunday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric'})})`;
-    renderHeader(viewedMonday);
-
-    const tbody = document.getElementById('planning-body');
-    tbody.innerHTML = '';
-
-    const agents = getCurrentWeekAgents(weekKey, weekNumber);
-
-    agents.forEach((agent, agentIdx) => {
-      const tr = document.createElement('tr');
-      let html = `
-        <td class="cell-agent">
-          <div class="field-box">
-            <span class="field-text" title="${agent.name}">${agent.name}</span>
-            <button class="btn-edit-small" ${isLocked ? 'disabled' : ''} onclick="promptChangeAgent('${weekKey}', ${agentIdx})">✏️</button>
-          </div>
-        </td>
-        <td class="cell-zone">
-          <div class="field-box">
-            <span class="field-text zone-txt" title="${agent.zone}">${agent.zone}</span>
-            <button class="btn-edit-small" ${isLocked ? 'disabled' : ''} onclick="promptChangeZone('${weekKey}', ${agentIdx})">✏️</button>
-          </div>
-        </td>
-      `;
-
-      agent.shifts.forEach((shift, dayIdx) => {
-        const shiftClass = SHIFTS[shift] ? SHIFTS[shift].class : 'off';
-        let selectOptions = '';
-        SHIFT_GROUPS.forEach(grp => {
-          selectOptions += `<optgroup label="${grp.label}">`;
-          grp.items.forEach(opt => { selectOptions += `<option value="${opt}" ${opt === shift ? 'selected' : ''}>${opt}</option>`; });
-          selectOptions += `</optgroup>`;
+    function getGPS() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(p => {
+          document.getElementById('rec-gps').value = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
         });
+      }
+    }
 
-        html += `<td><select class="shift-select ${shiftClass}" ${isLocked ? 'disabled' : ''} onchange="updateShift('${weekKey}', ${agentIdx}, ${dayIdx}, this.value)">${selectOptions}</select></td>`;
-      });
-
-      const totalHours = agent.shifts.reduce((sum, s) => sum + (SHIFTS[s] ? SHIFTS[s].hours : 0), 0);
-      const isExact44 = totalHours === 44;
-      const badgeClass = isExact44 ? 'badge-ok' : 'badge-alert';
-      const badgeText = isExact44 ? '44h OK' : `${totalHours}h`;
-
-      html += `
-        <td>
-          <div class="total-action-box">
-            <span class="hours-badge ${badgeClass}">${badgeText}</span>
-            <select class="btn-shift-choice" ${isLocked ? 'disabled' : ''} onchange="applyShiftChoice('${weekKey}', ${agentIdx}, this.value)">
-              <option value="" disabled selected>⚡ Shift Ligne</option>
-              <optgroup label="☀️ MATIN"><option value="matin">☀️ Matin (10h)</option></optgroup>
-              <optgroup label="🌙 SOIR"><option value="soir17">🌅 Soir (17h)</option><option value="soir19">🌙 Soir (19h)</option></optgroup>
-              <optgroup label="⚡ AUTRE"><option value="techno">⚡ Techno (12h)</option></optgroup>
-            </select>
-          </div>
-        </td>
-        <td><button class="btn-del" ${isLocked ? 'disabled' : ''} onclick="deleteAgent('${weekKey}', ${agentIdx})">✕</button></td>
-      `;
-      tr.innerHTML = html;
-      tbody.appendChild(tr);
-    });
-  }
-
-  function promptChangeAgent(weekKey, agentIdx) {
-    const newName = prompt("Nouveau nom de l'agent :", planningDB[weekKey][agentIdx].name);
-    if (newName && newName.trim()) { planningDB[weekKey][agentIdx].name = newName.trim(); savePlanningDB(); renderTable(); }
-  }
-
-  function promptChangeZone(weekKey, agentIdx) {
-    const input = prompt("Nom de la zone :", planningDB[weekKey][agentIdx].zone);
-    if (input && input.trim()) { planningDB[weekKey][agentIdx].zone = input.trim(); savePlanningDB(); renderTable(); }
-  }
-
-  function applyShiftChoice(weekKey, agentIdx, shiftType) {
-    const agent = planningDB[weekKey][agentIdx];
-    agent.shiftType = shiftType;
-    for (let day = 0; day < 7; day++) { if (agent.shifts[day] !== "OFF") agent.shifts[day] = getShiftForDay(shiftType, day); }
-    savePlanningDB(); renderTable();
-  }
-
-  function updateShift(weekKey, agentIdx, dayIdx, val) {
-    planningDB[weekKey][agentIdx].shifts[dayIdx] = val; savePlanningDB(); renderTable();
-  }
-
-  function changeWeek(dir) { currentWeekOffset += dir; manualUnlock = false; renderTable(); }
-  function goToCurrentWeek() { currentWeekOffset = 0; manualUnlock = false; renderTable(); }
-  function forceUnlockCurrentWeek() { if (confirm("Déverrouiller la semaine en cours ?")) { manualUnlock = true; renderTable(); } }
-
-  function handleAddNewAgent() {
-    const weekKey = getWeekKey(getMonday(new Date()));
-    planningDB[weekKey].push({ name: "Nouvel Agent", zone: "Temara - Oulad Mtaa", shiftType: "matin", shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "10:00-17:00"] });
-    savePlanningDB(); renderTable();
-  }
-
-  function deleteAgent(weekKey, idx) { if (confirm("Supprimer cet agent ?")) { planningDB[weekKey].splice(idx, 1); savePlanningDB(); renderTable(); } }
-  function resetToDefault() { if (confirm("Réinitialiser le planning ?")) { localStorage.removeItem('shift_db_permanent_v3'); planningDB = {}; renderTable(); } }
-
-  function savePlanningDB() { localStorage.setItem('shift_db_permanent_v3', JSON.stringify(planningDB)); }
-  function saveClaims() { localStorage.setItem('ops_reclamations_db_v2', JSON.stringify(claimsDB)); }
-
-  renderTable();
-</script>
-
+    function saveReclamation() {
+      alert(`✅ Réclamation enregistrée par ${currentAgent}!`);
+      document.getElementById('rec-target').value = '';
+      document.getElementById('rec-comment').value = '';
+    }
+  </script>
 </body>
 </html>
