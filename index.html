@@ -150,6 +150,7 @@
 
       <div class="menu-section">
         <div class="menu-label">Ressources</div>
+        <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️</span> Configuration Dynamic</div>
         <div class="nav-item" id="menu-param" onclick="showView('parametres', this)"><span>⚙️</span> Paramètres</div>
       </div>
     </div>
@@ -194,12 +195,48 @@
         </div>
       </div>
 
+      <!-- CONFIGURATION DYNAMIQUE DE FORMULAIRE (Najib Admin) -->
+      <div id="view-config" class="content-card hidden">
+        <h3>🛠️ Configuration & Modification des Options Réclamation</h3>
+        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Ajoutez ou supprimez des Marque, Stores, Motifs d'incidents et Options du formulaire des agents.</p>
+
+        <div class="form-grid">
+          <!-- Ajouter Marque & Stores -->
+          <div style="background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
+            <h4 style="font-size:13px; margin-bottom:10px; color:#00875a;">➕ Ajouter Marque / Store :</h4>
+            <div class="form-group" style="margin-bottom:8px;">
+              <label>Nom de la Marque (Ex: Starbucks, Tacos...) :</label>
+              <input type="text" id="cfg-new-brand" placeholder="Ex: Tacos de Lyon" />
+            </div>
+            <div class="form-group" style="margin-bottom:8px;">
+              <label>Stores rattachés (séparés par virgule) :</label>
+              <input type="text" id="cfg-new-stores" placeholder="Ex: Tacos Agdal, Tacos Temara" />
+            </div>
+            <button class="btn-action" onclick="addCustomBrand()">Ajouter la Marque</button>
+          </div>
+
+          <!-- Ajouter Motif d'Incident -->
+          <div style="background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
+            <h4 style="font-size:13px; margin-bottom:10px; color:#00875a;">➕ Ajouter Motif Réclamation :</h4>
+            <div class="form-group" style="margin-bottom:8px;">
+              <label>Nouveau Motif (Ex: Problème Emballage) :</label>
+              <input type="text" id="cfg-new-motif" placeholder="Ex: Erreur d'Article" />
+            </div>
+            <button class="btn-action" onclick="addCustomMotif()">Ajouter le Motif</button>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;">
+          <h4 style="font-size:14px; margin-bottom:10px;">📋 Liste des Marques actuelles en Système :</h4>
+          <div id="brands-catalog-list" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+        </div>
+      </div>
+
       <!-- MESSAGES DIRECTS -->
       <div id="view-messages" class="content-card hidden">
         <h3>💬 Centre de Messagerie & Instructions Directes</h3>
         <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Communication directe entre l'Équipe de Gestion et les Agents Terrain.</p>
 
-        <!-- Vue Responsables (Najib, Mehdi, Anass, Youssef) -->
         <div id="admin-msg-panel" class="hidden" style="margin-bottom:20px; background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
           <h4 style="font-size:14px; margin-bottom:10px;">✉️ Envoyer un Message Direct :</h4>
           <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -209,7 +246,6 @@
           </div>
         </div>
 
-        <!-- Liste des Messages Réçus -->
         <div>
           <h4 style="font-size:14px; margin-bottom:10px;">📋 Boîte de Réception Messages :</h4>
           <div id="messages-list-container" style="display:flex; flex-direction:column; gap:10px;"></div>
@@ -230,14 +266,9 @@
         </div>
       </div>
 
-      <!-- RECLAMATIONS FORM (Seulement pour les Agents Terrain) -->
+      <!-- RECLAMATIONS FORM (Agents Terrain) -->
       <div id="view-reclamations" class="content-card hidden">
         <h3>🚨 Saisie Nouvelle Réclamation</h3>
-        
-        <div id="agent-msg-alert" class="hidden" style="background:#e0f2fe; border:1px solid #0284c7; padding:12px; border-radius:10px; margin-bottom:14px; font-size:12px; color:#0369a1;">
-          <strong>💬 Instruction des Responsables :</strong>
-          <p id="agent-msg-text" style="margin-top:4px; font-weight:700;"></p>
-        </div>
 
         <div class="form-grid">
           <div class="form-group">
@@ -246,37 +277,19 @@
           </div>
           <div class="form-group" id="group-partenaire">
             <label>Marque Partenaire :</label>
-            <select id="rec-target-partenaire" onchange="updateStoreLocations()">
-              <option value="McDonald's">McDonald's</option>
-              <option value="Burger King">Burger King</option>
-              <option value="KFC">KFC</option>
-              <option value="Yoka Sushi">Yoka Sushi</option>
-              <option value="Sushi Box">Sushi Box</option>
-              <option value="Le Talmama">Le Talmama</option>
-              <option value="Carrefour">Carrefour</option>
-              <option value="Marjane">Marjane</option>
-              <option value="Crosty">Crosty</option>
-              <option value="Panda">Panda</option>
-            </select>
+            <select id="rec-target-partenaire" onchange="updateStoreLocations()"></select>
           </div>
           <div class="form-group" id="group-store-location">
             <label>Magasin Exact (Store Location) :</label>
-            <select id="rec-store-sector">
-              <!-- Dynamique selon la marque -->
-            </select>
+            <select id="rec-store-sector"></select>
           </div>
           <div class="form-group hidden" id="group-livreur">
             <label>ID Livreur :</label>
             <input type="text" id="rec-target-livreur" placeholder="Ex: 54932" />
           </div>
           <div class="form-group">
-            <label>Motif :</label>
-            <select id="rec-motif">
-              <option value="Prêt non respecté">Prêt non respecté / Retard</option>
-              <option value="Commande Volée">Commande Volée / Disparue</option>
-              <option value="Problème Box/Sac">Problème Boîte / Sac (Box)</option>
-              <option value="Assurance/Papier">Papiers / Assurance / Carte AE</option>
-            </select>
+            <label>Motif Incident :</label>
+            <select id="rec-motif"></select>
           </div>
           <div class="form-group">
             <label>N° de Commande :</label>
@@ -284,13 +297,13 @@
           </div>
           <div class="form-group">
             <label>Localisation GPS :</label>
-            <button type="button" onclick="getGPS()" style="padding:10px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer; font-weight:700;">📍 Détecter Position</button>
+            <button type="button" onclick="getGPS()" style="padding:10px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer; font-weight:700;">📍 Détecter Position Position</button>
             <input type="text" id="rec-gps" readonly placeholder="Lat, Long" />
           </div>
         </div>
         <div class="form-group" style="margin-top:12px;">
-          <label>Commentaires & Détails :</label>
-          <textarea id="rec-comment" rows="3" placeholder="Saisir les commentaires et explications..."></textarea>
+          <label>Commentaires & Explications :</label>
+          <textarea id="rec-comment" rows="3" placeholder="Saisir les commentaires et détails..."></textarea>
         </div>
         <button class="btn-action" onclick="submitReclamation()">Envoyer la Réclamation</button>
       </div>
@@ -304,7 +317,7 @@
   </div>
 
   <script>
-    const storeCatalog = {
+    let defaultStoreCatalog = {
       "McDonald's": ["McDo Hay Chmaou", "McDo Medina Salé", "McDo Temara", "McDo Agdal", "McDo Hay Riad", "McDo Carrousel", "McDo Zaer", "McDo Hassan"],
       "Burger King": ["BK Temara", "BK Agdal", "BK Hay Riad", "BK Salé", "BK Zaer"],
       "KFC": ["KFC Temara", "KFC Agdal", "KFC Hay Riad", "KFC Salé Medina"],
@@ -316,6 +329,16 @@
       "Crosty": ["Crosty Temara", "Crosty Agdal"],
       "Panda": ["Panda Wok Agdal", "Panda Hay Riad"]
     };
+
+    let defaultMotifs = [
+      "Prêt non respecté / Retard",
+      "Commande Volée / Disparue",
+      "Problème Boîte / Sac (Box)",
+      "Papiers / Assurance / Carte AE"
+    ];
+
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v13')) || defaultStoreCatalog;
+    let customMotifs = JSON.parse(localStorage.getItem('fieldops_motifs_v13')) || defaultMotifs;
 
     const initialAgents = [
       { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", pin: "Najib1992@", role: "admin", canDelete: true, zone: "Temara - Oulad Mtaa" },
@@ -337,12 +360,12 @@
       { id: "17", fname: "Youssef", lname: "DERKAOUI", color: "#0284c7", pin: "1234", role: "agent", zone: "Agdal" }
     ];
 
-    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v12')) || initialAgents;
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v12')) || [
-      { id: 1, agent: "Yahya RHALLAB", type: "Partenaire", target: "McDonald's", sector: "McDo Temara", motif: "Prêt non respecté", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" },
-      { id: 2, agent: "Ayoub ABSSI", type: "Livreur", target: "54932", sector: "-", motif: "Commande Volée", orderNum: "#9120", gps: "33.9821, -6.8482", comment: "Livreur a annulé après collecte client", date: "19/09/2026", status: "En Cours" }
+    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v13')) || initialAgents;
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v13')) || [
+      { id: 1, agent: "Yahya RHALLAB", type: "Partenaire", target: "McDonald's", sector: "McDo Temara", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" },
+      { id: 2, agent: "Ayoub ABSSI", type: "Livreur", target: "54932", sector: "-", motif: "Commande Volée / Disparue", orderNum: "#9120", gps: "33.9821, -6.8482", comment: "Livreur a annulé après collecte client", date: "19/09/2026", status: "En Cours" }
     ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v12')) || [];
+    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v13')) || [];
 
     let currentDashTab = "Partenaire";
     let selectedAgent = null;
@@ -371,6 +394,7 @@
         
         if (currentUser.role === 'agent') {
           document.getElementById('menu-dash').classList.add('hidden');
+          document.getElementById('menu-config').classList.add('hidden');
           document.getElementById('menu-rec').classList.remove('hidden');
           document.getElementById('menu-param').classList.add('hidden');
           document.getElementById('admin-msg-panel').classList.add('hidden');
@@ -382,15 +406,18 @@
           populateAgentMsgDropdown();
           if(currentUser.role === 'admin') {
             document.getElementById('menu-param').classList.remove('hidden');
+            document.getElementById('menu-config').classList.remove('hidden');
           } else {
             document.getElementById('menu-param').classList.add('hidden');
+            document.getElementById('menu-config').classList.add('hidden');
           }
           showView('dashboard', document.getElementById('menu-dash'));
         }
-        updateStoreLocations();
+        initFormDropdowns();
         renderPlanningTable();
         renderReclamationStats();
         renderMessagesView();
+        renderBrandsConfigList();
       } else alert("❌ PIN/Password Incorrect !");
     }
 
@@ -408,9 +435,28 @@
       document.getElementById('view-planning').classList.add('hidden');
       document.getElementById('view-reclamations').classList.add('hidden');
       document.getElementById('view-messages').classList.add('hidden');
+      document.getElementById('view-config').classList.add('hidden');
       document.getElementById('view-parametres').classList.add('hidden');
       document.getElementById('view-' + viewId).classList.remove('hidden');
       if (viewId === 'messages') renderMessagesView();
+    }
+
+    function initFormDropdowns() {
+      // Brands Dropdown
+      const brandSel = document.getElementById('rec-target-partenaire');
+      brandSel.innerHTML = '';
+      Object.keys(storeCatalog).forEach(b => {
+        brandSel.innerHTML += `<option value="${b}">${b}</option>`;
+      });
+
+      // Motifs Dropdown
+      const motifSel = document.getElementById('rec-motif');
+      motifSel.innerHTML = '';
+      customMotifs.forEach(m => {
+        motifSel.innerHTML += `<option value="${m}">${m}</option>`;
+      });
+
+      updateStoreLocations();
     }
 
     function updateStoreLocations() {
@@ -420,6 +466,43 @@
       const stores = storeCatalog[brand] || [brand + " Central"];
       stores.forEach(s => {
         selector.innerHTML += `<option value="${s}">${s}</option>`;
+      });
+    }
+
+    function addCustomBrand() {
+      const brand = document.getElementById('cfg-new-brand').value.trim();
+      const storesInput = document.getElementById('cfg-new-stores').value.trim();
+      if (!brand) return alert("Saisissez le nom de la marque !");
+      
+      const stores = storesInput ? storesInput.split(',').map(s => s.trim()) : [brand + " Central"];
+      storeCatalog[brand] = stores;
+      localStorage.setItem('fieldops_store_catalog_v13', JSON.stringify(storeCatalog));
+      alert(`✅ Marque "${brand}" ajoutée avec succès !`);
+      document.getElementById('cfg-new-brand').value = '';
+      document.getElementById('cfg-new-stores').value = '';
+      initFormDropdowns();
+      renderBrandsConfigList();
+    }
+
+    function addCustomMotif() {
+      const motif = document.getElementById('cfg-new-motif').value.trim();
+      if (!motif) return alert("Saisissez le motif !");
+      customMotifs.push(motif);
+      localStorage.setItem('fieldops_motifs_v13', JSON.stringify(customMotifs));
+      alert(`✅ Motif "${motif}" ajouté !`);
+      document.getElementById('cfg-new-motif').value = '';
+      initFormDropdowns();
+    }
+
+    function renderBrandsConfigList() {
+      const target = document.getElementById('brands-catalog-list');
+      target.innerHTML = '';
+      Object.keys(storeCatalog).forEach(b => {
+        target.innerHTML += `
+          <div style="background:#e0f2fe; padding:8px 12px; border-radius:8px; font-size:12px; font-weight:800; color:#0369a1;">
+            🏢 ${b} (${storeCatalog[b].length} Stores)
+          </div>
+        `;
       });
     }
 
@@ -479,7 +562,7 @@
         date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
       });
 
-      localStorage.setItem('fieldops_direct_msgs_v12', JSON.stringify(directMessagesDB));
+      localStorage.setItem('fieldops_direct_msgs_v13', JSON.stringify(directMessagesDB));
       alert(`✅ Message envoyé à ${targetAgent} !`);
       document.getElementById('msg-input-text').value = '';
       renderMessagesView();
@@ -522,7 +605,7 @@
           text: msg,
           date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
         });
-        localStorage.setItem('fieldops_direct_msgs_v12', JSON.stringify(directMessagesDB));
+        localStorage.setItem('fieldops_direct_msgs_v13', JSON.stringify(directMessagesDB));
         alert(`✅ Instruction envoyée à ${agentFName} !`);
       }
     }
@@ -550,7 +633,7 @@
         status: 'En Cours' 
       });
 
-      localStorage.setItem('fieldops_claims_db_v12', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v13', JSON.stringify(claimsDB));
       alert("✅ Réclamation envoyée avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
@@ -559,7 +642,7 @@
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v12', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v13', JSON.stringify(claimsDB));
         renderReclamationStats();
       }
     }
@@ -613,7 +696,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v12', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v13', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
@@ -634,7 +717,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v12', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v13', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
