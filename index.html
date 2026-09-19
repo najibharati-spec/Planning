@@ -322,71 +322,89 @@
 
   <script>
     let defaultStoreCatalog = {
-      "McDonald's": [
-        "McDonald's Temara", "McDonald's Hay Riad", "McDonald's Gare Rabat Agdal",
-        "McDonald's agdal", "Mcdonald's Arjat", "McDonald's Rabat Ville", "McDonald's Bouregreg"
+      "McDonald's®": [
+        "McDonald's Marjane Hay Riad - 12", "McDonald's Salé - 33", "McDonald's Temara - 46",
+        "McDonald's Carrousel-93", "McDonald's Rabat ville - 22", "McDonald's Agdal - 02",
+        "Mcdonald's Arjat - 96", "McDonald's Zaer - 110"
+      ],
+      "Primos Chicken": [
+        "Primos Chicken Oulad Mtaa", "Primos Chicken Salé Medina", "Primos Chicken Hassan",
+        "Primos Chicken Agdal", "Primos Chicken Temara", "Primos Chicken Kamra",
+        "Primos Chicken Hay Riad", "Primos Chicken Tabriquet"
       ],
       "Burger King": [
-        "Burger King Sela Park", "Burger King Harhoura", "Burger King",
-        "Burger King agdal", "Burger King Salé", "Burger King Bouregreg"
+        "Burger King Agdal", "Burger King Temara Sela Park", "Burger King Hay Riad",
+        "Burger King Zaer", "Burger King Bouregreg", "Burger King Sela Park Salé",
+        "Burger King Harhoura", "Burger King Arribat Center", "Burger King Ocean"
       ],
       "KFC": [
-        "KFC Sela Park", "KFC Marjane Hay Riad", "KFC agdal",
-        "KFC Rabat Ville", "KFC Bab El Had"
+        "KFC Hay Riad", "KFC Agdal", "KFC Temara Sela Park", "KFC Salé Sela Park",
+        "KFC Rabat Ville", "KFC Mahaj Riad", "KFC Bab El Had", "KFC Hassan"
+      ],
+      "Little Mamma": [
+        "Little Mamma Agdal", "Little Mamma Hay Riad", "Little Mamma Temara"
+      ],
+      "Crusty": [
+        "Crusty Agdal"
       ],
       "Pizza Hut": [
-        "Pizza Hut Temara", "Pizza Hut Harhoura", "Pizza Hut Marjane Hay Riad",
-        "Pizza Hut Agdal", "Pizza Hut Bouregreg"
+        "Pizza Hut Agdal", "Pizza Hut Hay Riad", "Pizza Hut Temara", "Pizza Hut Salé",
+        "Pizza Hut Hassan", "Pizza Hut Zaer", "Pizza Hut Harhoura", "Pizza Hut Bouregreg",
+        "Pizza Hut Mahaj Riad", "Pizza Hut Ocean"
       ],
-      "Carrefour": [
+      "Tacos by L.Y.O.N.": [
+        "Tacos by L.Y.O.N. Agdal", "Tacos by L.Y.O.N. Hassan", "Tacos by L.Y.O.N. Hay Riad"
+      ],
+      "Yoka Sushi": [
+        "Yoka Sushi Agdal", "Yoka Sushi Hay Riad", "Yoka Sushi Temara",
+        "Yoka Sushi Hassan", "Yoka Sushi Salé", "Yoka Sushi Zaer"
+      ],
+      "Domino's Pizza": [
+        "Domino's Pizza Agdal", "Domino's Pizza Hay Riad", "Domino's Pizza Temara",
+        "Domino's Pizza Salé", "Domino's Pizza Hassan", "Domino's Pizza Zaer"
+      ],
+      "Carrefour Express / Market": [
         "Carrefour Express Temara Wifak 2", "Carrefour Market WIFAK", "Carrefour Express Temara",
         "Carrefour Mehdi Ben Barka", "Carrefour Market Riad", "Carrefour Gourmet",
         "Carrefour Market Souissi", "Carrefour Market Oqba", "Carrefour Market Al Manal",
         "Carrefour Market Descartes", "Carrefour Market Shem's", "Carrefour Technopolis",
         "Carrefour Market Hassan", "Carrefour Express Medina", "Carrefour Hepar Salé", "Carrefour Market Bettana"
       ],
-      "Marjane": [
+      "Marjane / Marjane Market": [
         "Marjane Hyper Hay Riad", "Marjane Market A.V BENBARKA", "Marjane Market Prestigia Hay Riad",
         "Marjane City OQBA", "Marjane Technopolis", "Marjane market ocean", "Marjane Hepar Bouregreg"
       ],
-      "Yoka Sushi": [
-        "Yoka Sushi - Témara", "Yoka Sushi Hay Riad", "Yoka Sushi"
-      ],
       "Sushi Box": [
-        "Sushi Box Harhoura"
+        "Sushi Box Harhoura", "Sushi Box Agdal", "Sushi Box Hay Riad"
       ],
-      "Tacos": [
-        "Tacos Kamal", "Tacos Only Temara", "Tacos 75 Temara", "Tacos de Nice",
-        "Tacos BY L.Y.O.N", "S Tacos", "tacos by L.Y.O.N", "Tacos Avenue",
-        "Tacos de Nice (Kouass)", "Tacos Yassinos", "Amigo Tacos, chez hamada"
+      "Tacos de Nice": [
+        "Tacos de Nice Agdal", "Tacos de Nice (Kouass)", "Tacos de Nice Hassan"
       ],
-      "Autres Hotspots / Restaurants": [
-        "Chawarma Ibn Acham Temara", "Primos Temara", "Michwat Al Akhawayn", "Pizza Friends Temara",
+      "Autres Hotspots Filtered (+100 Orders)": [
+        "Chawarma Ibn Acham Temara", "Michwat Al Akhawayn", "Pizza Friends Temara",
         "Restaurant Anassim Temara", "Quick", "Agha Cham", "Paul Harhoura", "Di Villaggio Harhoura",
         "Papa John's Harhoura", "Chez Ouazzani Harhoura", "Dunkin Harhoura", "Pokawa Hrhoura",
         "La Maison du Pain Harhoura", "Grillade Al Andalous Harhoura", "Yummy Grill Temara",
         "Ben's Team Fast Food", "Chrono Pizza", "Maison Bocadillos Temara", "Oulad Mtaa",
         "Primo Massira 1", "Polyvalente", "Zen Acham", "BOCADILLOS EL RINCON", "Le Port Temara",
         "Between The Buns Temara", "175Kg Grillade Temara", "Cali Burger Temara", "Paradise Massira 1",
-        "Primos Massira 1", "Michwat Alakhawayn", "Ryad Square Shopping Center", "Pomme de Pain",
-        "Av. Annakhil", "Blue Berry Rabat", "Kool Smoothie Almelia", "Mahaj Ryad Center",
-        "Pokawa Hay Riad", "The Burg", "Les Domaines", "Prestigia", "Agha Acham Prestigia",
-        "Grillade Al Andalous prestigia", "L'Atelier Burger Hay riad", "La Grillardière Hay riad",
-        "Oh My Bun : Buntastic Burgers", "Coq Magic Hay Riad", "Atlas Chicken Hay Riad",
-        "Dunkin' Prestigia", "L'Atelier Burger", "Le Marché Dar Essalam", "Hay Nahda Rabat",
+        "Ryad Square Shopping Center", "Pomme de Pain", "Av. Annakhil", "Blue Berry Rabat",
+        "Kool Smoothie Almelia", "Mahaj Ryad Center", "Pokawa Hay Riad", "The Burg", "Les Domaines",
+        "Prestigia", "Agha Acham Prestigia", "Grillade Al Andalous prestigia", "L'Atelier Burger Hay riad",
+        "La Grillardière Hay riad", "Oh My Bun : Buntastic Burgers", "Coq Magic Hay Riad",
+        "Atlas Chicken Hay Riad", "Dunkin' Prestigia", "Le Marché Dar Essalam", "Hay Nahda Rabat",
         "Centre commercial Jasmin", "Maymana Souissi", "snack monalisa", "Mega Mall Rabat",
         "Dicapri", "Pâtisserie Fennich", "Green Village", "Mall Rabat Center", "Mall Carrousel Rabat",
         "Moojood", "Shawarma Mazen Chef", "Oops Fried Chicken", "Restaurant Abou Samy",
         "Restaurant Hekaya Chamiya", "Face Burger", "Sandway", "Maison Chorouk El Menzeh",
         "Restaurant Sabah al sham", "Maya Sushi agdal", "JaponézA Sushis : Thaï & Woks",
-        "Little Mamma Agdal", "SALADE BAR", "PAUL", "Atlas Chicken Agdal", "tangier's Bocadillos",
-        "Bocadillos El Rincón", "DAR AL FAWAKIH RABAT - AGDAL", "Dar Morjana", "Shawarma Ostorat Sham",
-        "Primos Chicken", "Yours Brunch", "Boca Mia", "Sushi ARIJ", "Gusto Chicken",
-        "Bocadillos Tanjaoui", "Mahaj Alfawakih", "Vida Souss", "Crepti", "Bari bana",
-        "Shamiyat", "Grill vibe", "175 kg", "So Chicken ocean", "Primos Chicken Océan",
+        "SALADE BAR", "PAUL", "Atlas Chicken Agdal", "tangier's Bocadillos", "Bocadillos El Rincón",
+        "DAR AL FAWAKIH RABAT - AGDAL", "Dar Morjana", "Shawarma Ostorat Sham", "Yours Brunch",
+        "Boca Mia", "Sushi ARIJ", "Gusto Chicken", "Bocadillos Tanjaoui", "Mahaj Alfawakih",
+        "Vida Souss", "Crepti", "Bari bana", "Shamiyat", "Grill vibe", "175 kg", "So Chicken ocean",
         "Zumba : Snack à Jus", "Mahlabat Bafares Moderne", "Pincho's Hassane", "IMIM SNACK",
-        "Snack Tempo", "Primos Salé", "Mister Chicken Sale", "Bocadillo Del Norte sale",
-        "Mamma Pizza", "S-tacos مطعم عالم الشام", "Meko Food sale", "Rocket Food"
+        "Snack Tempo", "Mister Chicken Sale", "Bocadillo Del Norte sale", "Mamma Pizza",
+        "S-tacos مطعم عالم الشام", "Meko Food sale", "Rocket Food"
       ]
     };
 
@@ -395,9 +413,9 @@
       "Livreur": ["Commande Volée / Disparue", "Problème Boîte / Sac (Box)", "Papiers / Assurance / Carte AE"]
     };
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v17')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v17')) || defaultRecTypes;
-    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v17')) || { order: true, sector: true, gps: true, comment: true };
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v18')) || defaultStoreCatalog;
+    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v18')) || defaultRecTypes;
+    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v18')) || { order: true, sector: true, gps: true, comment: true };
 
     const initialAgents = [
       { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", pin: "Najib1992@", role: "admin", canDelete: true, zone: "Temara - Oulad Mtaa" },
@@ -419,11 +437,11 @@
       { id: "17", fname: "Youssef", lname: "DERKAOUI", color: "#0284c7", pin: "1234", role: "agent", zone: "Agdal" }
     ];
 
-    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v17')) || initialAgents;
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v17')) || [
-      { id: 1, agent: "Yahya RHALLAB", type: "Partenaire", target: "McDonald's", sector: "McDonald's Temara", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
+    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v18')) || initialAgents;
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v18')) || [
+      { id: 1, agent: "Yahya RHALLAB", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
     ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v17')) || [];
+    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v18')) || [];
 
     let currentDashTab = "Partenaire";
     let selectedAgent = null;
@@ -560,7 +578,7 @@
         status: 'En Cours' 
       });
 
-      localStorage.setItem('fieldops_claims_db_v17', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v18', JSON.stringify(claimsDB));
       alert("✅ Réclamation enregistrée et ajoutée au Dashboard avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
@@ -570,7 +588,7 @@
 
     function toggleFieldVisibility(fieldKey) {
       fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
-      localStorage.setItem('fieldops_vis_v17', JSON.stringify(fieldVisibility));
+      localStorage.setItem('fieldops_vis_v18', JSON.stringify(fieldVisibility));
     }
 
     /* DYNAMIC TREE CONFIGURATION CONTROLS FOR ADMIN */
@@ -581,14 +599,14 @@
         bTree.innerHTML += `
           <div class="cfg-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
             <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-              <span style="font-size:14px; color:#0f172a;">🏢 <strong>${b}</strong></span>
+              <span style="font-size:14px; color:#0f172a;">🏢 <strong>${b}</strong> (${storeCatalog[b].length} Stores)</span>
               <div>
                 <button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="addStorePrompt('${b}')">➕ Store</button>
                 <button class="btn-edit" onclick="editBrandPrompt('${b}')">✏️ Modifier</button>
                 <button class="btn-delete" onclick="deleteBrandPrompt('${b}')">🗑️ Supprimer</button>
               </div>
             </div>
-            <div style="padding-left:16px; display:flex; flex-wrap:wrap; gap:6px; width:100%;">
+            <div style="padding-left:16px; display:flex; flex-wrap:wrap; gap:6px; width:100%; max-height:120px; overflow-y:auto;">
               ${storeCatalog[b].map(s => `
                 <span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
                   📍 ${s}
@@ -629,7 +647,7 @@
       const name = prompt("Nom du nouveau Partenaire (Marque) :");
       if (name && !storeCatalog[name]) {
         storeCatalog[name] = [name + " Store Central"];
-        localStorage.setItem('fieldops_store_catalog_v17', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v18', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -640,7 +658,7 @@
       if (newBrand && newBrand !== oldBrand) {
         storeCatalog[newBrand] = storeCatalog[oldBrand];
         delete storeCatalog[oldBrand];
-        localStorage.setItem('fieldops_store_catalog_v17', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v18', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -649,7 +667,7 @@
     function deleteBrandPrompt(brand) {
       if (confirm("Supprimer le partenaire " + brand + " ?")) {
         delete storeCatalog[brand];
-        localStorage.setItem('fieldops_store_catalog_v17', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v18', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -659,7 +677,7 @@
       const storeName = prompt("Nom du nouveau Store pour " + brand + " :");
       if (storeName) {
         storeCatalog[brand].push(storeName);
-        localStorage.setItem('fieldops_store_catalog_v17', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v18', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -667,7 +685,7 @@
 
     function deleteStore(brand, store) {
       storeCatalog[brand] = storeCatalog[brand].filter(s => s !== store);
-      localStorage.setItem('fieldops_store_catalog_v17', JSON.stringify(storeCatalog));
+      localStorage.setItem('fieldops_store_catalog_v18', JSON.stringify(storeCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -676,7 +694,7 @@
       const typeName = prompt("Nom du nouveau Type de Réclamation :");
       if (typeName && !recTypesCatalog[typeName]) {
         recTypesCatalog[typeName] = ["Incident Général"];
-        localStorage.setItem('fieldops_rec_types_v17', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v18', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -685,7 +703,7 @@
     function deleteRecTypePrompt(type) {
       if (confirm("Supprimer le type " + type + " ?")) {
         delete recTypesCatalog[type];
-        localStorage.setItem('fieldops_rec_types_v17', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v18', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -695,7 +713,7 @@
       const motif = prompt("Nouveau motif pour " + type + " :");
       if (motif) {
         recTypesCatalog[type].push(motif);
-        localStorage.setItem('fieldops_rec_types_v17', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v18', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -703,7 +721,7 @@
 
     function deleteMotif(type, motif) {
       recTypesCatalog[type] = recTypesCatalog[type].filter(m => m !== motif);
-      localStorage.setItem('fieldops_rec_types_v17', JSON.stringify(recTypesCatalog));
+      localStorage.setItem('fieldops_rec_types_v18', JSON.stringify(recTypesCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -742,7 +760,7 @@
         date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
       });
 
-      localStorage.setItem('fieldops_direct_msgs_v17', JSON.stringify(directMessagesDB));
+      localStorage.setItem('fieldops_direct_msgs_v18', JSON.stringify(directMessagesDB));
       alert(`✅ Message envoyé à ${targetAgent} !`);
       document.getElementById('msg-input-text').value = '';
       renderMessagesView();
@@ -779,7 +797,7 @@
           text: msg,
           date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
         });
-        localStorage.setItem('fieldops_direct_msgs_v17', JSON.stringify(directMessagesDB));
+        localStorage.setItem('fieldops_direct_msgs_v18', JSON.stringify(directMessagesDB));
         alert(`✅ Instruction envoyée à ${agentFName} !`);
       }
     }
@@ -787,7 +805,7 @@
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v17', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v18', JSON.stringify(claimsDB));
         renderReclamationStats();
       }
     }
@@ -840,7 +858,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v17', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v18', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
@@ -861,7 +879,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v17', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v18', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
