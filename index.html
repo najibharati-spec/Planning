@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - System Central</title>
+  <title>FieldOps - Central System</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -78,6 +78,16 @@
     .user-info-badge { display: flex; align-items: center; gap: 10px; background: #ffffff; padding: 6px 14px; border-radius: 10px; border: 1px solid #e2e8f0; }
 
     .content-card { background: #ffffff; border-radius: 16px; border: 1px solid var(--border-subtle); padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 20px; }
+
+    /* DASHBOARD TABS */
+    .tab-container { display: flex; gap: 10px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 16px; }
+    .tab-btn { padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; border: none; background: #f1f5f9; color: #475569; }
+    .tab-btn.active { background: var(--green-primary); color: #ffffff; }
+
+    .btn-copy { background: #e2e8f0; border: none; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; cursor: pointer; margin-left: 4px; }
+    .btn-copy:hover { background: #cbd5e1; }
+
+    .btn-msg { background: #0284c7; color: #fff; border: none; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; }
 
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
     .form-group { display: flex; flex-direction: column; gap: 5px; }
@@ -155,13 +165,18 @@
 
       <!-- DASHBOARD (Najib, Mehdi, Anass, Youssef) -->
       <div id="view-dashboard" class="content-card">
-        <h3>📊 Traitement & Détails des Réclamations Terrain</h3>
-        <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Consultation et décision sur les réclamations envoyées par les agents.</p>
+        <h3>📊 Centre de Traitement des Réclamations</h3>
+        <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Suivi temps réel avec tri prioritaire par récurrence.</p>
         
+        <div class="tab-container">
+          <button class="tab-btn active" id="tab-part" onclick="switchDashTab('Partenaire')">🏪 Partenaires (Merchants)</button>
+          <button class="tab-btn" id="tab-livr" onclick="switchDashTab('Livreur')">🛵 Livreurs (Couriers)</button>
+        </div>
+
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
           <div>
-            <label style="font-weight:800; font-size:11px;">Période : </label>
-            <select id="filter-period" onchange="renderReclamationStats()"><option value="day">Aujourd'hui</option><option value="week" selected>Cette Semaine</option><option value="month">Ce Mois</option></select>
+            <label style="font-weight:800; font-size:11px;">Filtre Période : </label>
+            <select id="filter-period" onchange="renderReclamationStats()"><option value="day">Aujourd'hui (Jour)</option><option value="week" selected>Cette Semaine</option><option value="month">Ce Mois</option></select>
           </div>
           <button class="btn-action" style="margin:0; font-size:12px;" onclick="exportToCSV()">📥 Exporter CSV</button>
         </div>
@@ -169,18 +184,8 @@
         <div style="overflow-x:auto;">
           <table>
             <thead>
-              <tr>
-                <th>Agent</th>
-                <th>Type</th>
-                <th>Partenaire / Store</th>
-                <th>Secteur / Ville</th>
-                <th>Motif</th>
-                <th>N° Commande</th>
-                <th>Lien GPS Maps</th>
-                <th>Commentaires / Détails</th>
-                <th>Danger</th>
-                <th>Statut</th>
-                <th id="th-action-delete">Action</th>
+              <tr id="dash-table-head">
+                <!-- Dynamique -->
               </tr>
             </thead>
             <tbody id="rec-dashboard-body"></tbody>
@@ -205,6 +210,12 @@
       <!-- RECLAMATIONS FORM (Seulement pour les Agents Terrain) -->
       <div id="view-reclamations" class="content-card hidden">
         <h3>🚨 Saisie Nouvelle Réclamation</h3>
+        
+        <div id="agent-msg-alert" class="hidden" style="background:#e0f2fe; border:1px solid #0284c7; padding:12px; border-radius:10px; margin-bottom:14px; font-size:12px; color:#0369a1;">
+          <strong>💬 Message des Responsables (Najib/Mehdi/Anass/Youssef) :</strong>
+          <p id="agent-msg-text" style="margin-top:4px; font-weight:700;"></p>
+        </div>
+
         <div class="form-grid">
           <div class="form-group">
             <label>Type Réclamation :</label>
@@ -298,12 +309,14 @@
       { id: "17", fname: "Youssef", lname: "DERKAOUI", color: "#0284c7", pin: "1234", role: "agent", zone: "Agdal" }
     ];
 
-    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v10')) || initialAgents;
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v10')) || [
+    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v11')) || initialAgents;
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v11')) || [
       { id: 1, agent: "Yahya RHALLAB", type: "Partenaire", target: "McDonald's", sector: "Témara", motif: "Prêt non respecté", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" },
-      { id: 2, agent: "Ayoub ABSSI", type: "Livreur", target: "54932", sector: "Agdal", motif: "Commande Volée", orderNum: "#9120", gps: "33.9821, -6.8482", comment: "Livreur a annulé après collecte client", date: "19/09/2026", status: "En Cours" }
+      { id: 2, agent: "Ayoub ABSSI", type: "Livreur", target: "54932", sector: "-", motif: "Commande Volée", orderNum: "#9120", gps: "33.9821, -6.8482", comment: "Livreur a annulé après collecte client", date: "19/09/2026", status: "En Cours" },
+      { id: 3, agent: "Mourad CHERRADI", type: "Livreur", target: "54932", sector: "-", motif: "Problème Box/Sac", orderNum: "#9155", gps: "33.9821, -6.8482", comment: "Pas de box isotherme", date: "19/09/2026", status: "En Cours" }
     ];
 
+    let currentDashTab = "Partenaire";
     let selectedAgent = null;
     let currentUser = null;
 
@@ -333,6 +346,16 @@
           document.getElementById('menu-rec').classList.remove('hidden');
           document.getElementById('menu-param').classList.add('hidden');
           showView('reclamations', document.getElementById('menu-rec'));
+
+          // Check if message for this agent
+          const savedMsg = localStorage.getItem(`msg_for_${currentUser.fname}`);
+          if (savedMsg) {
+            document.getElementById('agent-msg-alert').classList.remove('hidden');
+            document.getElementById('agent-msg-text').innerText = savedMsg;
+          } else {
+            document.getElementById('agent-msg-alert').classList.add('hidden');
+          }
+
         } else {
           document.getElementById('menu-dash').classList.remove('hidden');
           document.getElementById('menu-rec').classList.add('hidden');
@@ -365,6 +388,13 @@
       document.getElementById('view-' + viewId).classList.remove('hidden');
     }
 
+    function switchDashTab(tab) {
+      currentDashTab = tab;
+      document.getElementById('tab-part').classList.toggle('active', tab === 'Partenaire');
+      document.getElementById('tab-livr').classList.toggle('active', tab === 'Livreur');
+      renderReclamationStats();
+    }
+
     function toggleRecType() {
       const type = document.getElementById('rec-type').value;
       if (type === 'Partenaire') {
@@ -383,9 +413,21 @@
         navigator.geolocation.getCurrentPosition(p => {
           document.getElementById('rec-gps').value = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
         }, () => {
-          alert("GPS non détecté. Génération position de test.");
           document.getElementById('rec-gps').value = "33.9182, -6.9211";
         });
+      }
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+      alert(`📋 Copié dans le presse-papier : ${text}`);
+    }
+
+    function sendMessageToAgent(agentFName) {
+      const msg = prompt(`Envoyer un message / instruction à l'agent ${agentFName} :`);
+      if (msg) {
+        localStorage.setItem(`msg_for_${agentFName}`, msg);
+        alert(`✅ Message envoyé à ${agentFName} !`);
       }
     }
 
@@ -400,7 +442,7 @@
 
       claimsDB.push({ 
         id: Date.now(), 
-        agent: `${currentUser.fname} ${currentUser.lname}`, 
+        agent: currentUser.fname, 
         type, 
         target, 
         sector: type === 'Partenaire' ? sector : '-', 
@@ -412,7 +454,7 @@
         status: 'En Cours' 
       });
 
-      localStorage.setItem('fieldops_claims_db_v10', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v11', JSON.stringify(claimsDB));
       alert("✅ Réclamation envoyée avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
@@ -421,20 +463,38 @@
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v10', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v11', JSON.stringify(claimsDB));
         renderReclamationStats();
       }
     }
 
     function renderReclamationStats() {
       const tbody = document.getElementById('rec-dashboard-body');
+      const thead = document.getElementById('dash-table-head');
       tbody.innerHTML = '';
 
-      const targetCounts = {};
-      claimsDB.forEach(c => { targetCounts[c.target] = (targetCounts[c.target] || 0) + 1; });
+      if (currentDashTab === 'Partenaire') {
+        thead.innerHTML = `
+          <th>Agent Saisie</th><th>Store / Partenaire</th><th>Secteur</th><th>Motif</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Danger</th><th>Statut</th><th>Contact Agent</th>${currentUser && currentUser.canDelete ? '<th>Action</th>' : ''}
+        `;
+      } else {
+        thead.innerHTML = `
+          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Récurence Danger</th><th>Statut</th><th>Contact Agent</th>${currentUser && currentUser.canDelete ? '<th>Action</th>' : ''}
+        `;
+      }
 
-      claimsDB.forEach((c, idx) => {
-        const count = targetCounts[c.target] || 1;
+      // Filter by tab
+      let filtered = claimsDB.filter(c => c.type === currentDashTab);
+
+      // Calculate recurrences
+      const counts = {};
+      filtered.forEach(c => { counts[c.target] = (counts[c.target] || 0) + 1; });
+
+      // Sort by highest recurrence
+      filtered.sort((a, b) => (counts[b.target] || 0) - (counts[a.target] || 0));
+
+      filtered.forEach((c) => {
+        const count = counts[c.target] || 1;
         let badge = `<span class="badge-green">${count} Rec.</span>`;
         if (c.type === 'Partenaire') {
           if (count >= 3 && count <= 5) badge = `<span class="badge-orange">⚠️ ${count} Rec. (Orange)</span>`;
@@ -444,30 +504,56 @@
           if (count >= 4) badge = `<span class="badge-red">🚨 ${count} Rec. (Rouge)</span>`;
         }
 
-        const gpsLink = c.gps ? `<a href="https://maps.google.com/?q=${c.gps}" target="_blank" style="color:#0284c7; font-weight:800;">🗺️ Maps Link</a>` : '-';
+        const mapsUrl = c.gps ? `https://maps.google.com/?q=${c.gps}` : '#';
+        const gpsLinkHtml = c.gps ? `<a href="${mapsUrl}" target="_blank" style="color:#0284c7; font-weight:800;">🗺️ Maps</a><button class="btn-copy" onclick="copyToClipboard('${mapsUrl}')">📋</button>` : '-';
+        const orderHtml = `${c.orderNum || '-'} <button class="btn-copy" onclick="copyToClipboard('${c.orderNum}')">📋</button>`;
+        const targetHtml = `${c.target} <button class="btn-copy" onclick="copyToClipboard('${c.target}')">📋</button>`;
         const showDeleteBtn = currentUser && currentUser.canDelete;
 
-        tbody.innerHTML += `
-          <tr>
-            <td><strong>${c.agent}</strong></td>
-            <td>${c.type}</td>
-            <td><strong>${c.target}</strong></td>
-            <td><strong>${c.sector || '-'}</strong></td>
-            <td>${c.motif}</td>
-            <td><strong style="color:#00875a;">${c.orderNum || '-'}</strong></td>
-            <td>${gpsLink}</td>
-            <td style="max-width:200px; font-size:11px;">${c.comment || '-'}</td>
-            <td>${badge}</td>
-            <td>
-              <select onchange="claimsDB[${idx}].status=this.value; localStorage.setItem('fieldops_claims_db_v10', JSON.stringify(claimsDB));">
-                <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
-                <option ${c.status==='Traité'?'selected':''}>Traité</option>
-                <option ${c.status==='Classé'?'selected':''}>Classé</option>
-              </select>
-            </td>
-            ${showDeleteBtn ? `<td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button></td>` : `<td>-</td>`}
-          </tr>
-        `;
+        if (currentDashTab === 'Partenaire') {
+          tbody.innerHTML += `
+            <tr>
+              <td><strong>${c.agent}</strong></td>
+              <td><strong>${targetHtml}</strong></td>
+              <td>${c.sector || '-'}</td>
+              <td>${c.motif}</td>
+              <td>${orderHtml}</td>
+              <td>${gpsLinkHtml}</td>
+              <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
+              <td>${badge}</td>
+              <td>
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v11', JSON.stringify(claimsDB));">
+                  <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
+                  <option ${c.status==='Traité'?'selected':''}>Traité</option>
+                  <option ${c.status==='Classé'?'selected':''}>Classé</option>
+                </select>
+              </td>
+              <td><button class="btn-msg" onclick="sendMessageToAgent('${c.agent}')">💬 Msg Agent</button></td>
+              ${showDeleteBtn ? `<td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button></td>` : ''}
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML += `
+            <tr>
+              <td><strong>${c.agent}</strong></td>
+              <td><strong style="color:#2563eb;">${targetHtml}</strong></td>
+              <td>${c.motif}</td>
+              <td>${orderHtml}</td>
+              <td>${gpsLinkHtml}</td>
+              <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
+              <td>${badge}</td>
+              <td>
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v11', JSON.stringify(claimsDB));">
+                  <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
+                  <option ${c.status==='Traité'?'selected':''}>Traité</option>
+                  <option ${c.status==='Classé'?'selected':''}>Classé</option>
+                </select>
+              </td>
+              <td><button class="btn-msg" onclick="sendMessageToAgent('${c.agent}')">💬 Msg Agent</button></td>
+              ${showDeleteBtn ? `<td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button></td>` : ''}
+            </tr>
+          `;
+        }
       });
     }
 
