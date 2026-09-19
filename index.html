@@ -217,7 +217,8 @@
 
           <div class="form-group" id="fgroup-sector">
             <label>Magasin Exact (Store) :</label>
-            <select id="rec-store-sector"></select>
+            <select id="rec-store-sector" onchange="checkCustomStore()"></select>
+            <input type="text" id="custom-store-input" class="hidden" placeholder="Saisir le nom du partenaire/store exact..." style="margin-top:6px; padding:8px; border-radius:6px; border:1px solid #cbd5e1;" />
           </div>
 
           <div class="form-group hidden" id="fgroup-livreur">
@@ -384,6 +385,9 @@
       "Dunkin'": [
         "Dunkin' Harhoura", "Dunkin' Arribat Center", "Dunkin' Prestigia Rabat",
         "Dunkin' Mahaj Riad", "Dunkin' Label Gallery Rabat", "Dunkin' Le Marché Dar Essalam"
+      ],
+      "📍 Autres Partenaires / Restaurants": [
+        "➕ Saisir un autre partenaire..."
       ]
     };
 
@@ -392,9 +396,9 @@
       "Livreur": ["Commande Volée / Disparue", "Problème Boîte / Sac (Box)", "Papiers / Assurance / Carte AE"]
     };
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v20')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v20')) || defaultRecTypes;
-    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v20')) || { order: true, sector: true, gps: true, comment: true };
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v21')) || defaultStoreCatalog;
+    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v21')) || defaultRecTypes;
+    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v21')) || { order: true, sector: true, gps: true, comment: true };
 
     const initialAgents = [
       { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", role: "admin", canDelete: true, zone: "Temara - Oulad Mtaa" },
@@ -403,11 +407,11 @@
       { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur", canDelete: false, zone: "Agdal" }
     ];
 
-    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v20')) || initialAgents;
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v20')) || [
+    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v21')) || initialAgents;
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v21')) || [
       { id: 1, agent: "Najib HARATI", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
     ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v20')) || [];
+    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v21')) || [];
 
     let currentDashTab = "Partenaire";
     let selectedAgent = initialAgents[0];
@@ -515,14 +519,30 @@
       const brand = document.getElementById('rec-target-partenaire').value;
       const selector = document.getElementById('rec-store-sector');
       selector.innerHTML = '';
+
       if (!brand || !storeCatalog[brand]) {
         selector.innerHTML = `<option value="-">-</option>`;
+        checkCustomStore();
         return;
       }
+
       const stores = storeCatalog[brand];
       stores.forEach(s => {
         selector.innerHTML += `<option value="${s}">${s}</option>`;
       });
+
+      checkCustomStore();
+    }
+
+    function checkCustomStore() {
+      const storeVal = document.getElementById('rec-store-sector').value;
+      const customInput = document.getElementById('custom-store-input');
+      if (storeVal === "➕ Saisir un autre partenaire...") {
+        customInput.classList.remove('hidden');
+      } else {
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      }
     }
 
     function getGPS() {
@@ -537,12 +557,19 @@
 
     function submitReclamation() {
       const type = document.getElementById('rec-type').value;
-      const target = type === 'Partenaire' ? document.getElementById('rec-target-partenaire').value : document.getElementById('rec-target-livreur').value;
-      const sector = document.getElementById('rec-store-sector').value;
+      let target = type === 'Partenaire' ? document.getElementById('rec-target-partenaire').value : document.getElementById('rec-target-livreur').value;
+      let sector = document.getElementById('rec-store-sector').value;
       const motif = document.getElementById('rec-motif').value;
       const orderNum = document.getElementById('rec-order-num').value;
       const gps = document.getElementById('rec-gps').value;
       const comment = document.getElementById('rec-comment').value;
+
+      if (sector === "➕ Saisir un autre partenaire...") {
+        const customVal = document.getElementById('custom-store-input').value;
+        if (!customVal) return alert("Veuillez saisir le nom du partenaire !");
+        sector = customVal;
+        target = customVal;
+      }
 
       if (!target || target.startsWith('❌')) return alert("Veuillez choisir un partenaire valide !");
 
@@ -560,17 +587,18 @@
         status: 'En Cours' 
       });
 
-      localStorage.setItem('fieldops_claims_db_v20', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v21', JSON.stringify(claimsDB));
       alert("✅ Réclamation enregistrée et ajoutée au Dashboard avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
+      document.getElementById('custom-store-input').value = '';
       renderReclamationStats();
       showView('dashboard', document.getElementById('menu-dash'));
     }
 
     function toggleFieldVisibility(fieldKey) {
       fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
-      localStorage.setItem('fieldops_vis_v20', JSON.stringify(fieldVisibility));
+      localStorage.setItem('fieldops_vis_v21', JSON.stringify(fieldVisibility));
     }
 
     /* DYNAMIC TREE CONFIGURATION CONTROLS FOR ADMIN */
@@ -634,7 +662,7 @@
       const name = prompt("Nom du nouveau Partenaire (Marque) :");
       if (name && !storeCatalog[name]) {
         storeCatalog[name] = [name + " Store Central"];
-        localStorage.setItem('fieldops_store_catalog_v20', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v21', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -646,7 +674,7 @@
       if (newBrand && newBrand !== oldBrand) {
         storeCatalog[newBrand] = storeCatalog[oldBrand];
         delete storeCatalog[oldBrand];
-        localStorage.setItem('fieldops_store_catalog_v20', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v21', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -656,7 +684,7 @@
       const brand = decodeURIComponent(safeBrand);
       if (confirm("Supprimer le partenaire " + brand + " ?")) {
         delete storeCatalog[brand];
-        localStorage.setItem('fieldops_store_catalog_v20', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v21', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -667,7 +695,7 @@
       const storeName = prompt("Nom du nouveau Store pour " + brand + " :");
       if (storeName) {
         storeCatalog[brand].push(storeName);
-        localStorage.setItem('fieldops_store_catalog_v20', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v21', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -677,7 +705,7 @@
       const brand = decodeURIComponent(safeBrand);
       const store = decodeURIComponent(safeStore);
       storeCatalog[brand] = storeCatalog[brand].filter(s => s !== store);
-      localStorage.setItem('fieldops_store_catalog_v20', JSON.stringify(storeCatalog));
+      localStorage.setItem('fieldops_store_catalog_v21', JSON.stringify(storeCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -686,7 +714,7 @@
       const typeName = prompt("Nom du nouveau Type de Réclamation :");
       if (typeName && !recTypesCatalog[typeName]) {
         recTypesCatalog[typeName] = ["Incident Général"];
-        localStorage.setItem('fieldops_rec_types_v20', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v21', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -696,7 +724,7 @@
       const type = decodeURIComponent(safeType);
       if (confirm("Supprimer le type " + type + " ?")) {
         delete recTypesCatalog[type];
-        localStorage.setItem('fieldops_rec_types_v20', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v21', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -707,7 +735,7 @@
       const motif = prompt("Nouveau motif pour " + type + " :");
       if (motif) {
         recTypesCatalog[type].push(motif);
-        localStorage.setItem('fieldops_rec_types_v20', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v21', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -717,7 +745,7 @@
       const type = decodeURIComponent(safeType);
       const motif = decodeURIComponent(safeMotif);
       recTypesCatalog[type] = recTypesCatalog[type].filter(m => m !== motif);
-      localStorage.setItem('fieldops_rec_types_v20', JSON.stringify(recTypesCatalog));
+      localStorage.setItem('fieldops_rec_types_v21', JSON.stringify(recTypesCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -756,7 +784,7 @@
         date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
       });
 
-      localStorage.setItem('fieldops_direct_msgs_v20', JSON.stringify(directMessagesDB));
+      localStorage.setItem('fieldops_direct_msgs_v21', JSON.stringify(directMessagesDB));
       alert(`✅ Message envoyé à ${targetAgent} !`);
       document.getElementById('msg-input-text').value = '';
       renderMessagesView();
@@ -786,7 +814,7 @@
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v20', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v21', JSON.stringify(claimsDB));
         renderReclamationStats();
       }
     }
@@ -839,7 +867,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v20', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v21', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
@@ -859,7 +887,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v20', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v21', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
