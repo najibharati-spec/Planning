@@ -51,10 +51,6 @@
     .agent-lname { font-size: 9px; font-weight: 700; color: #78716c; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
 
     .login-box { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 8px; }
-    .pin-input {
-      width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e7e5e4;
-      background: var(--card-cream); font-size: 13.5px; font-weight: 800; color: #1c1917; text-align: center; outline: none;
-    }
     .btn-unlock {
       width: 100%; padding: 12px; border-radius: 12px; border: none;
       background: var(--green-primary); color: #ffffff; font-size: 14px; font-weight: 800; cursor: pointer;
@@ -94,6 +90,11 @@
     .form-group label { font-size: 12px; font-weight: 800; color: #334155; }
     .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px; font-weight: 600; }
 
+    .search-input-box {
+      padding: 10px 12px; border-radius: 8px; border: 2px solid #00875a; outline: none;
+      font-size: 13px; font-weight: 700; background: #f0fdf4; margin-bottom: 4px;
+    }
+
     .btn-action { background: var(--green-primary); color: #fff; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
     .btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 11px; }
     .btn-edit { background: #e0f2fe; color: #0369a1; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 11px; }
@@ -124,7 +125,7 @@
   <div id="lock-screen">
     <div class="brand-header">
       <h1>FieldOps Admin</h1>
-      <p>Système Central de Gestion RH & Operations (Admin Najip / Mehdi / Anass / Youssef)</p>
+      <p>Sélectionnez votre profil Admin pour accéder directement au système</p>
     </div>
 
     <div class="agents-grid-container">
@@ -132,8 +133,7 @@
     </div>
 
     <div class="login-box">
-      <input type="password" id="pin-input-field" class="pin-input" placeholder="Sélectionnez un utilisateur..." maxlength="20" />
-      <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER ADMIN</button>
+      <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER ACCÈS DIRECT</button>
     </div>
   </div>
 
@@ -198,7 +198,7 @@
         </div>
       </div>
 
-      <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION (POUR ADMIN ET LEADS) -->
+      <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION -->
       <div id="view-reclamations" class="content-card hidden">
         <h3>🚨 Saisie Nouvelle Réclamation (Lead / Admin)</h3>
         <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Saisissez directement les réclamations terrain en tant que Responsable.</p>
@@ -208,32 +208,40 @@
             <label>Type Réclamation :</label>
             <select id="rec-type" onchange="toggleRecType()"></select>
           </div>
+
           <div class="form-group" id="fgroup-partenaire">
-            <label>Marque Partenaire :</label>
+            <label>🔎 Rechercher & Sélectionner Partenaire :</label>
+            <input type="text" id="brand-search-input" class="search-input-box" placeholder="🔍 Taper pour chercher (ex: Macdo, KFC, Primos...)" oninput="filterBrands()" />
             <select id="rec-target-partenaire" onchange="updateStoreLocations()"></select>
           </div>
+
           <div class="form-group" id="fgroup-sector">
             <label>Magasin Exact (Store) :</label>
             <select id="rec-store-sector"></select>
           </div>
+
           <div class="form-group hidden" id="fgroup-livreur">
             <label>ID Livreur :</label>
             <input type="text" id="rec-target-livreur" placeholder="Ex: 54932" />
           </div>
+
           <div class="form-group" id="fgroup-motif">
             <label>Motif Incident :</label>
             <select id="rec-motif"></select>
           </div>
+
           <div class="form-group" id="fgroup-order">
             <label>N° de Commande :</label>
             <input type="text" id="rec-order-num" placeholder="Ex: #8841, #9902" />
           </div>
+
           <div class="form-group" id="fgroup-gps">
             <label>Localisation GPS :</label>
             <button type="button" onclick="getGPS()" style="padding:10px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer; font-weight:700;">📍 Détecter Position</button>
             <input type="text" id="rec-gps" readonly placeholder="Lat, Long" />
           </div>
         </div>
+
         <div class="form-group" id="fgroup-comment" style="margin-top:12px;">
           <label>Commentaires & Explications :</label>
           <textarea id="rec-comment" rows="3" placeholder="Saisir les commentaires et détails..."></textarea>
@@ -259,9 +267,12 @@
 
         <!-- 2. GESTION ARBORESCENCE PARTENAIRES & STORES -->
         <div class="cfg-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
             <h4 style="font-size:14px; color:#00875a;">🏬 Arborescence Partenaires & Stores :</h4>
-            <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="addNewBrandPrompt()">➕ Ajouter Nouveau Partenaire</button>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="text" id="config-brand-search" class="search-input-box" style="margin:0; width:220px;" placeholder="🔍 Chercher Partenaire f Config..." oninput="renderConfigTree()" />
+              <button class="btn-action" style="padding:8px 12px; font-size:11px;" onclick="addNewBrandPrompt()">➕ Ajouter Nouveau Partenaire</button>
+            </div>
           </div>
           
           <div id="brands-tree-container"></div>
@@ -315,7 +326,7 @@
       <!-- PARAMETRES -->
       <div id="view-parametres" class="content-card hidden">
         <h3>⚙️ Paramètres système Admin</h3>
-        <p style="color:#64748b; font-size:12px;">Gestion des accès et modification des codes PIN.</p>
+        <p style="color:#64748b; font-size:12px;">Gestion des accès et modification des comptes.</p>
       </div>
     </div>
   </div>
@@ -324,87 +335,55 @@
     let defaultStoreCatalog = {
       "McDonald's®": [
         "McDonald's Marjane Hay Riad - 12", "McDonald's Salé - 33", "McDonald's Temara - 46",
-        "McDonald's Carrousel-93", "McDonald's Rabat ville - 22", "McDonald's Agdal - 02",
-        "Mcdonald's Arjat - 96", "McDonald's Zaer - 110"
+        "McDonald's Carrousel-93", "McDonald's Rabat ville - 22", "McDonald's Gare LGV Agdal - 48",
+        "McDonald's Agdal - 2", "McDonald's El Menzeh"
       ],
       "Primos Chicken": [
-        "Primos Chicken Oulad Mtaa", "Primos Chicken Salé Medina", "Primos Chicken Hassan",
-        "Primos Chicken Agdal", "Primos Chicken Temara", "Primos Chicken Kamra",
-        "Primos Chicken Hay Riad", "Primos Chicken Tabriquet"
+        "Primos Agdal", "Primos Chicken Hay Riad", "Primos Salé", "Primos Temara",
+        "Primos Chicken Massira", "Primos Centre Ville", "Primos Chicken CARROUSSEL", "Primos Ocean"
       ],
       "Burger King": [
-        "Burger King Agdal", "Burger King Temara Sela Park", "Burger King Hay Riad",
-        "Burger King Zaer", "Burger King Bouregreg", "Burger King Sela Park Salé",
-        "Burger King Harhoura", "Burger King Arribat Center", "Burger King Ocean"
+        "Burger King Temara", "Burger King Mahaj Ryad", "Burger King Carrefour Salé",
+        "Burger King Agdal", "Burger King Marina Salé", "Burger King Arribat Center",
+        "Burger King Harhoura", "Burger King LGB Zaer", "Burger King Kitea Géant"
       ],
       "KFC": [
-        "KFC Hay Riad", "KFC Agdal", "KFC Temara Sela Park", "KFC Salé Sela Park",
-        "KFC Rabat Ville", "KFC Mahaj Riad", "KFC Bab El Had", "KFC Hassan"
+        "KFC Sela Park", "KFC Hassan", "KFC Hay Riad", "KFC Rabat Ville",
+        "KFC Agdal", "KFC Le Carrousel", "KFC Arribat Center"
       ],
       "Little Mamma": [
-        "Little Mamma Agdal", "Little Mamma Hay Riad", "Little Mamma Temara"
+        "Little Mamma Mahaj Riad", "Little Mamma Agdal", "Little Mamma Centre Ville Rabat"
       ],
-      "Crusty": [
-        "Crusty Agdal"
+      "Carrefour Market / Express": [
+        "Carrefour Express Temara Wifak 2", "Carrefour Market WIFAK", "Carrefour Express Temara",
+        "Carrefour Mehdi Ben Barka", "Carrefour Market Riad", "Carrefour Gourmet",
+        "Carrefour Market Souissi", "Carrefour Market Oqba", "Carrefour Market Al Manal"
       ],
       "Pizza Hut": [
-        "Pizza Hut Agdal", "Pizza Hut Hay Riad", "Pizza Hut Temara", "Pizza Hut Salé",
-        "Pizza Hut Hassan", "Pizza Hut Zaer", "Pizza Hut Harhoura", "Pizza Hut Bouregreg",
-        "Pizza Hut Mahaj Riad", "Pizza Hut Ocean"
+        "Pizza Hut Mahaj Ryad", "Pizza Hut Agdal", "Temara Square – Av Hassan 2",
+        "Pizza Hut Carrefour Salé - PHD24", "Pizza Hut - Marjane Bouregreg", "Pizza Hut Souissi",
+        "Pizza Hut Hay Riad", "Pizza Hut Harhoura", "Pizza Hut El Menzeh"
       ],
       "Tacos by L.Y.O.N.": [
-        "Tacos by L.Y.O.N. Agdal", "Tacos by L.Y.O.N. Hassan", "Tacos by L.Y.O.N. Hay Riad"
+        "T2L Fal Ould Oumeir", "T2L Mohamed V RBT", "T2L Arribat Center"
       ],
       "Yoka Sushi": [
         "Yoka Sushi Agdal", "Yoka Sushi Hay Riad", "Yoka Sushi Temara",
-        "Yoka Sushi Hassan", "Yoka Sushi Salé", "Yoka Sushi Zaer"
+        "Yoka Sushi Label'Gallery", "Yoka Sushi Salé", "Yoka Sushi Harhoura"
       ],
       "Domino's Pizza": [
-        "Domino's Pizza Agdal", "Domino's Pizza Hay Riad", "Domino's Pizza Temara",
-        "Domino's Pizza Salé", "Domino's Pizza Hassan", "Domino's Pizza Zaer"
-      ],
-      "Carrefour Express / Market": [
-        "Carrefour Express Temara Wifak 2", "Carrefour Market WIFAK", "Carrefour Express Temara",
-        "Carrefour Mehdi Ben Barka", "Carrefour Market Riad", "Carrefour Gourmet",
-        "Carrefour Market Souissi", "Carrefour Market Oqba", "Carrefour Market Al Manal",
-        "Carrefour Market Descartes", "Carrefour Market Shem's", "Carrefour Technopolis",
-        "Carrefour Market Hassan", "Carrefour Express Medina", "Carrefour Hepar Salé", "Carrefour Market Bettana"
-      ],
-      "Marjane / Marjane Market": [
-        "Marjane Hyper Hay Riad", "Marjane Market A.V BENBARKA", "Marjane Market Prestigia Hay Riad",
-        "Marjane City OQBA", "Marjane Technopolis", "Marjane market ocean", "Marjane Hepar Bouregreg"
+        "Domino's Agdal", "Domino's Harhoura", "Domino's Prestigia Rabat",
+        "Domino's Mahaj Riad", "Domino's Mega Mall", "Domino's Label Gallery Rabat"
       ],
       "Sushi Box": [
-        "Sushi Box Harhoura", "Sushi Box Agdal", "Sushi Box Hay Riad"
+        "Sushi Box Mahaj Ryad", "Sushi Box Harhoura", "Sushi Box Labelvie RBT", "Sushi Box Arribat Center"
       ],
-      "Tacos de Nice": [
-        "Tacos de Nice Agdal", "Tacos de Nice (Kouass)", "Tacos de Nice Hassan"
+      "Papa John's": [
+        "Papa John's Hay Riad", "Papa John's Harhoura"
       ],
-      "Autres Hotspots Filtered (+100 Orders)": [
-        "Chawarma Ibn Acham Temara", "Michwat Al Akhawayn", "Pizza Friends Temara",
-        "Restaurant Anassim Temara", "Quick", "Agha Cham", "Paul Harhoura", "Di Villaggio Harhoura",
-        "Papa John's Harhoura", "Chez Ouazzani Harhoura", "Dunkin Harhoura", "Pokawa Hrhoura",
-        "La Maison du Pain Harhoura", "Grillade Al Andalous Harhoura", "Yummy Grill Temara",
-        "Ben's Team Fast Food", "Chrono Pizza", "Maison Bocadillos Temara", "Oulad Mtaa",
-        "Primo Massira 1", "Polyvalente", "Zen Acham", "BOCADILLOS EL RINCON", "Le Port Temara",
-        "Between The Buns Temara", "175Kg Grillade Temara", "Cali Burger Temara", "Paradise Massira 1",
-        "Ryad Square Shopping Center", "Pomme de Pain", "Av. Annakhil", "Blue Berry Rabat",
-        "Kool Smoothie Almelia", "Mahaj Ryad Center", "Pokawa Hay Riad", "The Burg", "Les Domaines",
-        "Prestigia", "Agha Acham Prestigia", "Grillade Al Andalous prestigia", "L'Atelier Burger Hay riad",
-        "La Grillardière Hay riad", "Oh My Bun : Buntastic Burgers", "Coq Magic Hay Riad",
-        "Atlas Chicken Hay Riad", "Dunkin' Prestigia", "Le Marché Dar Essalam", "Hay Nahda Rabat",
-        "Centre commercial Jasmin", "Maymana Souissi", "snack monalisa", "Mega Mall Rabat",
-        "Dicapri", "Pâtisserie Fennich", "Green Village", "Mall Rabat Center", "Mall Carrousel Rabat",
-        "Moojood", "Shawarma Mazen Chef", "Oops Fried Chicken", "Restaurant Abou Samy",
-        "Restaurant Hekaya Chamiya", "Face Burger", "Sandway", "Maison Chorouk El Menzeh",
-        "Restaurant Sabah al sham", "Maya Sushi agdal", "JaponézA Sushis : Thaï & Woks",
-        "SALADE BAR", "PAUL", "Atlas Chicken Agdal", "tangier's Bocadillos", "Bocadillos El Rincón",
-        "DAR AL FAWAKIH RABAT - AGDAL", "Dar Morjana", "Shawarma Ostorat Sham", "Yours Brunch",
-        "Boca Mia", "Sushi ARIJ", "Gusto Chicken", "Bocadillos Tanjaoui", "Mahaj Alfawakih",
-        "Vida Souss", "Crepti", "Bari bana", "Shamiyat", "Grill vibe", "175 kg", "So Chicken ocean",
-        "Zumba : Snack à Jus", "Mahlabat Bafares Moderne", "Pincho's Hassane", "IMIM SNACK",
-        "Snack Tempo", "Mister Chicken Sale", "Bocadillo Del Norte sale", "Mamma Pizza",
-        "S-tacos مطعم عالم الشام", "Meko Food sale", "Rocket Food"
+      "Dunkin'": [
+        "Dunkin' Harhoura", "Dunkin' Arribat Center", "Dunkin' Prestigia Rabat",
+        "Dunkin' Mahaj Riad", "Dunkin' Label Gallery Rabat", "Dunkin' Le Marché Dar Essalam"
       ]
     };
 
@@ -413,44 +392,31 @@
       "Livreur": ["Commande Volée / Disparue", "Problème Boîte / Sac (Box)", "Papiers / Assurance / Carte AE"]
     };
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v18')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v18')) || defaultRecTypes;
-    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v18')) || { order: true, sector: true, gps: true, comment: true };
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v20')) || defaultStoreCatalog;
+    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v20')) || defaultRecTypes;
+    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v20')) || { order: true, sector: true, gps: true, comment: true };
 
     const initialAgents = [
-      { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", pin: "Najib1992@", role: "admin", canDelete: true, zone: "Temara - Oulad Mtaa" },
-      { id: "2", fname: "Mehdi", lname: "FADLI", color: "#2563eb", pin: "1234", role: "decideur", canDelete: true, zone: "Temara" },
-      { id: "3", fname: "Anass", lname: "FADLI", color: "#059669", pin: "1234", role: "decideur", canDelete: true, zone: "Technopolis" },
-      { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", pin: "1234", role: "decideur", canDelete: false, zone: "Agdal" },
-      { id: "5", fname: "Yahya", lname: "RHALLAB", color: "#d97706", pin: "1234", role: "agent", zone: "Temara" },
-      { id: "6", fname: "Mourad", lname: "CHERRADI", color: "#b91c1c", pin: "1234", role: "agent", zone: "Agdal" },
-      { id: "7", fname: "Ayoub", lname: "ABSSI", color: "#0284c7", pin: "1234", role: "agent", zone: "Agdal" },
-      { id: "8", fname: "Ayoub", lname: "BEN MALEK", color: "#7c3aed", pin: "1234", role: "agent", zone: "Salé - Medina" },
-      { id: "9", fname: "Charaf", lname: "LOUMMIHI", color: "#334155", pin: "1234", role: "agent", zone: "Salé - Medina" },
-      { id: "10", fname: "Hassan", lname: "AZGOUNE", color: "#0f766e", pin: "1234", role: "agent", zone: "Salé - Medina" },
-      { id: "11", fname: "Islam", lname: "ELMARDI", color: "#059669", pin: "1234", role: "agent", zone: "Hay Riad" },
-      { id: "12", fname: "Aymane", lname: "CHLIFANE", color: "#7c3aed", pin: "1234", role: "agent", zone: "Temara" },
-      { id: "13", fname: "Mehdi", lname: "AIT JEBOUR", color: "#d97706", pin: "1234", role: "agent", zone: "Temara" },
-      { id: "14", fname: "Oussama", lname: "EL ATRACH", color: "#1e293b", pin: "1234", role: "agent", zone: "Hay Riad" },
-      { id: "15", fname: "Zakariae", lname: "BENALI", color: "#2563eb", pin: "1234", role: "agent", zone: "Technopolis" },
-      { id: "16", fname: "Achraf", lname: "AKHLIJ", color: "#d97706", pin: "1234", role: "agent", zone: "Hay Riad" },
-      { id: "17", fname: "Youssef", lname: "DERKAOUI", color: "#0284c7", pin: "1234", role: "agent", zone: "Agdal" }
+      { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", role: "admin", canDelete: true, zone: "Temara - Oulad Mtaa" },
+      { id: "2", fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur", canDelete: true, zone: "Temara" },
+      { id: "3", fname: "Anass", lname: "FADLI", color: "#059669", role: "decideur", canDelete: true, zone: "Technopolis" },
+      { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur", canDelete: false, zone: "Agdal" }
     ];
 
-    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v18')) || initialAgents;
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v18')) || [
-      { id: 1, agent: "Yahya RHALLAB", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
+    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v20')) || initialAgents;
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v20')) || [
+      { id: 1, agent: "Najib HARATI", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
     ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v18')) || [];
+    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v20')) || [];
 
     let currentDashTab = "Partenaire";
-    let selectedAgent = null;
-    let currentUser = null;
+    let selectedAgent = initialAgents[0];
+    let currentUser = initialAgents[0];
 
     function renderLockCards() {
       const target = document.getElementById('agents-grid-target');
       target.innerHTML = '';
-      agentsDB.filter(a => a.role === 'admin' || a.role === 'decideur').forEach(a => {
+      agentsDB.forEach(a => {
         const card = document.createElement('div');
         card.className = `agent-card ${selectedAgent && selectedAgent.id === a.id ? 'selected' : ''}`;
         card.onclick = () => { selectedAgent = a; renderLockCards(); };
@@ -460,22 +426,19 @@
     }
 
     function attemptUnlock() {
-      if (!selectedAgent) return alert("Sélectionnez un compte Admin !");
-      const pin = document.getElementById('pin-input-field').value;
-      if (pin === selectedAgent.pin || pin === "1234" || pin === "2026") {
-        currentUser = selectedAgent;
-        document.getElementById('lock-screen').classList.add('hidden');
-        document.getElementById('main-app').classList.remove('hidden');
-        document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname}`;
-        
-        initFormDropdowns();
-        populateAgentMsgDropdown();
-        showView('dashboard', document.getElementById('menu-dash'));
-        renderPlanningTable();
-        renderReclamationStats();
-        renderMessagesView();
-        renderConfigTree();
-      } else alert("❌ PIN/Password Incorrect !");
+      if (!selectedAgent) selectedAgent = agentsDB[0];
+      currentUser = selectedAgent;
+      document.getElementById('lock-screen').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('hidden');
+      document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname}`;
+      
+      initFormDropdowns();
+      populateAgentMsgDropdown();
+      showView('dashboard', document.getElementById('menu-dash'));
+      renderPlanningTable();
+      renderReclamationStats();
+      renderMessagesView();
+      renderConfigTree();
     }
 
     function lockSystem() {
@@ -487,7 +450,7 @@
 
     function showView(viewId, el) {
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      el.classList.add('active');
+      if(el) el.classList.add('active');
       document.getElementById('view-dashboard').classList.add('hidden');
       document.getElementById('view-reclamations').classList.add('hidden');
       document.getElementById('view-planning').classList.add('hidden');
@@ -505,13 +468,26 @@
         typeSel.innerHTML += `<option value="${t}">${t}</option>`;
       });
 
+      filterBrands();
+      toggleRecType();
+    }
+
+    function filterBrands() {
+      const searchVal = document.getElementById('brand-search-input').value.toLowerCase().trim();
       const brandSel = document.getElementById('rec-target-partenaire');
       brandSel.innerHTML = '';
+
       Object.keys(storeCatalog).forEach(b => {
-        brandSel.innerHTML += `<option value="${b}">${b}</option>`;
+        if (b.toLowerCase().includes(searchVal)) {
+          brandSel.innerHTML += `<option value="${b}">${b}</option>`;
+        }
       });
 
-      toggleRecType();
+      if (brandSel.options.length === 0) {
+        brandSel.innerHTML = `<option value="">❌ Aucun partenaire trouvé</option>`;
+      }
+
+      updateStoreLocations();
     }
 
     function toggleRecType() {
@@ -539,7 +515,11 @@
       const brand = document.getElementById('rec-target-partenaire').value;
       const selector = document.getElementById('rec-store-sector');
       selector.innerHTML = '';
-      const stores = storeCatalog[brand] || [brand + " Store Central"];
+      if (!brand || !storeCatalog[brand]) {
+        selector.innerHTML = `<option value="-">-</option>`;
+        return;
+      }
+      const stores = storeCatalog[brand];
       stores.forEach(s => {
         selector.innerHTML += `<option value="${s}">${s}</option>`;
       });
@@ -564,6 +544,8 @@
       const gps = document.getElementById('rec-gps').value;
       const comment = document.getElementById('rec-comment').value;
 
+      if (!target || target.startsWith('❌')) return alert("Veuillez choisir un partenaire valide !");
+
       claimsDB.push({ 
         id: Date.now(), 
         agent: `${currentUser.fname} (${currentUser.role.toUpperCase()})`, 
@@ -578,7 +560,7 @@
         status: 'En Cours' 
       });
 
-      localStorage.setItem('fieldops_claims_db_v18', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v20', JSON.stringify(claimsDB));
       alert("✅ Réclamation enregistrée et ajoutée au Dashboard avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
@@ -588,29 +570,33 @@
 
     function toggleFieldVisibility(fieldKey) {
       fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
-      localStorage.setItem('fieldops_vis_v18', JSON.stringify(fieldVisibility));
+      localStorage.setItem('fieldops_vis_v20', JSON.stringify(fieldVisibility));
     }
 
     /* DYNAMIC TREE CONFIGURATION CONTROLS FOR ADMIN */
     function renderConfigTree() {
+      const searchConfig = (document.getElementById('config-brand-search')?.value || '').toLowerCase().trim();
       const bTree = document.getElementById('brands-tree-container');
       bTree.innerHTML = '';
+
       Object.keys(storeCatalog).forEach(b => {
+        if (!b.toLowerCase().includes(searchConfig)) return;
+        const safeBrandKey = encodeURIComponent(b);
         bTree.innerHTML += `
           <div class="cfg-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
             <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
               <span style="font-size:14px; color:#0f172a;">🏢 <strong>${b}</strong> (${storeCatalog[b].length} Stores)</span>
               <div>
-                <button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="addStorePrompt('${b}')">➕ Store</button>
-                <button class="btn-edit" onclick="editBrandPrompt('${b}')">✏️ Modifier</button>
-                <button class="btn-delete" onclick="deleteBrandPrompt('${b}')">🗑️ Supprimer</button>
+                <button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="addStorePrompt('${safeBrandKey}')">➕ Store</button>
+                <button class="btn-edit" onclick="editBrandPrompt('${safeBrandKey}')">✏️ Modifier</button>
+                <button class="btn-delete" onclick="deleteBrandPrompt('${safeBrandKey}')">🗑️ Supprimer</button>
               </div>
             </div>
             <div style="padding-left:16px; display:flex; flex-wrap:wrap; gap:6px; width:100%; max-height:120px; overflow-y:auto;">
               ${storeCatalog[b].map(s => `
                 <span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
                   📍 ${s}
-                  <button onclick="deleteStore('${b}', '${s}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
+                  <button onclick="deleteStore('${safeBrandKey}', '${encodeURIComponent(s)}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
                 </span>
               `).join('')}
             </div>
@@ -621,20 +607,21 @@
       const tTree = document.getElementById('types-motifs-container');
       tTree.innerHTML = '';
       Object.keys(recTypesCatalog).forEach(t => {
+        const safeTypeKey = encodeURIComponent(t);
         tTree.innerHTML += `
           <div class="cfg-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
             <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
               <span style="font-size:14px; color:#0f172a;">🚨 Type: <strong>${t}</strong></span>
               <div>
-                <button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="addMotifPrompt('${t}')">➕ Motif</button>
-                <button class="btn-delete" onclick="deleteRecTypePrompt('${t}')">🗑️ Supprimer Type</button>
+                <button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="addMotifPrompt('${safeTypeKey}')">➕ Motif</button>
+                <button class="btn-delete" onclick="deleteRecTypePrompt('${safeTypeKey}')">🗑️ Supprimer Type</button>
               </div>
             </div>
             <div style="padding-left:16px; display:flex; flex-wrap:wrap; gap:6px; width:100%;">
               ${recTypesCatalog[t].map(m => `
                 <span style="background:#fef3c7; color:#92400e; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
                   ${m}
-                  <button onclick="deleteMotif('${t}', '${m}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
+                  <button onclick="deleteMotif('${safeTypeKey}', '${encodeURIComponent(m)}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
                 </span>
               `).join('')}
             </div>
@@ -647,45 +634,50 @@
       const name = prompt("Nom du nouveau Partenaire (Marque) :");
       if (name && !storeCatalog[name]) {
         storeCatalog[name] = [name + " Store Central"];
-        localStorage.setItem('fieldops_store_catalog_v18', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v20', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
     }
 
-    function editBrandPrompt(oldBrand) {
+    function editBrandPrompt(safeOldBrand) {
+      const oldBrand = decodeURIComponent(safeOldBrand);
       const newBrand = prompt("Nouveau nom pour " + oldBrand + " :", oldBrand);
       if (newBrand && newBrand !== oldBrand) {
         storeCatalog[newBrand] = storeCatalog[oldBrand];
         delete storeCatalog[oldBrand];
-        localStorage.setItem('fieldops_store_catalog_v18', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v20', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
     }
 
-    function deleteBrandPrompt(brand) {
+    function deleteBrandPrompt(safeBrand) {
+      const brand = decodeURIComponent(safeBrand);
       if (confirm("Supprimer le partenaire " + brand + " ?")) {
         delete storeCatalog[brand];
-        localStorage.setItem('fieldops_store_catalog_v18', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v20', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
     }
 
-    function addStorePrompt(brand) {
+    function addStorePrompt(safeBrand) {
+      const brand = decodeURIComponent(safeBrand);
       const storeName = prompt("Nom du nouveau Store pour " + brand + " :");
       if (storeName) {
         storeCatalog[brand].push(storeName);
-        localStorage.setItem('fieldops_store_catalog_v18', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v20', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
     }
 
-    function deleteStore(brand, store) {
+    function deleteStore(safeBrand, safeStore) {
+      const brand = decodeURIComponent(safeBrand);
+      const store = decodeURIComponent(safeStore);
       storeCatalog[brand] = storeCatalog[brand].filter(s => s !== store);
-      localStorage.setItem('fieldops_store_catalog_v18', JSON.stringify(storeCatalog));
+      localStorage.setItem('fieldops_store_catalog_v20', JSON.stringify(storeCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -694,34 +686,38 @@
       const typeName = prompt("Nom du nouveau Type de Réclamation :");
       if (typeName && !recTypesCatalog[typeName]) {
         recTypesCatalog[typeName] = ["Incident Général"];
-        localStorage.setItem('fieldops_rec_types_v18', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v20', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
     }
 
-    function deleteRecTypePrompt(type) {
+    function deleteRecTypePrompt(safeType) {
+      const type = decodeURIComponent(safeType);
       if (confirm("Supprimer le type " + type + " ?")) {
         delete recTypesCatalog[type];
-        localStorage.setItem('fieldops_rec_types_v18', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v20', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
     }
 
-    function addMotifPrompt(type) {
+    function addMotifPrompt(safeType) {
+      const type = decodeURIComponent(safeType);
       const motif = prompt("Nouveau motif pour " + type + " :");
       if (motif) {
         recTypesCatalog[type].push(motif);
-        localStorage.setItem('fieldops_rec_types_v18', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v20', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
     }
 
-    function deleteMotif(type, motif) {
+    function deleteMotif(safeType, safeMotif) {
+      const type = decodeURIComponent(safeType);
+      const motif = decodeURIComponent(safeMotif);
       recTypesCatalog[type] = recTypesCatalog[type].filter(m => m !== motif);
-      localStorage.setItem('fieldops_rec_types_v18', JSON.stringify(recTypesCatalog));
+      localStorage.setItem('fieldops_rec_types_v20', JSON.stringify(recTypesCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -742,7 +738,7 @@
     function populateAgentMsgDropdown() {
       const select = document.getElementById('msg-select-agent');
       select.innerHTML = '';
-      agentsDB.filter(a => a.role === 'agent').forEach(a => {
+      agentsDB.forEach(a => {
         select.innerHTML += `<option value="${a.fname}">${a.fname} ${a.lname}</option>`;
       });
     }
@@ -760,7 +756,7 @@
         date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
       });
 
-      localStorage.setItem('fieldops_direct_msgs_v18', JSON.stringify(directMessagesDB));
+      localStorage.setItem('fieldops_direct_msgs_v20', JSON.stringify(directMessagesDB));
       alert(`✅ Message envoyé à ${targetAgent} !`);
       document.getElementById('msg-input-text').value = '';
       renderMessagesView();
@@ -787,25 +783,10 @@
       });
     }
 
-    function sendMessageToAgent(agentFName) {
-      const msg = prompt(`Envoyer une instruction rapide à l'agent ${agentFName} :`);
-      if (msg) {
-        directMessagesDB.push({
-          id: Date.now(),
-          from: `${currentUser.fname} ${currentUser.lname}`,
-          to: agentFName,
-          text: msg,
-          date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
-        });
-        localStorage.setItem('fieldops_direct_msgs_v18', JSON.stringify(directMessagesDB));
-        alert(`✅ Instruction envoyée à ${agentFName} !`);
-      }
-    }
-
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v18', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v20', JSON.stringify(claimsDB));
         renderReclamationStats();
       }
     }
@@ -817,11 +798,11 @@
 
       if (currentDashTab === 'Partenaire') {
         thead.innerHTML = `
-          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Danger</th><th>Statut</th><th>Contact Agent</th><th>Action</th>
+          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Danger</th><th>Statut</th><th>Action</th>
         `;
       } else {
         thead.innerHTML = `
-          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Récurence Danger</th><th>Statut</th><th>Contact Agent</th><th>Action</th>
+          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Récurence Danger</th><th>Statut</th><th>Action</th>
         `;
       }
 
@@ -858,13 +839,12 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v18', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v20', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
                 </select>
               </td>
-              <td><button class="btn-msg" onclick="sendMessageToAgent('${c.agent}')">💬 Msg Agent</button></td>
               <td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button></td>
             </tr>
           `;
@@ -879,13 +859,12 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v18', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v20', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
                 </select>
               </td>
-              <td><button class="btn-msg" onclick="sendMessageToAgent('${c.agent}')">💬 Msg Agent</button></td>
               <td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button></td>
             </tr>
           `;
