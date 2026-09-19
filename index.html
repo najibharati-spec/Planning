@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - Central System</title>
+  <title>FieldOps - Dynamic Management System</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -94,8 +94,9 @@
     .form-group label { font-size: 12px; font-weight: 800; color: #334155; }
     .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px; font-weight: 600; }
 
-    .btn-action { background: var(--green-primary); color: #fff; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: 14px; }
+    .btn-action { background: var(--green-primary); color: #fff; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
     .btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 11px; }
+    .btn-edit { background: #e0f2fe; color: #0369a1; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 11px; }
 
     table { width: 100%; border-collapse: collapse; margin-top: 14px; }
     th { background: #f8fafc; text-align: left; padding: 10px; font-size: 11px; color: #475569; }
@@ -104,6 +105,10 @@
     .badge-orange { background: #ffe0b2; color: #e65100; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
     .badge-red { background: #ffcdd2; color: #b71c1c; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
     .badge-green { background: #c8e6c9; color: #1b5e20; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
+
+    /* CONFIG CARDS */
+    .cfg-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .cfg-item { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 8px; font-size: 13px; font-weight: 700; }
 
     @media (max-width: 768px) {
       #main-app { flex-direction: column; }
@@ -150,7 +155,7 @@
 
       <div class="menu-section">
         <div class="menu-label">Ressources</div>
-        <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️</span> Configuration Dynamic</div>
+        <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️</span> Config Dynamic</div>
         <div class="nav-item" id="menu-param" onclick="showView('parametres', this)"><span>⚙️</span> Paramètres</div>
       </div>
     </div>
@@ -165,7 +170,7 @@
         </div>
       </div>
 
-      <!-- DASHBOARD (Najib, Mehdi, Anass, Youssef) -->
+      <!-- DASHBOARD -->
       <div id="view-dashboard" class="content-card">
         <h3>📊 Centre de Traitement des Réclamations</h3>
         <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Suivi temps réel avec tri prioritaire par récurrence.</p>
@@ -186,49 +191,47 @@
         <div style="overflow-x:auto;">
           <table>
             <thead>
-              <tr id="dash-table-head">
-                <!-- Dynamique -->
-              </tr>
+              <tr id="dash-table-head"></tr>
             </thead>
             <tbody id="rec-dashboard-body"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- CONFIGURATION DYNAMIQUE DE FORMULAIRE (Najib Admin) -->
+      <!-- CONFIGURATION DYNAMIQUE COMPLETE -->
       <div id="view-config" class="content-card hidden">
-        <h3>🛠️ Configuration & Modification des Options Réclamation</h3>
-        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Ajoutez ou supprimez des Marque, Stores, Motifs d'incidents et Options du formulaire des agents.</p>
+        <h3>🛠️ Configuration Dynamique du Formulaire</h3>
+        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Gérez l'arborescence des Partenaires, Far3 (Stores), Types de réclamation, Motifs et visibilité des champs.</p>
 
-        <div class="form-grid">
-          <!-- Ajouter Marque & Stores -->
-          <div style="background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
-            <h4 style="font-size:13px; margin-bottom:10px; color:#00875a;">➕ Ajouter Marque / Store :</h4>
-            <div class="form-group" style="margin-bottom:8px;">
-              <label>Nom de la Marque (Ex: Starbucks, Tacos...) :</label>
-              <input type="text" id="cfg-new-brand" placeholder="Ex: Tacos de Lyon" />
-            </div>
-            <div class="form-group" style="margin-bottom:8px;">
-              <label>Stores rattachés (séparés par virgule) :</label>
-              <input type="text" id="cfg-new-stores" placeholder="Ex: Tacos Agdal, Tacos Temara" />
-            </div>
-            <button class="btn-action" onclick="addCustomBrand()">Ajouter la Marque</button>
-          </div>
-
-          <!-- Ajouter Motif d'Incident -->
-          <div style="background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
-            <h4 style="font-size:13px; margin-bottom:10px; color:#00875a;">➕ Ajouter Motif Réclamation :</h4>
-            <div class="form-group" style="margin-bottom:8px;">
-              <label>Nouveau Motif (Ex: Problème Emballage) :</label>
-              <input type="text" id="cfg-new-motif" placeholder="Ex: Erreur d'Article" />
-            </div>
-            <button class="btn-action" onclick="addCustomMotif()">Ajouter le Motif</button>
+        <!-- 1. GESTION DES CHAMPS (VISIBILITÉ) -->
+        <div class="cfg-card">
+          <h4 style="font-size:14px; color:#00875a; margin-bottom:10px;">👁️ Visibilité des Champs dans le Formulaire Agent :</h4>
+          <div style="display:flex; gap:16px; flex-wrap:wrap;">
+            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-order" checked onchange="toggleFieldVisibility('order')" /> Champ N° Commande</label>
+            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-sector" checked onchange="toggleFieldVisibility('sector')" /> Champ Store / Emplacement</label>
+            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-gps" checked onchange="toggleFieldVisibility('gps')" /> Champ Localisation GPS</label>
+            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-comment" checked onchange="toggleFieldVisibility('comment')" /> Champ Commentaires</label>
           </div>
         </div>
 
-        <div style="margin-top:20px;">
-          <h4 style="font-size:14px; margin-bottom:10px;">📋 Liste des Marques actuelles en Système :</h4>
-          <div id="brands-catalog-list" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+        <!-- 2. GESTION ARBORESCENCE PARTENAIRES & FAR3 (STORES) -->
+        <div class="cfg-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h4 style="font-size:14px; color:#00875a;">🏬 Arborescence Partenaires & Far3 (Stores) :</h4>
+            <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="addNewBrandPrompt()">➕ Ajouter Nouveau Partenaire</button>
+          </div>
+          
+          <div id="brands-tree-container"></div>
+        </div>
+
+        <!-- 3. GESTION TYPES DE RÉCLAMATIONS & MOTIFS -->
+        <div class="cfg-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h4 style="font-size:14px; color:#00875a;">🚨 Types de Réclamation & Motifs :</h4>
+            <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="addNewRecTypePrompt()">➕ Ajouter Type Réclamation</button>
+          </div>
+
+          <div id="types-motifs-container"></div>
         </div>
       </div>
 
@@ -266,46 +269,46 @@
         </div>
       </div>
 
-      <!-- RECLAMATIONS FORM (Agents Terrain) -->
+      <!-- RECLAMATIONS FORM -->
       <div id="view-reclamations" class="content-card hidden">
         <h3>🚨 Saisie Nouvelle Réclamation</h3>
 
         <div class="form-grid">
-          <div class="form-group">
+          <div class="form-group" id="fgroup-type">
             <label>Type Réclamation :</label>
-            <select id="rec-type" onchange="toggleRecType()"><option value="Partenaire">Partenaire (Merchant)</option><option value="Livreur">Livreur (Courier)</option></select>
+            <select id="rec-type" onchange="toggleRecType()"></select>
           </div>
-          <div class="form-group" id="group-partenaire">
+          <div class="form-group" id="fgroup-partenaire">
             <label>Marque Partenaire :</label>
             <select id="rec-target-partenaire" onchange="updateStoreLocations()"></select>
           </div>
-          <div class="form-group" id="group-store-location">
-            <label>Magasin Exact (Store Location) :</label>
+          <div class="form-group" id="fgroup-sector">
+            <label>Magasin Exact (Store Far3) :</label>
             <select id="rec-store-sector"></select>
           </div>
-          <div class="form-group hidden" id="group-livreur">
+          <div class="form-group hidden" id="fgroup-livreur">
             <label>ID Livreur :</label>
             <input type="text" id="rec-target-livreur" placeholder="Ex: 54932" />
           </div>
-          <div class="form-group">
+          <div class="form-group" id="fgroup-motif">
             <label>Motif Incident :</label>
             <select id="rec-motif"></select>
           </div>
-          <div class="form-group">
+          <div class="form-group" id="fgroup-order">
             <label>N° de Commande :</label>
             <input type="text" id="rec-order-num" placeholder="Ex: #8841, #9902" />
           </div>
-          <div class="form-group">
+          <div class="form-group" id="fgroup-gps">
             <label>Localisation GPS :</label>
-            <button type="button" onclick="getGPS()" style="padding:10px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer; font-weight:700;">📍 Détecter Position Position</button>
+            <button type="button" onclick="getGPS()" style="padding:10px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer; font-weight:700;">📍 Détecter Position</button>
             <input type="text" id="rec-gps" readonly placeholder="Lat, Long" />
           </div>
         </div>
-        <div class="form-group" style="margin-top:12px;">
+        <div class="form-group" id="fgroup-comment" style="margin-top:12px;">
           <label>Commentaires & Explications :</label>
           <textarea id="rec-comment" rows="3" placeholder="Saisir les commentaires et détails..."></textarea>
         </div>
-        <button class="btn-action" onclick="submitReclamation()">Envoyer la Réclamation</button>
+        <button class="btn-action" style="margin-top:14px;" onclick="submitReclamation()">Envoyer la Réclamation</button>
       </div>
 
       <!-- PARAMETRES (Admin Only) -->
@@ -324,21 +327,18 @@
       "Yoka Sushi": ["Yoka Sushi Agdal", "Yoka Sushi Hay Riad"],
       "Sushi Box": ["Sushi Box Agdal", "Sushi Box Souissi"],
       "Le Talmama": ["Le Talmama Hay Riad", "Le Talmama Agdal"],
-      "Carrefour": ["Carrefour Express Temara", "Carrefour Market Agdal", "Carrefour Market Hay Riad", "Carrefour Salé"],
-      "Marjane": ["Marjane Market Temara", "Marjane Hay Riad", "Marjane City Center Salé"],
-      "Crosty": ["Crosty Temara", "Crosty Agdal"],
-      "Panda": ["Panda Wok Agdal", "Panda Hay Riad"]
+      "Carrefour": ["Carrefour Express Temara", "Carrefour Market Agdal", "Carrefour Market Hay Riad"],
+      "Marjane": ["Marjane Market Temara", "Marjane Hay Riad"]
     };
 
-    let defaultMotifs = [
-      "Prêt non respecté / Retard",
-      "Commande Volée / Disparue",
-      "Problème Boîte / Sac (Box)",
-      "Papiers / Assurance / Carte AE"
-    ];
+    let defaultRecTypes = {
+      "Partenaire": ["Prêt non respecté / Retard", "Commande Volée / Disparue", "Erreur d'Article", "Comportement Staff"],
+      "Livreur": ["Commande Volée / Disparue", "Problème Boîte / Sac (Box)", "Papiers / Assurance / Carte AE"]
+    };
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v13')) || defaultStoreCatalog;
-    let customMotifs = JSON.parse(localStorage.getItem('fieldops_motifs_v13')) || defaultMotifs;
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v14')) || defaultStoreCatalog;
+    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v14')) || defaultRecTypes;
+    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v14')) || { order: true, sector: true, gps: true, comment: true };
 
     const initialAgents = [
       { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", pin: "Najib1992@", role: "admin", canDelete: true, zone: "Temara - Oulad Mtaa" },
@@ -360,12 +360,11 @@
       { id: "17", fname: "Youssef", lname: "DERKAOUI", color: "#0284c7", pin: "1234", role: "agent", zone: "Agdal" }
     ];
 
-    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v13')) || initialAgents;
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v13')) || [
-      { id: 1, agent: "Yahya RHALLAB", type: "Partenaire", target: "McDonald's", sector: "McDo Temara", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" },
-      { id: 2, agent: "Ayoub ABSSI", type: "Livreur", target: "54932", sector: "-", motif: "Commande Volée / Disparue", orderNum: "#9120", gps: "33.9821, -6.8482", comment: "Livreur a annulé après collecte client", date: "19/09/2026", status: "En Cours" }
+    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v14')) || initialAgents;
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v14')) || [
+      { id: 1, agent: "Yahya RHALLAB", type: "Partenaire", target: "McDonald's", sector: "McDo Temara", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
     ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v13')) || [];
+    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v14')) || [];
 
     let currentDashTab = "Partenaire";
     let selectedAgent = null;
@@ -414,10 +413,11 @@
           showView('dashboard', document.getElementById('menu-dash'));
         }
         initFormDropdowns();
+        applyFieldVisibility();
         renderPlanningTable();
         renderReclamationStats();
         renderMessagesView();
-        renderBrandsConfigList();
+        renderConfigTree();
       } else alert("❌ PIN/Password Incorrect !");
     }
 
@@ -441,7 +441,15 @@
       if (viewId === 'messages') renderMessagesView();
     }
 
+    /* FORM DROPDOWNS & VISIBILITY */
     function initFormDropdowns() {
+      // Types Dropdown
+      const typeSel = document.getElementById('rec-type');
+      typeSel.innerHTML = '';
+      Object.keys(recTypesCatalog).forEach(t => {
+        typeSel.innerHTML += `<option value="${t}">${t}</option>`;
+      });
+
       // Brands Dropdown
       const brandSel = document.getElementById('rec-target-partenaire');
       brandSel.innerHTML = '';
@@ -449,10 +457,25 @@
         brandSel.innerHTML += `<option value="${b}">${b}</option>`;
       });
 
-      // Motifs Dropdown
+      toggleRecType();
+    }
+
+    function toggleRecType() {
+      const type = document.getElementById('rec-type').value;
+      if (type === 'Partenaire') {
+        document.getElementById('fgroup-partenaire').classList.remove('hidden');
+        document.getElementById('fgroup-sector').classList.remove('hidden');
+        document.getElementById('fgroup-livreur').classList.add('hidden');
+      } else {
+        document.getElementById('fgroup-partenaire').classList.add('hidden');
+        document.getElementById('fgroup-sector').classList.add('hidden');
+        document.getElementById('fgroup-livreur').classList.remove('hidden');
+      }
+
+      // Motifs for selected type
       const motifSel = document.getElementById('rec-motif');
       motifSel.innerHTML = '';
-      customMotifs.forEach(m => {
+      (recTypesCatalog[type] || []).forEach(m => {
         motifSel.innerHTML += `<option value="${m}">${m}</option>`;
       });
 
@@ -469,61 +492,158 @@
       });
     }
 
-    function addCustomBrand() {
-      const brand = document.getElementById('cfg-new-brand').value.trim();
-      const storesInput = document.getElementById('cfg-new-stores').value.trim();
-      if (!brand) return alert("Saisissez le nom de la marque !");
-      
-      const stores = storesInput ? storesInput.split(',').map(s => s.trim()) : [brand + " Central"];
-      storeCatalog[brand] = stores;
-      localStorage.setItem('fieldops_store_catalog_v13', JSON.stringify(storeCatalog));
-      alert(`✅ Marque "${brand}" ajoutée avec succès !`);
-      document.getElementById('cfg-new-brand').value = '';
-      document.getElementById('cfg-new-stores').value = '';
-      initFormDropdowns();
-      renderBrandsConfigList();
+    function toggleFieldVisibility(fieldKey) {
+      fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
+      localStorage.setItem('fieldops_vis_v14', JSON.stringify(fieldVisibility));
+      applyFieldVisibility();
     }
 
-    function addCustomMotif() {
-      const motif = document.getElementById('cfg-new-motif').value.trim();
-      if (!motif) return alert("Saisissez le motif !");
-      customMotifs.push(motif);
-      localStorage.setItem('fieldops_motifs_v13', JSON.stringify(customMotifs));
-      alert(`✅ Motif "${motif}" ajouté !`);
-      document.getElementById('cfg-new-motif').value = '';
-      initFormDropdowns();
+    function applyFieldVisibility() {
+      document.getElementById('fgroup-order').classList.toggle('hidden', !fieldVisibility.order);
+      document.getElementById('fgroup-sector').classList.toggle('hidden', !fieldVisibility.sector);
+      document.getElementById('fgroup-gps').classList.toggle('hidden', !fieldVisibility.gps);
+      document.getElementById('fgroup-comment').classList.toggle('hidden', !fieldVisibility.comment);
+
+      document.getElementById('field-toggle-order').checked = fieldVisibility.order;
+      document.getElementById('field-toggle-sector').checked = fieldVisibility.sector;
+      document.getElementById('field-toggle-gps').checked = fieldVisibility.gps;
+      document.getElementById('field-toggle-comment').checked = fieldVisibility.comment;
     }
 
-    function renderBrandsConfigList() {
-      const target = document.getElementById('brands-catalog-list');
-      target.innerHTML = '';
+    /* DYNAMIC TREE CONFIGURATION CONTROLS */
+    function renderConfigTree() {
+      // Brands & Stores
+      const bTree = document.getElementById('brands-tree-container');
+      bTree.innerHTML = '';
       Object.keys(storeCatalog).forEach(b => {
-        target.innerHTML += `
-          <div style="background:#e0f2fe; padding:8px 12px; border-radius:8px; font-size:12px; font-weight:800; color:#0369a1;">
-            🏢 ${b} (${storeCatalog[b].length} Stores)
+        bTree.innerHTML += `
+          <div class="cfg-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
+            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+              <span style="font-size:14px; color:#0f172a;">🏢 <strong>${b}</strong></span>
+              <div>
+                <button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="addStoreFar3Prompt('${b}')">➕ Far3 (Store)</button>
+                <button class="btn-edit" onclick="editBrandPrompt('${b}')">✏️ Modifier</button>
+                <button class="btn-delete" onclick="deleteBrandPrompt('${b}')">🗑️ Supprimer</button>
+              </div>
+            </div>
+            <div style="padding-left:16px; display:flex; flex-wrap:wrap; gap:6px; width:100%;">
+              ${storeCatalog[b].map(s => `
+                <span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
+                  ${s}
+                  <button onclick="deleteStoreFar3('${b}', '${s}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      // Types & Motifs
+      const tTree = document.getElementById('types-motifs-container');
+      tTree.innerHTML = '';
+      Object.keys(recTypesCatalog).forEach(t => {
+        tTree.innerHTML += `
+          <div class="cfg-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
+            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+              <span style="font-size:14px; color:#0f172a;">🚨 Type: <strong>${t}</strong></span>
+              <div>
+                <button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="addMotifPrompt('${t}')">➕ Motif</button>
+                <button class="btn-delete" onclick="deleteRecTypePrompt('${t}')">🗑️ Supprimer Type</button>
+              </div>
+            </div>
+            <div style="padding-left:16px; display:flex; flex-wrap:wrap; gap:6px; width:100%;">
+              ${recTypesCatalog[t].map(m => `
+                <span style="background:#fef3c7; color:#92400e; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
+                  ${m}
+                  <button onclick="deleteMotif('${t}', '${m}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
+                </span>
+              `).join('')}
+            </div>
           </div>
         `;
       });
     }
 
+    function addNewBrandPrompt() {
+      const name = prompt("Nom du nouveau Partenaire (Marque) :");
+      if (name && !storeCatalog[name]) {
+        storeCatalog[name] = [name + " Central"];
+        localStorage.setItem('fieldops_store_catalog_v14', JSON.stringify(storeCatalog));
+        initFormDropdowns(); renderConfigTree();
+      }
+    }
+
+    function editBrandPrompt(oldBrand) {
+      const newBrand = prompt("Nouveau nom pour " + oldBrand + " :", oldBrand);
+      if (newBrand && newBrand !== oldBrand) {
+        storeCatalog[newBrand] = storeCatalog[oldBrand];
+        delete storeCatalog[oldBrand];
+        localStorage.setItem('fieldops_store_catalog_v14', JSON.stringify(storeCatalog));
+        initFormDropdowns(); renderConfigTree();
+      }
+    }
+
+    function deleteBrandPrompt(brand) {
+      if (confirm("Supprimer le partenaire " + brand + " ?")) {
+        delete storeCatalog[brand];
+        localStorage.setItem('fieldops_store_catalog_v14', JSON.stringify(storeCatalog));
+        initFormDropdowns(); renderConfigTree();
+      }
+    }
+
+    function addStoreFar3Prompt(brand) {
+      const storeName = prompt("Nom du nouveau Store / Far3 pour " + brand + " :");
+      if (storeName) {
+        storeCatalog[brand].push(storeName);
+        localStorage.setItem('fieldops_store_catalog_v14', JSON.stringify(storeCatalog));
+        initFormDropdowns(); renderConfigTree();
+      }
+    }
+
+    function deleteStoreFar3(brand, store) {
+      storeCatalog[brand] = storeCatalog[brand].filter(s => s !== store);
+      localStorage.setItem('fieldops_store_catalog_v14', JSON.stringify(storeCatalog));
+      initFormDropdowns(); renderConfigTree();
+    }
+
+    function addNewRecTypePrompt() {
+      const typeName = prompt("Nom du nouveau Type de Réclamation :");
+      if (typeName && !recTypesCatalog[typeName]) {
+        recTypesCatalog[typeName] = ["Incident Général"];
+        localStorage.setItem('fieldops_rec_types_v14', JSON.stringify(recTypesCatalog));
+        initFormDropdowns(); renderConfigTree();
+      }
+    }
+
+    function deleteRecTypePrompt(type) {
+      if (confirm("Supprimer le type " + type + " ?")) {
+        delete recTypesCatalog[type];
+        localStorage.setItem('fieldops_rec_types_v14', JSON.stringify(recTypesCatalog));
+        initFormDropdowns(); renderConfigTree();
+      }
+    }
+
+    function addMotifPrompt(type) {
+      const motif = prompt("Nouveau motif pour " + type + " :");
+      if (motif) {
+        recTypesCatalog[type].push(motif);
+        localStorage.setItem('fieldops_rec_types_v14', JSON.stringify(recTypesCatalog));
+        initFormDropdowns(); renderConfigTree();
+      }
+    }
+
+    function deleteMotif(type, motif) {
+      recTypesCatalog[type] = recTypesCatalog[type].filter(m => m !== motif);
+      localStorage.setItem('fieldops_rec_types_v14', JSON.stringify(recTypesCatalog));
+      initFormDropdowns(); renderConfigTree();
+    }
+
+    /* MESSAGES & SYSTEM APP FUNCTIONS */
     function switchDashTab(tab) {
       currentDashTab = tab;
       document.getElementById('tab-part').classList.toggle('active', tab === 'Partenaire');
       document.getElementById('tab-livr').classList.toggle('active', tab === 'Livreur');
       renderReclamationStats();
-    }
-
-    function toggleRecType() {
-      const type = document.getElementById('rec-type').value;
-      if (type === 'Partenaire') {
-        document.getElementById('group-partenaire').classList.remove('hidden');
-        document.getElementById('group-store-location').classList.remove('hidden');
-        document.getElementById('group-livreur').classList.add('hidden');
-      } else {
-        document.getElementById('group-partenaire').classList.add('hidden');
-        document.getElementById('group-store-location').classList.add('hidden');
-        document.getElementById('group-livreur').classList.remove('hidden');
-      }
     }
 
     function getGPS() {
@@ -562,7 +682,7 @@
         date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
       });
 
-      localStorage.setItem('fieldops_direct_msgs_v13', JSON.stringify(directMessagesDB));
+      localStorage.setItem('fieldops_direct_msgs_v14', JSON.stringify(directMessagesDB));
       alert(`✅ Message envoyé à ${targetAgent} !`);
       document.getElementById('msg-input-text').value = '';
       renderMessagesView();
@@ -605,7 +725,7 @@
           text: msg,
           date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
         });
-        localStorage.setItem('fieldops_direct_msgs_v13', JSON.stringify(directMessagesDB));
+        localStorage.setItem('fieldops_direct_msgs_v14', JSON.stringify(directMessagesDB));
         alert(`✅ Instruction envoyée à ${agentFName} !`);
       }
     }
@@ -633,7 +753,7 @@
         status: 'En Cours' 
       });
 
-      localStorage.setItem('fieldops_claims_db_v13', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v14', JSON.stringify(claimsDB));
       alert("✅ Réclamation envoyée avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
@@ -642,7 +762,7 @@
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v13', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v14', JSON.stringify(claimsDB));
         renderReclamationStats();
       }
     }
@@ -696,7 +816,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v13', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v14', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
@@ -717,7 +837,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v13', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v14', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
