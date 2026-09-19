@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - Dynamic Management System</title>
+  <title>FieldOps - Admin Central System</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -123,8 +123,8 @@
   <!-- LOCK SCREEN -->
   <div id="lock-screen">
     <div class="brand-header">
-      <h1>FieldOps</h1>
-      <p>Système Central de Gestion RH & Operations (17 Membres)</p>
+      <h1>FieldOps Admin</h1>
+      <p>Système Central de Gestion RH & Operations (Admin Najip / Mehdi / Anass / Youssef)</p>
     </div>
 
     <div class="agents-grid-container">
@@ -133,7 +133,7 @@
 
     <div class="login-box">
       <input type="password" id="pin-input-field" class="pin-input" placeholder="Sélectionnez un utilisateur..." maxlength="20" />
-      <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER</button>
+      <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER ADMIN</button>
     </div>
   </div>
 
@@ -146,23 +146,23 @@
       </div>
 
       <div class="menu-section">
-        <div class="menu-label">Opérations</div>
+        <div class="menu-label">Opérations Admin</div>
         <div class="nav-item active" id="menu-dash" onclick="showView('dashboard', this)"><span>📊</span> Dashboard</div>
-        <div class="nav-item" id="menu-plan" onclick="showView('planning', this)"><span>📅</span> Planning</div>
-        <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨</span> Réclamations</div>
+        <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨</span> Saisie Réclamation</div>
+        <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️</span> Config Dynamic</div>
         <div class="nav-item" id="menu-msg" onclick="showView('messages', this)"><span>💬</span> Messages Directs</div>
+        <div class="nav-item" id="menu-plan" onclick="showView('planning', this)"><span>📅</span> Planning</div>
       </div>
 
       <div class="menu-section">
         <div class="menu-label">Ressources</div>
-        <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️</span> Config Dynamic</div>
         <div class="nav-item" id="menu-param" onclick="showView('parametres', this)"><span>⚙️</span> Paramètres</div>
       </div>
     </div>
 
     <div class="main-content">
       <div class="top-header-bar">
-        <h2 id="current-view-title" style="font-size:20px; font-weight:800; color:#0f172a;">Dashboard</h2>
+        <h2 id="current-view-title" style="font-size:20px; font-weight:800; color:#0f172a;">Dashboard Admin</h2>
         <div class="user-info-badge">
           <span id="logged-user-avatar" style="width:26px; height:26px; border-radius:50%; background:#00875a; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:11px;">👤</span>
           <span id="logged-user-name" style="font-weight:800; font-size:13px; color:#1e293b;">-</span>
@@ -198,80 +198,10 @@
         </div>
       </div>
 
-      <!-- CONFIGURATION DYNAMIQUE COMPLETE -->
-      <div id="view-config" class="content-card hidden">
-        <h3>🛠️ Configuration Dynamique du Formulaire</h3>
-        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Gérez l'arborescence des Partenaires, Far3 (Stores), Types de réclamation, Motifs et visibilité des champs.</p>
-
-        <!-- 1. GESTION DES CHAMPS (VISIBILITÉ) -->
-        <div class="cfg-card">
-          <h4 style="font-size:14px; color:#00875a; margin-bottom:10px;">👁️ Visibilité des Champs dans le Formulaire Agent :</h4>
-          <div style="display:flex; gap:16px; flex-wrap:wrap;">
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-order" checked onchange="toggleFieldVisibility('order')" /> Champ N° Commande</label>
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-sector" checked onchange="toggleFieldVisibility('sector')" /> Champ Store / Emplacement</label>
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-gps" checked onchange="toggleFieldVisibility('gps')" /> Champ Localisation GPS</label>
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-comment" checked onchange="toggleFieldVisibility('comment')" /> Champ Commentaires</label>
-          </div>
-        </div>
-
-        <!-- 2. GESTION ARBORESCENCE PARTENAIRES & FAR3 (STORES) -->
-        <div class="cfg-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h4 style="font-size:14px; color:#00875a;">🏬 Arborescence Partenaires & Far3 (Stores) :</h4>
-            <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="addNewBrandPrompt()">➕ Ajouter Nouveau Partenaire</button>
-          </div>
-          
-          <div id="brands-tree-container"></div>
-        </div>
-
-        <!-- 3. GESTION TYPES DE RÉCLAMATIONS & MOTIFS -->
-        <div class="cfg-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h4 style="font-size:14px; color:#00875a;">🚨 Types de Réclamation & Motifs :</h4>
-            <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="addNewRecTypePrompt()">➕ Ajouter Type Réclamation</button>
-          </div>
-
-          <div id="types-motifs-container"></div>
-        </div>
-      </div>
-
-      <!-- MESSAGES DIRECTS -->
-      <div id="view-messages" class="content-card hidden">
-        <h3>💬 Centre de Messagerie & Instructions Directes</h3>
-        <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Communication directe entre l'Équipe de Gestion et les Agents Terrain.</p>
-
-        <div id="admin-msg-panel" class="hidden" style="margin-bottom:20px; background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
-          <h4 style="font-size:14px; margin-bottom:10px;">✉️ Envoyer un Message Direct :</h4>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <select id="msg-select-agent" style="padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-weight:700;"></select>
-            <input type="text" id="msg-input-text" placeholder="Saisir votre instruction..." style="flex:1; min-width:240px; padding:10px; border-radius:8px; border:1px solid #cbd5e1;" />
-            <button class="btn-action" style="margin:0;" onclick="sendDirectMessage()">Envoyer</button>
-          </div>
-        </div>
-
-        <div>
-          <h4 style="font-size:14px; margin-bottom:10px;">📋 Boîte de Réception Messages :</h4>
-          <div id="messages-list-container" style="display:flex; flex-direction:column; gap:10px;"></div>
-        </div>
-      </div>
-
-      <!-- PLANNING -->
-      <div id="view-planning" class="content-card hidden">
-        <h3>📅 Planning des Shifts (44H)</h3>
-        <p style="color:#64748b; margin-bottom:12px; font-size:12px;">Agents : vous pouvez modifier votre statut en <strong>ABSENT</strong> en cas d'absence.</p>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead>
-              <tr><th>Agent</th><th>Zone</th><th>Lun</th><th>Mar</th><th>Mer</th><th>Jeu</th><th>Ven</th><th>Sam</th><th>Dim</th></tr>
-            </thead>
-            <tbody id="planning-table-body"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- RECLAMATIONS FORM -->
+      <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION (POUR ADMIN ET LEADS) -->
       <div id="view-reclamations" class="content-card hidden">
-        <h3>🚨 Saisie Nouvelle Réclamation</h3>
+        <h3>🚨 Saisie Nouvelle Réclamation (Lead / Admin)</h3>
+        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Saisissez directement les réclamations terrain en tant que Responsable.</p>
 
         <div class="form-grid">
           <div class="form-group" id="fgroup-type">
@@ -283,7 +213,7 @@
             <select id="rec-target-partenaire" onchange="updateStoreLocations()"></select>
           </div>
           <div class="form-group" id="fgroup-sector">
-            <label>Magasin Exact (Store Far3) :</label>
+            <label>Magasin Exact (Store) :</label>
             <select id="rec-store-sector"></select>
           </div>
           <div class="form-group hidden" id="fgroup-livreur">
@@ -311,9 +241,80 @@
         <button class="btn-action" style="margin-top:14px;" onclick="submitReclamation()">Envoyer la Réclamation</button>
       </div>
 
-      <!-- PARAMETRES (Admin Only) -->
+      <!-- CONFIGURATION DYNAMIQUE COMPLETE -->
+      <div id="view-config" class="content-card hidden">
+        <h3>🛠️ Configuration Dynamique du Formulaire Admin</h3>
+        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Gérez l'arborescence des Partenaires, Stores, Types de réclamation, Motifs et visibilité des champs.</p>
+
+        <!-- 1. GESTION DES CHAMPS (VISIBILITÉ) -->
+        <div class="cfg-card">
+          <h4 style="font-size:14px; color:#00875a; margin-bottom:10px;">👁️ Visibilité des Champs dans le Formulaire Agent :</h4>
+          <div style="display:flex; gap:16px; flex-wrap:wrap;">
+            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-order" checked onchange="toggleFieldVisibility('order')" /> Champ N° Commande</label>
+            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-sector" checked onchange="toggleFieldVisibility('sector')" /> Champ Stores / Emplacement</label>
+            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-gps" checked onchange="toggleFieldVisibility('gps')" /> Champ Localisation GPS</label>
+            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-comment" checked onchange="toggleFieldVisibility('comment')" /> Champ Commentaires</label>
+          </div>
+        </div>
+
+        <!-- 2. GESTION ARBORESCENCE PARTENAIRES & STORES -->
+        <div class="cfg-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h4 style="font-size:14px; color:#00875a;">🏬 Arborescence Partenaires & Stores :</h4>
+            <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="addNewBrandPrompt()">➕ Ajouter Nouveau Partenaire</button>
+          </div>
+          
+          <div id="brands-tree-container"></div>
+        </div>
+
+        <!-- 3. GESTION TYPES DE RÉCLAMATIONS & MOTIFS -->
+        <div class="cfg-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h4 style="font-size:14px; color:#00875a;">🚨 Types de Réclamation & Motifs :</h4>
+            <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="addNewRecTypePrompt()">➕ Ajouter Type Réclamation</button>
+          </div>
+
+          <div id="types-motifs-container"></div>
+        </div>
+      </div>
+
+      <!-- MESSAGES DIRECTS -->
+      <div id="view-messages" class="content-card hidden">
+        <h3>💬 Centre de Messagerie & Instructions Directes</h3>
+        <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Communication directe entre l'Équipe de Gestion et les Agents Terrain.</p>
+
+        <div id="admin-msg-panel" style="margin-bottom:20px; background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
+          <h4 style="font-size:14px; margin-bottom:10px;">✉️ Envoyer un Message Direct :</h4>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <select id="msg-select-agent" style="padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-weight:700;"></select>
+            <input type="text" id="msg-input-text" placeholder="Saisir votre instruction..." style="flex:1; min-width:240px; padding:10px; border-radius:8px; border:1px solid #cbd5e1;" />
+            <button class="btn-action" style="margin:0;" onclick="sendDirectMessage()">Envoyer</button>
+          </div>
+        </div>
+
+        <div>
+          <h4 style="font-size:14px; margin-bottom:10px;">📋 Boîte de Réception Messages :</h4>
+          <div id="messages-list-container" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+      </div>
+
+      <!-- PLANNING -->
+      <div id="view-planning" class="content-card hidden">
+        <h3>📅 Planning des Shifts (44H)</h3>
+        <p style="color:#64748b; margin-bottom:12px; font-size:12px;">Gestion et suivi des emplois du temps des 17 agents.</p>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr><th>Agent</th><th>Zone</th><th>Lun</th><th>Mar</th><th>Mer</th><th>Jeu</th><th>Ven</th><th>Sam</th><th>Dim</th></tr>
+            </thead>
+            <tbody id="planning-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PARAMETRES -->
       <div id="view-parametres" class="content-card hidden">
-        <h3>⚙️ Paramètres système (Admin Only)</h3>
+        <h3>⚙️ Paramètres système Admin</h3>
         <p style="color:#64748b; font-size:12px;">Gestion des accès et modification des codes PIN.</p>
       </div>
     </div>
@@ -321,14 +322,72 @@
 
   <script>
     let defaultStoreCatalog = {
-      "McDonald's": ["McDo Hay Chmaou", "McDo Medina Salé", "McDo Temara", "McDo Agdal", "McDo Hay Riad", "McDo Carrousel", "McDo Zaer", "McDo Hassan"],
-      "Burger King": ["BK Temara", "BK Agdal", "BK Hay Riad", "BK Salé", "BK Zaer"],
-      "KFC": ["KFC Temara", "KFC Agdal", "KFC Hay Riad", "KFC Salé Medina"],
-      "Yoka Sushi": ["Yoka Sushi Agdal", "Yoka Sushi Hay Riad"],
-      "Sushi Box": ["Sushi Box Agdal", "Sushi Box Souissi"],
-      "Le Talmama": ["Le Talmama Hay Riad", "Le Talmama Agdal"],
-      "Carrefour": ["Carrefour Express Temara", "Carrefour Market Agdal", "Carrefour Market Hay Riad"],
-      "Marjane": ["Marjane Market Temara", "Marjane Hay Riad"]
+      "McDonald's": [
+        "McDonald's Temara", "McDonald's Hay Riad", "McDonald's Gare Rabat Agdal",
+        "McDonald's agdal", "Mcdonald's Arjat", "McDonald's Rabat Ville", "McDonald's Bouregreg"
+      ],
+      "Burger King": [
+        "Burger King Sela Park", "Burger King Harhoura", "Burger King",
+        "Burger King agdal", "Burger King Salé", "Burger King Bouregreg"
+      ],
+      "KFC": [
+        "KFC Sela Park", "KFC Marjane Hay Riad", "KFC agdal",
+        "KFC Rabat Ville", "KFC Bab El Had"
+      ],
+      "Pizza Hut": [
+        "Pizza Hut Temara", "Pizza Hut Harhoura", "Pizza Hut Marjane Hay Riad",
+        "Pizza Hut Agdal", "Pizza Hut Bouregreg"
+      ],
+      "Carrefour": [
+        "Carrefour Express Temara Wifak 2", "Carrefour Market WIFAK", "Carrefour Express Temara",
+        "Carrefour Mehdi Ben Barka", "Carrefour Market Riad", "Carrefour Gourmet",
+        "Carrefour Market Souissi", "Carrefour Market Oqba", "Carrefour Market Al Manal",
+        "Carrefour Market Descartes", "Carrefour Market Shem's", "Carrefour Technopolis",
+        "Carrefour Market Hassan", "Carrefour Express Medina", "Carrefour Hepar Salé", "Carrefour Market Bettana"
+      ],
+      "Marjane": [
+        "Marjane Hyper Hay Riad", "Marjane Market A.V BENBARKA", "Marjane Market Prestigia Hay Riad",
+        "Marjane City OQBA", "Marjane Technopolis", "Marjane market ocean", "Marjane Hepar Bouregreg"
+      ],
+      "Yoka Sushi": [
+        "Yoka Sushi - Témara", "Yoka Sushi Hay Riad", "Yoka Sushi"
+      ],
+      "Sushi Box": [
+        "Sushi Box Harhoura"
+      ],
+      "Tacos": [
+        "Tacos Kamal", "Tacos Only Temara", "Tacos 75 Temara", "Tacos de Nice",
+        "Tacos BY L.Y.O.N", "S Tacos", "tacos by L.Y.O.N", "Tacos Avenue",
+        "Tacos de Nice (Kouass)", "Tacos Yassinos", "Amigo Tacos, chez hamada"
+      ],
+      "Autres Hotspots / Restaurants": [
+        "Chawarma Ibn Acham Temara", "Primos Temara", "Michwat Al Akhawayn", "Pizza Friends Temara",
+        "Restaurant Anassim Temara", "Quick", "Agha Cham", "Paul Harhoura", "Di Villaggio Harhoura",
+        "Papa John's Harhoura", "Chez Ouazzani Harhoura", "Dunkin Harhoura", "Pokawa Hrhoura",
+        "La Maison du Pain Harhoura", "Grillade Al Andalous Harhoura", "Yummy Grill Temara",
+        "Ben's Team Fast Food", "Chrono Pizza", "Maison Bocadillos Temara", "Oulad Mtaa",
+        "Primo Massira 1", "Polyvalente", "Zen Acham", "BOCADILLOS EL RINCON", "Le Port Temara",
+        "Between The Buns Temara", "175Kg Grillade Temara", "Cali Burger Temara", "Paradise Massira 1",
+        "Primos Massira 1", "Michwat Alakhawayn", "Ryad Square Shopping Center", "Pomme de Pain",
+        "Av. Annakhil", "Blue Berry Rabat", "Kool Smoothie Almelia", "Mahaj Ryad Center",
+        "Pokawa Hay Riad", "The Burg", "Les Domaines", "Prestigia", "Agha Acham Prestigia",
+        "Grillade Al Andalous prestigia", "L'Atelier Burger Hay riad", "La Grillardière Hay riad",
+        "Oh My Bun : Buntastic Burgers", "Coq Magic Hay Riad", "Atlas Chicken Hay Riad",
+        "Dunkin' Prestigia", "L'Atelier Burger", "Le Marché Dar Essalam", "Hay Nahda Rabat",
+        "Centre commercial Jasmin", "Maymana Souissi", "snack monalisa", "Mega Mall Rabat",
+        "Dicapri", "Pâtisserie Fennich", "Green Village", "Mall Rabat Center", "Mall Carrousel Rabat",
+        "Moojood", "Shawarma Mazen Chef", "Oops Fried Chicken", "Restaurant Abou Samy",
+        "Restaurant Hekaya Chamiya", "Face Burger", "Sandway", "Maison Chorouk El Menzeh",
+        "Restaurant Sabah al sham", "Maya Sushi agdal", "JaponézA Sushis : Thaï & Woks",
+        "Little Mamma Agdal", "SALADE BAR", "PAUL", "Atlas Chicken Agdal", "tangier's Bocadillos",
+        "Bocadillos El Rincón", "DAR AL FAWAKIH RABAT - AGDAL", "Dar Morjana", "Shawarma Ostorat Sham",
+        "Primos Chicken", "Yours Brunch", "Boca Mia", "Sushi ARIJ", "Gusto Chicken",
+        "Bocadillos Tanjaoui", "Mahaj Alfawakih", "Vida Souss", "Crepti", "Bari bana",
+        "Shamiyat", "Grill vibe", "175 kg", "So Chicken ocean", "Primos Chicken Océan",
+        "Zumba : Snack à Jus", "Mahlabat Bafares Moderne", "Pincho's Hassane", "IMIM SNACK",
+        "Snack Tempo", "Primos Salé", "Mister Chicken Sale", "Bocadillo Del Norte sale",
+        "Mamma Pizza", "S-tacos مطعم عالم الشام", "Meko Food sale", "Rocket Food"
+      ]
     };
 
     let defaultRecTypes = {
@@ -336,9 +395,9 @@
       "Livreur": ["Commande Volée / Disparue", "Problème Boîte / Sac (Box)", "Papiers / Assurance / Carte AE"]
     };
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v14')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v14')) || defaultRecTypes;
-    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v14')) || { order: true, sector: true, gps: true, comment: true };
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v17')) || defaultStoreCatalog;
+    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v17')) || defaultRecTypes;
+    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v17')) || { order: true, sector: true, gps: true, comment: true };
 
     const initialAgents = [
       { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", pin: "Najib1992@", role: "admin", canDelete: true, zone: "Temara - Oulad Mtaa" },
@@ -360,11 +419,11 @@
       { id: "17", fname: "Youssef", lname: "DERKAOUI", color: "#0284c7", pin: "1234", role: "agent", zone: "Agdal" }
     ];
 
-    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v14')) || initialAgents;
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v14')) || [
-      { id: 1, agent: "Yahya RHALLAB", type: "Partenaire", target: "McDonald's", sector: "McDo Temara", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
+    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v17')) || initialAgents;
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v17')) || [
+      { id: 1, agent: "Yahya RHALLAB", type: "Partenaire", target: "McDonald's", sector: "McDonald's Temara", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
     ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v14')) || [];
+    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v17')) || [];
 
     let currentDashTab = "Partenaire";
     let selectedAgent = null;
@@ -373,7 +432,7 @@
     function renderLockCards() {
       const target = document.getElementById('agents-grid-target');
       target.innerHTML = '';
-      agentsDB.forEach(a => {
+      agentsDB.filter(a => a.role === 'admin' || a.role === 'decideur').forEach(a => {
         const card = document.createElement('div');
         card.className = `agent-card ${selectedAgent && selectedAgent.id === a.id ? 'selected' : ''}`;
         card.onclick = () => { selectedAgent = a; renderLockCards(); };
@@ -383,7 +442,7 @@
     }
 
     function attemptUnlock() {
-      if (!selectedAgent) return alert("Sélectionnez un agent !");
+      if (!selectedAgent) return alert("Sélectionnez un compte Admin !");
       const pin = document.getElementById('pin-input-field').value;
       if (pin === selectedAgent.pin || pin === "1234" || pin === "2026") {
         currentUser = selectedAgent;
@@ -391,29 +450,9 @@
         document.getElementById('main-app').classList.remove('hidden');
         document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname}`;
         
-        if (currentUser.role === 'agent') {
-          document.getElementById('menu-dash').classList.add('hidden');
-          document.getElementById('menu-config').classList.add('hidden');
-          document.getElementById('menu-rec').classList.remove('hidden');
-          document.getElementById('menu-param').classList.add('hidden');
-          document.getElementById('admin-msg-panel').classList.add('hidden');
-          showView('reclamations', document.getElementById('menu-rec'));
-        } else {
-          document.getElementById('menu-dash').classList.remove('hidden');
-          document.getElementById('menu-rec').classList.add('hidden');
-          document.getElementById('admin-msg-panel').classList.remove('hidden');
-          populateAgentMsgDropdown();
-          if(currentUser.role === 'admin') {
-            document.getElementById('menu-param').classList.remove('hidden');
-            document.getElementById('menu-config').classList.remove('hidden');
-          } else {
-            document.getElementById('menu-param').classList.add('hidden');
-            document.getElementById('menu-config').classList.add('hidden');
-          }
-          showView('dashboard', document.getElementById('menu-dash'));
-        }
         initFormDropdowns();
-        applyFieldVisibility();
+        populateAgentMsgDropdown();
+        showView('dashboard', document.getElementById('menu-dash'));
         renderPlanningTable();
         renderReclamationStats();
         renderMessagesView();
@@ -432,8 +471,8 @@
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       el.classList.add('active');
       document.getElementById('view-dashboard').classList.add('hidden');
-      document.getElementById('view-planning').classList.add('hidden');
       document.getElementById('view-reclamations').classList.add('hidden');
+      document.getElementById('view-planning').classList.add('hidden');
       document.getElementById('view-messages').classList.add('hidden');
       document.getElementById('view-config').classList.add('hidden');
       document.getElementById('view-parametres').classList.add('hidden');
@@ -441,16 +480,13 @@
       if (viewId === 'messages') renderMessagesView();
     }
 
-    /* FORM DROPDOWNS & VISIBILITY */
     function initFormDropdowns() {
-      // Types Dropdown
       const typeSel = document.getElementById('rec-type');
       typeSel.innerHTML = '';
       Object.keys(recTypesCatalog).forEach(t => {
         typeSel.innerHTML += `<option value="${t}">${t}</option>`;
       });
 
-      // Brands Dropdown
       const brandSel = document.getElementById('rec-target-partenaire');
       brandSel.innerHTML = '';
       Object.keys(storeCatalog).forEach(b => {
@@ -472,7 +508,6 @@
         document.getElementById('fgroup-livreur').classList.remove('hidden');
       }
 
-      // Motifs for selected type
       const motifSel = document.getElementById('rec-motif');
       motifSel.innerHTML = '';
       (recTypesCatalog[type] || []).forEach(m => {
@@ -486,33 +521,60 @@
       const brand = document.getElementById('rec-target-partenaire').value;
       const selector = document.getElementById('rec-store-sector');
       selector.innerHTML = '';
-      const stores = storeCatalog[brand] || [brand + " Central"];
+      const stores = storeCatalog[brand] || [brand + " Store Central"];
       stores.forEach(s => {
         selector.innerHTML += `<option value="${s}">${s}</option>`;
       });
     }
 
+    function getGPS() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(p => {
+          document.getElementById('rec-gps').value = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
+        }, () => {
+          document.getElementById('rec-gps').value = "33.9182, -6.9211";
+        });
+      }
+    }
+
+    function submitReclamation() {
+      const type = document.getElementById('rec-type').value;
+      const target = type === 'Partenaire' ? document.getElementById('rec-target-partenaire').value : document.getElementById('rec-target-livreur').value;
+      const sector = document.getElementById('rec-store-sector').value;
+      const motif = document.getElementById('rec-motif').value;
+      const orderNum = document.getElementById('rec-order-num').value;
+      const gps = document.getElementById('rec-gps').value;
+      const comment = document.getElementById('rec-comment').value;
+
+      claimsDB.push({ 
+        id: Date.now(), 
+        agent: `${currentUser.fname} (${currentUser.role.toUpperCase()})`, 
+        type, 
+        target, 
+        sector: type === 'Partenaire' ? sector : '-', 
+        motif, 
+        orderNum: orderNum || '-', 
+        gps, 
+        comment: comment || '-', 
+        date: new Date().toLocaleDateString('fr-FR'), 
+        status: 'En Cours' 
+      });
+
+      localStorage.setItem('fieldops_claims_db_v17', JSON.stringify(claimsDB));
+      alert("✅ Réclamation enregistrée et ajoutée au Dashboard avec succès !");
+      document.getElementById('rec-order-num').value = '';
+      document.getElementById('rec-comment').value = '';
+      renderReclamationStats();
+      showView('dashboard', document.getElementById('menu-dash'));
+    }
+
     function toggleFieldVisibility(fieldKey) {
       fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
-      localStorage.setItem('fieldops_vis_v14', JSON.stringify(fieldVisibility));
-      applyFieldVisibility();
+      localStorage.setItem('fieldops_vis_v17', JSON.stringify(fieldVisibility));
     }
 
-    function applyFieldVisibility() {
-      document.getElementById('fgroup-order').classList.toggle('hidden', !fieldVisibility.order);
-      document.getElementById('fgroup-sector').classList.toggle('hidden', !fieldVisibility.sector);
-      document.getElementById('fgroup-gps').classList.toggle('hidden', !fieldVisibility.gps);
-      document.getElementById('fgroup-comment').classList.toggle('hidden', !fieldVisibility.comment);
-
-      document.getElementById('field-toggle-order').checked = fieldVisibility.order;
-      document.getElementById('field-toggle-sector').checked = fieldVisibility.sector;
-      document.getElementById('field-toggle-gps').checked = fieldVisibility.gps;
-      document.getElementById('field-toggle-comment').checked = fieldVisibility.comment;
-    }
-
-    /* DYNAMIC TREE CONFIGURATION CONTROLS */
+    /* DYNAMIC TREE CONFIGURATION CONTROLS FOR ADMIN */
     function renderConfigTree() {
-      // Brands & Stores
       const bTree = document.getElementById('brands-tree-container');
       bTree.innerHTML = '';
       Object.keys(storeCatalog).forEach(b => {
@@ -521,7 +583,7 @@
             <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
               <span style="font-size:14px; color:#0f172a;">🏢 <strong>${b}</strong></span>
               <div>
-                <button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="addStoreFar3Prompt('${b}')">➕ Far3 (Store)</button>
+                <button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="addStorePrompt('${b}')">➕ Store</button>
                 <button class="btn-edit" onclick="editBrandPrompt('${b}')">✏️ Modifier</button>
                 <button class="btn-delete" onclick="deleteBrandPrompt('${b}')">🗑️ Supprimer</button>
               </div>
@@ -529,8 +591,8 @@
             <div style="padding-left:16px; display:flex; flex-wrap:wrap; gap:6px; width:100%;">
               ${storeCatalog[b].map(s => `
                 <span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
-                  ${s}
-                  <button onclick="deleteStoreFar3('${b}', '${s}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
+                  📍 ${s}
+                  <button onclick="deleteStore('${b}', '${s}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
                 </span>
               `).join('')}
             </div>
@@ -538,7 +600,6 @@
         `;
       });
 
-      // Types & Motifs
       const tTree = document.getElementById('types-motifs-container');
       tTree.innerHTML = '';
       Object.keys(recTypesCatalog).forEach(t => {
@@ -567,9 +628,10 @@
     function addNewBrandPrompt() {
       const name = prompt("Nom du nouveau Partenaire (Marque) :");
       if (name && !storeCatalog[name]) {
-        storeCatalog[name] = [name + " Central"];
-        localStorage.setItem('fieldops_store_catalog_v14', JSON.stringify(storeCatalog));
-        initFormDropdowns(); renderConfigTree();
+        storeCatalog[name] = [name + " Store Central"];
+        localStorage.setItem('fieldops_store_catalog_v17', JSON.stringify(storeCatalog));
+        initFormDropdowns();
+        renderConfigTree();
       }
     }
 
@@ -578,48 +640,54 @@
       if (newBrand && newBrand !== oldBrand) {
         storeCatalog[newBrand] = storeCatalog[oldBrand];
         delete storeCatalog[oldBrand];
-        localStorage.setItem('fieldops_store_catalog_v14', JSON.stringify(storeCatalog));
-        initFormDropdowns(); renderConfigTree();
+        localStorage.setItem('fieldops_store_catalog_v17', JSON.stringify(storeCatalog));
+        initFormDropdowns();
+        renderConfigTree();
       }
     }
 
     function deleteBrandPrompt(brand) {
       if (confirm("Supprimer le partenaire " + brand + " ?")) {
         delete storeCatalog[brand];
-        localStorage.setItem('fieldops_store_catalog_v14', JSON.stringify(storeCatalog));
-        initFormDropdowns(); renderConfigTree();
+        localStorage.setItem('fieldops_store_catalog_v17', JSON.stringify(storeCatalog));
+        initFormDropdowns();
+        renderConfigTree();
       }
     }
 
-    function addStoreFar3Prompt(brand) {
-      const storeName = prompt("Nom du nouveau Store / Far3 pour " + brand + " :");
+    function addStorePrompt(brand) {
+      const storeName = prompt("Nom du nouveau Store pour " + brand + " :");
       if (storeName) {
         storeCatalog[brand].push(storeName);
-        localStorage.setItem('fieldops_store_catalog_v14', JSON.stringify(storeCatalog));
-        initFormDropdowns(); renderConfigTree();
+        localStorage.setItem('fieldops_store_catalog_v17', JSON.stringify(storeCatalog));
+        initFormDropdowns();
+        renderConfigTree();
       }
     }
 
-    function deleteStoreFar3(brand, store) {
+    function deleteStore(brand, store) {
       storeCatalog[brand] = storeCatalog[brand].filter(s => s !== store);
-      localStorage.setItem('fieldops_store_catalog_v14', JSON.stringify(storeCatalog));
-      initFormDropdowns(); renderConfigTree();
+      localStorage.setItem('fieldops_store_catalog_v17', JSON.stringify(storeCatalog));
+      initFormDropdowns();
+      renderConfigTree();
     }
 
     function addNewRecTypePrompt() {
       const typeName = prompt("Nom du nouveau Type de Réclamation :");
       if (typeName && !recTypesCatalog[typeName]) {
         recTypesCatalog[typeName] = ["Incident Général"];
-        localStorage.setItem('fieldops_rec_types_v14', JSON.stringify(recTypesCatalog));
-        initFormDropdowns(); renderConfigTree();
+        localStorage.setItem('fieldops_rec_types_v17', JSON.stringify(recTypesCatalog));
+        initFormDropdowns();
+        renderConfigTree();
       }
     }
 
     function deleteRecTypePrompt(type) {
       if (confirm("Supprimer le type " + type + " ?")) {
         delete recTypesCatalog[type];
-        localStorage.setItem('fieldops_rec_types_v14', JSON.stringify(recTypesCatalog));
-        initFormDropdowns(); renderConfigTree();
+        localStorage.setItem('fieldops_rec_types_v17', JSON.stringify(recTypesCatalog));
+        initFormDropdowns();
+        renderConfigTree();
       }
     }
 
@@ -627,33 +695,25 @@
       const motif = prompt("Nouveau motif pour " + type + " :");
       if (motif) {
         recTypesCatalog[type].push(motif);
-        localStorage.setItem('fieldops_rec_types_v14', JSON.stringify(recTypesCatalog));
-        initFormDropdowns(); renderConfigTree();
+        localStorage.setItem('fieldops_rec_types_v17', JSON.stringify(recTypesCatalog));
+        initFormDropdowns();
+        renderConfigTree();
       }
     }
 
     function deleteMotif(type, motif) {
       recTypesCatalog[type] = recTypesCatalog[type].filter(m => m !== motif);
-      localStorage.setItem('fieldops_rec_types_v14', JSON.stringify(recTypesCatalog));
-      initFormDropdowns(); renderConfigTree();
+      localStorage.setItem('fieldops_rec_types_v17', JSON.stringify(recTypesCatalog));
+      initFormDropdowns();
+      renderConfigTree();
     }
 
-    /* MESSAGES & SYSTEM APP FUNCTIONS */
+    /* MESSAGES & SYSTEM FUNCTIONS */
     function switchDashTab(tab) {
       currentDashTab = tab;
       document.getElementById('tab-part').classList.toggle('active', tab === 'Partenaire');
       document.getElementById('tab-livr').classList.toggle('active', tab === 'Livreur');
       renderReclamationStats();
-    }
-
-    function getGPS() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(p => {
-          document.getElementById('rec-gps').value = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
-        }, () => {
-          document.getElementById('rec-gps').value = "33.9182, -6.9211";
-        });
-      }
     }
 
     function copyToClipboard(text) {
@@ -682,7 +742,7 @@
         date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
       });
 
-      localStorage.setItem('fieldops_direct_msgs_v14', JSON.stringify(directMessagesDB));
+      localStorage.setItem('fieldops_direct_msgs_v17', JSON.stringify(directMessagesDB));
       alert(`✅ Message envoyé à ${targetAgent} !`);
       document.getElementById('msg-input-text').value = '';
       renderMessagesView();
@@ -691,18 +751,12 @@
     function renderMessagesView() {
       const container = document.getElementById('messages-list-container');
       container.innerHTML = '';
-
-      let list = directMessagesDB;
-      if (currentUser.role === 'agent') {
-        list = directMessagesDB.filter(m => m.to === currentUser.fname);
-      }
-
-      if (list.length === 0) {
+      if (directMessagesDB.length === 0) {
         container.innerHTML = `<div style="padding:16px; background:#f8fafc; border-radius:10px; color:#64748b; font-weight:700;">Aucun message direct.</div>`;
         return;
       }
 
-      list.slice().reverse().forEach(m => {
+      directMessagesDB.slice().reverse().forEach(m => {
         container.innerHTML += `
           <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:12px 16px; border-radius:12px;">
             <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
@@ -725,44 +779,15 @@
           text: msg,
           date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
         });
-        localStorage.setItem('fieldops_direct_msgs_v14', JSON.stringify(directMessagesDB));
+        localStorage.setItem('fieldops_direct_msgs_v17', JSON.stringify(directMessagesDB));
         alert(`✅ Instruction envoyée à ${agentFName} !`);
       }
-    }
-
-    function submitReclamation() {
-      const type = document.getElementById('rec-type').value;
-      const target = type === 'Partenaire' ? document.getElementById('rec-target-partenaire').value : document.getElementById('rec-target-livreur').value;
-      const sector = document.getElementById('rec-store-sector').value;
-      const motif = document.getElementById('rec-motif').value;
-      const orderNum = document.getElementById('rec-order-num').value;
-      const gps = document.getElementById('rec-gps').value;
-      const comment = document.getElementById('rec-comment').value;
-
-      claimsDB.push({ 
-        id: Date.now(), 
-        agent: currentUser.fname, 
-        type, 
-        target, 
-        sector: type === 'Partenaire' ? sector : '-', 
-        motif, 
-        orderNum: orderNum || '-', 
-        gps, 
-        comment: comment || '-', 
-        date: new Date().toLocaleDateString('fr-FR'), 
-        status: 'En Cours' 
-      });
-
-      localStorage.setItem('fieldops_claims_db_v14', JSON.stringify(claimsDB));
-      alert("✅ Réclamation envoyée avec succès !");
-      document.getElementById('rec-order-num').value = '';
-      document.getElementById('rec-comment').value = '';
     }
 
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v14', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v17', JSON.stringify(claimsDB));
         renderReclamationStats();
       }
     }
@@ -774,11 +799,11 @@
 
       if (currentDashTab === 'Partenaire') {
         thead.innerHTML = `
-          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Danger</th><th>Statut</th><th>Contact Agent</th>${currentUser && currentUser.canDelete ? '<th>Action</th>' : ''}
+          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Danger</th><th>Statut</th><th>Contact Agent</th><th>Action</th>
         `;
       } else {
         thead.innerHTML = `
-          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Récurence Danger</th><th>Statut</th><th>Contact Agent</th>${currentUser && currentUser.canDelete ? '<th>Action</th>' : ''}
+          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Récurence Danger</th><th>Statut</th><th>Contact Agent</th><th>Action</th>
         `;
       }
 
@@ -802,7 +827,6 @@
         const gpsLinkHtml = c.gps ? `<a href="${mapsUrl}" target="_blank" style="color:#0284c7; font-weight:800;">🗺️ Maps</a><button class="btn-copy" onclick="copyToClipboard('${mapsUrl}')">📋</button>` : '-';
         const orderHtml = `${c.orderNum || '-'} <button class="btn-copy" onclick="copyToClipboard('${c.orderNum}')">📋</button>`;
         const targetHtml = `${c.target} <button class="btn-copy" onclick="copyToClipboard('${c.target}')">📋</button>`;
-        const showDeleteBtn = currentUser && currentUser.canDelete;
 
         if (currentDashTab === 'Partenaire') {
           tbody.innerHTML += `
@@ -816,14 +840,14 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v14', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v17', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
                 </select>
               </td>
               <td><button class="btn-msg" onclick="sendMessageToAgent('${c.agent}')">💬 Msg Agent</button></td>
-              ${showDeleteBtn ? `<td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button></td>` : ''}
+              <td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button></td>
             </tr>
           `;
         } else {
@@ -837,14 +861,14 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v14', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v17', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
                 </select>
               </td>
               <td><button class="btn-msg" onclick="sendMessageToAgent('${c.agent}')">💬 Msg Agent</button></td>
-              ${showDeleteBtn ? `<td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button></td>` : ''}
+              <td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button></td>
             </tr>
           `;
         }
@@ -855,13 +879,12 @@
       const tbody = document.getElementById('planning-table-body');
       tbody.innerHTML = '';
       agentsDB.forEach(a => {
-        const isSelf = currentUser && currentUser.id === a.id;
         tbody.innerHTML += `
           <tr>
             <td><strong>${a.fname} ${a.lname}</strong></td><td>${a.zone}</td>
             ${['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'].map(() => `
               <td>
-                <select ${!isSelf && currentUser.role==='agent' ? 'disabled' : ''}>
+                <select>
                   <option value="10:00-17:00">10:00-17:00</option>
                   <option value="17:00-00:00">17:00-00:00</option>
                   <option value="ABSENT" style="color:red; font-weight:800;">🚨 ABSENT</option>
@@ -875,7 +898,7 @@
     }
 
     function exportToCSV() {
-      let csv = "Agent,Type,Cible,Secteur,Motif,N° Commande,GPS,Commentaire,Date,Status\n";
+      let csv = "Agent,Type,Cible,Store,Motif,N° Commande,GPS,Commentaire,Date,Status\n";
       claimsDB.forEach(c => { csv += `"${c.agent}","${c.type}","${c.target}","${c.sector}","${c.motif}","${c.orderNum}","${c.gps}","${c.comment}","${c.date}","${c.status}"\n`; });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;' }));
