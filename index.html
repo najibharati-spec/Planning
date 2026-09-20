@@ -22,7 +22,7 @@
     body { background: var(--bg-cream); color: var(--text-dark); min-height: 100vh; display: flex; }
     .hidden { display: none !important; }
 
-    /* LOCK SCREEN */
+    /* LOCK SCREEN FOR RESPONSABLES */
     #lock-screen {
       width: 100%; min-height: 100vh; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 10px;
@@ -106,6 +106,15 @@
     .badge-green { background: #c8e6c9; color: #1b5e20; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
 
     .alert-banner { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 800; margin-top: 10px; }
+
+    /* PLANNING STYLES */
+    .shift-select {
+      font-size: 11px; font-weight: 700; padding: 6px; border-radius: 6px; border: 1px solid #cbd5e1; outline: none; width: 100%;
+    }
+    .shift-morging { background: #e0f2fe; color: #0369a1; }
+    .shift-evening { background: #fef3c7; color: #92400e; }
+    .shift-off { background: #f1f5f9; color: #64748b; }
+    .shift-absent { background: #fee2e2; color: #991b1b; }
 
     /* CONFIG CARDS */
     .cfg-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
@@ -314,14 +323,34 @@
         </div>
       </div>
 
-      <!-- PLANNING AGENTS TERRAIN EXCLUSIVEMENT -->
+      <!-- PLANNING HEBDOMADAIRE DESIGN OPTIMISÉ (AGENTS TERRAIN) -->
       <div id="view-planning" class="content-card hidden">
-        <h3>📅 Planning des Shifts hebdomadaire (Agents Terrain 44H)</h3>
-        <p style="color:#64748b; margin-bottom:12px; font-size:12px;">Suivi et organisation des emplois du temps des Agents Terrain.</p>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+          <div>
+            <h3>📅 Planning Hebdomadaire des Shifts (44H/Agent)</h3>
+            <p style="color:#64748b; font-size:12px;">Suivi et organisation des shifts terrain pour Yahya, Mourad, Islam, Achraf et l'équipe.</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-action" style="padding:8px 14px; font-size:12px;" onclick="addAgentToPlanningPrompt()">➕ Ajouter Agent Terrain</button>
+            <button class="btn-action" style="padding:8px 14px; font-size:12px; background:#0284c7;" onclick="window.print()">🖨️ Imprimer Planning</button>
+          </div>
+        </div>
+
         <div style="overflow-x:auto;">
           <table>
             <thead>
-              <tr><th>Agent Terrain</th><th>Zone Affectée</th><th>Lun</th><th>Mar</th><th>Mer</th><th>Jeu</th><th>Ven</th><th>Sam</th><th>Dim</th></tr>
+              <tr style="background:#f1f5f9; text-align:center;">
+                <th style="min-width:140px; text-align:left;">Agent Terrain</th>
+                <th style="min-width:130px; text-align:left;">Zone Principal</th>
+                <th style="width:110px; text-align:center;">Lundi</th>
+                <th style="width:110px; text-align:center;">Mardi</th>
+                <th style="width:110px; text-align:center;">Mercredi</th>
+                <th style="width:110px; text-align:center;">Jeudi</th>
+                <th style="width:110px; text-align:center;">Vendredi</th>
+                <th style="width:110px; text-align:center;">Samedi</th>
+                <th style="width:110px; text-align:center;">Dimanche</th>
+                <th style="width:60px; text-align:center;">Action</th>
+              </tr>
             </thead>
             <tbody id="planning-table-body"></tbody>
           </table>
@@ -467,30 +496,31 @@
       { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur", canDelete: false }
     ];
 
-    // 2. LES AGENTS TERRAIN (POUR LE PLANNING EXCLUSIVEMENT)
-    const fieldAgentsList = [
-      { id: "101", fname: "Ayoub", lname: "ABSSI", zone: "Temara - Wifaq" },
+    // 2. LES AGENTS TERRAIN (EXPLICITLY UPDATED WITH YAHYA, MOURAD, ISLAM, ACHRAF, ETC.)
+    const defaultFieldAgents = [
+      { id: "101", fname: "Yahya", lname: "RHALLAB", zone: "Hay Riad" },
       { id: "102", fname: "Mourad", lname: "CHERRADI", zone: "Rabat Hassan" },
-      { id: "103", fname: "Yahya", lname: "RHALLAB", zone: "Hay Riad" },
-      { id: "104", fname: "Othmane", lname: "BENALI", zone: "Harhoura" },
-      { id: "105", fname: "Hamza", lname: "SEBTI", zone: "Salé Tabriquet" },
-      { id: "106", fname: "Khalid", lname: "NACIRI", zone: "Ocean Rabat" },
-      { id: "107", fname: "Tariq", lname: "BOUKHAR", zone: "Rabat Centre" },
-      { id: "108", fname: "Reda", lname: "EL AMRI", zone: "Temara Fouarat" },
-      { id: "109", fname: "Saad", lname: "LAHLOU", zone: "Agdal Sud" },
-      { id: "110", fname: "Badr", lname: "EL IDRISSI", zone: "Souissi" },
-      { id: "111", fname: "Ismail", lname: "TAZI", zone: "Hay Nahda" },
-      { id: "112", fname: "Amine", lname: "BENSOUDA", zone: "Guich Oudaya" }
+      { id: "103", fname: "Islam", lname: "EL AMRI", zone: "Agdal Central" },
+      { id: "104", fname: "Achraf", lname: "BENALI", zone: "Temara Central" },
+      { id: "105", fname: "Ayoub", lname: "ABSSI", zone: "Temara - Wifaq" },
+      { id: "106", fname: "Othmane", lname: "SEBTI", zone: "Harhoura" },
+      { id: "107", fname: "Hamza", lname: "NACIRI", zone: "Salé Tabriquet" },
+      { id: "108", fname: "Khalid", lname: "BOUKHAR", zone: "Ocean Rabat" },
+      { id: "109", fname: "Tariq", lname: "LAHLOU", zone: "Rabat Centre" },
+      { id: "110", fname: "Reda", lname: "EL IDRISSI", zone: "Temara Fouarat" },
+      { id: "111", fname: "Saad", lname: "TAZI", zone: "Souissi" },
+      { id: "112", fname: "Badr", lname: "BENSOUDA", zone: "Guich Oudaya" }
     ];
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v27')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v27')) || defaultRecTypes;
-    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v27')) || { order: true, sector: true, gps: true, comment: true };
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v28')) || defaultStoreCatalog;
+    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v28')) || defaultRecTypes;
+    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v28')) || { order: true, sector: true, gps: true, comment: true };
+    let fieldAgentsList = JSON.parse(localStorage.getItem('fieldops_field_agents_v28')) || defaultFieldAgents;
     
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v27')) || [
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v28')) || [
       { id: 1, agent: "Najib HARATI (ADMIN)", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
     ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v27')) || [];
+    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v28')) || [];
 
     let currentDashTab = "Partenaire";
     let selectedAgent = responsablesList[0];
@@ -677,7 +707,7 @@
         status: 'En Cours' 
       });
 
-      localStorage.setItem('fieldops_claims_db_v27', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v28', JSON.stringify(claimsDB));
       alert("✅ Réclamation enregistrée et ajoutée au Dashboard avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
@@ -690,7 +720,7 @@
 
     function toggleFieldVisibility(fieldKey) {
       fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
-      localStorage.setItem('fieldops_vis_v27', JSON.stringify(fieldVisibility));
+      localStorage.setItem('fieldops_vis_v28', JSON.stringify(fieldVisibility));
     }
 
     /* DYNAMIC TREE CONFIGURATION CONTROLS FOR ADMIN */
@@ -754,7 +784,7 @@
       const name = prompt("Nom du nouveau Partenaire (Marque) :");
       if (name && !storeCatalog[name]) {
         storeCatalog[name] = [name + " Store Central"];
-        localStorage.setItem('fieldops_store_catalog_v27', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v28', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -766,7 +796,7 @@
       if (newBrand && newBrand !== oldBrand) {
         storeCatalog[newBrand] = storeCatalog[oldBrand];
         delete storeCatalog[oldBrand];
-        localStorage.setItem('fieldops_store_catalog_v27', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v28', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -776,7 +806,7 @@
       const brand = decodeURIComponent(safeBrand);
       if (confirm("Supprimer le partenaire " + brand + " ?")) {
         delete storeCatalog[brand];
-        localStorage.setItem('fieldops_store_catalog_v27', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v28', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -787,7 +817,7 @@
       const storeName = prompt("Nom du nouveau Store pour " + brand + " :");
       if (storeName) {
         storeCatalog[brand].push(storeName);
-        localStorage.setItem('fieldops_store_catalog_v27', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v28', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -797,7 +827,7 @@
       const brand = decodeURIComponent(safeBrand);
       const store = decodeURIComponent(safeStore);
       storeCatalog[brand] = storeCatalog[brand].filter(s => s !== store);
-      localStorage.setItem('fieldops_store_catalog_v27', JSON.stringify(storeCatalog));
+      localStorage.setItem('fieldops_store_catalog_v28', JSON.stringify(storeCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -806,7 +836,7 @@
       const typeName = prompt("Nom du nouveau Type de Réclamation :");
       if (typeName && !recTypesCatalog[typeName]) {
         recTypesCatalog[typeName] = ["Incident Général"];
-        localStorage.setItem('fieldops_rec_types_v27', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v28', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -816,7 +846,7 @@
       const type = decodeURIComponent(safeType);
       if (confirm("Supprimer le type " + type + " ?")) {
         delete recTypesCatalog[type];
-        localStorage.setItem('fieldops_rec_types_v27', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v28', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -827,7 +857,7 @@
       const motif = prompt("Nouveau motif pour " + type + " :");
       if (motif) {
         recTypesCatalog[type].push(motif);
-        localStorage.setItem('fieldops_rec_types_v27', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v28', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -837,7 +867,7 @@
       const type = decodeURIComponent(safeType);
       const motif = decodeURIComponent(safeMotif);
       recTypesCatalog[type] = recTypesCatalog[type].filter(m => m !== motif);
-      localStorage.setItem('fieldops_rec_types_v27', JSON.stringify(recTypesCatalog));
+      localStorage.setItem('fieldops_rec_types_v28', JSON.stringify(recTypesCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -876,7 +906,7 @@
         date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
       });
 
-      localStorage.setItem('fieldops_direct_msgs_v27', JSON.stringify(directMessagesDB));
+      localStorage.setItem('fieldops_direct_msgs_v28', JSON.stringify(directMessagesDB));
       alert(`✅ Message envoyé à ${targetAgent} !`);
       document.getElementById('msg-input-text').value = '';
       renderMessagesView();
@@ -906,7 +936,7 @@
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v27', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v28', JSON.stringify(claimsDB));
         renderReclamationStats();
       }
     }
@@ -959,7 +989,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v27', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v28', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
@@ -979,7 +1009,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v27', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v28', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
@@ -992,28 +1022,68 @@
       });
     }
 
-    // RENDER PLANNING FOR FIELD AGENTS ONLY
+    // RENDER PLANNING FOR FIELD AGENTS WITH BEAUTIFUL SHIFT DESIGN
     function renderPlanningTable() {
       const tbody = document.getElementById('planning-table-body');
       tbody.innerHTML = '';
-      fieldAgentsList.forEach(a => {
+      fieldAgentsList.forEach((a, index) => {
         tbody.innerHTML += `
           <tr>
-            <td><strong>${a.fname} ${a.lname}</strong></td>
-            <td><span style="font-size:11px; background:#f1f5f9; padding:3px 6px; border-radius:4px; font-weight:700;">${a.zone}</span></td>
-            ${['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'].map(() => `
-              <td>
-                <select style="font-size:11px; padding:4px;">
-                  <option value="10:00-17:00">10:00-17:00</option>
-                  <option value="17:00-00:00">17:00-00:00</option>
-                  <option value="ABSENT" style="color:red; font-weight:800;">🚨 ABSENT</option>
-                  <option value="OFF">OFF</option>
-                </select>
-              </td>
-            `).join('')}
+            <td><strong style="color:#0f172a;">${a.fname} ${a.lname}</strong></td>
+            <td><span style="font-size:11px; background:#e2e8f0; color:#334155; padding:3px 8px; border-radius:6px; font-weight:800;">📍 ${a.zone}</span></td>
+            ${['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'].map((day, dIdx) => {
+              const defaultVal = dIdx === 6 ? "OFF" : (dIdx % 2 === 0 ? "10:00-17:00" : "17:00-00:00");
+              let shiftClass = defaultVal === '10:00-17:00' ? 'shift-morging' : (defaultVal === '17:00-00:00' ? 'shift-evening' : 'shift-off');
+              return `
+                <td>
+                  <select class="shift-select ${shiftClass}" onchange="updateShiftStyle(this)">
+                    <option value="10:00-17:00" ${defaultVal==='10:00-17:00'?'selected':''}>10:00 - 17:00</option>
+                    <option value="17:00-00:00" ${defaultVal==='17:00-00:00'?'selected':''}>17:00 - 00:00</option>
+                    <option value="OFF" ${defaultVal==='OFF'?'selected':''}>💤 OFF</option>
+                    <option value="ABSENT" ${defaultVal==='ABSENT'?'selected':''}>🚨 ABSENT</option>
+                  </select>
+                </td>
+              `;
+            }).join('')}
+            <td style="text-align:center;"><button class="btn-delete" onclick="removeAgentFromPlanning('${a.id}')">🗑️</button></td>
           </tr>
         `;
       });
+    }
+
+    function updateShiftStyle(selectEl) {
+      selectEl.classList.remove('shift-morging', 'shift-evening', 'shift-off', 'shift-absent');
+      if (selectEl.value === '10:00-17:00') selectEl.classList.add('shift-morging');
+      else if (selectEl.value === '17:00-00:00') selectEl.classList.add('shift-evening');
+      else if (selectEl.value === 'OFF') selectEl.classList.add('shift-off');
+      else if (selectEl.value === 'ABSENT') selectEl.classList.add('shift-absent');
+    }
+
+    function addAgentToPlanningPrompt() {
+      const fname = prompt("Prénom de l'Agent Terrain :");
+      if (!fname) return;
+      const lname = prompt("Nom de l'Agent Terrain :");
+      const zone = prompt("Zone d'affectation (ex: Agdal, Temara, Hassan...) :");
+
+      fieldAgentsList.push({
+        id: Date.now().toString(),
+        fname,
+        lname: lname || '',
+        zone: zone || 'Général'
+      });
+
+      localStorage.setItem('fieldops_field_agents_v28', JSON.stringify(fieldAgentsList));
+      renderPlanningTable();
+      populateAgentMsgDropdown();
+    }
+
+    function removeAgentFromPlanning(id) {
+      if (confirm("Supprimer cet agent du planning ?")) {
+        fieldAgentsList = fieldAgentsList.filter(a => a.id !== id);
+        localStorage.setItem('fieldops_field_agents_v28', JSON.stringify(fieldAgentsList));
+        renderPlanningTable();
+        populateAgentMsgDropdown();
+      }
     }
 
     function exportToCSV() {
