@@ -102,7 +102,18 @@
 
     .content-card { background: #ffffff; border-radius: 16px; border: 1px solid var(--border-subtle); padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 20px; }
 
-    /* ELECTRIC VIOLET PLANNING INTEGRATED STYLES */
+    /* DASHBOARD & FORM STYLES */
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: #334155; }
+    .form-control { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 13px; font-weight: 600; outline: none; }
+    .form-control:focus { border-color: var(--green-primary); }
+
+    .badge-status { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; display: inline-block; }
+    .status-pen { background: #fef3c7; color: #d97706; }
+    .status-tra { background: #dcfce7; color: #15803d; }
+    .status-urg { background: #fee2e2; color: #b91c1c; }
+
+    /* ELECTRIC VIOLET PLANNING STYLES */
     .top-bar-plan {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
       background: #ffffff; padding: 18px 20px; border-radius: 16px; border: 1px solid #e9d5ff; margin-bottom: 22px;
@@ -226,37 +237,108 @@
         </div>
       </div>
 
-      <!-- DASHBOARD -->
+      <!-- 1. DASHBOARD COMPLET DES RECLAMATIONS -->
       <div id="view-dashboard" class="content-card">
-        <h3>📊 Centre de Traitement des Réclamations</h3>
-        <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Suivi temps réel avec tri prioritaire par récurrence.</p>
-        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div>
+            <h3>📊 Centre de Traitement des Réclamations</h3>
+            <p style="color:#64748b; font-size:12px;">Suivi temps réel avec filtrage w tri automatique.</p>
+          </div>
+          <button onclick="renderDashboardTable()" style="background:#00875a; color:#fff; padding:8px 14px; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:12px;">🔄 Actualiser</button>
+        </div>
+
         <div style="overflow-x:auto;">
-          <table style="width:100%; border-collapse:collapse;">
+          <table style="width:100%; border-collapse:collapse; font-size:12px;">
             <thead>
-              <tr id="dash-table-head"></tr>
+              <tr style="background:#f1f5f9; text-align:left; border-bottom:2px solid #cbd5e1;">
+                <th style="padding:10px;">ID / Date</th>
+                <th style="padding:10px;">Agent / Zone</th>
+                <th style="padding:10px;">Type Réclamation</th>
+                <th style="padding:10px;">Priorité</th>
+                <th style="padding:10px;">Statut</th>
+                <th style="padding:10px;">Actions</th>
+              </tr>
             </thead>
             <tbody id="rec-dashboard-body"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION -->
+      <!-- 2. FORMULAIRE DE SAISIE DE RÉCLAMATION -->
       <div id="view-reclamations" class="content-card hidden">
-        <h3>🚨 Saisie Nouvelle Réclamation (Responsable)</h3>
+        <h3 style="margin-bottom:12px; color:#0f172a;">🚨 Saisie Nouvelle Réclamation (Responsable)</h3>
+        <form onsubmit="handleCreateReclamation(event)">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div class="form-group">
+              <label>Agent Terrain Concerned :</label>
+              <input type="text" id="rec-agent" class="form-control" placeholder="ex: Yahya Rhallab" required />
+            </div>
+            <div class="form-group">
+              <label>Secteur / Zone :</label>
+              <select id="rec-zone" class="form-control" required>
+                <option value="Temara - Oulad Mtaa">Temara - Oulad Mtaa</option>
+                <option value="Agdal - Carrousel">Agdal - Carrousel</option>
+                <option value="Salé - Medina">Salé - Medina</option>
+                <option value="Hay Riad - Soussi">Hay Riad - Soussi</option>
+                <option value="Technopolis">Technopolis</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div class="form-group">
+              <label>Type de Réclamation :</label>
+
+              <select id="rec-type" class="form-control" required>
+                <option value="Absence Non Justifiée">Absence Non Justifiée</option>
+                <option value="Retard Shift">Retard Shift</option>
+                <option value="Problème Application / Opswatcher">Problème Application / Opswatcher</option>
+                <option value="Non Respect Equipement (Sac/Tenue)">Non Respect Equipement (Sac/Tenue)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Niveau de Priorité :</label>
+
+              <select id="rec-prio" class="form-control" required>
+                <option value="NORMALE">NORMALE</option>
+                <option value="URGENTE">URGENTE</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Détails & Commentaire :</label>
+
+            <textarea id="rec-desc" class="form-control" rows="3" placeholder="Saisir les explications complémentaires..."></textarea>
+          </div>
+          <button type="submit" style="background:#00875a; color:#fff; padding:12px 20px; border:none; border-radius:10px; font-weight:800; cursor:pointer;">💾 Enregistrer Réclamation</button>
+        </form>
       </div>
 
-      <!-- CONFIGURATION DYNAMIQUE -->
+      <!-- 3. CONFIGURATION DYNAMIQUE -->
       <div id="view-config" class="content-card hidden">
         <h3>🛠️ Configuration Dynamique du Formulaire Admin</h3>
+        <p style="color:#64748b; font-size:12px; margin-bottom:16px;">Gérez les options w les types de réclamations disponibles f le système.</p>
+        <div style="display:flex; gap:10px; margin-bottom:14px;">
+          <input type="text" id="new-rec-type-input" class="form-control" placeholder="Nouveau Type de réclamation..." style="max-width:300px;" />
+          <button onclick="addNewRecType()" style="background:#6d28d9; color:#fff; border:none; padding:10px 16px; border-radius:8px; font-weight:800; cursor:pointer;">➕ Ajouter Option</button>
+        </div>
+        <div id="config-types-list" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
       </div>
 
-      <!-- MESSAGES DIRECTS -->
+      <!-- 4. MESSAGES DIRECTS -->
       <div id="view-messages" class="content-card hidden">
-        <h3>💬 Centre de Messagerie Directe</h3>
+        <h3>💬 Centre de Messagerie Directe avec les Agents</h3>
+        <div style="margin-top:14px; border:1px solid #e2e8f0; border-radius:12px; padding:16px; background:#fafafa;">
+          <div id="chat-box" style="height:250px; overflow-y:auto; margin-bottom:14px; display:flex; flex-direction:column; gap:8px;">
+            <div style="background:#e2e8f0; padding:8px 12px; border-radius:8px; max-width:70%; align-self:flex-start; font-size:12px;"><strong>Système:</strong> Bienvenue sur le canal de communication FieldOps.</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="chat-msg-input" class="form-control" placeholder="Écrire un message à l'équipe..." />
+            <button onclick="sendChatMessage()" style="background:#00875a; color:#fff; border:none; padding:10px 18px; border-radius:8px; font-weight:800; cursor:pointer;">Envoyer</button>
+          </div>
+        </div>
       </div>
 
-      <!-- PLANNING AGENTS ELECTRIC VIOLET (INTEGRATED FULL VERSION) -->
+      <!-- 5. PLANNING AGENTS ELECTRIC VIOLET (EXACT INTEGRATED VERSION) -->
       <div id="view-planning" class="hidden">
         <div class="top-bar-plan">
           <div class="brand-title-plan">
@@ -298,9 +380,10 @@
         </div>
       </div>
 
-      <!-- PARAMETRES -->
+      <!-- 6. PARAMETRES -->
       <div id="view-parametres" class="content-card hidden">
         <h3 style="color:#4c1d95; font-size:18px; margin-bottom:6px;">⚙️ Paramètres système Admin</h3>
+        <p style="color:#64748b; font-size:12px;">Gestion globale dyal les comptes, zones, w les accès du système FieldOps.</p>
       </div>
     </div>
   </div>
@@ -315,6 +398,14 @@
 
     let selectedAgent = responsablesList[0];
     let currentUser = responsablesList[0];
+
+    // STORAGE DB RECLAMATIONS & CONFIG
+    let reclamationsList = JSON.parse(localStorage.getItem('fieldops_reclamations_v2')) || [
+      { id: "REC-101", date: "20/09/2026", agent: "Yahya Rhallab", zone: "Temara - Oulad Mtaa", type: "Retard Shift", prio: "NORMALE", status: "PENDING" },
+      { id: "REC-102", date: "19/09/2026", agent: "Ayoub Abssi", zone: "Agdal - Carrousel", type: "Absence Non Justifiée", prio: "URGENTE", status: "PENDING" }
+    ];
+
+    let customTypes = JSON.parse(localStorage.getItem('fieldops_types_v2')) || ["Absence Non Justifiée", "Retard Shift", "Problème Application / Opswatcher", "Non Respect Equipement (Sac/Tenue)"];
 
     function renderLockCards() {
       const target = document.getElementById('agents-grid-target');
@@ -334,7 +425,7 @@
       document.getElementById('lock-screen').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
       document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname}`;
-      showView('planning', document.getElementById('menu-plan'));
+      showView('dashboard', document.getElementById('menu-dash'));
     }
 
     function lockSystem() {
@@ -357,8 +448,91 @@
       const targetView = document.getElementById('view-' + viewId);
       if(targetView) targetView.classList.remove('hidden');
 
-      if (viewId === 'planning') {
-        renderTable();
+      if (viewId === 'dashboard') renderDashboardTable();
+      if (viewId === 'config') renderConfigTypes();
+      if (viewId === 'planning') renderTable();
+    }
+
+    /* RECLAMATIONS FUNCTIONS */
+    function renderDashboardTable() {
+      const tbody = document.getElementById('rec-dashboard-body');
+      tbody.innerHTML = '';
+      reclamationsList.forEach((r, idx) => {
+        tbody.innerHTML += `
+          <tr style="border-bottom:1px solid #e2e8f0;">
+            <td style="padding:10px;"><strong>${r.id}</strong><br><span style="color:#64748b; font-size:10px;">${r.date}</span></td>
+            <td style="padding:10px;"><strong>${r.agent}</strong><br><span style="color:#64748b; font-size:10px;">📍 ${r.zone}</span></td>
+            <td style="padding:10px;">${r.type}</td>
+            <td style="padding:10px;"><span class="badge-status ${r.prio==='URGENTE'?'status-urg':'status-pen'}">${r.prio}</span></td>
+            <td style="padding:10px;"><span class="badge-status ${r.status==='TRAITÉ'?'status-tra':'status-pen'}">${r.status}</span></td>
+            <td style="padding:10px;">
+              <button onclick="toggleRecStatus(${idx})" style="background:#e2e8f0; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-size:11px; font-weight:700;">Changer Statut</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function handleCreateReclamation(e) {
+      e.preventDefault();
+      const newRec = {
+        id: "REC-" + (Math.floor(Math.random() * 900) + 100),
+        date: new Date().toLocaleDateString('fr-FR'),
+        agent: document.getElementById('rec-agent').value,
+        zone: document.getElementById('rec-zone').value,
+        type: document.getElementById('rec-type').value,
+        prio: document.getElementById('rec-prio').value,
+        status: "PENDING"
+      };
+      reclamationsList.unshift(newRec);
+      localStorage.setItem('fieldops_reclamations_v2', JSON.stringify(reclamationsList));
+      alert("✅ Réclamation enregistrée avec succès !");
+      showView('dashboard', document.getElementById('menu-dash'));
+    }
+
+    function toggleRecStatus(idx) {
+      reclamationsList[idx].status = reclamationsList[idx].status === 'TRAITÉ' ? 'PENDING' : 'TRAITÉ';
+      localStorage.setItem('fieldops_reclamations_v2', JSON.stringify(reclamationsList));
+      renderDashboardTable();
+    }
+
+    /* CONFIG FUNCTIONS */
+    function renderConfigTypes() {
+      const box = document.getElementById('config-types-list');
+      box.innerHTML = '';
+      customTypes.forEach((t, i) => {
+        box.innerHTML += `
+          <span style="background:#f3e8ff; color:#6b21a8; padding:6px 12px; border-radius:8px; font-size:12px; font-weight:700; border:1px solid #d8b4fe; display:inline-flex; align-items:center; gap:8px;">
+            ${t} <button onclick="removeRecType(${i})" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
+          </span>
+        `;
+      });
+    }
+
+    function addNewRecType() {
+      const val = document.getElementById('new-rec-type-input').value;
+      if (val && !customTypes.includes(val)) {
+        customTypes.push(val);
+        localStorage.setItem('fieldops_types_v2', JSON.stringify(customTypes));
+        document.getElementById('new-rec-type-input').value = '';
+        renderConfigTypes();
+      }
+    }
+
+    function removeRecType(i) {
+      customTypes.splice(i, 1);
+      localStorage.setItem('fieldops_types_v2', JSON.stringify(customTypes));
+      renderConfigTypes();
+    }
+
+    /* MESSAGES FUNCTIONS */
+    function sendChatMessage() {
+      const input = document.getElementById('chat-msg-input');
+      if (input.value.trim()) {
+        const chatBox = document.getElementById('chat-box');
+        chatBox.innerHTML += `<div style="background:#dcfce7; padding:8px 12px; border-radius:8px; max-width:70%; align-self:flex-end; font-size:12px;"><strong>${currentUser.fname}:</strong> ${input.value}</div>`;
+        input.value = '';
+        chatBox.scrollTop = chatBox.scrollHeight;
       }
     }
 
