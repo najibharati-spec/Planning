@@ -151,7 +151,7 @@
         <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨</span> Saisie Réclamation</div>
         <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️</span> Config Dynamic</div>
         <div class="nav-item" id="menu-msg" onclick="showView('messages', this)"><span>💬</span> Messages Directs</div>
-        <div class="nav-item" id="menu-plan" onclick="showView('planning', this)"><span>📅</span> Planning</div>
+        <div class="nav-item" id="menu-plan" onclick="showView('planning', this)"><span>📅</span> Planning (17 Agents)</div>
       </div>
 
       <div class="menu-section">
@@ -314,14 +314,14 @@
         </div>
       </div>
 
-      <!-- PLANNING -->
+      <!-- PLANNING (17 AGENTS) -->
       <div id="view-planning" class="content-card hidden">
-        <h3>📅 Planning des Shifts (44H)</h3>
-        <p style="color:#64748b; margin-bottom:12px; font-size:12px;">Gestion et suivi des emplois du temps des 17 agents.</p>
+        <h3>📅 Planning des Shifts hebdomadaire (44H par Agent)</h3>
+        <p style="color:#64748b; margin-bottom:12px; font-size:12px;">Gestion globale et suivi des emplois du temps des 17 agents de l'équipe terrain.</p>
         <div style="overflow-x:auto;">
           <table>
             <thead>
-              <tr><th>Agent</th><th>Zone</th><th>Lun</th><th>Mar</th><th>Mer</th><th>Jeu</th><th>Ven</th><th>Sam</th><th>Dim</th></tr>
+              <tr><th>Agent Terrain</th><th>Zone Affectée</th><th>Lun</th><th>Mar</th><th>Mer</th><th>Jeu</th><th>Ven</th><th>Sam</th><th>Dim</th></tr>
             </thead>
             <tbody id="planning-table-body"></tbody>
           </table>
@@ -441,40 +441,53 @@
       "Zenacham", "Zayyane", "bocadillos A 48", "delish bun", "samraa", "tacos ismail"
     ];
 
-    // Updated Motifs as explicitly requested
+    // MOTIFS EN FRANÇAIS (MANDATORY UPDATE)
     let defaultRecTypes = {
       "Partenaire": [
-        "Commande prête non reçu",
-        "Commande non prête mais trop tardée",
+        "Commande prête non reçue",
+        "Commande non prête (Retard excessif)",
         "Commande volée",
-        "Personel Store makit3amloch mazyane m3a livreurs"
+        "Comportement inapproprié du personnel Store envers les livreurs"
       ],
       "Livreur": [
         "Mauvais comportement",
-        "Vestimentaire non approprié",
-        "Boxe trop abîmée ou trop endommagée",
-        "Boxe sans ID",
-        "Livreur sra9 commande",
-        "Khadam b compte machi dyalo (Compte loué/partagé)"
+        "Tenue vestimentaire non appropriée",
+        "Boîte trop abîmée ou endommagée",
+        "Boîte sans ID",
+        "Vol de commande par le livreur",
+        "Utilisation d'un compte non personnel (Compte loué/partagé)"
       ]
     };
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v24')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v24')) || defaultRecTypes;
-    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v24')) || { order: true, sector: true, gps: true, comment: true };
-
+    // COMPLETE 17 AGENTS LIST FOR PLANNING
     const initialAgents = [
       { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", role: "admin", canDelete: true, zone: "Temara - Oulad Mtaa" },
-      { id: "2", fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur", canDelete: true, zone: "Temara" },
+      { id: "2", fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur", canDelete: true, zone: "Temara Central" },
       { id: "3", fname: "Anass", lname: "FADLI", color: "#059669", role: "decideur", canDelete: true, zone: "Technopolis" },
-      { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur", canDelete: false, zone: "Agdal" }
+      { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur", canDelete: false, zone: "Agdal" },
+      { id: "5", fname: "Ayoub", lname: "ABSSI", color: "#d97706", role: "agent", canDelete: false, zone: "Temara - Wifaq" },
+      { id: "6", fname: "Mourad", lname: "CHERRADI", color: "#dc2626", role: "agent", canDelete: false, zone: "Rabat Hassan" },
+      { id: "7", fname: "Yahya", lname: "RHALLAB", color: "#0284c7", role: "agent", canDelete: false, zone: "Hay Riad" },
+      { id: "8", fname: "Othmane", lname: "BENALI", color: "#4f46e5", role: "agent", canDelete: false, zone: "Harhoura" },
+      { id: "9", fname: "Hamza", lname: "SEBTI", color: "#059669", role: "agent", canDelete: false, zone: "Salé Tabriquet" },
+      { id: "10", fname: "Omar", lname: "KABBAB", color: "#9333ea", role: "agent", canDelete: false, zone: "Salé Marina" },
+      { id: "11", fname: "Khalid", lname: "NACIRI", color: "#e11d48", role: "agent", canDelete: false, zone: "Ocean Rabat" },
+      { id: "12", fname: "Tariq", lname: "BOUKHAR", color: "#0d9488", role: "agent", canDelete: false, zone: "Rabat Centre" },
+      { id: "13", fname: "Reda", lname: "EL AMRI", color: "#ca8a04", role: "agent", canDelete: false, zone: "Temara Fouarat" },
+      { id: "14", fname: "Saad", lname: "LAHLOU", color: "#16a34a", role: "agent", canDelete: false, zone: "Agdal Sud" },
+      { id: "15", fname: "Badr", lname: "EL IDRISSI", color: "#2563eb", role: "agent", canDelete: false, zone: "Souissi" },
+      { id: "16", fname: "Ismail", lname: "TAZI", color: "#c026d3", role: "agent", canDelete: false, zone: "Hay Nahda" },
+      { id: "17", fname: "Amine", lname: "BENSOUDA", color: "#0891b2", role: "agent", canDelete: false, zone: "Guich Oudaya" }
     ];
 
-    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v24')) || initialAgents;
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v24')) || [
-      { id: 1, agent: "Najib HARATI", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête mais trop tardée", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v25')) || defaultStoreCatalog;
+    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v25')) || defaultRecTypes;
+    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v25')) || { order: true, sector: true, gps: true, comment: true };
+    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v25')) || initialAgents;
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v25')) || [
+      { id: 1, agent: "Najib HARATI", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
     ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v24')) || [];
+    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v25')) || [];
 
     let currentDashTab = "Partenaire";
     let selectedAgent = initialAgents[0];
@@ -661,7 +674,7 @@
         status: 'En Cours' 
       });
 
-      localStorage.setItem('fieldops_claims_db_v24', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v25', JSON.stringify(claimsDB));
       alert("✅ Réclamation enregistrée et ajoutée au Dashboard avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
@@ -674,7 +687,7 @@
 
     function toggleFieldVisibility(fieldKey) {
       fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
-      localStorage.setItem('fieldops_vis_v24', JSON.stringify(fieldVisibility));
+      localStorage.setItem('fieldops_vis_v25', JSON.stringify(fieldVisibility));
     }
 
     /* DYNAMIC TREE CONFIGURATION CONTROLS FOR ADMIN */
@@ -738,7 +751,7 @@
       const name = prompt("Nom du nouveau Partenaire (Marque) :");
       if (name && !storeCatalog[name]) {
         storeCatalog[name] = [name + " Store Central"];
-        localStorage.setItem('fieldops_store_catalog_v24', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v25', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -750,7 +763,7 @@
       if (newBrand && newBrand !== oldBrand) {
         storeCatalog[newBrand] = storeCatalog[oldBrand];
         delete storeCatalog[oldBrand];
-        localStorage.setItem('fieldops_store_catalog_v24', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v25', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -760,7 +773,7 @@
       const brand = decodeURIComponent(safeBrand);
       if (confirm("Supprimer le partenaire " + brand + " ?")) {
         delete storeCatalog[brand];
-        localStorage.setItem('fieldops_store_catalog_v24', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v25', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -771,7 +784,7 @@
       const storeName = prompt("Nom du nouveau Store pour " + brand + " :");
       if (storeName) {
         storeCatalog[brand].push(storeName);
-        localStorage.setItem('fieldops_store_catalog_v24', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v25', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -781,7 +794,7 @@
       const brand = decodeURIComponent(safeBrand);
       const store = decodeURIComponent(safeStore);
       storeCatalog[brand] = storeCatalog[brand].filter(s => s !== store);
-      localStorage.setItem('fieldops_store_catalog_v24', JSON.stringify(storeCatalog));
+      localStorage.setItem('fieldops_store_catalog_v25', JSON.stringify(storeCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -790,7 +803,7 @@
       const typeName = prompt("Nom du nouveau Type de Réclamation :");
       if (typeName && !recTypesCatalog[typeName]) {
         recTypesCatalog[typeName] = ["Incident Général"];
-        localStorage.setItem('fieldops_rec_types_v24', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v25', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -800,7 +813,7 @@
       const type = decodeURIComponent(safeType);
       if (confirm("Supprimer le type " + type + " ?")) {
         delete recTypesCatalog[type];
-        localStorage.setItem('fieldops_rec_types_v24', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v25', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -811,7 +824,7 @@
       const motif = prompt("Nouveau motif pour " + type + " :");
       if (motif) {
         recTypesCatalog[type].push(motif);
-        localStorage.setItem('fieldops_rec_types_v24', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v25', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -821,7 +834,7 @@
       const type = decodeURIComponent(safeType);
       const motif = decodeURIComponent(safeMotif);
       recTypesCatalog[type] = recTypesCatalog[type].filter(m => m !== motif);
-      localStorage.setItem('fieldops_rec_types_v24', JSON.stringify(recTypesCatalog));
+      localStorage.setItem('fieldops_rec_types_v25', JSON.stringify(recTypesCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -860,7 +873,7 @@
         date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
       });
 
-      localStorage.setItem('fieldops_direct_msgs_v24', JSON.stringify(directMessagesDB));
+      localStorage.setItem('fieldops_direct_msgs_v25', JSON.stringify(directMessagesDB));
       alert(`✅ Message envoyé à ${targetAgent} !`);
       document.getElementById('msg-input-text').value = '';
       renderMessagesView();
@@ -890,7 +903,7 @@
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v24', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v25', JSON.stringify(claimsDB));
         renderReclamationStats();
       }
     }
@@ -943,7 +956,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v24', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v25', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
@@ -963,7 +976,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v24', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v25', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
@@ -976,16 +989,18 @@
       });
     }
 
+    // RENDER PLANNING FOR ALL 17 AGENTS
     function renderPlanningTable() {
       const tbody = document.getElementById('planning-table-body');
       tbody.innerHTML = '';
       agentsDB.forEach(a => {
         tbody.innerHTML += `
           <tr>
-            <td><strong>${a.fname} ${a.lname}</strong></td><td>${a.zone}</td>
+            <td><strong>${a.fname} ${a.lname}</strong></td>
+            <td><span style="font-size:11px; background:#f1f5f9; padding:3px 6px; border-radius:4px; font-weight:700;">${a.zone}</span></td>
             ${['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'].map(() => `
               <td>
-                <select>
+                <select style="font-size:11px; padding:4px;">
                   <option value="10:00-17:00">10:00-17:00</option>
                   <option value="17:00-00:00">17:00-00:00</option>
                   <option value="ABSENT" style="color:red; font-weight:800;">🚨 ABSENT</option>
