@@ -3,144 +3,178 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - System Admin & Planning Central</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>FieldOps - Executive Control Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-cream: #fbf7ee;
-      --card-cream: #fde8ad;
-      --card-hover: #f9dd93;
-      --green-primary: #00875a;
-      --green-dark: #005a3c;
-      --sidebar-bg: #f8f6fc;
-      --border-subtle: #e9e5f0;
-      --text-dark: #1e293b;
-      --purple-header: #4c1d95;
-      --purple-th: #5b21b6;
+      /* PALETTE EXECUTIVE MODERN */
+      --bg-app: #f1f5f9;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      
+      --brand-primary: #059669;
+      --brand-primary-hover: #047857;
+      --brand-dark: #064e3b;
+      --brand-light: #ecfdf5;
 
-      /* ELECTRIC VIOLET PLANNING COLORS */
-      --header-bg: linear-gradient(90deg, #4c1d95 0%, #581c87 50%, #6b21a8 100%);
-      --text-main: #3b0764;
+      --violet-accent: #7c3aed;
+      --violet-dark: #4c1d95;
+      --violet-light: #f5f3ff;
 
-      --matin-bg: #ede9fe;
-      --matin-txt: #6d28d9;
-      --matin-border: #c4b5fd;
+      --sidebar-bg: #0f172a;
+      --sidebar-text: #94a3b8;
+      --sidebar-active: #1e293b;
 
-      --aprem-bg: #fae8ff;
-      --aprem-txt: #86198f;
-      --aprem-border: #f0abfc;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
 
-      --soir-bg: #e0e7ff;
-      --soir-txt: #3730a3;
-      --soir-border: #a5b4fc;
+      --badge-green-bg: #dcfce7; --badge-green-txt: #15803d;
+      --badge-orange-bg: #ffedd5; --badge-orange-txt: #c2410c;
+      --badge-red-bg: #fee2e2; --badge-red-txt: #b91c1c;
 
-      --off-bg: #f8fafc;
-      --off-txt: #94a3b8;
-      --off-border: #e2e8f0;
-
-      --ok-bg: #dcfce7;
-      --ok-txt: #15803d;
-      --ok-border: #86efac;
-
-      --alert-bg: #fee2e2;
-      --alert-txt: #b91c1c;
-      --alert-border: #fca5a5;
+      --matin-bg: #ede9fe; --matin-txt: #6d28d9; --matin-border: #c4b5fd;
+      --aprem-bg: #fae8ff; --aprem-txt: #86198f; --aprem-border: #f0abfc;
+      --soir-bg: #e0e7ff; --soir-txt: #3730a3; --soir-border: #a5b4fc;
+      --off-bg: #f8fafc; --off-txt: #94a3b8; --off-border: #e2e8f0;
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
-    body { background: var(--bg-cream); color: var(--text-dark); min-height: 100vh; display: flex; }
+    body { background: var(--bg-app); color: var(--text-main); min-height: 100vh; display: flex; font-size: 14px; }
     .hidden { display: none !important; }
 
-    /* LOCK SCREEN FOR RESPONSABLES */
+    /* LOCK SCREEN ACCUEIL PRO */
     #lock-screen {
       width: 100%; min-height: 100vh; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 10px;
+      align-items: center; justify-content: center; padding: 20px;
+      background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%); color: #fff;
     }
-    .brand-header { text-align: center; margin-bottom: 12px; }
-    .brand-header h1 { font-size: 26px; font-weight: 800; color: #005a3c; }
-    .brand-header p { font-size: 12px; color: #78716c; font-weight: 600; }
+    .brand-header-lock { text-align: center; margin-bottom: 24px; }
+    .brand-header-lock h1 { font-size: 32px; font-weight: 800; color: #34d399; letter-spacing: -0.5px; }
+    .brand-header-lock p { font-size: 13px; color: #94a3b8; font-weight: 500; margin-top: 4px; }
 
-    .agents-grid-container { width: 100%; max-width: 900px; padding: 4px; margin-bottom: 12px; }
-    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+    .agents-grid-container { width: 100%; max-width: 800px; margin-bottom: 24px; }
+    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
 
     .agent-card {
-      background: var(--card-cream); border: 2px solid transparent; border-radius: 12px;
-      padding: 8px 4px; text-align: center; cursor: pointer; transition: all 0.2s ease;
-      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px;
+      padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column; align-items: center; gap: 6px; backdrop-filter: blur(8px);
     }
-    .agent-card:hover { background: var(--card-hover); transform: translateY(-2px); }
-    .agent-card.selected { background: #e6f4ea; border-color: var(--green-primary); }
+    .agent-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); border-color: rgba(255,255,255,0.25); }
+    .agent-card.selected { background: rgba(5, 150, 105, 0.2); border-color: #34d399; box-shadow: 0 0 20px rgba(52, 211, 153, 0.2); }
 
     .avatar-circle {
-      width: 36px; height: 36px; border-radius: 50%; display: flex;
-      align-items: center; justify-content: center; color: #ffffff; font-size: 15px; font-weight: 800;
+      width: 42px; height: 42px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; color: #ffffff; font-size: 16px; font-weight: 800;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
+    .agent-fname { font-size: 13px; font-weight: 700; color: #f8fafc; }
+    .agent-lname { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
 
-    .agent-fname { font-size: 11.5px; font-weight: 800; color: #1c1917; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-    .agent-lname { font-size: 9px; font-weight: 700; color: #78716c; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-
-    .login-box { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 8px; }
     .btn-unlock {
-      width: 100%; padding: 12px; border-radius: 12px; border: none;
-      background: var(--green-primary); color: #ffffff; font-size: 14px; font-weight: 800; cursor: pointer;
+      width: 100%; max-width: 400px; padding: 14px; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-hover)); color: #ffffff;
+      font-size: 14px; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
+      box-shadow: 0 10px 20px -5px rgba(5, 150, 105, 0.4);
+    }
+    .btn-unlock:hover { transform: translateY(-1px); filter: brightness(1.1); }
+
+    /* MAIN EXECUTIVE APP STRUCTURE */
+    #main-app { display: flex; width: 100%; min-height: 100vh; }
+    .sidebar {
+      width: 260px; background: var(--sidebar-bg); padding: 24px 16px;
+      display: flex; flex-direction: column; gap: 24px; flex-shrink: 0; border-right: 1px solid #1e293b;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; padding-left: 8px; }
+    .brand-icon {
+      width: 40px; height: 40px; background: linear-gradient(135deg, var(--brand-primary), #047857);
+      color: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 20px; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+    }
+    .brand-title { font-size: 20px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; }
+
+    .menu-section { display: flex; flex-direction: column; gap: 6px; }
+    .menu-label { font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.8px; padding: 0 10px; margin-bottom: 4px; }
+    
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px;
+      font-weight: 700; font-size: 13px; color: var(--sidebar-text); cursor: pointer; transition: all 0.2s ease;
+    }
+    .nav-item:hover { background: var(--sidebar-active); color: #f8fafc; }
+    .nav-item.active { background: var(--brand-primary); color: #ffffff; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35); }
+
+    .main-content { flex: 1; padding: 28px 36px; overflow-y: auto; }
+    
+    .top-header-bar {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+      background: var(--card-bg); padding: 16px 24px; border-radius: 16px; border: 1px solid var(--card-border);
+      box-shadow: 0 4px 15px -3px rgba(0,0,0,0.02);
+    }
+    .user-info-badge { display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 8px 14px; border-radius: 10px; border: 1px solid #e2e8f0; }
+
+    .content-card {
+      background: var(--card-bg); border-radius: 16px; border: 1px solid var(--card-border);
+      padding: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); margin-bottom: 24px;
     }
 
-    /* MAIN APP */
-    #main-app { display: flex; width: 100%; min-height: 100vh; background: #fefcf6; }
-    .sidebar { width: 250px; background: var(--sidebar-bg); border-right: 1px solid var(--border-subtle); padding: 20px 14px; display: flex; flex-direction: column; gap: 20px; flex-shrink: 0; }
-    .brand { display: flex; align-items: center; gap: 10px; padding-left: 6px; }
-    .brand-icon { width: 36px; height: 36px; background: var(--green-primary); color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; }
-    .brand-title { font-size: 18px; font-weight: 800; color: #0f172a; }
+    /* TAB CONTROLS PRO */
+    .tab-container { display: flex; gap: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 20px; }
+    .tab-btn {
+      padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer;
+      border: none; background: #f8fafc; color: var(--text-muted); transition: all 0.2s;
+    }
+    .tab-btn:hover { background: #e2e8f0; }
+    .tab-btn.active { background: var(--brand-primary); color: #ffffff; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2); }
 
-    .menu-section { display: flex; flex-direction: column; gap: 4px; }
-    .menu-label { font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; padding: 0 10px; margin-bottom: 4px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; font-weight: 700; font-size: 13px; color: #475569; cursor: pointer; }
-    .nav-item:hover { background: #eeeaf8; color: var(--green-dark); }
-    .nav-item.active { background: var(--green-primary); color: #ffffff; box-shadow: 0 4px 12px rgba(0, 135, 90, 0.25); }
+    /* BUTTONS EXECUTIVE */
+    .btn-action {
+      background: var(--brand-primary); color: #fff; padding: 10px 18px; border: none;
+      border-radius: 10px; font-weight: 800; font-size: 12.5px; cursor: pointer; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-action:hover { background: var(--brand-primary-hover); transform: translateY(-1px); }
 
-    .main-content { flex: 1; padding: 24px; overflow-y: auto; }
-    .top-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; }
-    .user-info-badge { display: flex; align-items: center; gap: 10px; background: #ffffff; padding: 6px 14px; border-radius: 10px; border: 1px solid #e2e8f0; }
+    .btn-copy { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; margin-left: 4px; }
+    .btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 11px; }
+    .btn-edit { background: #e0f2fe; color: #0369a1; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 11px; }
 
-    .content-card { background: #ffffff; border-radius: 16px; border: 1px solid var(--border-subtle); padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 20px; }
+    /* TABLES PRO */
+    table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    thead th {
+      background: #f8fafc; color: var(--text-muted); font-size: 11px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.5px; padding: 14px 12px; border-bottom: 2px solid #e2e8f0; text-align: left;
+    }
+    tbody tr { transition: background 0.15s ease; }
+    tbody tr:hover { background: #f8fafc; }
+    td { padding: 14px 12px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
 
-    /* DASHBOARD TABS */
-    .tab-container { display: flex; gap: 10px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 16px; }
-    .tab-btn { padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; border: none; background: #f1f5f9; color: #475569; }
-    .tab-btn.active { background: var(--green-primary); color: #ffffff; }
-
-    .btn-copy { background: #e2e8f0; border: none; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; cursor: pointer; margin-left: 4px; }
-    .btn-action { background: var(--green-primary); color: #fff; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
-    .btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 11px; }
-    .btn-edit { background: #e0f2fe; color: #0369a1; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 11px; }
-
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
-    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    /* FORM ELEMENTS */
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group label { font-size: 12px; font-weight: 800; color: #334155; }
-    .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px; font-weight: 600; }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; outline: none;
+      font-size: 13px; font-weight: 600; background: #ffffff; transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15); }
 
     .search-input-box {
-      padding: 10px 12px; border-radius: 8px; border: 2px solid #00875a; outline: none;
-      font-size: 13px; font-weight: 700; background: #f0fdf4; margin-bottom: 4px;
+      padding: 10px 14px; border-radius: 10px; border: 2px solid var(--brand-primary); outline: none;
+      font-size: 13px; font-weight: 700; background: #ecfdf5; margin-bottom: 4px; width: 100%;
     }
 
-    .badge-orange { background: #ffe0b2; color: #e65100; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
-    .badge-red { background: #ffcdd2; color: #b71c1c; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
-    .badge-green { background: #c8e6c9; color: #1b5e20; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
+    /* BADGES */
+    .badge-orange { background: var(--badge-orange-bg); color: var(--badge-orange-txt); padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px; }
+    .badge-red { background: var(--badge-red-bg); color: var(--badge-red-txt); padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px; }
+    .badge-green { background: var(--badge-green-bg); color: var(--badge-green-txt); padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px; }
 
-    .alert-banner { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 800; margin-top: 10px; }
-
-    /* CONFIG CARDS */
-    .cfg-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-    .cfg-item { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 8px; font-size: 13px; font-weight: 700; }
-
-    /* ELECTRIC VIOLET PLANNING STYLES */
+    /* ELECTRIC VIOLET PLANNING SYSTEM PRO */
     .top-bar-plan {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
-      background: #ffffff; padding: 18px 20px; border-radius: 16px; border: 1px solid #e9d5ff; margin-bottom: 22px;
-      box-shadow: 0 10px 25px -5px rgba(76, 29, 149, 0.08);
+      background: #ffffff; padding: 20px 24px; border-radius: 16px; border: 1px solid #e9d5ff; margin-bottom: 22px;
+      box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.08);
     }
-    .brand-title-plan { display: flex; align-items: center; gap: 12px; }
+    .brand-title-plan { display: flex; align-items: center; gap: 14px; }
     .brand-icon-plan {
       width: 44px; height: 44px; background: linear-gradient(135deg, #7c3aed, #4c1d95); border-radius: 12px;
       display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px;
@@ -156,20 +190,20 @@
     .pill-locked { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
     .pill-unlocked { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
 
-    .btn-nav { background: #ffffff; color: #6b21a8; border: 1px solid #e9d5ff; padding: 6px 12px; font-size: 12px; font-weight: 700; border-radius: 10px; cursor: pointer; }
+    .btn-nav { background: #ffffff; color: #6b21a8; border: 1px solid #e9d5ff; padding: 8px 14px; font-size: 12px; font-weight: 700; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
     .btn-nav:hover { background: #f3e8ff; color: #4c1d95; }
 
-    .btn-primary-plan { background: linear-gradient(135deg, #7c3aed, #581c87); color: #ffffff; border: none; padding: 9px 16px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3); }
-    .btn-primary-plan:hover { background: linear-gradient(135deg, #6d28d9, #4c1d95); }
-    .btn-reset-plan { background: #ffffff; color: #6b21a8; border: 1px solid #e9d5ff; padding: 9px 16px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; }
+    .btn-primary-plan { background: linear-gradient(135deg, #7c3aed, #581c87); color: #ffffff; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3); }
+    .btn-primary-plan:hover { background: linear-gradient(135deg, #6d28d9, #4c1d95); transform: translateY(-1px); }
+    .btn-reset-plan { background: #ffffff; color: #6b21a8; border: 1px solid #e9d5ff; padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; }
 
     #lock-banner {
-      display: none; background: #fffbeb; border: 1.5px solid #fde68a; color: #b45309; padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 700; margin-bottom: 18px; align-items: center; justify-content: space-between;
+      display: none; background: #fffbeb; border: 1.5px solid #fde68a; color: #b45309; padding: 14px 20px; border-radius: 14px; font-size: 13px; font-weight: 700; margin-bottom: 20px; align-items: center; justify-content: space-between;
     }
 
     .table-container-plan { background: #ffffff; border-radius: 18px; overflow-x: auto; border: 1px solid #e9d5ff; box-shadow: 0 12px 35px -10px rgba(76, 29, 149, 0.1); }
     .table-plan { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1500px; text-align: center; }
-    .table-plan thead th { background: var(--header-bg); color: #ffffff; padding: 16px 8px; font-size: 12px; font-weight: 800; text-transform: uppercase; border-bottom: 2px solid #3b0764; letter-spacing: 0.6px; }
+    .table-plan thead th { background: linear-gradient(90deg, #4c1d95, #6b21a8); color: #ffffff; padding: 16px 8px; font-size: 12px; font-weight: 800; text-transform: uppercase; border-bottom: 2px solid #3b0764; letter-spacing: 0.6px; }
     .table-plan th.col-agent { width: 210px; text-align: left; padding-left: 20px; }
     .table-plan th.col-zone { width: 200px; text-align: left; padding-left: 14px; }
     .table-plan th.col-total { width: 240px; }
@@ -195,14 +229,14 @@
 
     .total-action-box { display: flex; align-items: center; justify-content: center; gap: 6px; }
     .hours-badge { display: inline-flex; align-items: center; justify-content: center; padding: 6px 10px; border-radius: 16px; font-weight: 800; font-size: 11.5px; white-space: nowrap; }
-    .badge-ok { background: var(--ok-bg); color: var(--ok-txt); border: 1.5px solid var(--ok-border); }
-    .badge-alert { background: var(--alert-bg); color: var(--alert-txt); border: 1.5px solid var(--alert-border); }
+    .badge-ok { background: #dcfce7; color: #15803d; border: 1.5px solid #86efac; }
+    .badge-alert { background: #fee2e2; color: #b91c1c; border: 1.5px solid #fca5a5; }
 
     select.btn-shift-choice { padding: 6px 8px; font-size: 11px; font-weight: 800; border-radius: 8px; background: #faf5ff; color: #6b21a8; border: 1.5px solid #c4b5fd; cursor: pointer; outline: none; }
     .btn-del { background: transparent; color: #c4b5fd; font-size: 16px; cursor: pointer; padding: 6px 8px; border-radius: 8px; border: none; }
     .btn-del:hover { color: #ef4444; background: #fee2e2; }
 
-    /* MODAL OVERLAY */
+    /* MODAL */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
@@ -217,9 +251,9 @@
 
     @media (max-width: 768px) {
       #main-app { flex-direction: column; }
-      .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 12px; }
-      .main-content { padding: 14px; }
-      .agents-grid { grid-template-columns: repeat(3, 1fr); }
+      .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 14px; }
+      .main-content { padding: 16px; }
+      .agents-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -227,8 +261,8 @@
 
   <!-- LOCK SCREEN FOR RESPONSABLES -->
   <div id="lock-screen">
-    <div class="brand-header">
-      <h1>FieldOps Admin</h1>
+    <div class="brand-header-lock">
+      <h1>FieldOps Executive</h1>
       <p>Sélectionnez votre profil Responsable pour accéder au système</p>
     </div>
 
@@ -236,9 +270,7 @@
       <div class="agents-grid" id="agents-grid-target"></div>
     </div>
 
-    <div class="login-box">
-      <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER ACCÈS DIRECT</button>
-    </div>
+    <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER ACCÈS DIRECT</button>
   </div>
 
   <!-- MAIN APP -->
@@ -268,32 +300,32 @@
       <div class="top-header-bar">
         <h2 id="current-view-title" style="font-size:20px; font-weight:800; color:#0f172a;">Dashboard Admin</h2>
         <div class="user-info-badge">
-          <span id="logged-user-avatar" style="width:26px; height:26px; border-radius:50%; background:#00875a; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:11px;">👤</span>
+          <span id="logged-user-avatar" style="width:28px; height:28px; border-radius:50%; background:#059669; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:11px;">👤</span>
           <span id="logged-user-name" style="font-weight:800; font-size:13px; color:#1e293b;">-</span>
-          <button onclick="lockSystem()" style="background:#fee2e2; color:#b91c1c; border:none; padding:5px 10px; border-radius:8px; font-weight:800; cursor:pointer; font-size:11px; margin-left:8px;">🔒 Déconnexion</button>
+          <button onclick="lockSystem()" style="background:#fee2e2; color:#b91c1c; border:none; padding:6px 12px; border-radius:8px; font-weight:800; cursor:pointer; font-size:11px; margin-left:8px;">🔒 Déconnexion</button>
         </div>
       </div>
 
       <!-- DASHBOARD -->
       <div id="view-dashboard" class="content-card">
-        <h3>📊 Centre de Traitement des Réclamations</h3>
-        <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Suivi temps réel avec tri prioritaire par récurrence.</p>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📊 Centre de Traitement des Réclamations</h3>
+        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Suivi temps réel avec tri prioritaire par récurrence.</p>
         
         <div class="tab-container">
           <button class="tab-btn active" id="tab-part" onclick="switchDashTab('Partenaire')">🏪 Partenaires (Merchants)</button>
           <button class="tab-btn" id="tab-livr" onclick="switchDashTab('Livreur')">🛵 Livreurs (Couriers)</button>
         </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
           <div>
-            <label style="font-weight:800; font-size:11px;">Filtre Période : </label>
-            <select id="filter-period" onchange="renderReclamationStats()"><option value="day">Aujourd'hui (Jour)</option><option value="week" selected>Cette Semaine</option><option value="month">Ce Mois</option></select>
+            <label style="font-weight:800; font-size:12px; color:#475569;">Filtre Période : </label>
+            <select id="filter-period" onchange="renderReclamationStats()" style="padding:6px 10px; border-radius:8px; border:1px solid #cbd5e1; font-weight:700;"><option value="day">Aujourd'hui (Jour)</option><option value="week" selected>Cette Semaine</option><option value="month">Ce Mois</option></select>
           </div>
           <button class="btn-action" style="margin:0; font-size:12px;" onclick="exportToCSV()">📥 Exporter CSV</button>
         </div>
 
         <div style="overflow-x:auto;">
-          <table style="width:100%; border-collapse:collapse;">
+          <table>
             <thead>
               <tr id="dash-table-head"></tr>
             </thead>
@@ -304,8 +336,8 @@
 
       <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION -->
       <div id="view-reclamations" class="content-card hidden">
-        <h3>🚨 Saisie Nouvelle Réclamation (Responsable)</h3>
-        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Saisissez directement les réclamations terrain en tant que Responsable.</p>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🚨 Saisie Nouvelle Réclamation (Responsable)</h3>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Saisissez directement les réclamations terrain en tant que Responsable.</p>
 
         <div class="form-grid">
           <div class="form-group" id="fgroup-type">
@@ -322,7 +354,7 @@
             <label>🔎 Magasin Exact / Store (Recherche) :</label>
             <input type="text" id="store-search-input" class="search-input-box" placeholder="🔍 Taper pour chercher le Store..." oninput="filterStores()" />
             <select id="rec-store-sector" onchange="checkCustomStore()"></select>
-            <input type="text" id="custom-store-input" class="hidden" placeholder="Saisir le nom du partenaire/store exact..." style="margin-top:6px; padding:8px; border-radius:6px; border:1px solid #cbd5e1;" />
+            <input type="text" id="custom-store-input" class="hidden" placeholder="Saisir le nom du partenaire/store exact..." style="margin-top:6px; padding:10px; border-radius:8px; border:1px solid #cbd5e1;" />
           </div>
 
           <div class="form-group hidden" id="fgroup-livreur">
@@ -347,51 +379,51 @@
           </div>
         </div>
 
-        <div id="gps-error-banner" class="alert-banner hidden">
+        <div id="gps-error-banner" style="background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; padding:12px; border-radius:10px; font-size:12px; font-weight:800; margin-top:14px;" class="hidden">
           ⚠️ Attention : Vous devez obligatoirement cliquer sur "📍 Détecter Position GPS" pour valider la réclamation !
         </div>
 
-        <div class="form-group" id="fgroup-comment" style="margin-top:12px;">
+        <div class="form-group" id="fgroup-comment" style="margin-top:14px;">
           <label>Commentaires & Explications :</label>
           <textarea id="rec-comment" rows="3" placeholder="Saisir les commentaires et détails..."></textarea>
         </div>
-        <button class="btn-action" style="margin-top:14px;" onclick="submitReclamation()">Envoyer la Réclamation</button>
+        <button class="btn-action" style="margin-top:16px; padding:12px 24px;" onclick="submitReclamation()">Envoyer la Réclamation</button>
       </div>
 
       <!-- CONFIGURATION DYNAMIQUE -->
       <div id="view-config" class="content-card hidden">
-        <h3>🛠️ Configuration Dynamique du Formulaire Admin</h3>
-        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Gérez l'arborescence des Partenaires, Stores, Types de réclamation, Motifs et visibilité des champs.</p>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🛠️ Configuration Dynamique du Formulaire Admin</h3>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Gérez l'arborescence des Partenaires, Stores, Types de réclamation, Motifs et visibilité des champs.</p>
 
-        <!-- 1. GESTION DES CHAMPS (VISIBILITÉ) -->
-        <div class="cfg-card">
-          <h4 style="font-size:14px; color:#00875a; margin-bottom:10px;">👁️ Visibilité des Champs dans le Formulaire Agent :</h4>
-          <div style="display:flex; gap:16px; flex-wrap:wrap;">
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-order" checked onchange="toggleFieldVisibility('order')" /> Champ N° Commande</label>
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-sector" checked onchange="toggleFieldVisibility('sector')" /> Champ Stores / Emplacement</label>
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-gps" checked onchange="toggleFieldVisibility('gps')" /> Champ Localisation GPS</label>
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-comment" checked onchange="toggleFieldVisibility('comment')" /> Champ Commentaires</label>
+        <!-- VISIBILITÉ DES CHAMPS -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:18px; margin-bottom:18px;">
+          <h4 style="font-size:14px; color:#059669; margin-bottom:12px; font-weight:800;">👁️ Visibilité des Champs dans le Formulaire Agent :</h4>
+          <div style="display:flex; gap:18px; flex-wrap:wrap;">
+            <label style="font-weight:700; font-size:13px; color:#334155;"><input type="checkbox" id="field-toggle-order" checked onchange="toggleFieldVisibility('order')" /> Champ N° Commande</label>
+            <label style="font-weight:700; font-size:13px; color:#334155;"><input type="checkbox" id="field-toggle-sector" checked onchange="toggleFieldVisibility('sector')" /> Champ Stores / Emplacement</label>
+            <label style="font-weight:700; font-size:13px; color:#334155;"><input type="checkbox" id="field-toggle-gps" checked onchange="toggleFieldVisibility('gps')" /> Champ Localisation GPS</label>
+            <label style="font-weight:700; font-size:13px; color:#334155;"><input type="checkbox" id="field-toggle-comment" checked onchange="toggleFieldVisibility('comment')" /> Champ Commentaires</label>
           </div>
         </div>
 
-        <!-- 2. GESTION ARBORESCENCE PARTENAIRES & STORES -->
-        <div class="cfg-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-            <h4 style="font-size:14px; color:#00875a;">🏬 Arborescence Partenaires & Stores :</h4>
+        <!-- ARBORESCENCE PARTENAIRES -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:18px; margin-bottom:18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+            <h4 style="font-size:14px; color:#059669; font-weight:800;">🏬 Arborescence Partenaires & Stores :</h4>
             <div style="display:flex; gap:8px; align-items:center;">
-              <input type="text" id="config-brand-search" class="search-input-box" style="margin:0; width:220px;" placeholder="🔍 Chercher Partenaire f Config..." oninput="renderConfigTree()" />
-              <button class="btn-action" style="padding:8px 12px; font-size:11px;" onclick="addNewBrandPrompt()">➕ Ajouter Nouveau Partenaire</button>
+              <input type="text" id="config-brand-search" class="search-input-box" style="margin:0; width:220px;" placeholder="🔍 Chercher Partenaire..." oninput="renderConfigTree()" />
+              <button class="btn-action" style="padding:8px 14px; font-size:12px;" onclick="addNewBrandPrompt()">➕ Ajouter Nouveau Partenaire</button>
             </div>
           </div>
           
           <div id="brands-tree-container"></div>
         </div>
 
-        <!-- 3. GESTION TYPES DE RÉCLAMATIONS & MOTIFS -->
-        <div class="cfg-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h4 style="font-size:14px; color:#00875a;">🚨 Types de Réclamation & Motifs :</h4>
-            <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="addNewRecTypePrompt()">➕ Ajouter Type Réclamation</button>
+        <!-- TYPES DE RÉCLAMATION -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h4 style="font-size:14px; color:#059669; font-weight:800;">🚨 Types de Réclamation & Motifs :</h4>
+            <button class="btn-action" style="padding:8px 14px; font-size:12px;" onclick="addNewRecTypePrompt()">➕ Ajouter Type Réclamation</button>
           </div>
 
           <div id="types-motifs-container"></div>
@@ -400,38 +432,38 @@
 
       <!-- MESSAGES DIRECTS -->
       <div id="view-messages" class="content-card hidden">
-        <h3>💬 Centre de Messagerie & Instructions Directes</h3>
-        <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Communication directe entre l'Équipe de Gestion et les Agents Terrain.</p>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">💬 Centre de Messagerie & Instructions Directes</h3>
+        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Communication directe entre l'Équipe de Gestion et les Agents Terrain.</p>
 
-        <div id="admin-msg-panel" style="margin-bottom:20px; background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
-          <h4 style="font-size:14px; margin-bottom:10px;">✉️ Envoyer un Message Direct :</h4>
+        <div style="margin-bottom:20px; background:#f8fafc; padding:18px; border-radius:14px; border:1px solid #e2e8f0;">
+          <h4 style="font-size:14px; margin-bottom:12px; color:#0f172a; font-weight:800;">✉️ Envoyer un Message Direct :</h4>
           <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <select id="msg-select-agent" style="padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-weight:700;"></select>
-            <input type="text" id="msg-input-text" placeholder="Saisir votre instruction..." style="flex:1; min-width:240px; padding:10px; border-radius:8px; border:1px solid #cbd5e1;" />
+            <select id="msg-select-agent" style="padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-weight:700;"></select>
+            <input type="text" id="msg-input-text" placeholder="Saisir votre instruction..." style="flex:1; min-width:240px; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1;" />
             <button class="btn-action" style="margin:0;" onclick="sendDirectMessage()">Envoyer</button>
           </div>
         </div>
 
         <div>
-          <h4 style="font-size:14px; margin-bottom:10px;">📋 Boîte de Réception Messages :</h4>
+          <h4 style="font-size:14px; margin-bottom:12px; color:#0f172a; font-weight:800;">📋 Boîte de Réception Messages :</h4>
           <div id="messages-list-container" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
       </div>
 
-      <!-- PLANNING AGENTS ELECTRIC VIOLET (REPLACED SYSTEM) -->
+      <!-- PLANNING AGENTS ELECTRIC VIOLET -->
       <div id="view-planning" class="hidden">
         <div class="top-bar-plan">
           <div class="brand-title-plan">
             <div class="brand-icon-plan">⚡</div>
             <div>
               <h1>Operational Shift Planning (44H)</h1>
-              <p>Boutons Modifier Nom & Zone • Thème Electric Violet • Sauvegarde Permanente</p>
+              <p style="font-size:12px; color:#6b21a8; font-weight:600; margin-top:2px;">Boutons Modifier Nom & Zone • Thème Electric Violet • Sauvegarde Permanente</p>
             </div>
           </div>
 
           <div class="week-nav">
             <button class="btn-nav" onclick="changeWeek(-1)">◀ Précédent</button>
-            <span id="current-week-label" style="font-weight:700; font-size:13.5px; color:#581c87;">Semaine ...</span>
+            <span id="current-week-label" style="font-weight:800; font-size:13.5px; color:#581c87;">Semaine ...</span>
             <span id="lock-status-pill" class="status-pill"></span>
             <button class="btn-nav" onclick="changeWeek(1)">Suivant ▶</button>
             <button class="btn-nav" style="margin-left: 6px;" onclick="goToCurrentWeek()">Aujourd'hui</button>
@@ -462,9 +494,9 @@
 
       <!-- PARAMETRES -->
       <div id="view-parametres" class="content-card hidden">
-        <h3>⚙️ Paramètres Système Admin</h3>
-        <p style="color:#64748b; font-size:12px;">Configuration globale de la plateforme, gestion des accès et exportations système.</p>
-        <div style="margin-top:16px; display:flex; flex-direction:column; gap:12px; max-width:400px;">
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">⚙️ Paramètres Système Admin</h3>
+        <p style="color:#64748b; font-size:12px; margin-bottom:16px;">Configuration globale de la plateforme, gestion des accès et exportations système.</p>
+        <div style="display:flex; flex-direction:column; gap:12px; max-width:400px;">
           <button class="btn-action" style="background:#0284c7;" onclick="alert('Système réinitialisé aux valeurs par défaut !')">🔄 Réinitialiser Données Système</button>
           <button class="btn-action" style="background:#059669;" onclick="exportToCSV()">📊 Télécharger l'ensemble des Réclamations (CSV)</button>
         </div>
@@ -607,9 +639,9 @@
     };
 
     const responsablesList = [
-      { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", role: "admin" },
+      { id: "1", fname: "Najib", lname: "HARATI", color: "#059669", role: "admin" },
       { id: "2", fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur" },
-      { id: "3", fname: "Anass", lname: "FADLI", color: "#059669", role: "decideur" },
+      { id: "3", fname: "Anass", lname: "FADLI", color: "#047857", role: "decideur" },
       { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
     ];
 
@@ -895,7 +927,7 @@
         if (!b.toLowerCase().includes(searchConfig)) return;
         const safeBrandKey = encodeURIComponent(b);
         bTree.innerHTML += `
-          <div class="cfg-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
+          <div class="cfg-item" style="display:flex; flex-direction:column; align-items:flex-start; gap:8px; background:#fff; padding:12px 16px; border-radius:10px; border:1px solid #cbd5e1; margin-top:8px;">
             <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
               <span style="font-size:14px; color:#0f172a;">🏢 <strong>${b}</strong> (${storeCatalog[b].length} Stores)</span>
               <div>
@@ -906,7 +938,7 @@
             </div>
             <div style="padding-left:16px; display:flex; flex-wrap:wrap; gap:6px; width:100%; max-height:120px; overflow-y:auto;">
               ${storeCatalog[b].map(s => `
-                <span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
+                <span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px; font-weight:700;">
                   📍 ${s}
                   <button onclick="deleteStore('${safeBrandKey}', '${encodeURIComponent(s)}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
                 </span>
@@ -922,7 +954,7 @@
       Object.keys(recTypesCatalog).forEach(t => {
         const safeTypeKey = encodeURIComponent(t);
         tTree.innerHTML += `
-          <div class="cfg-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
+          <div class="cfg-item" style="display:flex; flex-direction:column; align-items:flex-start; gap:8px; background:#fff; padding:12px 16px; border-radius:10px; border:1px solid #cbd5e1; margin-top:8px;">
             <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
               <span style="font-size:14px; color:#0f172a;">🚨 Type: <strong>${t}</strong></span>
               <div>
@@ -932,7 +964,7 @@
             </div>
             <div style="padding-left:16px; display:flex; flex-wrap:wrap; gap:6px; width:100%;">
               ${recTypesCatalog[t].map(m => `
-                <span style="background:#fef3c7; color:#92400e; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
+                <span style="background:#fef3c7; color:#92400e; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px; font-weight:700;">
                   ${m}
                   <button onclick="deleteMotif('${safeTypeKey}', '${encodeURIComponent(m)}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
                 </span>
@@ -1086,9 +1118,9 @@
 
       directMessagesDB.slice().reverse().forEach(m => {
         container.innerHTML += `
-          <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:12px 16px; border-radius:12px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-              <strong style="color:#00875a; font-size:13px;">De: ${m.from} ➔ À: ${m.to}</strong>
+          <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:14px 18px; border-radius:12px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <strong style="color:#059669; font-size:13px;">De: ${m.from} ➔ À: ${m.to}</strong>
               <span style="font-size:11px; color:#94a3b8; font-weight:700;">${m.date}</span>
             </div>
             <p style="font-size:13px; font-weight:700; color:#1e293b;">${m.text}</p>
@@ -1147,14 +1179,14 @@
             <tr>
               <td><strong>${c.agent}</strong></td>
               <td><strong>${targetHtml}</strong></td>
-              <td><strong style="color:#00875a;">${c.sector || '-'}</strong></td>
+              <td><strong style="color:#059669;">${c.sector || '-'}</strong></td>
               <td>${c.motif}</td>
               <td>${orderHtml}</td>
               <td>${gpsLinkHtml}</td>
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));">
+                <select style="padding:4px 8px; border-radius:6px; font-weight:700;" onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
@@ -1174,7 +1206,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));">
+                <select style="padding:4px 8px; border-radius:6px; font-weight:700;" onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
