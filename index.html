@@ -376,7 +376,7 @@
           </button>
         </div>
 
-        <!-- BARRE DE FILTRES AVANCÉS -->
+        <!-- BARRE DE FILTRES AVANCÉS DES RÉCLAMATIONS EN COURS -->
         <div class="filter-panel">
           <div>
             <label>🔎 Recherche (ID / Order# / Agent) :</label>
@@ -423,14 +423,53 @@
           </table>
         </div>
 
-        <!-- SECTION ARCHIVE HISTORIQUE -->
+        <!-- SECTION ARCHIVE HISTORIQUE AVEC FILTRES DÉDIÉS -->
         <div style="margin-top:30px; border-top:2px solid #e2e8f0; padding-top:20px;">
           <h4 style="font-size:15px; font-weight:800; color:#059669; margin-bottom:10px;">✅ Historique des Réclamations Traitées & Classées</h4>
+          
+          <!-- BARRE DE FILTRES DÉDIÉE À L'HISTORIQUE -->
+          <div class="filter-panel" style="background:#f0fdf4; border-color:#bbf7d0;">
+            <div>
+              <label>🔎 Chercher dans L'Historique :</label>
+              <input type="text" id="flt-arc-search" placeholder="Ex: Order #, Store, Agent..." oninput="renderReclamationStats()" />
+            </div>
+
+            <div>
+              <label>🚨 Motif Incident :</label>
+              <select id="flt-arc-motif" onchange="renderReclamationStats()">
+                <option value="">-- Tous les Motifs --</option>
+                <option value="Commande volée">Commande volée</option>
+                <option value="Utilisation d'un compte non personnel (Compte loué/partagé)">Compte Loué / Partagé</option>
+                <option value="Commande non prête (Retard excessif)">Retard Excessif Store</option>
+                <option value="Vol de commande par le livreur">Vol par Livreur</option>
+                <option value="Mauvais comportement">Mauvais comportement</option>
+              </select>
+            </div>
+
+            <div>
+              <label>📦 Type Cible :</label>
+              <select id="flt-arc-type" onchange="renderReclamationStats()">
+                <option value="">-- Tous les Types --</option>
+                <option value="Partenaire">Partenaire (Merchant)</option>
+                <option value="Livreur">Livreur (Courier)</option>
+              </select>
+            </div>
+
+            <div>
+              <label>📅 Date Exacte (Calendrier) :</label>
+              <input type="date" id="flt-arc-date" onchange="renderReclamationStats()" style="cursor:pointer;" />
+            </div>
+
+            <div>
+              <button class="btn-action" style="padding:8px 12px; font-size:11px; background:#64748b;" onclick="resetArchiveFilters()">🔄 Vider Filtres Archive</button>
+            </div>
+          </div>
+
           <div style="overflow-x:auto;">
             <table>
               <thead>
                 <tr>
-                  <th>Agent</th><th>Type</th><th>Cible / Store</th><th>Motif</th><th>Order #</th><th>Date</th><th>Statut</th>
+                  <th>Agent</th><th>Type</th><th>Cible / Store</th><th>Motif</th><th>Order #</th><th>Date</th><th>Statut</th><th>Actions</th>
                 </tr>
               </thead>
               <tbody id="rec-archive-body"></tbody>
@@ -1060,6 +1099,14 @@
       renderReclamationStats();
     }
 
+    function resetArchiveFilters() {
+      document.getElementById('flt-arc-search').value = '';
+      document.getElementById('flt-arc-motif').value = '';
+      document.getElementById('flt-arc-type').value = '';
+      document.getElementById('flt-arc-date').value = '';
+      renderReclamationStats();
+    }
+
     function toggleRecType() {
       const typeSel = document.getElementById('rec-type');
       if (!typeSel) return;
@@ -1200,7 +1247,7 @@
       localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
       alert("✅ Réclamation transmise aux Responsables avec succès !");
 
-      // RESET TOTAL ET PROPRE D-FORMULAIRE (حتى حاجة ما تبقى لاصقة)
+      // RESET TOTAL ET PROPRE D-FORMULAIRE
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
       document.getElementById('rec-gps').value = '';
@@ -1600,6 +1647,7 @@
         `;
       }
 
+      // FILTRES EN COURS
       const fltSearch = (document.getElementById('flt-search')?.value || '').toLowerCase().trim();
       const fltMotif = document.getElementById('flt-motif')?.value || '';
       const fltBrand = document.getElementById('flt-brand')?.value || '';
@@ -1627,8 +1675,6 @@
       if (fltDate !== '') {
         activeClaims = activeClaims.filter(c => c.date === fltDate);
       }
-
-      let archivedClaims = claimsDB.filter(c => c.status === 'Traité' || c.status === 'Classé');
 
       const counts = {};
       activeClaims.forEach(c => { counts[c.target] = (counts[c.target] || 0) + 1; });
@@ -1688,9 +1734,38 @@
         }
       });
 
+      // FILTRES DE L'HISTORIQUE (ARCHIVE)
+      const fltArcSearch = (document.getElementById('flt-arc-search')?.value || '').toLowerCase().trim();
+      const fltArcMotif = document.getElementById('flt-arc-motif')?.value || '';
+      const fltArcType = document.getElementById('flt-arc-type')?.value || '';
+      const fltArcDate = document.getElementById('flt-arc-date')?.value || '';
+
+      let archivedClaims = claimsDB.filter(c => c.status === 'Traité' || c.status === 'Classé');
+
+      if (fltArcSearch !== '') {
+        archivedClaims = archivedClaims.filter(c => 
+          c.agent.toLowerCase().includes(fltArcSearch) ||
+          c.target.toLowerCase().includes(fltArcSearch) ||
+          c.orderNum.toLowerCase().includes(fltArcSearch) ||
+          c.sector.toLowerCase().includes(fltArcSearch)
+        );
+      }
+
+      if (fltArcMotif !== '') {
+        archivedClaims = archivedClaims.filter(c => c.motif === fltArcMotif);
+      }
+
+      if (fltArcType !== '') {
+        archivedClaims = archivedClaims.filter(c => c.type === fltArcType);
+      }
+
+      if (fltArcDate !== '') {
+        archivedClaims = archivedClaims.filter(c => c.date === fltArcDate);
+      }
+
       if (archiveBody) {
         if (archivedClaims.length === 0) {
-          archiveBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#64748b; font-weight:700; padding:14px;">Aucune réclamation archivée pour le moment.</td></tr>`;
+          archiveBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; font-weight:700; padding:14px;">Aucune réclamation archivée pour le moment.</td></tr>`;
         } else {
           archivedClaims.forEach(ac => {
             archiveBody.innerHTML += `
@@ -1702,6 +1777,7 @@
                 <td>${ac.orderNum}</td>
                 <td>${ac.date}</td>
                 <td><span class="badge-green">✅ ${ac.status}</span></td>
+                <td><button class="btn-gold" style="padding:4px 8px; font-size:10px;" onclick="openClaimDetailsModal(${ac.id})">👁️ Voir</button></td>
               </tr>
             `;
           });
