@@ -210,13 +210,13 @@
           </div>
 
           <div class="form-group" id="fgroup-partenaire">
-            <label>🔎 Rechercher & Sélectionner Partenaire :</label>
-            <input type="text" id="brand-search-input" class="search-input-box" placeholder="🔍 Taper pour chercher (ex: Macdo, KFC, Primos...)" oninput="filterBrands()" />
+            <label>Marque Partenaire :</label>
             <select id="rec-target-partenaire" onchange="updateStoreLocations()"></select>
           </div>
 
           <div class="form-group" id="fgroup-sector">
-            <label>Magasin Exact (Store) :</label>
+            <label>🔎 Magasin Exact / Store (Recherche) :</label>
+            <input type="text" id="store-search-input" class="search-input-box" placeholder="🔍 Taper pour chercher le Store (ex: Agdal, Hay Riad, Temara...)" oninput="filterStores()" />
             <select id="rec-store-sector" onchange="checkCustomStore()"></select>
             <input type="text" id="custom-store-input" class="hidden" placeholder="Saisir le nom du partenaire/store exact..." style="margin-top:6px; padding:8px; border-radius:6px; border:1px solid #cbd5e1;" />
           </div>
@@ -387,18 +387,65 @@
         "Dunkin' Mahaj Riad", "Dunkin' Label Gallery Rabat", "Dunkin' Le Marché Dar Essalam"
       ],
       "📍 Autres Partenaires / Restaurants": [
-        "➕ Saisir un autre partenaire..."
+        "ALL_PARTNERS"
       ]
     };
+
+    // Global list of all partners/restaurants collected across all catalogs
+    let allPartnersList = [
+      "175 KG", "218 BROS", "44brunch", "AGHA CHAM", "AM Fast Food", "ARZAK", "ATHLETIC PIZZA", "AYAMEK YA CHAM", "Addawk Chami", "Ahl alcham",
+      "Air Stick", "Al Andalous grille&co", "Albayt Dimashki", "Allo Sushi Restaurant (Salé)", "Amaya", "Amigo Tacos", "As'iette", "As'iam", "Assil Acham",
+      "Au P'tit Coin", "Awal", "Ayourino", "BA Fares", "BAYT AL QUDS", "BTB Sweets", "Bacara Cafe Restaurantmajid", "Babek Abtal", "Babek Hay Riad",
+      "BbT Agdal", "Beauty Market", "Beauty Success", "Bella mamma", "Beyti Istanbul", "Black coffee", "Bling bling chicken", "Bo Burger", "Bocadillo Del Norte",
+      "Bocadillos El Rincón", "Bocadillos Los Hermanos", "Bocadillos by Tangier's", "Boho Café", "Bricoma Hay Riad", "Bricoma Quamra", "Bricoma Salé Marina", "Bricoma Temara",
+      "Burger King Agdal", "Burger King Arribat Center", "Burger King Carrefour Salé", "Burger King Harhoura", "Burger King Kitea Géant", "Burger King LGB Zaer",
+      "Burger King Marina Salé", "Burger King Mahaj Ryad", "Burger King Temara", "CAP GOURMET", "COCOC Chicken", "Café Nezonya", "Café Tulip Yazane", "Café snack arc de paris",
+      "Capital Vape", "Caribou Coffee Gare Agdal", "Caribou Coffee Hay Riad", "Caribou Coffee La villa 16", "Carrefour Express Temara", "Carrefour Gourmet",
+      "Carrefour Market WIFAK", "Carrefour Mehdi Ben Barka", "Castle Fish", "Chez Ouazzani", "Chez musty", "Chouwaya Al Akhawayn", "Chrono Pizza Temara", "Ch’hiwa food",
+      "Coin délices", "Coq Chef", "Costa coffee caroussel", "Crispeat", "Crispy Food", "Crusty Hay Riad", "D'VAPE", "DAR AL FAWAKIH RABAT - AGDAL", "Da Milena",
+      "Dajaji", "Dalla Zia", "Di Villaggio", "Domino's Agdal", "Domino's Harhoura", "Domino's Label Gallery Rabat", "Domino's Mahaj Riad", "Domino's Mega Mall",
+      "Domino's Prestigia Rabat", "Dunkin' Arribat Center", "Dunkin' Harhoura", "Dunkin' Label Gallery Rabat", "Dunkin' Le Marché Dar Essalam", "Dunkin' Mahaj Riad",
+      "Dunkin' Prestigia Rabat", "EASY VAPE SALE", "EASY VAPE Rabat", "Eatalia", "ElBayt El Dimashki", "Electroshine", "Encas", "Face Burger", "Fakihat Saada",
+      "Fast Ryad", "Fast Pizza", "Fast & delicious", "Fino Resto", "First Pizza", "Flavour Crêpe", "Flormar", "Food Delice", "FreCheese", "Ghost Kitchen",
+      "Go Frero Carrousel", "Good Flowers", "Goodway", "Green Village Rabat", "Grillade Al Andalous", "Hortensia café &more", "Huna", "I AM SUSHI", "IMIM SNACK",
+      "Il Giardino", "Indian Flavors", "Instafood", "J and J", "Japonezà", "Juicy Vapes", "KFC Agdal", "KFC Arribat Center", "KFC Hassan", "KFC Hay Riad",
+      "KFC Le Carrousel", "KFC Rabat Ville", "KFC Sela Park", "Kitchen Ryad", "Kitchen 59", "Koko Chicken", "Kool Smoothies AFRIQUIA HAY RIAD", "Kool Smoothies Arribat Center",
+      "Krispy Kreme - Agdal", "Krispy Kreme - Arribat Center", "L'Atelier Burger Hay Riad", "L'Atelier Burger Temara", "LA CASA GRANDE", "LA MAISON Fresh & Bio",
+      "LA PORTE DE LA MER", "LE PORT", "LE 40", "LE GOÛT DU FRUIT", "LES FRÈRES BOUCHERS", "La Déliciosa", "La Dinette", "La Mamma’s Pizza", "La Ola", "La Spezia",
+      "La pause 88 Mix Food", "La tasse verte", "Lamjarred Boutique Patisserie", "Latium", "Le Chill", "Le Macaron Maitre Artisan", "Le Roissant", "Le Rôti", "Le Smash",
+      "Lea Joy", "Liogelato", "Little Mamma Agdal", "Little Mamma Centre Ville Rabat", "Little Mamma Mahaj Riad", "Lovely Sheep", "Louai’s", "L’gordo", "MAC Cosmetics",
+      "MK Cloud", "Mademoiselle Framboise Rabat", "Mahaj Alfawakih", "Maison du Pain", "Maison du chou", "Mamito", "Marjane Hyper Hay Riad", "Masked Chicken", "Mawaid chabab",
+      "Maymana", "Maymana Souissi", "McDonald's Agdal - 2", "McDonald's Carrousel-93", "McDonald's El Menzeh", "McDonald's Gare LGV Agdal - 48", "McDonald's Marjane Hay Riad - 12",
+      "McDonald's Rabat ville - 22", "McDonald's Salé - 33", "McDonald's Temara - 46", "Meka Sushi", "Mevico", "Michwatkom", "Michouat al akhaouayne", "Mister Chicken Sale",
+      "Mitsuki Arribat Center", "Mitsuki Carrousel", "Mitsuki Gare", "Moissons", "Mr Bricolage Salé", "Mr Brunch", "Mr Kool", "Mr. Bricolage", "Muskaan Nikkei", "My Eataly",
+      "My Poke & Salads", "Natus Marrakech", "O'Caprices", "O'BOCADILLO'S", "O'charbon", "OMB Arribat Center", "OMB Hay Riad", "Oasis Café Express- Hay Riad", "Oben Coffee shop",
+      "Ocrepino", "Oliveri Hay Ryad", "Oppa Chicken", "Otantik Restaurant cuisine méditerranéenne", "Ouafaa Cakes Delivery", "PRODIET", "Panda", "Panda Crepe Marina",
+      "Papa John's Harhoura", "Papa John's Hay Riad", "Para Acima Harhoura", "Para Ain Atiq", "Para Dana", "Para MAGNOLIA", "Para Outlet", "Para Rivage", "Para Saliha NewShop",
+      "Para Al mohit", "Para Kounouz", "Para lagrande pharmacie", "Parapharmacie Beauty Skin", "Parapharmacie COSMOBIO", "Parasquare", "Paradise", "Pâtisserie Fennich",
+      "Pet Corner", "Pet Partner", "Pets Club", "Pets boutique RBT", "Pinchos Hassan", "Pinchos Mahaj Riad", "Pincho's Hassane", "Pizza Hut Agdal", "Pizza Hut Harhoura",
+      "Pizza Hut Hay Riad", "Pizza Hut Mahaj Ryad", "Pizza Hut Souissi", "Pizza Rio", "Pizza Vera", "Pizzeria silvia", "Pokawa Harhoura", "Pomme de pain Rabat", "Pop and Top",
+      "Pousse-Pousse", "Pralinor", "Prestigia", "Primos Agdal", "Primos CARROUSSEL", "Primos Centre Ville", "Primos Chicken Hay Riad", "Primos Chicken Massira",
+      "Primos Chicken Ocean", "Primos Salé", "Primos Temara", "Qaouti House", "Quick - Ryad square", "Quickpara", "RBT Arribat Center Av. Omar Ibn Al Khattab",
+      "RBT Aswak Assalam Av Mehdi Ben Barka - 1", "RBT Mega Mall Av. Mohamed VI", "Rafa Food", "Ragueb Para", "Raihani Food", "Rayan Nehmé", "Regalito", "Restaurant BACI",
+      "Restaurant Sabah al sham", "Ryad Square Gen2", "S Tacos Hay Riad", "S Tacos Salé", "S Tacos Témara", "SKY VAPE", "SOttoSOpra", "Safe and tasty", "Sama Juice ساماجوس",
+      "Sharxclub", "Shawarma Ghali Acham", "Shölk Maître Chocolatier", "Snack ABC", "Snack Ariwak Adahabi", "Snack Bacha", "Snack El Karam", "Snack Tempo", "Snack chamal",
+      "So Chicken", "Starbucks Agdal", "Starbucks Gare Rabat Agdal", "Starbucks Hay Riad", "Sunset on Fire", "Sushi Box Arribat Center", "Sushi Box Harhoura",
+      "Sushi Box Labelvie RBT", "Sushi Box Mahaj Ryad", "Sushi ARIJ", "Sushi youzar", "Sushi yanyan prestigia", "Sweet stoune", "SWEETOPIA", "T2L Arribat Center",
+      "T2L Fal Ould Oumeir", "T2L Mohamed V RBT", "Tac'N'roll", "Tacos Pescara", "Tacos Avenue", "Tacos de Nice", "Tacos slimani", "Tacos ismail", "tacos monalisa",
+      "Tasty Chicken", "Tender fish", "Temara Square – Av Hassan 2", "The Burger Meister", "The number one", "Thaitaam", "U Express Mega Mall", "VAPENERGY", "Valdi divce",
+      "Vape Market", "Verzatis", "Vida Souss", "Villa My Pearl", "WINO FOOD", "Win Win", "World Burger", "YAMA SUSHI", "Yaha", "Yas Gadgets", "Yoka Sushi Agdal",
+      "Yoka Sushi Harhoura", "Yoka Sushi Hay Riad", "Yoka Sushi Label'Gallery", "Yoka Sushi Salé", "Yoka Sushi Temara", "Yummy Délices By Bennani", "ZA7MA", "Zehn Electronic",
+      "Zenacham", "Zayyane", "bocadillos A 48", "delish bun", "samraa", "tacos ismail"
+    ];
 
     let defaultRecTypes = {
       "Partenaire": ["Prêt non respecté / Retard", "Commande Volée / Disparue", "Erreur d'Article", "Comportement Staff"],
       "Livreur": ["Commande Volée / Disparue", "Problème Boîte / Sac (Box)", "Papiers / Assurance / Carte AE"]
     };
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v21')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v21')) || defaultRecTypes;
-    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v21')) || { order: true, sector: true, gps: true, comment: true };
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v22')) || defaultStoreCatalog;
+    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v22')) || defaultRecTypes;
+    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v22')) || { order: true, sector: true, gps: true, comment: true };
 
     const initialAgents = [
       { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", role: "admin", canDelete: true, zone: "Temara - Oulad Mtaa" },
@@ -407,11 +454,11 @@
       { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur", canDelete: false, zone: "Agdal" }
     ];
 
-    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v21')) || initialAgents;
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v21')) || [
+    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v22')) || initialAgents;
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v22')) || [
       { id: 1, agent: "Najib HARATI", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
     ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v21')) || [];
+    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v22')) || [];
 
     let currentDashTab = "Partenaire";
     let selectedAgent = initialAgents[0];
@@ -472,26 +519,13 @@
         typeSel.innerHTML += `<option value="${t}">${t}</option>`;
       });
 
-      filterBrands();
-      toggleRecType();
-    }
-
-    function filterBrands() {
-      const searchVal = document.getElementById('brand-search-input').value.toLowerCase().trim();
       const brandSel = document.getElementById('rec-target-partenaire');
       brandSel.innerHTML = '';
-
       Object.keys(storeCatalog).forEach(b => {
-        if (b.toLowerCase().includes(searchVal)) {
-          brandSel.innerHTML += `<option value="${b}">${b}</option>`;
-        }
+        brandSel.innerHTML += `<option value="${b}">${b}</option>`;
       });
 
-      if (brandSel.options.length === 0) {
-        brandSel.innerHTML = `<option value="">❌ Aucun partenaire trouvé</option>`;
-      }
-
-      updateStoreLocations();
+      toggleRecType();
     }
 
     function toggleRecType() {
@@ -517,19 +551,35 @@
 
     function updateStoreLocations() {
       const brand = document.getElementById('rec-target-partenaire').value;
+      document.getElementById('store-search-input').value = '';
+      filterStores();
+    }
+
+    function filterStores() {
+      const brand = document.getElementById('rec-target-partenaire').value;
+      const searchVal = document.getElementById('store-search-input').value.toLowerCase().trim();
       const selector = document.getElementById('rec-store-sector');
       selector.innerHTML = '';
 
-      if (!brand || !storeCatalog[brand]) {
-        selector.innerHTML = `<option value="-">-</option>`;
-        checkCustomStore();
-        return;
+      let listToDisplay = [];
+      if (brand === "📍 Autres Partenaires / Restaurants" || (storeCatalog[brand] && storeCatalog[brand][0] === "ALL_PARTNERS")) {
+        listToDisplay = allPartnersList;
+      } else if (storeCatalog[brand]) {
+        listToDisplay = storeCatalog[brand];
       }
 
-      const stores = storeCatalog[brand];
-      stores.forEach(s => {
-        selector.innerHTML += `<option value="${s}">${s}</option>`;
+      listToDisplay.forEach(s => {
+        if (s.toLowerCase().includes(searchVal)) {
+          selector.innerHTML += `<option value="${s}">${s}</option>`;
+        }
       });
+
+      // Add custom option at the bottom
+      selector.innerHTML += `<option value="➕ Saisir manuellement un autre partenaire...">➕ Saisir manuellement un autre partenaire...</option>`;
+
+      if (selector.options.length === 1 && searchVal !== '') {
+        selector.selectedIndex = 0;
+      }
 
       checkCustomStore();
     }
@@ -537,7 +587,7 @@
     function checkCustomStore() {
       const storeVal = document.getElementById('rec-store-sector').value;
       const customInput = document.getElementById('custom-store-input');
-      if (storeVal === "➕ Saisir un autre partenaire...") {
+      if (storeVal === "➕ Saisir manuellement un autre partenaire...") {
         customInput.classList.remove('hidden');
       } else {
         customInput.classList.add('hidden');
@@ -564,14 +614,14 @@
       const gps = document.getElementById('rec-gps').value;
       const comment = document.getElementById('rec-comment').value;
 
-      if (sector === "➕ Saisir un autre partenaire...") {
+      if (sector === "➕ Saisir manuellement un autre partenaire...") {
         const customVal = document.getElementById('custom-store-input').value;
         if (!customVal) return alert("Veuillez saisir le nom du partenaire !");
         sector = customVal;
         target = customVal;
+      } else if (target === "📍 Autres Partenaires / Restaurants") {
+        target = sector;
       }
-
-      if (!target || target.startsWith('❌')) return alert("Veuillez choisir un partenaire valide !");
 
       claimsDB.push({ 
         id: Date.now(), 
@@ -587,7 +637,7 @@
         status: 'En Cours' 
       });
 
-      localStorage.setItem('fieldops_claims_db_v21', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v22', JSON.stringify(claimsDB));
       alert("✅ Réclamation enregistrée et ajoutée au Dashboard avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
@@ -598,7 +648,7 @@
 
     function toggleFieldVisibility(fieldKey) {
       fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
-      localStorage.setItem('fieldops_vis_v21', JSON.stringify(fieldVisibility));
+      localStorage.setItem('fieldops_vis_v22', JSON.stringify(fieldVisibility));
     }
 
     /* DYNAMIC TREE CONFIGURATION CONTROLS FOR ADMIN */
@@ -662,7 +712,7 @@
       const name = prompt("Nom du nouveau Partenaire (Marque) :");
       if (name && !storeCatalog[name]) {
         storeCatalog[name] = [name + " Store Central"];
-        localStorage.setItem('fieldops_store_catalog_v21', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v22', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -674,7 +724,7 @@
       if (newBrand && newBrand !== oldBrand) {
         storeCatalog[newBrand] = storeCatalog[oldBrand];
         delete storeCatalog[oldBrand];
-        localStorage.setItem('fieldops_store_catalog_v21', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v22', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -684,7 +734,7 @@
       const brand = decodeURIComponent(safeBrand);
       if (confirm("Supprimer le partenaire " + brand + " ?")) {
         delete storeCatalog[brand];
-        localStorage.setItem('fieldops_store_catalog_v21', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v22', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -695,7 +745,7 @@
       const storeName = prompt("Nom du nouveau Store pour " + brand + " :");
       if (storeName) {
         storeCatalog[brand].push(storeName);
-        localStorage.setItem('fieldops_store_catalog_v21', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v22', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -705,7 +755,7 @@
       const brand = decodeURIComponent(safeBrand);
       const store = decodeURIComponent(safeStore);
       storeCatalog[brand] = storeCatalog[brand].filter(s => s !== store);
-      localStorage.setItem('fieldops_store_catalog_v21', JSON.stringify(storeCatalog));
+      localStorage.setItem('fieldops_store_catalog_v22', JSON.stringify(storeCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -714,7 +764,7 @@
       const typeName = prompt("Nom du nouveau Type de Réclamation :");
       if (typeName && !recTypesCatalog[typeName]) {
         recTypesCatalog[typeName] = ["Incident Général"];
-        localStorage.setItem('fieldops_rec_types_v21', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v22', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -724,7 +774,7 @@
       const type = decodeURIComponent(safeType);
       if (confirm("Supprimer le type " + type + " ?")) {
         delete recTypesCatalog[type];
-        localStorage.setItem('fieldops_rec_types_v21', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v22', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -735,7 +785,7 @@
       const motif = prompt("Nouveau motif pour " + type + " :");
       if (motif) {
         recTypesCatalog[type].push(motif);
-        localStorage.setItem('fieldops_rec_types_v21', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v22', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -745,7 +795,7 @@
       const type = decodeURIComponent(safeType);
       const motif = decodeURIComponent(safeMotif);
       recTypesCatalog[type] = recTypesCatalog[type].filter(m => m !== motif);
-      localStorage.setItem('fieldops_rec_types_v21', JSON.stringify(recTypesCatalog));
+      localStorage.setItem('fieldops_rec_types_v22', JSON.stringify(recTypesCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -784,7 +834,7 @@
         date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
       });
 
-      localStorage.setItem('fieldops_direct_msgs_v21', JSON.stringify(directMessagesDB));
+      localStorage.setItem('fieldops_direct_msgs_v22', JSON.stringify(directMessagesDB));
       alert(`✅ Message envoyé à ${targetAgent} !`);
       document.getElementById('msg-input-text').value = '';
       renderMessagesView();
@@ -814,7 +864,7 @@
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v21', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v22', JSON.stringify(claimsDB));
         renderReclamationStats();
       }
     }
@@ -867,7 +917,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v21', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v22', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
@@ -887,7 +937,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v21', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v22', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
