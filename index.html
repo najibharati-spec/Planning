@@ -282,7 +282,6 @@
       <div class="top-header-bar">
         <h2 id="current-view-title" style="font-size:20px; font-weight:800; color:#0f172a;">Dashboard Admin</h2>
         <div style="display:flex; align-items:center; gap:12px;">
-          <!-- BANNIÈRES DÉTAILLÉES TOP (PARTENAIRES VS LIVREURS) -->
           <div id="dash-live-banner-part" class="badge-red" style="font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:10px; display:flex; align-items:center; gap:4px;">
             🏪 Partenaires: <span id="dash-pending-part-txt">0</span>
           </div>
@@ -314,7 +313,6 @@
           </button>
         </div>
 
-        <!-- BARRE DE FILTRES AVANCÉS DES RÉCLAMATIONS EN COURS -->
         <div class="filter-panel">
           <div>
             <label>🔎 Recherche (ID / Order# / Agent) :</label>
@@ -340,7 +338,6 @@
             </select>
           </div>
 
-          <!-- CALENDRIER DE RECHERCHE EXACTE D'UNE DATE -->
           <div>
             <label>📅 Sélectionner Date (Calendrier) :</label>
             <input type="date" id="flt-date" onchange="renderReclamationStats()" style="cursor:pointer;" />
@@ -361,7 +358,7 @@
           </table>
         </div>
 
-        <!-- SECTION ARCHIVE HISTORIQUE AVEC FILTRES DÉDIÉS -->
+        <!-- SECTION ARCHIVE HISTORIQUE -->
         <div style="margin-top:30px; border-top:2px solid #e2e8f0; padding-top:20px;">
           <h4 style="font-size:15px; font-weight:800; color:#059669; margin-bottom:10px;">✅ Historique des Réclamations Traitées & Classées</h4>
           
@@ -495,7 +492,7 @@
         </div>
         <button class="btn-action" style="margin-top:16px; padding:12px 24px;" onclick="submitReclamation()">Envoyer la Réclamation</button>
 
-        <!-- MES RÉCLAMATIONS SAISIES (POUR LES AGENTS) -->
+        <!-- MES RÉCLAMATIONS SAISIES -->
         <div id="agent-my-claims-section" style="margin-top:30px; border-top:2px solid #e2e8f0; padding-top:20px;">
           <h4 style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:12px;">📋 Mes Réclamations Envoyées & Statut de Lecture</h4>
           <div style="overflow-x:auto;">
@@ -605,7 +602,6 @@
         <!-- Dynamic content -->
       </div>
 
-      <!-- THREAD DISCUSSION EN DIRECT SUR LA RÉCLAMATION -->
       <div style="margin-top:16px; background:#f8fafc; padding:14px; border-radius:12px; border:1px solid #cbd5e1;">
         <h4 style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:8px;">💬 Chat / Discussion Directe sur cette Réclamation :</h4>
         <div id="modal-chat-thread" style="max-height:160px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
@@ -625,7 +621,7 @@
     </div>
   </div>
 
-  <!-- MODAL ZOOM PHOTO / IMAGE VIEWER -->
+  <!-- MODAL ZOOM PHOTO -->
   <div id="photo-zoom-modal" class="modal-overlay" style="z-index:1000;" onclick="closePhotoZoomModal()">
     <div style="position:relative; max-width:90vw; max-height:90vh;" onclick="event.stopPropagation()">
       <img id="zoomed-photo-img" src="" alt="Preuve Agrandie" style="max-width:100%; max-height:80vh; border-radius:14px; border:3px solid #059669; box-shadow:0 10px 30px rgba(0,0,0,0.5);" />
@@ -636,7 +632,7 @@
     </div>
   </div>
 
-  <!-- MODAL EDIT RECLAMATION (RÉSERVÉ AUX AGENTS AVANT LECTURE) -->
+  <!-- MODAL EDIT RECLAMATION -->
   <div id="rec-edit-modal" class="modal-overlay">
     <div class="modal-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
@@ -667,15 +663,46 @@
   </div>
 
   <script>
+    // LA LISTE COMPLÈTE & DÉTAILLÉE DE TOUS LES PARTENAIRES & STORES
     let defaultStoreCatalog = {
-      "McDonald's®": ["McDonald's Temara - 46", "McDonald's Salé - 33", "McDonald's Marjane Hay Riad - 12"],
-      "Burger King": ["Burger King Temara", "Burger King Mahaj Ryad", "Burger King Agdal"],
-      "KFC": ["KFC Sela Park", "KFC Rabat Ville", "KFC Agdal"]
+      "McDonald's®": [
+        "McDonald's Temara - 46", "McDonald's Salé - 33", "McDonald's Marjane Hay Riad - 12",
+        "McDonald's Agdal - 05", "McDonald's Rabat Ville - 01", "McDonald's Route de Casablanca - 88",
+        "McDonald's Harhoura - 52", "McDonald's Zaer - 19"
+      ],
+      "Burger King": [
+        "Burger King Temara", "Burger King Mahaj Ryad", "Burger King Agdal",
+        "Burger King Salé - Route de Kénitra", "Burger King Ocean Rabat"
+      ],
+      "KFC": [
+        "KFC Sela Park Temara", "KFC Rabat Ville", "KFC Agdal", "KFC Salé Rda", "KFC Hay Riad"
+      ],
+      "Pizza Hut": [
+        "Pizza Hut Temara Wifaq", "Pizza Hut Agdal", "Pizza Hut Hay Riad", "Pizza Hut Salé Tabriquet"
+      ],
+      "Starbucks": [
+        "Starbucks Mahaj Riad", "Starbucks Agdal Avenue de France", "Starbucks Arribat Center"
+      ],
+      "Paul": [
+        "Paul Mahaj Riad", "Paul Agdal", "Paul Souissi", "Paul Harhoura"
+      ],
+      "Domino's Pizza": [
+        "Domino's Temara Massira", "Domino's Agdal", "Domino's Salé", "Domino's Hay Riad"
+      ],
+      "Tacos de Lyon": [
+        "Tacos de Lyon Temara", "Tacos de Lyon Agdal", "Tacos de Lyon Salé"
+      ],
+      "Kayser": [
+        "Maison Kayser Hay Riad", "Maison Kayser Agdal"
+      ],
+      "Venezia Ice": [
+        "Venezia Ice Harhoura", "Venezia Ice Agdal", "Venezia Ice Mahaj Riad"
+      ]
     };
 
     let defaultRecTypes = {
-      "Partenaire": ["Commande prête non reçue", "Commande non prête (Retard excessif)", "Commande volée"],
-      "Livreur": ["Mauvais comportement", "Vol de commande par le livreur", "Utilisation d'un compte non personnel (Compte loué/partagé)"]
+      "Partenaire": ["Commande prête non reçue", "Commande non prête (Retard excessif)", "Commande volée", "Produits manquants dans la commande", "Mauvais emballage"],
+      "Livreur": ["Mauvais comportement", "Vol de commande par le livreur", "Utilisation d'un compte non personnel (Compte loué/partagé)", "Retard de livraison exagéré", "Absence du livreur au store"]
     };
 
     const responsablesList = [
@@ -685,7 +712,6 @@
       { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
     ];
 
-    // LA LISTE COMPLÈTE DE TOUS LES AGENTS TERRAIN (13 AGENTS)
     const defaultAgents = [
       { id: "101", fname: "Yahya", lname: "RHALLAB", zone: "Temara - Oulad Mtaa", color: "#3b82f6", role: "field" },
       { id: "102", fname: "Mehdi", lname: "AIT JEBOUR", zone: "Temara - Oulad Mtaa", color: "#8b5cf6", role: "field" },
@@ -702,11 +728,11 @@
       { id: "113", fname: "Zakariae", lname: "BENALI", zone: "Technopolis", color: "#64748b", role: "field" }
     ];
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v30')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v30')) || defaultRecTypes;
-    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v30')) || { order: true, sector: true, gps: true, comment: true };
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v31')) || defaultStoreCatalog;
+    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v31')) || defaultRecTypes;
+    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v31')) || { order: true, sector: true, gps: true, comment: true };
     
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v30')) || [
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v31')) || [
       { 
         id: 1, 
         agent: "Yahya RHALLAB", 
@@ -729,8 +755,8 @@
       }
     ];
 
-    let auditLogsDB = JSON.parse(localStorage.getItem('fieldops_audit_logs_v30')) || [];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v30')) || [];
+    let auditLogsDB = JSON.parse(localStorage.getItem('fieldops_audit_logs_v31')) || [];
+    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v31')) || [];
 
     let currentDashTab = "Partenaire";
     let allSystemUsers = [...responsablesList, ...defaultAgents];
@@ -749,7 +775,7 @@
         timestamp: nowStr
       };
       auditLogsDB.unshift(entry);
-      localStorage.setItem('fieldops_audit_logs_v30', JSON.stringify(auditLogsDB));
+      localStorage.setItem('fieldops_audit_logs_v31', JSON.stringify(auditLogsDB));
       renderAuditLogs();
     }
 
@@ -776,7 +802,7 @@
     function clearAuditLog() {
       if (confirm("Vider l'historique VIP d'audit ?")) {
         auditLogsDB = [];
-        localStorage.setItem('fieldops_audit_logs_v30', JSON.stringify(auditLogsDB));
+        localStorage.setItem('fieldops_audit_logs_v31', JSON.stringify(auditLogsDB));
         renderAuditLogs();
       }
     }
@@ -1065,7 +1091,7 @@
       };
 
       claimsDB.push(newClaim);
-      localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
 
       logAuditEvent(`A créé la réclamation #${newClaim.id.toString().slice(-4)} (${newClaim.target})`);
       alert("✅ Réclamation transmise aux Responsables avec succès !");
@@ -1099,7 +1125,7 @@
           logAuditEvent(`A lu et pris en charge la réclamation #${activeOpenedClaim.id.toString().slice(-4)}`);
         }
         activeOpenedClaim.hasNewResponseFromAgent = false;
-        localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
       }
 
       document.getElementById('detail-rec-id').innerText = `ID: #${activeOpenedClaim.id.toString().slice(-4)}`;
@@ -1180,7 +1206,7 @@
         logAuditEvent(`Le responsable ${currentUser.fname} a envoyé un message sur la réclamation #${activeOpenedClaim.id.toString().slice(-4)}`);
       }
 
-      localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
       input.value = '';
       renderClaimThread();
       renderReclamationStats();
@@ -1201,7 +1227,7 @@
       if (activeOpenedClaim && markAsTraite) {
         activeOpenedClaim.status = "Traité";
         logAuditEvent(`A marqué la réclamation #${activeOpenedClaim.id.toString().slice(-4)} comme TRAITÉ/CLASSÉ`);
-        localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
       }
       activeOpenedClaim = null;
       document.getElementById('rec-detail-modal').classList.remove('active');
@@ -1245,7 +1271,7 @@
 
         logAuditEvent(`L'Agent a modifié sa réclamation #${activeEditClaim.id.toString().slice(-4)} avant lecture`);
 
-        localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
         alert("✅ Réclamation modifiée avec succès !");
         closeEditModal();
         renderAgentMyClaims();
@@ -1435,7 +1461,7 @@
 
     function toggleFieldVisibility(fieldKey) {
       fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
-      localStorage.setItem('fieldops_vis_v30', JSON.stringify(fieldVisibility));
+      localStorage.setItem('fieldops_vis_v31', JSON.stringify(fieldVisibility));
     }
 
     function renderConfigTree() {
@@ -1455,7 +1481,7 @@
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
         logAuditEvent(`A supprimé la réclamation #${id.toString().slice(-4)}`);
         updateLiveClaimCounters();
         renderReclamationStats();
