@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - System Admin & Paramètres Planning</title>
+  <title>FieldOps - System Admin & Planning Central</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -15,9 +15,13 @@
       --sidebar-bg: #f8f6fc;
       --border-subtle: #e9e5f0;
       --text-dark: #1e293b;
-      --purple-header: #4c1d95;
-      --purple-th: #5b21b6;
-      --purple-accent: #6d28d9;
+      
+      /* COULEURS DES ZONES */
+      --zone-sale: #0284c7;        /* Salé - Bleu Fixe */
+      --zone-temara: #059669;      /* Temara - Vert */
+      --zone-hayriad: #7c3aed;     /* Hay Riad - Violet */
+      --zone-agdal: #ea580c;       /* Agdal - Orange */
+      --zone-techno: #db2777;      /* Technopolis - Rose */
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
@@ -78,31 +82,44 @@
     .content-card { background: #ffffff; border-radius: 16px; border: 1px solid var(--border-subtle); padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 20px; }
 
     .btn-action { background: var(--green-primary); color: #fff; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
-    .btn-purple { background: var(--purple-accent); color: #fff; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
+    .btn-purple { background: #6d28d9; color: #fff; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
     .btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 11px; }
 
-    /* PLANNING STYLES MATCHING CAPTURE */
+    /* PLANNING STYLES MATCHING ROTATION */
     .planning-table-container { overflow-x: auto; border-radius: 12px; border: 1px solid #e2e8f0; }
     .plan-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #ffffff; }
-    .plan-table th { background: var(--purple-th); color: #ffffff; padding: 12px 8px; font-size: 11px; font-weight: 800; text-align: center; text-transform: uppercase; }
-    .plan-table th.first-col { text-align: left; padding-left: 16px; background: var(--purple-header); }
+    .plan-table th { background: #4c1d95; color: #ffffff; padding: 12px 8px; font-size: 11px; font-weight: 800; text-align: center; text-transform: uppercase; }
+    .plan-table th.first-col { text-align: left; padding-left: 16px; background: #3b0764; }
     .plan-table td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; text-align: center; vertical-align: middle; }
 
-    .select-agent-box, .select-zone-box {
+    .select-agent-box {
       width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid #d8b4fe; background: #ffffff; font-weight: 700; font-size: 12px; color: #1e1b4b; outline: none;
     }
-    
-    .shift-box {
-      padding: 8px 10px; border-radius: 10px; font-size: 11px; font-weight: 800; border: none; text-align: center; cursor: pointer; display: inline-block; width: 100%;
-    }
-    .shift-off { background: #f8fafc; color: #94a3b8; }
-    .shift-pink { background: #fce7f3; color: #be185d; }
-    .shift-purple { background: #ede9fe; color: #6d28d9; }
 
-    /* CONFIG CARDS FOR PARAMETRES PLANNING */
-    .cfg-card { background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 14px; padding: 18px; margin-bottom: 18px; }
-    .cfg-title { font-size: 15px; font-weight: 800; color: #581c87; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .tag-item { background: #ffffff; border: 1px solid #d8b4fe; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; color: #4c1d95; display: inline-flex; align-items: center; gap: 8px; }
+    /* BADGES DE ZONES AVEC COULEURS SPECIFIQUES */
+    .zone-badge {
+      display: inline-block; padding: 6px 12px; border-radius: 8px; font-weight: 800; font-size: 11px; color: #ffffff; width: 100%; text-align: center;
+    }
+    .zone-sale { background: var(--zone-sale); }
+    .zone-temara { background: var(--zone-temara); }
+    .zone-hayriad { background: var(--zone-hayriad); }
+    .zone-agdal { background: var(--zone-agdal); }
+    .zone-techno { background: var(--zone-techno); }
+
+    /* SHIFTS DESIGN */
+    .shift-select {
+      width: 100%; padding: 6px; border-radius: 8px; font-size: 11px; font-weight: 800; border: 1px solid #cbd5e1; outline: none; text-align: center; cursor: pointer;
+    }
+    .shift-morning { background: #e0f2fe; color: #0369a1; }
+    .shift-evening { background: #fce7f3; color: #be185d; }
+    .shift-night { background: #ede9fe; color: #6d28d9; }
+    .shift-off { background: #f1f5f9; color: #94a3b8; }
+    .shift-conge { background: #dcfce7; color: #15803d; }
+    .shift-absent { background: #fee2e2; color: #b91c1c; }
+
+    .alert-banner-warning {
+      background: #fffbebf5; border: 1px solid #fcd34d; color: #92400e; padding: 12px 16px; border-radius: 10px; font-size: 12px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;
+    }
 
     @media (max-width: 768px) {
       #main-app { flex-direction: column; }
@@ -193,14 +210,26 @@
         <h3>💬 Centre de Messagerie Directe</h3>
       </div>
 
-      <!-- PLANNING AGENTS TERRAIN EXACTEMENT COMME SUR LA CAPTURE D'ÉCRAN -->
+      <!-- PLANNING AGENTS TERRAIN ROTATIF -->
       <div id="view-planning" class="content-card hidden">
+        
+        <!-- BANNIERE AVERTISSEMENT MODIFICATION SEMAINE EN COURS -->
+        <div id="current-week-alert" class="alert-banner-warning hidden">
+          <span>⚠️ <strong>ATTENTION :</strong> Vous êtes en train de modifier le planning de la <u>Semaine en Cours</u> ! Tout changement impactera directement le shift de l'agent aujourd'hui.</span>
+          <button onclick="document.getElementById('current-week-alert').classList.add('hidden')" style="border:none; background:none; cursor:pointer; font-weight:800; color:#92400e;">×</button>
+        </div>
+
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
           <div>
-            <h3 style="font-size:18px; font-weight:800; color:#3b0764;">📅 Planning des Agents Terrain (Semaine 21/09 - 27/09)</h3>
-            <p style="color:#64748b; font-size:12px;">Interface de gestion directe des shifts terrain pour les agents.</p>
+            <h3 style="font-size:18px; font-weight:800; color:#3b0764;">📅 Planning Hebdomadaire Rotatif (44H/Agent)</h3>
+            <p style="color:#64748b; font-size:12px;">Rotation automatique Salé (Fixe) / Temara / Hay Riad / Agdal par semaine.</p>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div style="display:flex; gap:8px; align-items:center;">
+            <select id="week-selector" onchange="switchPlanningWeek()" style="padding:8px 12px; border-radius:8px; border:2px solid #6d28d9; font-weight:800; font-size:12px; background:#f5f3ff;">
+              <option value="S1">Semaine 1 (21/09 - 27/09) [En cours]</option>
+              <option value="S2">Semaine 2 (28/09 - 04/10) [Rotation]</option>
+              <option value="S3">Semaine 3 (05/10 - 11/10) [Rotation]</option>
+            </select>
             <button class="btn-purple" style="padding:8px 14px; font-size:12px;" onclick="addAgentToPlanningPrompt()">➕ Ajouter Agent</button>
             <button class="btn-action" style="padding:8px 14px; font-size:12px; background:#0284c7;" onclick="window.print()">🖨️ Imprimer</button>
           </div>
@@ -211,14 +240,15 @@
             <thead>
               <tr>
                 <th class="first-col" style="min-width:160px;">AGENT</th>
-                <th style="min-width:180px; text-align:left; padding-left:10px;">ZONE</th>
-                <th>LUN<br><span style="font-weight:600; font-size:10px;">21/09</span></th>
-                <th>MAR<br><span style="font-weight:600; font-size:10px;">22/09</span></th>
-                <th>MER<br><span style="font-weight:600; font-size:10px;">23/09</span></th>
-                <th>JEU<br><span style="font-weight:600; font-size:10px;">24/09</span></th>
-                <th>VEN<br><span style="font-weight:600; font-size:10px;">25/09</span></th>
-                <th>SAM<br><span style="font-weight:600; font-size:10px;">26/09</span></th>
-                <th>DIM<br><span style="font-weight:600; font-size:10px;">27/09</span></th>
+                <th style="min-width:160px; text-align:left; padding-left:10px;">ZONE AFFECTÉE</th>
+                <th>DIM<br><span style="font-weight:600; font-size:10px;">(7H)</span></th>
+                <th>LUN<br><span style="font-weight:600; font-size:10px;">(7H)</span></th>
+                <th>MAR<br><span style="font-weight:600; font-size:10px;">(7H)</span></th>
+                <th>MER<br><span style="font-weight:600; font-size:10px;">(7H)</span></th>
+                <th>JEU<br><span style="font-weight:600; font-size:10px;">(7H)</span></th>
+                <th>VEN<br><span style="font-weight:600; font-size:10px;">(8H)</span></th>
+                <th>SAM<br><span style="font-weight:600; font-size:10px;">(8H)</span></th>
+                <th>TOTAL</th>
               </tr>
             </thead>
             <tbody id="planning-table-body"></tbody>
@@ -226,41 +256,9 @@
         </div>
       </div>
 
-      <!-- PARAMETRES DU PLANNING DUPLICATED & OPTIMIZED -->
+      <!-- PARAMETRES -->
       <div id="view-parametres" class="content-card hidden">
-        <h3 style="color:#4c1d95; font-size:18px; margin-bottom:6px;">⚙️ Paramètres & Configuration du Planning</h3>
-        <p style="color:#64748b; font-size:12px; margin-bottom:18px;">Gérez les zones de couverture, les créneaux horaires des shifts et les règles d'heures hebdomadaires.</p>
-
-        <!-- 1. GESTION DES ZONES -->
-        <div class="cfg-card">
-          <div class="cfg-title">
-            <span>📍 Zones de Couverture (Secteurs Terrain)</span>
-            <button class="btn-purple" style="padding:6px 12px; font-size:11px;" onclick="addZonePrompt()">➕ Ajouter Zone</button>
-          </div>
-          <div id="zones-list-container" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
-        </div>
-
-        <!-- 2. GESTION DES SHIFTS HORAIRES -->
-        <div class="cfg-card">
-          <div class="cfg-title">
-            <span>⏰ Créneaux Horaires Disponibles (Shifts)</span>
-            <button class="btn-purple" style="padding:6px 12px; font-size:11px;" onclick="addShiftPrompt()">➕ Ajouter Shift</button>
-          </div>
-          <div id="shifts-list-container" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
-        </div>
-
-        <!-- 3. HEURES HEBDOMADAIRES -->
-        <div class="cfg-card">
-          <div class="cfg-title">
-            <span>⏳ Volume Horaire Contractuel</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <label style="font-size:13px; font-weight:700;">Nombre d'heures par agent par semaine :</label>
-            <input type="number" id="weekly-hours-input" value="44" style="width:80px; padding:8px; border-radius:8px; border:1px solid #d8b4fe; font-weight:800; text-align:center;" />
-            <span style="font-weight:800; color:#581c87;">Heures / Semaine</span>
-            <button class="btn-action" style="padding:8px 14px; font-size:12px; background:#059669;" onclick="saveWeeklyHours()">💾 Enregistrer</button>
-          </div>
-        </div>
+        <h3 style="color:#4c1d95; font-size:18px; margin-bottom:6px;">⚙️ Paramètres système Admin</h3>
       </div>
     </div>
   </div>
@@ -273,28 +271,29 @@
       { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
     ];
 
-    const defaultZones = ["Temara - Oulad Mtaa", "Agdal - Carrousel", "Salé - Medina", "Hay Riad - Soussi", "Technopolis", "Rabat Hassan", "Harhoura"];
-    const defaultShifts = ["10:00–17:00", "12:00–19:00", "17:00–00:00", "17:00–01:00", "18:00–02:00", "19:00–02:00", "OFF", "ABSENT"];
+    // ROTATION ZONES PER WEEK: Salé (Fixe), Temara, Hay Riad, Agdal
+    const zoneRotation = {
+      "S1": { "G1": "Salé - Medina", "G2": "Temara - Oulad Mtaa", "G3": "Hay Riad - Soussi", "G4": "Agdal - Carrousel" },
+      "S2": { "G1": "Salé - Medina", "G2": "Hay Riad - Soussi", "G3": "Agdal - Carrousel", "G4": "Temara - Oulad Mtaa" },
+      "S3": { "G1": "Salé - Medina", "G2": "Agdal - Carrousel", "G3": "Temara - Oulad Mtaa", "G4": "Hay Riad - Soussi" }
+    };
 
-    const screenshotAgents = [
-      { fname: "Yahya", lname: "Rhallab", zone: "Temara - Oulad Mtaa", shifts: ["OFF", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF"] },
-      { fname: "Mehdi", lname: "Ait Jebour", zone: "Temara - Oulad Mtaa", shifts: ["OFF", "10:00–17:00", "17:00–00:00", "17:00–00:00", "17:00–01:00", "17:00–01:00", "17:00–00:00"] },
-      { fname: "Ayman", lname: "Chlifane", zone: "Temara - Oulad Mtaa", shifts: ["10:00–17:00", "OFF", "10:00–17:00", "10:00–17:00", "10:00–18:00", "10:00–18:00", "10:00–17:00"] },
-      { fname: "Mourad", lname: "Cherradi", zone: "Agdal - Carrousel", shifts: ["19:00–02:00", "19:00–02:00", "19:00–02:00", "OFF", "18:00–02:00", "18:00–02:00", "19:00–02:00"] },
-      { fname: "Youssef", lname: "Derkaoui", zone: "Agdal - Carrousel", shifts: ["OFF", "10:00–17:00", "10:00–17:00", "10:00–17:00", "10:00–18:00", "10:00–18:00", "10:00–17:00"] },
-      { fname: "Ayoub", lname: "Abssi", zone: "Agdal - Carrousel", shifts: ["17:00–00:00", "OFF", "17:00–00:00", "17:00–00:00", "17:00–01:00", "17:00–01:00", "17:00–00:00"] },
-      { fname: "Charaf", lname: "Loummihi", zone: "Salé - Medina", shifts: ["10:00–17:00", "OFF", "10:00–17:00", "10:00–17:00", "10:00–18:00", "10:00–18:00", "10:00–17:00"] },
-      { fname: "Hassan", lname: "Azgoune", zone: "Salé - Medina", shifts: ["17:00–00:00", "17:00–00:00", "OFF", "17:00–00:00", "17:00–01:00", "17:00–01:00", "17:00–00:00"] },
-      { fname: "Ayoub", lname: "Ben Malek", zone: "Salé - Medina", shifts: ["19:00–02:00", "19:00–02:00", "19:00–02:00", "OFF", "18:00–02:00", "18:00–02:00", "19:00–02:00"] },
-      { fname: "Achraf", lname: "Akhlij", zone: "Hay Riad - Soussi", shifts: ["OFF", "17:00–00:00", "17:00–00:00", "17:00–00:00", "17:00–01:00", "17:00–01:00", "17:00–00:00"] },
-      { fname: "Islam", lname: "Elmardi", zone: "Hay Riad - Soussi", shifts: ["19:00–02:00", "19:00–02:00", "OFF", "10:00–17:00", "18:00–02:00", "18:00–02:00", "19:00–02:00"] },
-      { fname: "Oussama", lname: "El Atrach", zone: "Hay Riad - Soussi", shifts: ["10:00–17:00", "10:00–17:00", "10:00–17:00", "OFF", "10:00–18:00", "10:00–18:00", "10:00–17:00"] },
-      { fname: "Zakariae", lname: "Benali", zone: "Technopolis", shifts: ["OFF", "12:00–19:00", "12:00–19:00", "12:00–19:00", "12:00–20:00", "12:00–20:00", "12:00–19:00"] }
+    const initialAgents = [
+      { id: "1", fname: "Charaf", lname: "Loummihi", group: "G1", offDay: 1 },
+      { id: "2", fname: "Hassan", lname: "Azgoune", group: "G1", offDay: 2 },
+      { id: "3", fname: "Ayoub", lname: "Ben Malek", group: "G1", offDay: 3 },
+      { id: "4", fname: "Yahya", lname: "Rhallab", group: "G2", offDay: 1 },
+      { id: "5", fname: "Mehdi", lname: "Ait Jebour", group: "G2", offDay: 2 },
+      { id: "6", fname: "Ayman", lname: "Chlifane", group: "G2", offDay: 3 },
+      { id: "7", fname: "Achraf", lname: "Akhlij", group: "G3", offDay: 1 },
+      { id: "8", fname: "Islam", lname: "Elmardi", group: "G3", offDay: 2 },
+      { id: "9", fname: "Oussama", lname: "El Atrach", group: "G3", offDay: 3 },
+      { id: "10", fname: "Mourad", lname: "Cherradi", group: "G4", offDay: 1 },
+      { id: "11", fname: "Youssef", lname: "Derkaoui", group: "G4", offDay: 2 },
+      { id: "12", fname: "Ayoub", lname: "Abssi", group: "G4", offDay: 3 }
     ];
 
-    let planningZones = JSON.parse(localStorage.getItem('fieldops_plan_zones_v31')) || defaultZones;
-    let planningShifts = JSON.parse(localStorage.getItem('fieldops_plan_shifts_v31')) || defaultShifts;
-    let fieldAgentsList = JSON.parse(localStorage.getItem('fieldops_agents_screen_v31')) || screenshotAgents;
+    let currentWeek = "S1";
     let selectedAgent = responsablesList[0];
     let currentUser = responsablesList[0];
 
@@ -318,7 +317,6 @@
       document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname}`;
       showView('planning', document.getElementById('menu-plan'));
       renderPlanningTable();
-      renderParametresView();
     }
 
     function lockSystem() {
@@ -338,123 +336,92 @@
       document.getElementById('view-config').classList.add('hidden');
       document.getElementById('view-parametres').classList.add('hidden');
       document.getElementById('view-' + viewId).classList.remove('hidden');
-      if (viewId === 'parametres') renderParametresView();
     }
 
-    function getShiftClass(val) {
-      if (val === 'OFF') return 'shift-off';
-      if (val.includes('17:00') || val.includes('17:00–01:00') || val.includes('17:00–00:00')) return 'shift-pink';
-      return 'shift-purple';
+    function getZoneBadgeClass(zoneName) {
+      if (zoneName.includes('Salé')) return 'zone-sale';
+      if (zoneName.includes('Temara')) return 'zone-temara';
+      if (zoneName.includes('Hay Riad')) return 'zone-hayriad';
+      if (zoneName.includes('Agdal')) return 'zone-agdal';
+      return 'zone-techno';
+    }
+
+    function switchPlanningWeek() {
+      currentWeek = document.getElementById('week-selector').value;
+      if (currentWeek === 'S1') {
+        document.getElementById('current-week-alert').classList.remove('hidden');
+      } else {
+        document.getElementById('current-week-alert').classList.add('hidden');
+      }
+      renderPlanningTable();
+    }
+
+    function handleShiftChange(selectEl) {
+      if (currentWeek === 'S1') {
+        document.getElementById('current-week-alert').classList.remove('hidden');
+        alert("⚠️ RAPPEL : Vous modifiez le planning de la semaine en cours ! L'agent en sera informé.");
+      }
+      updateSelectColor(selectEl);
+    }
+
+    function updateSelectColor(selectEl) {
+      selectEl.className = 'shift-select';
+      const val = selectEl.value;
+      if (val.includes('10:00')) selectEl.classList.add('shift-morning');
+      else if (val.includes('17:00')) selectEl.classList.add('shift-evening');
+      else if (val.includes('19:00')) selectEl.classList.add('shift-night');
+      else if (val === 'OFF') selectEl.classList.add('shift-off');
+      else if (val === 'CONGÉ') selectEl.classList.add('shift-conge');
+      else if (val === 'ABSENT') selectEl.classList.add('shift-absent');
     }
 
     function renderPlanningTable() {
       const tbody = document.getElementById('planning-table-body');
-      if (!tbody) return;
       tbody.innerHTML = '';
-      fieldAgentsList.forEach((a, index) => {
+
+      initialAgents.forEach((a) => {
+        const assignedZone = zoneRotation[currentWeek][a.group] || "Salé - Medina";
+        const zoneClass = getZoneBadgeClass(assignedZone);
+
         tbody.innerHTML += `
           <tr>
             <td style="text-align:left; padding-left:12px;">
-              <select class="select-agent-box">
-                <option selected>${a.fname} ${a.lname}</option>
-              </select>
+              <strong style="font-size:12px; color:#0f172a;">${a.fname} ${a.lname}</strong>
             </td>
             <td style="text-align:left;">
-              <select class="select-zone-box">
-                ${planningZones.map(z => `<option ${a.zone===z?'selected':''}>${z}</option>`).join('')}
-              </select>
+              <span class="zone-badge ${zoneClass}">📍 ${assignedZone}</span>
             </td>
-            ${a.shifts.map((s) => `
-              <td>
-                <span class="shift-box ${getShiftClass(s)}">${s}</span>
-              </td>
-            `).join('')}
+            ${[0, 1, 2, 3, 4, 5, 6].map((dayIdx) => {
+              const isOff = dayIdx === a.offDay;
+              const defaultShift = isOff ? 'OFF' : (dayIdx >= 5 ? '17:00–01:00' : '10:00–17:00');
+              const shiftClass = isOff ? 'shift-off' : (dayIdx >= 5 ? 'shift-evening' : 'shift-morning');
+
+              return `
+                <td>
+                  <select class="shift-select ${shiftClass}" onchange="handleShiftChange(this)">
+                    <option value="10:00–17:00" ${defaultShift==='10:00–17:00'?'selected':''}>10:00–17:00 (7H)</option>
+                    <option value="17:00–00:00" ${defaultShift==='17:00–00:00'?'selected':''}>17:00–00:00 (7H)</option>
+                    <option value="17:00–01:00" ${defaultShift==='17:00–01:00'?'selected':''}>17:00–01:00 (8H)</option>
+                    <option value="19:00–02:00" ${defaultShift==='19:00–02:00'?'selected':''}>19:00–02:00 (7H)</option>
+                    <option value="OFF" ${defaultShift==='OFF'?'selected':''}>💤 OFF</option>
+                    <option value="CONGÉ">🏖️ CONGÉ</option>
+                    <option value="ABSENT">🚨 ABSENT</option>
+                  </select>
+                </td>
+              `;
+            }).join('')}
+            <td><strong style="color:#00875a; font-size:12px;">44H</strong></td>
           </tr>
         `;
       });
     }
 
     function addAgentToPlanningPrompt() {
-      const name = prompt("Saisir le Nom & Prénom de l'agent terrain :");
+      const name = prompt("Saisir le Prénom et Nom de l'agent :");
       if (name) {
-        fieldAgentsList.push({
-          fname: name, lname: "", zone: planningZones[0] || "Temara - Oulad Mtaa", shifts: ["10:00–17:00", "10:00–17:00", "10:00–17:00", "OFF", "10:00–18:00", "10:00–18:00", "10:00–17:00"]
-        });
-        localStorage.setItem('fieldops_agents_screen_v31', JSON.stringify(fieldAgentsList));
+        initialAgents.push({ id: Date.now().toString(), fname: name, lname: "", group: "G2", offDay: 1 });
         renderPlanningTable();
       }
-    }
-
-    /* PARAMETRES PLANNING FUNCTIONS */
-    function renderParametresView() {
-      const zonesBox = document.getElementById('zones-list-container');
-      if (zonesBox) {
-        zonesBox.innerHTML = '';
-        planningZones.forEach(z => {
-          zonesBox.innerHTML += `
-            <span class="tag-item">
-              📍 ${z}
-              <button onclick="removeZone('${encodeURIComponent(z)}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
-            </span>
-          `;
-        });
-      }
-
-      const shiftsBox = document.getElementById('shifts-list-container');
-      if (shiftsBox) {
-        shiftsBox.innerHTML = '';
-        planningShifts.forEach(s => {
-          shiftsBox.innerHTML += `
-            <span class="tag-item" style="border-color:#a855f7; color:#6b21a8;">
-              ⏰ ${s}
-              <button onclick="removeShift('${encodeURIComponent(s)}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
-            </span>
-          `;
-        });
-      }
-    }
-
-    function addZonePrompt() {
-      const zoneName = prompt("Nom de la nouvelle zone / secteur :");
-      if (zoneName && !planningZones.includes(zoneName)) {
-        planningZones.push(zoneName);
-        localStorage.setItem('fieldops_plan_zones_v31', JSON.stringify(planningZones));
-        renderParametresView();
-        renderPlanningTable();
-      }
-    }
-
-    function removeZone(safeZone) {
-      const zone = decodeURIComponent(safeZone);
-      if (confirm(`Supprimer la zone ${zone} ?`)) {
-        planningZones = planningZones.filter(z => z !== zone);
-        localStorage.setItem('fieldops_plan_zones_v31', JSON.stringify(planningZones));
-        renderParametresView();
-        renderPlanningTable();
-      }
-    }
-
-    function addShiftPrompt() {
-      const shiftName = prompt("Horaire du créneau (ex: 08:00–15:00) :");
-      if (shiftName && !planningShifts.includes(shiftName)) {
-        planningShifts.push(shiftName);
-        localStorage.setItem('fieldops_plan_shifts_v31', JSON.stringify(planningShifts));
-        renderParametresView();
-      }
-    }
-
-    function removeShift(safeShift) {
-      const shift = decodeURIComponent(safeShift);
-      if (confirm(`Supprimer le shift ${shift} ?`)) {
-        planningShifts = planningShifts.filter(s => s !== shift);
-        localStorage.setItem('fieldops_plan_shifts_v31', JSON.stringify(planningShifts));
-        renderParametresView();
-      }
-    }
-
-    function saveWeeklyHours() {
-      const val = document.getElementById('weekly-hours-input').value;
-      alert(`✅ Volume horaire enregistré à ${val} heures par semaine !`);
     }
 
     renderLockCards();
