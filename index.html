@@ -83,8 +83,6 @@
     .btn-copy { background: #e2e8f0; border: none; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; cursor: pointer; margin-left: 4px; }
     .btn-copy:hover { background: #cbd5e1; }
 
-    .btn-msg { background: #0284c7; color: #fff; border: none; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; }
-
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
     .form-group { display: flex; flex-direction: column; gap: 5px; }
     .form-group label { font-size: 12px; font-weight: 800; color: #334155; }
@@ -106,6 +104,8 @@
     .badge-orange { background: #ffe0b2; color: #e65100; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
     .badge-red { background: #ffcdd2; color: #b71c1c; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
     .badge-green { background: #c8e6c9; color: #1b5e20; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
+
+    .alert-banner { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 800; margin-top: 10px; }
 
     /* CONFIG CARDS */
     .cfg-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
@@ -216,7 +216,7 @@
 
           <div class="form-group" id="fgroup-sector">
             <label>🔎 Magasin Exact / Store (Recherche) :</label>
-            <input type="text" id="store-search-input" class="search-input-box" placeholder="🔍 Taper pour chercher le Store (ex: Agdal, Hay Riad, Temara...)" oninput="filterStores()" />
+            <input type="text" id="store-search-input" class="search-input-box" placeholder="🔍 Taper pour chercher le Store..." oninput="filterStores()" />
             <select id="rec-store-sector" onchange="checkCustomStore()"></select>
             <input type="text" id="custom-store-input" class="hidden" placeholder="Saisir le nom du partenaire/store exact..." style="margin-top:6px; padding:8px; border-radius:6px; border:1px solid #cbd5e1;" />
           </div>
@@ -237,10 +237,14 @@
           </div>
 
           <div class="form-group" id="fgroup-gps">
-            <label>Localisation GPS :</label>
-            <button type="button" onclick="getGPS()" style="padding:10px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer; font-weight:700;">📍 Détecter Position</button>
-            <input type="text" id="rec-gps" readonly placeholder="Lat, Long" />
+            <label>Localisation GPS (Obligatoire) :</label>
+            <button type="button" onclick="getGPS()" style="padding:10px; background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; border-radius:8px; cursor:pointer; font-weight:800;">📍 Détecter Position GPS *</button>
+            <input type="text" id="rec-gps" readonly placeholder="Cliquer sur 'Détecter Position'..." style="background:#f8fafc;" />
           </div>
+        </div>
+
+        <div id="gps-error-banner" class="alert-banner hidden">
+          ⚠️ Attention : Vous devez obligatoirement cliquer sur "📍 Détecter Position GPS" pour valider la réclamation !
         </div>
 
         <div class="form-group" id="fgroup-comment" style="margin-top:12px;">
@@ -391,13 +395,12 @@
       ]
     };
 
-    // Global list of all partners/restaurants collected across all catalogs
     let allPartnersList = [
       "175 KG", "218 BROS", "44brunch", "AGHA CHAM", "AM Fast Food", "ARZAK", "ATHLETIC PIZZA", "AYAMEK YA CHAM", "Addawk Chami", "Ahl alcham",
       "Air Stick", "Al Andalous grille&co", "Albayt Dimashki", "Allo Sushi Restaurant (Salé)", "Amaya", "Amigo Tacos", "As'iette", "As'iam", "Assil Acham",
       "Au P'tit Coin", "Awal", "Ayourino", "BA Fares", "BAYT AL QUDS", "BTB Sweets", "Bacara Cafe Restaurantmajid", "Babek Abtal", "Babek Hay Riad",
       "BbT Agdal", "Beauty Market", "Beauty Success", "Bella mamma", "Beyti Istanbul", "Black coffee", "Bling bling chicken", "Bo Burger", "Bocadillo Del Norte",
-      "Bocadillos El Rincón", "Bocadillos Los Hermanos", "Bocadillos by Tangier's", "Boho Café", "Bricoma Hay Riad", "Bricoma Quamra", "Bricoma Salé Marina", "Bricoma Temara",
+      "Bocadillos Los Hermanos", "Boho Café", "Bricoma Hay Riad", "Bricoma Quamra", "Bricoma Salé Marina", "Bricoma Temara",
       "Burger King Agdal", "Burger King Arribat Center", "Burger King Carrefour Salé", "Burger King Harhoura", "Burger King Kitea Géant", "Burger King LGB Zaer",
       "Burger King Marina Salé", "Burger King Mahaj Ryad", "Burger King Temara", "CAP GOURMET", "COCOC Chicken", "Café Nezonya", "Café Tulip Yazane", "Café snack arc de paris",
       "Capital Vape", "Caribou Coffee Gare Agdal", "Caribou Coffee Hay Riad", "Caribou Coffee La villa 16", "Carrefour Express Temara", "Carrefour Gourmet",
@@ -438,14 +441,24 @@
       "Zenacham", "Zayyane", "bocadillos A 48", "delish bun", "samraa", "tacos ismail"
     ];
 
+    // Updated Motifs as explicitly requested
     let defaultRecTypes = {
-      "Partenaire": ["Prêt non respecté / Retard", "Commande Volée / Disparue", "Erreur d'Article", "Comportement Staff"],
-      "Livreur": ["Commande Volée / Disparue", "Problème Boîte / Sac (Box)", "Papiers / Assurance / Carte AE"]
+      "Partenaire": [
+        "Commande prête non reçu",
+        "Commande non prête mais trop tardée",
+        "Commande volée"
+      ],
+      "Livreur": [
+        "Mauvais comportement",
+        "Vestimentaire non approprié",
+        "Boxe trop abîmée ou trop endommagée",
+        "Boxe sans ID"
+      ]
     };
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v22')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v22')) || defaultRecTypes;
-    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v22')) || { order: true, sector: true, gps: true, comment: true };
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v23')) || defaultStoreCatalog;
+    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v23')) || defaultRecTypes;
+    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v23')) || { order: true, sector: true, gps: true, comment: true };
 
     const initialAgents = [
       { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", role: "admin", canDelete: true, zone: "Temara - Oulad Mtaa" },
@@ -454,11 +467,11 @@
       { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur", canDelete: false, zone: "Agdal" }
     ];
 
-    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v22')) || initialAgents;
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v22')) || [
-      { id: 1, agent: "Najib HARATI", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Prêt non respecté / Retard", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
+    let agentsDB = JSON.parse(localStorage.getItem('fieldops_agents_db_v23')) || initialAgents;
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v23')) || [
+      { id: 1, agent: "Najib HARATI", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête mais trop tardée", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
     ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v22')) || [];
+    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v23')) || [];
 
     let currentDashTab = "Partenaire";
     let selectedAgent = initialAgents[0];
@@ -574,7 +587,6 @@
         }
       });
 
-      // Add custom option at the bottom
       selector.innerHTML += `<option value="➕ Saisir manuellement un autre partenaire...">➕ Saisir manuellement un autre partenaire...</option>`;
 
       if (selector.options.length === 1 && searchVal !== '') {
@@ -599,8 +611,10 @@
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(p => {
           document.getElementById('rec-gps').value = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
+          document.getElementById('gps-error-banner').classList.add('hidden');
         }, () => {
           document.getElementById('rec-gps').value = "33.9182, -6.9211";
+          document.getElementById('gps-error-banner').classList.add('hidden');
         });
       }
     }
@@ -613,6 +627,13 @@
       const orderNum = document.getElementById('rec-order-num').value;
       const gps = document.getElementById('rec-gps').value;
       const comment = document.getElementById('rec-comment').value;
+
+      // MANDATORY GPS CHECK
+      if (!gps || gps.trim() === '') {
+        document.getElementById('gps-error-banner').classList.remove('hidden');
+        alert("⚠️ OBLIGATOIRE : Vous devez cliquer sur '📍 Détecter Position GPS' pour géolocaliser la réclamation avant l'envoi !");
+        return;
+      }
 
       if (sector === "➕ Saisir manuellement un autre partenaire...") {
         const customVal = document.getElementById('custom-store-input').value;
@@ -637,18 +658,20 @@
         status: 'En Cours' 
       });
 
-      localStorage.setItem('fieldops_claims_db_v22', JSON.stringify(claimsDB));
+      localStorage.setItem('fieldops_claims_db_v23', JSON.stringify(claimsDB));
       alert("✅ Réclamation enregistrée et ajoutée au Dashboard avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
+      document.getElementById('rec-gps').value = '';
       document.getElementById('custom-store-input').value = '';
+      document.getElementById('gps-error-banner').classList.add('hidden');
       renderReclamationStats();
       showView('dashboard', document.getElementById('menu-dash'));
     }
 
     function toggleFieldVisibility(fieldKey) {
       fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
-      localStorage.setItem('fieldops_vis_v22', JSON.stringify(fieldVisibility));
+      localStorage.setItem('fieldops_vis_v23', JSON.stringify(fieldVisibility));
     }
 
     /* DYNAMIC TREE CONFIGURATION CONTROLS FOR ADMIN */
@@ -712,7 +735,7 @@
       const name = prompt("Nom du nouveau Partenaire (Marque) :");
       if (name && !storeCatalog[name]) {
         storeCatalog[name] = [name + " Store Central"];
-        localStorage.setItem('fieldops_store_catalog_v22', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v23', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -724,7 +747,7 @@
       if (newBrand && newBrand !== oldBrand) {
         storeCatalog[newBrand] = storeCatalog[oldBrand];
         delete storeCatalog[oldBrand];
-        localStorage.setItem('fieldops_store_catalog_v22', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v23', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -734,7 +757,7 @@
       const brand = decodeURIComponent(safeBrand);
       if (confirm("Supprimer le partenaire " + brand + " ?")) {
         delete storeCatalog[brand];
-        localStorage.setItem('fieldops_store_catalog_v22', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v23', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -745,7 +768,7 @@
       const storeName = prompt("Nom du nouveau Store pour " + brand + " :");
       if (storeName) {
         storeCatalog[brand].push(storeName);
-        localStorage.setItem('fieldops_store_catalog_v22', JSON.stringify(storeCatalog));
+        localStorage.setItem('fieldops_store_catalog_v23', JSON.stringify(storeCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -755,7 +778,7 @@
       const brand = decodeURIComponent(safeBrand);
       const store = decodeURIComponent(safeStore);
       storeCatalog[brand] = storeCatalog[brand].filter(s => s !== store);
-      localStorage.setItem('fieldops_store_catalog_v22', JSON.stringify(storeCatalog));
+      localStorage.setItem('fieldops_store_catalog_v23', JSON.stringify(storeCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -764,7 +787,7 @@
       const typeName = prompt("Nom du nouveau Type de Réclamation :");
       if (typeName && !recTypesCatalog[typeName]) {
         recTypesCatalog[typeName] = ["Incident Général"];
-        localStorage.setItem('fieldops_rec_types_v22', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v23', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -774,7 +797,7 @@
       const type = decodeURIComponent(safeType);
       if (confirm("Supprimer le type " + type + " ?")) {
         delete recTypesCatalog[type];
-        localStorage.setItem('fieldops_rec_types_v22', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v23', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -785,7 +808,7 @@
       const motif = prompt("Nouveau motif pour " + type + " :");
       if (motif) {
         recTypesCatalog[type].push(motif);
-        localStorage.setItem('fieldops_rec_types_v22', JSON.stringify(recTypesCatalog));
+        localStorage.setItem('fieldops_rec_types_v23', JSON.stringify(recTypesCatalog));
         initFormDropdowns();
         renderConfigTree();
       }
@@ -795,7 +818,7 @@
       const type = decodeURIComponent(safeType);
       const motif = decodeURIComponent(safeMotif);
       recTypesCatalog[type] = recTypesCatalog[type].filter(m => m !== motif);
-      localStorage.setItem('fieldops_rec_types_v22', JSON.stringify(recTypesCatalog));
+      localStorage.setItem('fieldops_rec_types_v23', JSON.stringify(recTypesCatalog));
       initFormDropdowns();
       renderConfigTree();
     }
@@ -834,7 +857,7 @@
         date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
       });
 
-      localStorage.setItem('fieldops_direct_msgs_v22', JSON.stringify(directMessagesDB));
+      localStorage.setItem('fieldops_direct_msgs_v23', JSON.stringify(directMessagesDB));
       alert(`✅ Message envoyé à ${targetAgent} !`);
       document.getElementById('msg-input-text').value = '';
       renderMessagesView();
@@ -864,7 +887,7 @@
     function deleteReclamation(id) {
       if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v22', JSON.stringify(claimsDB));
+        localStorage.setItem('fieldops_claims_db_v23', JSON.stringify(claimsDB));
         renderReclamationStats();
       }
     }
@@ -917,7 +940,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v22', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v23', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
@@ -937,7 +960,7 @@
               <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
               <td>${badge}</td>
               <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v22', JSON.stringify(claimsDB));">
+                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v23', JSON.stringify(claimsDB));">
                   <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
                   <option ${c.status==='Traité'?'selected':''}>Traité</option>
                   <option ${c.status==='Classé'?'selected':''}>Classé</option>
