@@ -101,11 +101,15 @@
     .nav-item:hover { background: var(--sidebar-active); color: #f8fafc; }
     .nav-item.active { background: var(--brand-primary); color: #ffffff; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35); }
 
-    /* BADGE NOTIFICATION RED PULSE */
+    /* BADGE NOTIFICATION PULSE */
     .nav-badge-count {
       background: #ef4444; color: #ffffff; font-size: 11px; font-weight: 800;
       padding: 2px 8px; border-radius: 12px; box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
       animation: pulse-red 2s infinite;
+    }
+    .nav-badge-blue {
+      background: #2563eb; color: #ffffff; font-size: 11px; font-weight: 800;
+      padding: 2px 8px; border-radius: 12px; box-shadow: 0 0 10px rgba(37, 99, 235, 0.6);
     }
 
     @keyframes pulse-red {
@@ -133,6 +137,7 @@
     .tab-btn {
       padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer;
       border: none; background: #f8fafc; color: var(--text-muted); transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
     }
     .tab-btn:hover { background: #e2e8f0; }
     .tab-btn.active { background: var(--brand-primary); color: #ffffff; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2); }
@@ -322,7 +327,10 @@
         <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨 Saisie Réclamation</span></div>
         <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️ Config Dynamic</span></div>
         <div class="nav-item" id="menu-sessions" onclick="showView('sessions', this)"><span>👥 Sessions Agents</span></div>
-        <div class="nav-item" id="menu-msg" onclick="showView('messages', this)"><span>💬 Messages Directs</span></div>
+        <div class="nav-item" id="menu-msg" onclick="showView('messages', this)">
+          <span>💬 Messages Directs</span>
+          <span class="nav-badge-blue hidden" id="msg-badge-count">0</span>
+        </div>
         <div class="nav-item" id="menu-plan" onclick="showView('planning', this)"><span>📅 Planning Agents</span></div>
       </div>
 
@@ -335,10 +343,13 @@
     <div class="main-content">
       <div class="top-header-bar">
         <h2 id="current-view-title" style="font-size:20px; font-weight:800; color:#0f172a;">Dashboard Admin</h2>
-        <div style="display:flex; align-items:center; gap:16px;">
-          <!-- BANNIÈRE NOTIFICATION DASHBOARD TOP -->
-          <div id="dash-live-banner" class="badge-red" style="font-size:12px; font-weight:800; padding:8px 14px; border-radius:10px; display:flex; align-items:center; gap:6px;">
-            🚨 <span id="dash-pending-txt">0 Réclamation(s) En Cours</span>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <!-- BANNIÈRES DÉTAILLÉES TOP (PARTENAIRES VS LIVREURS) -->
+          <div id="dash-live-banner-part" class="badge-red" style="font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:10px; display:flex; align-items:center; gap:4px;">
+            🏪 Partenaires: <span id="dash-pending-part-txt">0</span>
+          </div>
+          <div id="dash-live-banner-livr" class="badge-orange" style="font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:10px; display:flex; align-items:center; gap:4px; background:#dbeafe; color:#1e40af;">
+            🛵 Livreurs: <span id="dash-pending-livr-txt">0</span>
           </div>
 
           <div class="user-info-badge">
@@ -355,8 +366,14 @@
         <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Filtrez les réclamations actives par motif, partenaire, agent, date ou code commande.</p>
         
         <div class="tab-container">
-          <button class="tab-btn active" id="tab-part" onclick="switchDashTab('Partenaire')">🏪 Partenaires (Merchants)</button>
-          <button class="tab-btn" id="tab-livr" onclick="switchDashTab('Livreur')">🛵 Livreurs (Couriers)</button>
+          <button class="tab-btn active" id="tab-part" onclick="switchDashTab('Partenaire')">
+            🏪 Partenaires (Merchants)
+            <span id="tab-badge-part" class="badge-red" style="font-size:10px; padding:2px 6px;">0</span>
+          </button>
+          <button class="tab-btn" id="tab-livr" onclick="switchDashTab('Livreur')">
+            🛵 Livreurs (Couriers)
+            <span id="tab-badge-livr" class="badge-orange" style="font-size:10px; padding:2px 6px; background:#dbeafe; color:#1e40af;">0</span>
+          </button>
         </div>
 
         <!-- BARRE DE FILTRES AVANCÉS -->
@@ -543,7 +560,7 @@
         </div>
       </div>
 
-      <!-- MESSAGES DIRECTS -->
+      <!-- MESSAGES DIRECTS AVEC STATUT LU / NON LU -->
       <div id="view-messages" class="content-card hidden">
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">💬 Centre de Messagerie & Instructions Directes</h3>
         <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Communication directe entre l'Équipe de Gestion et les Agents Terrain.</p>
@@ -883,13 +900,36 @@
     let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v3')) || {};
 
     function updateLiveClaimCounters() {
-      const pendingCount = claimsDB.filter(c => c.status === 'En Cours').length;
-      
-      const badgeNav = document.getElementById('dash-badge-count');
-      if (badgeNav) badgeNav.innerText = pendingCount;
+      const pendingPart = claimsDB.filter(c => c.status === 'En Cours' && c.type === 'Partenaire').length;
+      const pendingLivr = claimsDB.filter(c => c.status === 'En Cours' && c.type === 'Livreur').length;
+      const pendingTotal = pendingPart + pendingLivr;
 
-      const pendingTxt = document.getElementById('dash-pending-txt');
-      if (pendingTxt) pendingTxt.innerText = `${pendingCount} Réclamation(s) En Cours`;
+      // Sidebar Dashboard Total Badge
+      const badgeNav = document.getElementById('dash-badge-count');
+      if (badgeNav) badgeNav.innerText = pendingTotal;
+
+      // Top Header Banners
+      const partTxt = document.getElementById('dash-pending-part-txt');
+      if (partTxt) partTxt.innerText = pendingPart;
+
+      const livrTxt = document.getElementById('dash-pending-livr-txt');
+      if (livrTxt) livrTxt.innerText = pendingLivr;
+
+      // Tabs Badges
+      const tabPartBadge = document.getElementById('tab-badge-part');
+      if (tabPartBadge) tabPartBadge.innerText = pendingPart;
+
+      const tabLivrBadge = document.getElementById('tab-badge-livr');
+      if (tabLivrBadge) tabLivrBadge.innerText = pendingLivr;
+
+      // Sidebar Messages Badge
+      const myName = `${currentUser.fname} ${currentUser.lname}`;
+      const unreadMsgs = directMessagesDB.filter(m => (m.to === myName || m.to.includes(currentUser.fname)) && !m.read).length;
+      const msgBadge = document.getElementById('msg-badge-count');
+      if (msgBadge) {
+        msgBadge.innerText = unreadMsgs;
+        msgBadge.classList.toggle('hidden', unreadMsgs === 0);
+      }
     }
 
     function renderLockCards() {
@@ -1146,16 +1186,21 @@
       localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
       alert("✅ Réclamation transmise aux Responsables avec succès !");
 
+      // RESET TOTAL ET PROPRE D-FORMULAIRE (حتى حاجة ما تبقى لاصقة)
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
       document.getElementById('rec-gps').value = '';
       document.getElementById('rec-target-livreur').value = '';
       document.getElementById('custom-store-input').value = '';
+      document.getElementById('custom-store-input').classList.add('hidden');
+      document.getElementById('store-search-input').value = '';
       document.getElementById('rec-photo-input').value = '';
+      document.getElementById('photo-preview-img').src = '';
       document.getElementById('photo-preview-box').classList.add('hidden');
       uploadedPhotoBase64 = "";
       document.getElementById('gps-error-banner').classList.add('hidden');
       
+      initFormDropdowns();
       updateLiveClaimCounters();
 
       if (currentUser.role === 'admin' || currentUser.role === 'decideur') {
@@ -1449,13 +1494,25 @@
         from: `${currentUser.fname} ${currentUser.lname}`,
         to: targetAgent,
         text,
+        read: false,
         date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
       });
 
       localStorage.setItem('fieldops_direct_msgs_v30', JSON.stringify(directMessagesDB));
       alert(`✅ Message envoyé à ${targetAgent} !`);
       document.getElementById('msg-input-text').value = '';
+      updateLiveClaimCounters();
       renderMessagesView();
+    }
+
+    function markMessageAsRead(msgId) {
+      const msg = directMessagesDB.find(m => m.id === msgId);
+      if (msg) {
+        msg.read = true;
+        localStorage.setItem('fieldops_direct_msgs_v30', JSON.stringify(directMessagesDB));
+        updateLiveClaimCounters();
+        renderMessagesView();
+      }
     }
 
     function renderMessagesView() {
@@ -1468,13 +1525,21 @@
       }
 
       directMessagesDB.slice().reverse().forEach(m => {
+        const isRead = m.read;
+        const statusBadge = isRead ? '<span class="badge-green">🟢 Lu</span>' : '<span class="badge-red">🔴 Non Lu</span>';
+        const actionBtn = !isRead ? `<button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="markMessageAsRead(${m.id})">📖 Marquer comme Lu</button>` : '';
+
         container.innerHTML += `
-          <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:14px 18px; border-radius:12px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <div style="background:${isRead ? '#f8fafc' : '#f0fdf4'}; border:1px solid ${isRead ? '#e2e8f0' : '#bbf7d0'}; padding:14px 18px; border-radius:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <strong style="color:#059669; font-size:13px;">De: ${m.from} ➔ À: ${m.to}</strong>
-              <span style="font-size:11px; color:#94a3b8; font-weight:700;">${m.date}</span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                ${statusBadge}
+                <span style="font-size:11px; color:#94a3b8; font-weight:700;">${m.date}</span>
+                ${actionBtn}
+              </div>
             </div>
-            <p style="font-size:13px; font-weight:700; color:#1e293b;">${m.text}</p>
+            <p style="font-size:13px; font-weight:700; color:#0f172a;">${m.text}</p>
           </div>
         `;
       });
