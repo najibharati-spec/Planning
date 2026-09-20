@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FieldOps - System Admin & Planning Central</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-cream: #fbf7ee;
@@ -17,13 +17,24 @@
       --text-dark: #1e293b;
       --purple-header: #4c1d95;
       --purple-th: #5b21b6;
+
+      /* SHIFT FLOW ENGINE VARIABLES */
+      --sf-bg-dark: #0f172a;
+      --sf-card-bg: #1e293b;
+      --sf-border-color: #334155;
+      --sf-accent-yellow: #ffc244;
+      --sf-accent-green: #00a082;
+      --sf-accent-blue: #3b82f6;
+      --sf-text-main: #f8fafc;
+      --sf-text-muted: #94a3b8;
+      --sf-success: #10b981;
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
     body { background: var(--bg-cream); color: var(--text-dark); min-height: 100vh; display: flex; }
     .hidden { display: none !important; }
 
-    /* LOCK SCREEN */
+    /* LOCK SCREEN FOR RESPONSABLES */
     #lock-screen {
       width: 100%; min-height: 100vh; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 10px;
@@ -102,27 +113,76 @@
 
     .alert-banner { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 800; margin-top: 10px; }
 
-    /* PLANNING STYLES MATCHING CAPTURE */
-    .planning-table-container { overflow-x: auto; border-radius: 12px; border: 1px solid #e2e8f0; }
-    .plan-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #ffffff; }
-    .plan-table th { background: var(--purple-th); color: #ffffff; padding: 12px 8px; font-size: 11px; font-weight: 800; text-align: center; text-transform: uppercase; }
-    .plan-table th.first-col { text-align: left; padding-left: 16px; background: var(--purple-header); }
-    .plan-table td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; text-align: center; vertical-align: middle; }
-
-    .select-agent-box, .select-zone-box {
-      width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid #d8b4fe; background: #ffffff; font-weight: 700; font-size: 12px; color: #1e1b4b; outline: none;
-    }
-    
-    .shift-box {
-      padding: 8px 10px; border-radius: 10px; font-size: 11px; font-weight: 800; border: none; text-align: center; cursor: pointer; display: inline-block; width: 100%;
-    }
-    .shift-off { background: #f8fafc; color: #94a3b8; }
-    .shift-pink { background: #fce7f3; color: #be185d; }
-    .shift-purple { background: #ede9fe; color: #6d28d9; }
-
     /* CONFIG CARDS */
     .cfg-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
     .cfg-item { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 8px; font-size: 13px; font-weight: 700; }
+
+    /* INTEGRATED SHIFT FLOW STYLES FOR PLANNING MODULE */
+    .sf-header-container {
+      background: var(--sf-card-bg);
+      border: 1px solid var(--sf-border-color);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      color: var(--sf-text-main);
+    }
+    .sf-logo-area { display: flex; align-items: center; gap: 12px; }
+    .sf-logo-badge {
+      background: var(--sf-accent-yellow); color: #000; font-weight: 700;
+      padding: 6px 12px; border-radius: 8px; font-size: 0.85rem;
+    }
+    .sf-nav-tabs {
+      display: flex; background: #0f172a; padding: 4px; border-radius: 10px; border: 1px solid var(--sf-border-color);
+    }
+    .sf-tab-btn {
+      background: transparent; border: none; color: var(--sf-text-muted);
+      padding: 8px 16px; font-size: 0.85rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+    }
+    .sf-tab-btn.active { background: var(--sf-card-bg); color: var(--sf-text-main); box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+
+    .sf-container-body {
+      background: var(--sf-bg-dark); color: var(--sf-text-main); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--sf-border-color);
+    }
+    .sf-subtab-content { display: none; }
+    .sf-subtab-content.active { display: block; }
+
+    .sf-action-bar {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;
+      background: var(--sf-card-bg); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid var(--sf-border-color);
+    }
+    .sf-metrics-group { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .sf-metric-item { display: flex; flex-direction: column; }
+    .sf-metric-label { font-size: 0.72rem; color: var(--sf-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .sf-metric-value { font-size: 1.15rem; font-weight: 700; margin-top: 2px; }
+
+    .sf-table-wrapper { background: var(--sf-card-bg); border-radius: 12px; border: 1px solid var(--sf-border-color); overflow-x: auto; }
+    .sf-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
+    .sf-table th, .sf-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--sf-border-color); color: var(--sf-text-main); }
+    .sf-table th { background: #162032; color: var(--sf-text-muted); font-size: 0.78rem; text-transform: uppercase; font-weight: 700; }
+
+    .sf-shift-badge { display: inline-block; padding: 6px 10px; border-radius: 6px; font-weight: 700; font-size: 0.72rem; text-align: center; }
+    .sf-badge-morning { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .sf-badge-evening { background: rgba(255, 194, 68, 0.15); color: var(--sf-accent-yellow); border: 1px solid rgba(255, 194, 68, 0.3); }
+    .sf-badge-off { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    .sf-settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
+    .sf-card { background: var(--sf-card-bg); border: 1px solid var(--sf-border-color); border-radius: 12px; padding: 1.25rem; }
+    .sf-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .sf-card-title { font-weight: 700; font-size: 0.95rem; color: var(--sf-text-main); }
+
+    .sf-form-group { margin-bottom: 0.85rem; }
+    .sf-form-label { display: block; font-size: 0.78rem; color: var(--sf-text-muted); margin-bottom: 5px; }
+    .sf-form-control { width: 100%; background: #0f172a; border: 1px solid var(--sf-border-color); padding: 8px 10px; border-radius: 6px; color: var(--sf-text-main); font-size: 0.85rem; }
+    .sf-list-item { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; border: 1px solid var(--sf-border-color); }
+
+    .sf-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 1rem; }
+    .sf-cal-header { text-align: center; padding: 6px; font-weight: 700; color: var(--sf-text-muted); font-size: 0.78rem; }
+    .sf-cal-day { background: var(--sf-card-bg); border: 1px solid var(--sf-border-color); border-radius: 8px; min-height: 85px; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; }
+    .sf-cal-day-num { font-weight: 700; font-size: 0.82rem; }
+    .sf-cal-day-info { font-size: 0.72rem; color: var(--sf-text-muted); }
 
     @media (max-width: 768px) {
       #main-app { flex-direction: column; }
@@ -327,36 +387,146 @@
         </div>
       </div>
 
-      <!-- PLANNING AGENTS TERRAIN EXACTEMENT COMME SUR LA CAPTURE D'ÉCRAN -->
-      <div id="view-planning" class="content-card hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
-          <div>
-            <h3 style="font-size:18px; font-weight:800; color:#3b0764;">📅 Planning des Agents Terrain (Semaine 21/09 - 27/09)</h3>
-            <p style="color:#64748b; font-size:12px;">Configuration exacte extraite directement de votre interface FieldOps.</p>
+      <!-- PLANNING AGENTS TERRAIN (INTEGRATION SHIFT FLOW PARFAITE) -->
+      <div id="view-planning" class="hidden">
+        <div class="sf-header-container">
+          <div class="sf-logo-area">
+            <span class="sf-logo-badge">SHIFT ENGINE</span>
+            <span style="font-weight: 700; font-size: 1.1rem;">Planning & Shift Control System</span>
           </div>
-          <div style="display:flex; gap:8px;">
-            <button class="btn-action" style="padding:8px 14px; font-size:12px; background:#6d28d9;" onclick="addAgentToPlanningPrompt()">➕ Ajouter Agent</button>
-            <button class="btn-action" style="padding:8px 14px; font-size:12px; background:#0284c7;" onclick="window.print()">🖨️ Imprimer</button>
+          <div class="sf-nav-tabs">
+            <button class="sf-tab-btn active" onclick="switchSfTab('sf-weekly', event)">Planning Hebdo</button>
+            <button class="sf-tab-btn" onclick="switchSfTab('sf-monthly', event)">Aperçu Mensuel</button>
+            <button class="sf-tab-btn" onclick="switchSfTab('sf-settings', event)">Paramètres Engine</button>
           </div>
         </div>
 
-        <div class="planning-table-container">
-          <table class="plan-table">
-            <thead>
-              <tr>
-                <th class="first-col" style="min-width:160px;">AGENT</th>
-                <th style="min-width:180px; text-align:left; padding-left:10px;">ZONE</th>
-                <th>LUN<br><span style="font-weight:600; font-size:10px;">21/09</span></th>
-                <th>MAR<br><span style="font-weight:600; font-size:10px;">22/09</span></th>
-                <th>MER<br><span style="font-weight:600; font-size:10px;">23/09</span></th>
-                <th>JEU<br><span style="font-weight:600; font-size:10px;">24/09</span></th>
-                <th>VEN<br><span style="font-weight:600; font-size:10px;">25/09</span></th>
-                <th>SAM<br><span style="font-weight:600; font-size:10px;">26/09</span></th>
-                <th>DIM<br><span style="font-weight:600; font-size:10px;">27/09</span></th>
-              </tr>
-            </thead>
-            <tbody id="planning-table-body"></tbody>
-          </table>
+        <div class="sf-container-body">
+          <!-- TAB 1: WEEKLY PLANNING VIEW -->
+          <div id="sf-weekly" class="sf-subtab-content active">
+            <div class="sf-action-bar">
+              <div class="sf-metrics-group">
+                <div class="sf-metric-item">
+                  <span class="sf-metric-label">Total Agents Active</span>
+                  <span class="sf-metric-value">12 Agents</span>
+                </div>
+                <div class="sf-metric-item">
+                  <span class="sf-metric-label">Target Hours / Agent</span>
+                  <span class="sf-metric-value" style="color: var(--sf-accent-yellow);">44.0 hrs</span>
+                </div>
+                <div class="sf-metric-item">
+                  <span class="sf-metric-label">Coverage Status</span>
+                  <span class="sf-metric-value" style="color: var(--sf-success);">100% Covered</span>
+                </div>
+              </div>
+              <button class="btn-action" style="background: var(--sf-accent-green); border:none;" onclick="alert('Planning mis à jour avec succès!')">Enregistrer Modifications</button>
+            </div>
+
+            <div class="sf-table-wrapper">
+              <table class="sf-table">
+                <thead>
+                  <tr>
+                    <th>Agent / Zone</th>
+                    <th>Lundi</th>
+                    <th>Mardi</th>
+                    <th>Mercredi</th>
+                    <th>Jeudi</th>
+                    <th>Vendredi</th>
+                    <th>Samedi</th>
+                    <th>Dimanche</th>
+                    <th>Total Heures</th>
+                  </tr>
+                </thead>
+                <tbody id="sf-weekly-table-body">
+                  <!-- Injected dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB 2: MONTHLY OVERVIEW -->
+          <div id="sf-monthly" class="sf-subtab-content">
+            <div class="sf-action-bar">
+              <h2 style="font-size: 1.05rem;">Octobre 2026 - Distribution globale</h2>
+              <div class="sf-metrics-group">
+                <div class="sf-metric-item">
+                  <span class="sf-metric-label">Shift Matin (M)</span>
+                  <span class="sf-metric-value">180 Slots</span>
+                </div>
+                <div class="sf-metric-item">
+                  <span class="sf-metric-label">Shift Soir (S)</span>
+                  <span class="sf-metric-value">180 Slots</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sf-calendar-grid">
+              <div class="sf-cal-header">Lun</div>
+              <div class="sf-cal-header">Mar</div>
+              <div class="sf-cal-header">Mer</div>
+              <div class="sf-cal-header">Jeu</div>
+              <div class="sf-cal-header">Ven</div>
+              <div class="sf-cal-header">Sam</div>
+              <div class="sf-cal-header">Dim</div>
+            </div>
+          </div>
+
+          <!-- TAB 3: PARAMETERS & CONFIGURATION -->
+          <div id="sf-settings" class="sf-subtab-content">
+            <div class="sf-settings-grid">
+              <div class="sf-card">
+                <div class="sf-card-header">
+                  <span class="sf-card-title">Configurations des Shifts</span>
+                  <span style="color: var(--sf-accent-blue); font-size: 0.8rem; cursor:pointer; font-weight:700;">+ Ajouter Shift</span>
+                </div>
+                <div class="sf-form-group">
+                  <label class="sf-form-label">Shift Matin (SHIFT_M)</label>
+                  <div style="display: flex; gap: 8px;">
+                    <input type="time" class="sf-form-control" value="09:00">
+                    <input type="time" class="sf-form-control" value="17:00">
+                  </div>
+                </div>
+                <div class="sf-form-group">
+                  <label class="sf-form-label">Shift Soir (SHIFT_S)</label>
+                  <div style="display: flex; gap: 8px;">
+                    <input type="time" class="sf-form-control" value="16:00">
+                    <input type="time" class="sf-form-control" value="00:00">
+                  </div>
+                </div>
+                <div class="sf-form-group">
+                  <label class="sf-form-label">DURÉE DU SHIFT (HEURES)</label>
+                  <input type="number" class="sf-form-control" value="8">
+                </div>
+              </div>
+
+              <div class="sf-card">
+                <div class="sf-card-header">
+                  <span class="sf-card-title">Règles & Quotas Hebdo</span>
+                </div>
+                <div class="sf-form-group">
+                  <label class="sf-form-label">Max Heures / Semaine / Agent</label>
+                  <input type="number" class="sf-form-control" value="44">
+                </div>
+                <div class="sf-form-group">
+                  <label class="sf-form-label">Jours de repos obligatoires / Semaine</label>
+                  <input type="number" class="sf-form-control" value="1">
+                </div>
+                <div class="sf-form-group">
+                  <label class="sf-form-label">Pause Inter-Shift Minimum (Heures)</label>
+                  <input type="number" class="sf-form-control" value="12">
+                </div>
+              </div>
+
+              <div class="sf-card">
+                <div class="sf-card-header">
+                  <span class="sf-card-title">Pool Agents (12/12)</span>
+                </div>
+                <div id="sf-agent-list">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -366,7 +536,7 @@
         <p style="color:#64748b; font-size:12px;">Configuration globale de la plateforme, gestion des accès et exportations système.</p>
         <div style="margin-top:16px; display:flex; flex-direction:column; gap:12px; max-width:400px;">
           <button class="btn-action" style="background:#0284c7;" onclick="alert('Système réinitialisé aux valeurs par défaut !')">🔄 Réinitialiser Données Système</button>
-          <button class="btn-action" style="background:#059669;" onclick="exportToCSV()">📊 Télécharger l\'ensemble des Réclamations (CSV)</button>
+          <button class="btn-action" style="background:#059669;" onclick="exportToCSV()">📊 Télécharger l'ensemble des Réclamations (CSV)</button>
         </div>
       </div>
     </div>
@@ -501,26 +671,24 @@
       { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
     ];
 
-    const screenshotAgents = [
-      { fname: "Yahya", lname: "Rhallab", zone: "Temara - Oulad Mtaa", shifts: ["OFF", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF"] },
-      { fname: "Mehdi", lname: "Ait Jebour", zone: "Temara - Oulad Mtaa", shifts: ["OFF", "10:00–17:00", "17:00–00:00", "17:00–00:00", "17:00–01:00", "17:00–01:00", "17:00–00:00"] },
-      { fname: "Ayman", lname: "Chlifane", zone: "Temara - Oulad Mtaa", shifts: ["10:00–17:00", "OFF", "10:00–17:00", "10:00–17:00", "10:00–18:00", "10:00–18:00", "10:00–17:00"] },
-      { fname: "Mourad", lname: "Cherradi", zone: "Agdal - Carrousel", shifts: ["19:00–02:00", "19:00–02:00", "19:00–02:00", "OFF", "18:00–02:00", "18:00–02:00", "19:00–02:00"] },
-      { fname: "Youssef", lname: "Derkaoui", zone: "Agdal - Carrousel", shifts: ["OFF", "10:00–17:00", "10:00–17:00", "10:00–17:00", "10:00–18:00", "10:00–18:00", "10:00–17:00"] },
-      { fname: "Ayoub", lname: "Abssi", zone: "Agdal - Carrousel", shifts: ["17:00–00:00", "OFF", "17:00–00:00", "17:00–00:00", "17:00–01:00", "17:00–01:00", "17:00–00:00"] },
-      { fname: "Charaf", lname: "Loummihi", zone: "Salé - Medina", shifts: ["10:00–17:00", "OFF", "10:00–17:00", "10:00–17:00", "10:00–18:00", "10:00–18:00", "10:00–17:00"] },
-      { fname: "Hassan", lname: "Azgoune", zone: "Salé - Medina", shifts: ["17:00–00:00", "17:00–00:00", "OFF", "17:00–00:00", "17:00–01:00", "17:00–01:00", "17:00–00:00"] },
-      { fname: "Ayoub", lname: "Ben Malek", zone: "Salé - Medina", shifts: ["19:00–02:00", "19:00–02:00", "19:00–02:00", "OFF", "18:00–02:00", "18:00–02:00", "19:00–02:00"] },
-      { fname: "Achraf", lname: "Akhlij", zone: "Hay Riad - Soussi", shifts: ["OFF", "17:00–00:00", "17:00–00:00", "17:00–00:00", "17:00–01:00", "17:00–01:00", "17:00–00:00"] },
-      { fname: "Islam", lname: "Elmardi", zone: "Hay Riad - Soussi", shifts: ["19:00–02:00", "19:00–02:00", "OFF", "10:00–17:00", "18:00–02:00", "18:00–02:00", "19:00–02:00"] },
-      { fname: "Oussama", lname: "El Atrach", zone: "Hay Riad - Soussi", shifts: ["10:00–17:00", "10:00–17:00", "10:00–17:00", "OFF", "10:00–18:00", "10:00–18:00", "10:00–17:00"] },
-      { fname: "Zakariae", lname: "Benali", zone: "Technopolis", shifts: ["OFF", "12:00–19:00", "12:00–19:00", "12:00–19:00", "12:00–20:00", "12:00–20:00", "12:00–19:00"] }
+    const sfAgentsList = [
+      { name: "Youssef B.", zone: "Témara Central" },
+      { name: "Ayoub A.", zone: "Harhoura" },
+      { name: "Mourad C.", zone: "Rabat" },
+      { name: "Yahya R.", zone: "Rabat" },
+      { name: "Mehdi K.", zone: "El Wifaq" },
+      { name: "Karim H.", zone: "Oulad Mtaa" },
+      { name: "Sami R.", zone: "Témara Central" },
+      { name: "Omar F.", zone: "Harhoura" },
+      { name: "Hamza T.", zone: "Rabat" },
+      { name: "Bilal S.", zone: "El Wifaq" },
+      { name: "Anass B.", zone: "Oulad Mtaa" },
+      { name: "Nabil M.", zone: "Témara Central" }
     ];
 
     let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v30')) || defaultStoreCatalog;
     let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v30')) || defaultRecTypes;
     let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v30')) || { order: true, sector: true, gps: true, comment: true };
-    let fieldAgentsList = JSON.parse(localStorage.getItem('fieldops_agents_screen_v30')) || screenshotAgents;
     let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v30')) || [
       { id: 1, agent: "Najib HARATI (ADMIN)", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
     ];
@@ -552,10 +720,14 @@
       initFormDropdowns();
       populateAgentMsgDropdown();
       showView('planning', document.getElementById('menu-plan'));
-      renderPlanningTable();
       renderReclamationStats();
       renderMessagesView();
       renderConfigTree();
+
+      // Init Shift Flow Engine Inside Planning
+      renderSfWeeklyTable();
+      renderSfSettingsAgents();
+      renderSfMonthlyGrid();
     }
 
     function lockSystem() {
@@ -899,8 +1071,8 @@
       const select = document.getElementById('msg-select-agent');
       if (!select) return;
       select.innerHTML = '';
-      fieldAgentsList.forEach(a => {
-        select.innerHTML += `<option value="${a.fname}">${a.fname} ${a.lname}</option>`;
+      sfAgentsList.forEach(a => {
+        select.innerHTML += `<option value="${a.name}">${a.name}</option>`;
       });
     }
 
@@ -1035,51 +1207,83 @@
       });
     }
 
-    function getShiftClass(val) {
-      if (val === 'OFF') return 'shift-off';
-      if (val.includes('17:00') || val.includes('17:00–01:00') || val.includes('17:00–00:00')) return 'shift-pink';
-      return 'shift-purple';
+    /* SHIFT FLOW ENGINE LOGIC */
+    function switchSfTab(subtabId, evt) {
+      document.querySelectorAll('.sf-subtab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.sf-tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(subtabId).classList.add('active');
+      if (evt && evt.target) evt.target.classList.add('active');
     }
 
-    function renderPlanningTable() {
-      const tbody = document.getElementById('planning-table-body');
+    function renderSfWeeklyTable() {
+      const tbody = document.getElementById('sf-weekly-table-body');
       if (!tbody) return;
       tbody.innerHTML = '';
-      fieldAgentsList.forEach((a, index) => {
-        tbody.innerHTML += `
-          <tr>
-            <td style="text-align:left; padding-left:12px;">
-              <select class="select-agent-box">
-                <option selected>${a.fname} ${a.lname}</option>
-              </select>
-            </td>
-            <td style="text-align:left;">
-              <select class="select-zone-box">
-                <option ${a.zone==='Temara - Oulad Mtaa'?'selected':''}>Temara - Oulad Mtaa</option>
-                <option ${a.zone==='Agdal - Carrousel'?'selected':''}>Agdal - Carrousel</option>
-                <option ${a.zone==='Salé - Medina'?'selected':''}>Salé - Medina</option>
-                <option ${a.zone==='Hay Riad - Soussi'?'selected':''}>Hay Riad - Soussi</option>
-                <option ${a.zone==='Technopolis'?'selected':''}>Technopolis</option>
-              </select>
-            </td>
-            ${a.shifts.map((s) => `
-              <td>
-                <span class="shift-box ${getShiftClass(s)}">${s}</span>
-              </td>
-            `).join('')}
-          </tr>
+
+      sfAgentsList.forEach((agent, index) => {
+        const tr = document.createElement('tr');
+        
+        let rowContent = `
+          <td>
+            <strong style="color: var(--sf-text-main); display:block;">${agent.name}</strong>
+            <small style="color: var(--sf-text-muted);">${agent.zone}</small>
+          </td>
         `;
+
+        for (let day = 0; day < 7; day++) {
+          const isOff = (day === (index % 7));
+          const isEvening = (day + index) % 2 === 0;
+
+          if (isOff) {
+            rowContent += `<td><span class="sf-shift-badge sf-badge-off">OFF</span></td>`;
+          } else if (isEvening) {
+            rowContent += `<td><span class="sf-shift-badge sf-badge-evening">16:00 - 00:00</span></td>`;
+          } else {
+            rowContent += `<td><span class="sf-shift-badge sf-badge-morning">09:00 - 17:00</span></td>`;
+          }
+        }
+
+        rowContent += `<td style="font-weight: 700; color: var(--sf-accent-yellow);">44 hrs</td>`;
+        tr.innerHTML = rowContent;
+        tbody.appendChild(tr);
       });
     }
 
-    function addAgentToPlanningPrompt() {
-      const name = prompt("Saisir le Nom & Prénom de l'agent terrain :");
-      if (name) {
-        fieldAgentsList.push({
-          fname: name, lname: "", zone: "Temara - Oulad Mtaa", shifts: ["10:00–17:00", "10:00–17:00", "10:00–17:00", "OFF", "10:00–18:00", "10:00–18:00", "10:00–17:00"]
-        });
-        localStorage.setItem('fieldops_agents_screen_v30', JSON.stringify(fieldAgentsList));
-        renderPlanningTable();
+    function renderSfSettingsAgents() {
+      const list = document.getElementById('sf-agent-list');
+      if (!list) return;
+      list.innerHTML = '';
+
+      sfAgentsList.slice(0, 5).forEach(agent => {
+        const div = document.createElement('div');
+        div.className = 'sf-list-item';
+        div.innerHTML = `
+          <div>
+            <div style="font-size:0.85rem; font-weight:600;">${agent.name}</div>
+            <div style="font-size:0.75rem; color:var(--sf-text-muted);">${agent.zone}</div>
+          </div>
+          <span style="color: var(--sf-success); font-size:0.75rem; font-weight:700;">Actif</span>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function renderSfMonthlyGrid() {
+      const grid = document.querySelector('.sf-calendar-grid');
+      if (!grid || grid.children.length > 7) return;
+
+      for(let i = 1; i <= 31; i++) {
+        const dayBox = document.createElement('div');
+        dayBox.className = 'sf-cal-day';
+        dayBox.innerHTML = `
+          <div class="sf-cal-day-num">${i}</div>
+          <div class="sf-cal-day-info">
+            <span style="color: var(--sf-accent-blue);">12 Agents</span><br>
+            <span>24 Shifts</span>
+          </div>
+        `;
+        grid.appendChild(dayBox);
       }
     }
 
