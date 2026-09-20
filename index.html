@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - System Admin & Planning Central</title>
+  <title>FieldOps - System Admin & Paramètres Planning</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -17,6 +17,7 @@
       --text-dark: #1e293b;
       --purple-header: #4c1d95;
       --purple-th: #5b21b6;
+      --purple-accent: #6d28d9;
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
@@ -76,31 +77,9 @@
 
     .content-card { background: #ffffff; border-radius: 16px; border: 1px solid var(--border-subtle); padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 20px; }
 
-    /* DASHBOARD TABS */
-    .tab-container { display: flex; gap: 10px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 16px; }
-    .tab-btn { padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; border: none; background: #f1f5f9; color: #475569; }
-    .tab-btn.active { background: var(--green-primary); color: #ffffff; }
-
-    .btn-copy { background: #e2e8f0; border: none; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; cursor: pointer; margin-left: 4px; }
     .btn-action { background: var(--green-primary); color: #fff; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
+    .btn-purple { background: var(--purple-accent); color: #fff; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
     .btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 11px; }
-    .btn-edit { background: #e0f2fe; color: #0369a1; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 11px; }
-
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
-    .form-group { display: flex; flex-direction: column; gap: 5px; }
-    .form-group label { font-size: 12px; font-weight: 800; color: #334155; }
-    .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px; font-weight: 600; }
-
-    .search-input-box {
-      padding: 10px 12px; border-radius: 8px; border: 2px solid #00875a; outline: none;
-      font-size: 13px; font-weight: 700; background: #f0fdf4; margin-bottom: 4px;
-    }
-
-    .badge-orange { background: #ffe0b2; color: #e65100; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
-    .badge-red { background: #ffcdd2; color: #b71c1c; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
-    .badge-green { background: #c8e6c9; color: #1b5e20; padding: 4px 8px; border-radius: 6px; font-weight: 800; }
-
-    .alert-banner { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 800; margin-top: 10px; }
 
     /* PLANNING STYLES MATCHING CAPTURE */
     .planning-table-container { overflow-x: auto; border-radius: 12px; border: 1px solid #e2e8f0; }
@@ -120,9 +99,10 @@
     .shift-pink { background: #fce7f3; color: #be185d; }
     .shift-purple { background: #ede9fe; color: #6d28d9; }
 
-    /* CONFIG CARDS */
-    .cfg-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-    .cfg-item { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 8px; font-size: 13px; font-weight: 700; }
+    /* CONFIG CARDS FOR PARAMETRES PLANNING */
+    .cfg-card { background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 14px; padding: 18px; margin-bottom: 18px; }
+    .cfg-title { font-size: 15px; font-weight: 800; color: #581c87; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .tag-item { background: #ffffff; border: 1px solid #d8b4fe; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; color: #4c1d95; display: inline-flex; align-items: center; gap: 8px; }
 
     @media (max-width: 768px) {
       #main-app { flex-direction: column; }
@@ -169,7 +149,7 @@
 
       <div class="menu-section">
         <div class="menu-label">Ressources</div>
-        <div class="nav-item" id="menu-param" onclick="showView('parametres', this)"><span>⚙️</span> Paramètres</div>
+        <div class="nav-item" id="menu-param" onclick="showView('parametres', this)"><span>⚙️</span> Paramètres Planning</div>
       </div>
     </div>
 
@@ -188,19 +168,6 @@
         <h3>📊 Centre de Traitement des Réclamations</h3>
         <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Suivi temps réel avec tri prioritaire par récurrence.</p>
         
-        <div class="tab-container">
-          <button class="tab-btn active" id="tab-part" onclick="switchDashTab('Partenaire')">🏪 Partenaires (Merchants)</button>
-          <button class="tab-btn" id="tab-livr" onclick="switchDashTab('Livreur')">🛵 Livreurs (Couriers)</button>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <div>
-            <label style="font-weight:800; font-size:11px;">Filtre Période : </label>
-            <select id="filter-period" onchange="renderReclamationStats()"><option value="day">Aujourd'hui (Jour)</option><option value="week" selected>Cette Semaine</option><option value="month">Ce Mois</option></select>
-          </div>
-          <button class="btn-action" style="margin:0; font-size:12px;" onclick="exportToCSV()">📥 Exporter CSV</button>
-        </div>
-
         <div style="overflow-x:auto;">
           <table style="width:100%; border-collapse:collapse;">
             <thead>
@@ -214,117 +181,16 @@
       <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION -->
       <div id="view-reclamations" class="content-card hidden">
         <h3>🚨 Saisie Nouvelle Réclamation (Responsable)</h3>
-        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Saisissez directement les réclamations terrain en tant que Responsable.</p>
-
-        <div class="form-grid">
-          <div class="form-group" id="fgroup-type">
-            <label>Type Réclamation :</label>
-            <select id="rec-type" onchange="toggleRecType()"></select>
-          </div>
-
-          <div class="form-group" id="fgroup-partenaire">
-            <label>Marque Partenaire :</label>
-            <select id="rec-target-partenaire" onchange="updateStoreLocations()"></select>
-          </div>
-
-          <div class="form-group" id="fgroup-sector">
-            <label>🔎 Magasin Exact / Store (Recherche) :</label>
-            <input type="text" id="store-search-input" class="search-input-box" placeholder="🔍 Taper pour chercher le Store..." oninput="filterStores()" />
-            <select id="rec-store-sector" onchange="checkCustomStore()"></select>
-            <input type="text" id="custom-store-input" class="hidden" placeholder="Saisir le nom du partenaire/store exact..." style="margin-top:6px; padding:8px; border-radius:6px; border:1px solid #cbd5e1;" />
-          </div>
-
-          <div class="form-group hidden" id="fgroup-livreur">
-            <label>ID Livreur :</label>
-            <input type="text" id="rec-target-livreur" placeholder="Ex: 54932" />
-          </div>
-
-          <div class="form-group" id="fgroup-motif">
-            <label>Motif Incident :</label>
-            <select id="rec-motif"></select>
-          </div>
-
-          <div class="form-group" id="fgroup-order">
-            <label>N° de Commande :</label>
-            <input type="text" id="rec-order-num" placeholder="Ex: #8841, #9902" />
-          </div>
-
-          <div class="form-group" id="fgroup-gps">
-            <label>Localisation GPS (Obligatoire) :</label>
-            <button type="button" onclick="getGPS()" style="padding:10px; background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; border-radius:8px; cursor:pointer; font-weight:800;">📍 Détecter Position GPS *</button>
-            <input type="text" id="rec-gps" readonly placeholder="Cliquer sur 'Détecter Position'..." style="background:#f8fafc;" />
-          </div>
-        </div>
-
-        <div id="gps-error-banner" class="alert-banner hidden">
-          ⚠️ Attention : Vous devez obligatoirement cliquer sur "📍 Détecter Position GPS" pour valider la réclamation !
-        </div>
-
-        <div class="form-group" id="fgroup-comment" style="margin-top:12px;">
-          <label>Commentaires & Explications :</label>
-          <textarea id="rec-comment" rows="3" placeholder="Saisir les commentaires et détails..."></textarea>
-        </div>
-        <button class="btn-action" style="margin-top:14px;" onclick="submitReclamation()">Envoyer la Réclamation</button>
       </div>
 
       <!-- CONFIGURATION DYNAMIQUE -->
       <div id="view-config" class="content-card hidden">
         <h3>🛠️ Configuration Dynamique du Formulaire Admin</h3>
-        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Gérez l'arborescence des Partenaires, Stores, Types de réclamation, Motifs et visibilité des champs.</p>
-
-        <!-- 1. GESTION DES CHAMPS (VISIBILITÉ) -->
-        <div class="cfg-card">
-          <h4 style="font-size:14px; color:#00875a; margin-bottom:10px;">👁️ Visibilité des Champs dans le Formulaire Agent :</h4>
-          <div style="display:flex; gap:16px; flex-wrap:wrap;">
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-order" checked onchange="toggleFieldVisibility('order')" /> Champ N° Commande</label>
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-sector" checked onchange="toggleFieldVisibility('sector')" /> Champ Stores / Emplacement</label>
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-gps" checked onchange="toggleFieldVisibility('gps')" /> Champ Localisation GPS</label>
-            <label style="font-weight:700; font-size:12px;"><input type="checkbox" id="field-toggle-comment" checked onchange="toggleFieldVisibility('comment')" /> Champ Commentaires</label>
-          </div>
-        </div>
-
-        <!-- 2. GESTION ARBORESCENCE PARTENAIRES & STORES -->
-        <div class="cfg-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-            <h4 style="font-size:14px; color:#00875a;">🏬 Arborescence Partenaires & Stores :</h4>
-            <div style="display:flex; gap:8px; align-items:center;">
-              <input type="text" id="config-brand-search" class="search-input-box" style="margin:0; width:220px;" placeholder="🔍 Chercher Partenaire f Config..." oninput="renderConfigTree()" />
-              <button class="btn-action" style="padding:8px 12px; font-size:11px;" onclick="addNewBrandPrompt()">➕ Ajouter Nouveau Partenaire</button>
-            </div>
-          </div>
-          
-          <div id="brands-tree-container"></div>
-        </div>
-
-        <!-- 3. GESTION TYPES DE RÉCLAMATIONS & MOTIFS -->
-        <div class="cfg-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h4 style="font-size:14px; color:#00875a;">🚨 Types de Réclamation & Motifs :</h4>
-            <button class="btn-action" style="padding:6px 12px; font-size:11px;" onclick="addNewRecTypePrompt()">➕ Ajouter Type Réclamation</button>
-          </div>
-
-          <div id="types-motifs-container"></div>
-        </div>
       </div>
 
       <!-- MESSAGES DIRECTS -->
       <div id="view-messages" class="content-card hidden">
-        <h3>💬 Centre de Messagerie & Instructions Directes</h3>
-        <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Communication directe entre l'Équipe de Gestion et les Agents Terrain.</p>
-
-        <div id="admin-msg-panel" style="margin-bottom:20px; background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
-          <h4 style="font-size:14px; margin-bottom:10px;">✉️ Envoyer un Message Direct :</h4>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <select id="msg-select-agent" style="padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-weight:700;"></select>
-            <input type="text" id="msg-input-text" placeholder="Saisir votre instruction..." style="flex:1; min-width:240px; padding:10px; border-radius:8px; border:1px solid #cbd5e1;" />
-            <button class="btn-action" style="margin:0;" onclick="sendDirectMessage()">Envoyer</button>
-          </div>
-        </div>
-
-        <div>
-          <h4 style="font-size:14px; margin-bottom:10px;">📋 Boîte de Réception Messages :</h4>
-          <div id="messages-list-container" style="display:flex; flex-direction:column; gap:10px;"></div>
-        </div>
+        <h3>💬 Centre de Messagerie Directe</h3>
       </div>
 
       <!-- PLANNING AGENTS TERRAIN EXACTEMENT COMME SUR LA CAPTURE D'ÉCRAN -->
@@ -332,10 +198,10 @@
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
           <div>
             <h3 style="font-size:18px; font-weight:800; color:#3b0764;">📅 Planning des Agents Terrain (Semaine 21/09 - 27/09)</h3>
-            <p style="color:#64748b; font-size:12px;">Configuration exacte extraite directement de votre interface FieldOps.</p>
+            <p style="color:#64748b; font-size:12px;">Interface de gestion directe des shifts terrain pour les agents.</p>
           </div>
           <div style="display:flex; gap:8px;">
-            <button class="btn-action" style="padding:8px 14px; font-size:12px; background:#6d28d9;" onclick="addAgentToPlanningPrompt()">➕ Ajouter Agent</button>
+            <button class="btn-purple" style="padding:8px 14px; font-size:12px;" onclick="addAgentToPlanningPrompt()">➕ Ajouter Agent</button>
             <button class="btn-action" style="padding:8px 14px; font-size:12px; background:#0284c7;" onclick="window.print()">🖨️ Imprimer</button>
           </div>
         </div>
@@ -360,146 +226,55 @@
         </div>
       </div>
 
-      <!-- PARAMETRES -->
+      <!-- PARAMETRES DU PLANNING DUPLICATED & OPTIMIZED -->
       <div id="view-parametres" class="content-card hidden">
-        <h3>⚙️ Paramètres Système Admin</h3>
-        <p style="color:#64748b; font-size:12px;">Configuration globale de la plateforme, gestion des accès et exportations système.</p>
-        <div style="margin-top:16px; display:flex; flex-direction:column; gap:12px; max-width:400px;">
-          <button class="btn-action" style="background:#0284c7;" onclick="alert('Système réinitialisé aux valeurs par défaut !')">🔄 Réinitialiser Données Système</button>
-          <button class="btn-action" style="background:#059669;" onclick="exportToCSV()">📊 Télécharger l\'ensemble des Réclamations (CSV)</button>
+        <h3 style="color:#4c1d95; font-size:18px; margin-bottom:6px;">⚙️ Paramètres & Configuration du Planning</h3>
+        <p style="color:#64748b; font-size:12px; margin-bottom:18px;">Gérez les zones de couverture, les créneaux horaires des shifts et les règles d'heures hebdomadaires.</p>
+
+        <!-- 1. GESTION DES ZONES -->
+        <div class="cfg-card">
+          <div class="cfg-title">
+            <span>📍 Zones de Couverture (Secteurs Terrain)</span>
+            <button class="btn-purple" style="padding:6px 12px; font-size:11px;" onclick="addZonePrompt()">➕ Ajouter Zone</button>
+          </div>
+          <div id="zones-list-container" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+        </div>
+
+        <!-- 2. GESTION DES SHIFTS HORAIRES -->
+        <div class="cfg-card">
+          <div class="cfg-title">
+            <span>⏰ Créneaux Horaires Disponibles (Shifts)</span>
+            <button class="btn-purple" style="padding:6px 12px; font-size:11px;" onclick="addShiftPrompt()">➕ Ajouter Shift</button>
+          </div>
+          <div id="shifts-list-container" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+        </div>
+
+        <!-- 3. HEURES HEBDOMADAIRES -->
+        <div class="cfg-card">
+          <div class="cfg-title">
+            <span>⏳ Volume Horaire Contractuel</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <label style="font-size:13px; font-weight:700;">Nombre d'heures par agent par semaine :</label>
+            <input type="number" id="weekly-hours-input" value="44" style="width:80px; padding:8px; border-radius:8px; border:1px solid #d8b4fe; font-weight:800; text-align:center;" />
+            <span style="font-weight:800; color:#581c87;">Heures / Semaine</span>
+            <button class="btn-action" style="padding:8px 14px; font-size:12px; background:#059669;" onclick="saveWeeklyHours()">💾 Enregistrer</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    let defaultStoreCatalog = {
-      "McDonald's®": [
-        "McDonald's Marjane Hay Riad - 12", "McDonald's Salé - 33", "McDonald's Temara - 46",
-        "McDonald's Carrousel-93", "McDonald's Rabat ville - 22", "McDonald's Gare LGV Agdal - 48",
-        "McDonald's Agdal - 2", "McDonald's El Menzeh"
-      ],
-      "Primos Chicken": [
-        "Primos Agdal", "Primos Chicken Hay Riad", "Primos Salé", "Primos Temara",
-        "Primos Chicken Massira", "Primos Centre Ville", "Primos Chicken CARROUSSEL", "Primos Ocean"
-      ],
-      "Burger King": [
-        "Burger King Temara", "Burger King Mahaj Ryad", "Burger King Carrefour Salé",
-        "Burger King Agdal", "Burger King Marina Salé", "Burger King Arribat Center",
-        "Burger King Harhoura", "Burger King LGB Zaer", "Burger King Kitea Géant"
-      ],
-      "KFC": [
-        "KFC Sela Park", "KFC Hassan", "KFC Hay Riad", "KFC Rabat Ville",
-        "KFC Agdal", "KFC Le Carrousel", "KFC Arribat Center"
-      ],
-      "Little Mamma": [
-        "Little Mamma Mahaj Riad", "Little Mamma Agdal", "Little Mamma Centre Ville Rabat"
-      ],
-      "Carrefour Market / Express": [
-        "Carrefour Express Temara Wifak 2", "Carrefour Market WIFAK", "Carrefour Express Temara",
-        "Carrefour Mehdi Ben Barka", "Carrefour Market Riad", "Carrefour Gourmet",
-        "Carrefour Market Souissi", "Carrefour Market Oqba", "Carrefour Market Al Manal"
-      ],
-      "Pizza Hut": [
-        "Pizza Hut Mahaj Ryad", "Pizza Hut Agdal", "Temara Square – Av Hassan 2",
-        "Pizza Hut Carrefour Salé - PHD24", "Pizza Hut - Marjane Bouregreg", "Pizza Hut Souissi",
-        "Pizza Hut Hay Riad", "Pizza Hut Harhoura", "Pizza Hut El Menzeh"
-      ],
-      "Tacos by L.Y.O.N.": [
-        "T2L Fal Ould Oumeir", "T2L Mohamed V RBT", "T2L Arribat Center"
-      ],
-      "Yoka Sushi": [
-        "Yoka Sushi Agdal", "Yoka Sushi Hay Riad", "Yoka Sushi Temara",
-        "Yoka Sushi Label'Gallery", "Yoka Sushi Salé", "Yoka Sushi Harhoura"
-      ],
-      "Domino's Pizza": [
-        "Domino's Agdal", "Domino's Harhoura", "Domino's Prestigia Rabat",
-        "Domino's Mahaj Riad", "Domino's Mega Mall", "Domino's Label Gallery Rabat"
-      ],
-      "Sushi Box": [
-        "Sushi Box Mahaj Ryad", "Sushi Box Harhoura", "Sushi Box Labelvie RBT", "Sushi Box Arribat Center"
-      ],
-      "Papa John's": [
-        "Papa John's Hay Riad", "Papa John's Harhoura"
-      ],
-      "Dunkin'": [
-        "Dunkin' Harhoura", "Dunkin' Arribat Center", "Dunkin' Prestigia Rabat",
-        "Dunkin' Mahaj Riad", "Dunkin' Label Gallery Rabat", "Dunkin' Le Marché Dar Essalam"
-      ],
-      "📍 Autres Partenaires / Restaurants": [
-        "ALL_PARTNERS"
-      ]
-    };
-
-    let allPartnersList = [
-      "175 KG", "218 BROS", "44brunch", "AGHA CHAM", "AM Fast Food", "ARZAK", "ATHLETIC PIZZA", "AYAMEK YA CHAM", "Addawk Chami", "Ahl alcham",
-      "Air Stick", "Al Andalous grille&co", "Albayt Dimashki", "Allo Sushi Restaurant (Salé)", "Amaya", "Amigo Tacos", "As'iette", "As'iam", "Assil Acham",
-      "Au P'tit Coin", "Awal", "Ayourino", "BA Fares", "BAYT AL QUDS", "BTB Sweets", "Bacara Cafe Restaurantmajid", "Babek Abtal", "Babek Hay Riad",
-      "BbT Agdal", "Beauty Market", "Beauty Success", "Bella mamma", "Beyti Istanbul", "Black coffee", "Bling bling chicken", "Bo Burger", "Bocadillo Del Norte",
-      "Bocadillos Los Hermanos", "Boho Café", "Bricoma Hay Riad", "Bricoma Quamra", "Bricoma Salé Marina", "Bricoma Temara",
-      "Burger King Agdal", "Burger King Arribat Center", "Burger King Carrefour Salé", "Burger King Harhoura", "Burger King Kitea Géant", "Burger King LGB Zaer",
-      "Burger King Marina Salé", "Burger King Mahaj Ryad", "Burger King Temara", "CAP GOURMET", "COCOC Chicken", "Café Nezonya", "Café Tulip Yazane", "Café snack arc de paris",
-      "Capital Vape", "Caribou Coffee Gare Agdal", "Caribou Coffee Hay Riad", "Caribou Coffee La villa 16", "Carrefour Express Temara", "Carrefour Gourmet",
-      "Carrefour Market WIFAK", "Carrefour Mehdi Ben Barka", "Castle Fish", "Chez Ouazzani", "Chez musty", "Chouwaya Al Akhawayn", "Chrono Pizza Temara", "Ch’hiwa food",
-      "Coin délices", "Coq Chef", "Costa coffee caroussel", "Crispeat", "Crispy Food", "Crusty Hay Riad", "D'VAPE", "DAR AL FAWAKIH RABAT - AGDAL", "Da Milena",
-      "Dajaji", "Dalla Zia", "Di Villaggio", "Domino's Agdal", "Domino's Harhoura", "Domino's Label Gallery Rabat", "Domino's Mahaj Riad", "Domino's Mega Mall",
-      "Domino's Prestigia Rabat", "Dunkin' Arribat Center", "Dunkin' Harhoura", "Dunkin' Label Gallery Rabat", "Dunkin' Le Marché Dar Essalam", "Dunkin' Mahaj Riad",
-      "Dunkin' Prestigia Rabat", "EASY VAPE SALE", "EASY VAPE Rabat", "Eatalia", "ElBayt El Dimashki", "Electroshine", "Encas", "Face Burger", "Fakihat Saada",
-      "Fast Ryad", "Fast Pizza", "Fast & delicious", "Fino Resto", "First Pizza", "Flavour Crêpe", "Flormar", "Food Delice", "FreCheese", "Ghost Kitchen",
-      "Go Frero Carrousel", "Good Flowers", "Goodway", "Green Village Rabat", "Grillade Al Andalous", "Hortensia café &more", "Huna", "I AM SUSHI", "IMIM SNACK",
-      "Il Giardino", "Indian Flavors", "Instafood", "J and J", "Japonezà", "Juicy Vapes", "KFC Agdal", "KFC Arribat Center", "KFC Hassan", "KFC Hay Riad",
-      "KFC Le Carrousel", "KFC Rabat Ville", "KFC Sela Park", "Kitchen Ryad", "Kitchen 59", "Koko Chicken", "Kool Smoothies AFRIQUIA HAY RIAD", "Kool Smoothies Arribat Center",
-      "Krispy Kreme - Agdal", "Krispy Kreme - Arribat Center", "L'Atelier Burger Hay Riad", "L'Atelier Burger Temara", "LA CASA GRANDE", "LA MAISON Fresh & Bio",
-      "LA PORTE DE LA MER", "LE PORT", "LE 40", "LE GOÛT DU FRUIT", "LES FRÈRES BOUCHERS", "La Déliciosa", "La Dinette", "La Mamma’s Pizza", "La Ola", "La Spezia",
-      "La pause 88 Mix Food", "La tasse verte", "Lamjarred Boutique Patisserie", "Latium", "Le Chill", "Le Macaron Maitre Artisan", "Le Roissant", "Le Rôti", "Le Smash",
-      "Lea Joy", "Liogelato", "Little Mamma Agdal", "Little Mamma Centre Ville Rabat", "Little Mamma Mahaj Riad", "Lovely Sheep", "Louai’s", "L’gordo", "MAC Cosmetics",
-      "MK Cloud", "Mademoiselle Framboise Rabat", "Mahaj Alfawakih", "Maison du Pain", "Maison du chou", "Mamito", "Marjane Hyper Hay Riad", "Masked Chicken", "Mawaid chabab",
-      "Maymana", "Maymana Souissi", "McDonald's Agdal - 2", "McDonald's Carrousel-93", "McDonald's El Menzeh", "McDonald's Gare LGV Agdal - 48", "McDonald's Marjane Hay Riad - 12",
-      "McDonald's Rabat ville - 22", "McDonald's Salé - 33", "McDonald's Temara - 46", "Meka Sushi", "Mevico", "Michwatkom", "Michouat al akhaouayne", "Mister Chicken Sale",
-      "Mitsuki Arribat Center", "Mitsuki Carrousel", "Mitsuki Gare", "Moissons", "Mr Bricolage Salé", "Mr Brunch", "Mr Kool", "Mr. Bricolage", "Muskaan Nikkei", "My Eataly",
-      "My Poke & Salads", "Natus Marrakech", "O'Caprices", "O'BOCADILLO'S", "O'charbon", "OMB Arribat Center", "OMB Hay Riad", "Oasis Café Express- Hay Riad", "Oben Coffee shop",
-      "Ocrepino", "Oliveri Hay Ryad", "Oppa Chicken", "Otantik Restaurant cuisine méditerranéenne", "Ouafaa Cakes Delivery", "PRODIET", "Panda", "Panda Crepe Marina",
-      "Papa John's Harhoura", "Papa John's Hay Riad", "Para Acima Harhoura", "Para Ain Atiq", "Para Dana", "Para MAGNOLIA", "Para Outlet", "Para Rivage", "Para Saliha NewShop",
-      "Para Al mohit", "Para Kounouz", "Para lagrande pharmacie", "Parapharmacie Beauty Skin", "Parapharmacie COSMOBIO", "Parasquare", "Paradise", "Pâtisserie Fennich",
-      "Pet Corner", "Pet Partner", "Pets Club", "Pets boutique RBT", "Pinchos Hassan", "Pinchos Mahaj Riad", "Pincho's Hassane", "Pizza Hut Agdal", "Pizza Hut Harhoura",
-      "Pizza Hut Hay Riad", "Pizza Hut Mahaj Ryad", "Pizza Hut Souissi", "Pizza Rio", "Pizza Vera", "Pizzeria silvia", "Pokawa Harhoura", "Pomme de pain Rabat", "Pop and Top",
-      "Pousse-Pousse", "Pralinor", "Prestigia", "Primos Agdal", "Primos CARROUSSEL", "Primos Centre Ville", "Primos Chicken Hay Riad", "Primos Chicken Massira",
-      "Primos Chicken Ocean", "Primos Salé", "Primos Temara", "Qaouti House", "Quick - Ryad square", "Quickpara", "RBT Arribat Center Av. Omar Ibn Al Khattab",
-      "RBT Aswak Assalam Av Mehdi Ben Barka - 1", "RBT Mega Mall Av. Mohamed VI", "Rafa Food", "Ragueb Para", "Raihani Food", "Rayan Nehmé", "Regalito", "Restaurant BACI",
-      "Restaurant Sabah al sham", "Ryad Square Gen2", "S Tacos Hay Riad", "S Tacos Salé", "S Tacos Témara", "SKY VAPE", "SOttoSOpra", "Safe and tasty", "Sama Juice ساماجوس",
-      "Sharxclub", "Shawarma Ghali Acham", "Shölk Maître Chocolatier", "Snack ABC", "Snack Ariwak Adahabi", "Snack Bacha", "Snack El Karam", "Snack Tempo", "Snack chamal",
-      "So Chicken", "Starbucks Agdal", "Starbucks Gare Rabat Agdal", "Starbucks Hay Riad", "Sunset on Fire", "Sushi Box Arribat Center", "Sushi Box Harhoura",
-      "Sushi Box Labelvie RBT", "Sushi Box Mahaj Ryad", "Sushi ARIJ", "Sushi youzar", "Sushi yanyan prestigia", "Sweet stoune", "SWEETOPIA", "T2L Arribat Center",
-      "T2L Fal Ould Oumeir", "T2L Mohamed V RBT", "Tac'N'roll", "Tacos Pescara", "Tacos Avenue", "Tacos de Nice", "Tacos slimani", "Tacos ismail", "tacos monalisa",
-      "Tasty Chicken", "Tender fish", "Temara Square – Av Hassan 2", "The Burger Meister", "The number one", "Thaitaam", "U Express Mega Mall", "VAPENERGY", "Valdi divce",
-      "Vape Market", "Verzatis", "Vida Souss", "Villa My Pearl", "WINO FOOD", "Win Win", "World Burger", "YAMA SUSHI", "Yaha", "Yas Gadgets", "Yoka Sushi Agdal",
-      "Yoka Sushi Harhoura", "Yoka Sushi Hay Riad", "Yoka Sushi Label'Gallery", "Yoka Sushi Salé", "Yoka Sushi Temara", "Yummy Délices By Bennani", "ZA7MA", "Zehn Electronic",
-      "Zenacham", "Zayyane", "bocadillos A 48", "delish bun", "samraa", "tacos ismail"
-    ];
-
-    let defaultRecTypes = {
-      "Partenaire": [
-        "Commande prête non reçue",
-        "Commande non prête (Retard excessif)",
-        "Commande volée",
-        "Comportement inapproprié du personnel Store envers les livreurs"
-      ],
-      "Livreur": [
-        "Mauvais comportement",
-        "Tenue vestimentaire non appropriée",
-        "Boîte trop abîmée ou endommagée",
-        "Boîte sans ID",
-        "Vol de commande par le livreur",
-        "Utilisation d'un compte non personnel (Compte loué/partagé)"
-      ]
-    };
-
     const responsablesList = [
       { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", role: "admin" },
       { id: "2", fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur" },
       { id: "3", fname: "Anass", lname: "FADLI", color: "#059669", role: "decideur" },
       { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
     ];
+
+    const defaultZones = ["Temara - Oulad Mtaa", "Agdal - Carrousel", "Salé - Medina", "Hay Riad - Soussi", "Technopolis", "Rabat Hassan", "Harhoura"];
+    const defaultShifts = ["10:00–17:00", "12:00–19:00", "17:00–00:00", "17:00–01:00", "18:00–02:00", "19:00–02:00", "OFF", "ABSENT"];
 
     const screenshotAgents = [
       { fname: "Yahya", lname: "Rhallab", zone: "Temara - Oulad Mtaa", shifts: ["OFF", "OFF", "OFF", "OFF", "OFF", "OFF", "OFF"] },
@@ -517,16 +292,9 @@
       { fname: "Zakariae", lname: "Benali", zone: "Technopolis", shifts: ["OFF", "12:00–19:00", "12:00–19:00", "12:00–19:00", "12:00–20:00", "12:00–20:00", "12:00–19:00"] }
     ];
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v30')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v30')) || defaultRecTypes;
-    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v30')) || { order: true, sector: true, gps: true, comment: true };
-    let fieldAgentsList = JSON.parse(localStorage.getItem('fieldops_agents_screen_v30')) || screenshotAgents;
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v30')) || [
-      { id: 1, agent: "Najib HARATI (ADMIN)", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min", date: "19/09/2026", status: "En Cours" }
-    ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v30')) || [];
-
-    let currentDashTab = "Partenaire";
+    let planningZones = JSON.parse(localStorage.getItem('fieldops_plan_zones_v31')) || defaultZones;
+    let planningShifts = JSON.parse(localStorage.getItem('fieldops_plan_shifts_v31')) || defaultShifts;
+    let fieldAgentsList = JSON.parse(localStorage.getItem('fieldops_agents_screen_v31')) || screenshotAgents;
     let selectedAgent = responsablesList[0];
     let currentUser = responsablesList[0];
 
@@ -548,14 +316,9 @@
       document.getElementById('lock-screen').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
       document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname}`;
-      
-      initFormDropdowns();
-      populateAgentMsgDropdown();
       showView('planning', document.getElementById('menu-plan'));
       renderPlanningTable();
-      renderReclamationStats();
-      renderMessagesView();
-      renderConfigTree();
+      renderParametresView();
     }
 
     function lockSystem() {
@@ -575,464 +338,7 @@
       document.getElementById('view-config').classList.add('hidden');
       document.getElementById('view-parametres').classList.add('hidden');
       document.getElementById('view-' + viewId).classList.remove('hidden');
-      if (viewId === 'messages') renderMessagesView();
-    }
-
-    function initFormDropdowns() {
-      const typeSel = document.getElementById('rec-type');
-      if (!typeSel) return;
-      typeSel.innerHTML = '';
-      Object.keys(recTypesCatalog).forEach(t => {
-        typeSel.innerHTML += `<option value="${t}">${t}</option>`;
-      });
-
-      const brandSel = document.getElementById('rec-target-partenaire');
-      if (!brandSel) return;
-      brandSel.innerHTML = '';
-      Object.keys(storeCatalog).forEach(b => {
-        brandSel.innerHTML += `<option value="${b}">${b}</option>`;
-      });
-
-      toggleRecType();
-    }
-
-    function toggleRecType() {
-      const typeSel = document.getElementById('rec-type');
-      if (!typeSel) return;
-      const type = typeSel.value;
-      if (type === 'Partenaire') {
-        document.getElementById('fgroup-partenaire').classList.remove('hidden');
-        document.getElementById('fgroup-sector').classList.remove('hidden');
-        document.getElementById('fgroup-livreur').classList.add('hidden');
-      } else {
-        document.getElementById('fgroup-partenaire').classList.add('hidden');
-        document.getElementById('fgroup-sector').classList.add('hidden');
-        document.getElementById('fgroup-livreur').classList.remove('hidden');
-      }
-
-      const motifSel = document.getElementById('rec-motif');
-      motifSel.innerHTML = '';
-      (recTypesCatalog[type] || []).forEach(m => {
-        motifSel.innerHTML += `<option value="${m}">${m}</option>`;
-      });
-
-      updateStoreLocations();
-    }
-
-    function updateStoreLocations() {
-      const brandSel = document.getElementById('rec-target-partenaire');
-      if (!brandSel) return;
-      document.getElementById('store-search-input').value = '';
-      filterStores();
-    }
-
-    function filterStores() {
-      const brandSel = document.getElementById('rec-target-partenaire');
-      if (!brandSel) return;
-      const brand = brandSel.value;
-      const searchVal = document.getElementById('store-search-input').value.toLowerCase().trim();
-      const selector = document.getElementById('rec-store-sector');
-      selector.innerHTML = '';
-
-      let listToDisplay = [];
-      if (brand === "📍 Autres Partenaires / Restaurants" || (storeCatalog[brand] && storeCatalog[brand][0] === "ALL_PARTNERS")) {
-        listToDisplay = allPartnersList;
-      } else if (storeCatalog[brand]) {
-        listToDisplay = storeCatalog[brand];
-      }
-
-      listToDisplay.forEach(s => {
-        if (s.toLowerCase().includes(searchVal)) {
-          selector.innerHTML += `<option value="${s}">${s}</option>`;
-        }
-      });
-
-      selector.innerHTML += `<option value="➕ Saisir manuellement un autre partenaire...">➕ Saisir manuellement un autre partenaire...</option>`;
-
-      if (selector.options.length === 1 && searchVal !== '') {
-        selector.selectedIndex = 0;
-      }
-
-      checkCustomStore();
-    }
-
-    function checkCustomStore() {
-      const storeVal = document.getElementById('rec-store-sector').value;
-      const customInput = document.getElementById('custom-store-input');
-      if (storeVal === "➕ Saisir manuellement un autre partenaire...") {
-        customInput.classList.remove('hidden');
-      } else {
-        customInput.classList.add('hidden');
-        customInput.value = '';
-      }
-    }
-
-    function getGPS() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(p => {
-          document.getElementById('rec-gps').value = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
-          document.getElementById('gps-error-banner').classList.add('hidden');
-        }, () => {
-          document.getElementById('rec-gps').value = "33.9182, -6.9211";
-          document.getElementById('gps-error-banner').classList.add('hidden');
-        });
-      }
-    }
-
-    function submitReclamation() {
-      const type = document.getElementById('rec-type').value;
-      let target = type === 'Partenaire' ? document.getElementById('rec-target-partenaire').value : document.getElementById('rec-target-livreur').value;
-      let sector = document.getElementById('rec-store-sector').value;
-      const motif = document.getElementById('rec-motif').value;
-      const orderNum = document.getElementById('rec-order-num').value;
-      const gps = document.getElementById('rec-gps').value;
-      const comment = document.getElementById('rec-comment').value;
-
-      if (!gps || gps.trim() === '') {
-        document.getElementById('gps-error-banner').classList.remove('hidden');
-        alert("⚠️ OBLIGATOIRE : Vous devez cliquer sur '📍 Détecter Position GPS' pour géolocaliser la réclamation avant l'envoi !");
-        return;
-      }
-
-      if (sector === "➕ Saisir manuellement un autre partenaire...") {
-        const customVal = document.getElementById('custom-store-input').value;
-        if (!customVal) return alert("Veuillez saisir le nom du partenaire !");
-        sector = customVal;
-        target = customVal;
-      } else if (target === "📍 Autres Partenaires / Restaurants") {
-        target = sector;
-      }
-
-      claimsDB.push({ 
-        id: Date.now(), 
-        agent: `${currentUser.fname} (${currentUser.role.toUpperCase()})`, 
-        type, 
-        target, 
-        sector: type === 'Partenaire' ? sector : '-', 
-        motif, 
-        orderNum: orderNum || '-', 
-        gps, 
-        comment: comment || '-', 
-        date: new Date().toLocaleDateString('fr-FR'), 
-        status: 'En Cours' 
-      });
-
-      localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
-      alert("✅ Réclamation enregistrée et ajoutée au Dashboard avec succès !");
-      document.getElementById('rec-order-num').value = '';
-      document.getElementById('rec-comment').value = '';
-      document.getElementById('rec-gps').value = '';
-      document.getElementById('custom-store-input').value = '';
-      document.getElementById('gps-error-banner').classList.add('hidden');
-      renderReclamationStats();
-      showView('dashboard', document.getElementById('menu-dash'));
-    }
-
-    function toggleFieldVisibility(fieldKey) {
-      fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
-      localStorage.setItem('fieldops_vis_v30', JSON.stringify(fieldVisibility));
-    }
-
-    function renderConfigTree() {
-      const searchConfig = (document.getElementById('config-brand-search')?.value || '').toLowerCase().trim();
-      const bTree = document.getElementById('brands-tree-container');
-      if (!bTree) return;
-      bTree.innerHTML = '';
-
-      Object.keys(storeCatalog).forEach(b => {
-        if (!b.toLowerCase().includes(searchConfig)) return;
-        const safeBrandKey = encodeURIComponent(b);
-        bTree.innerHTML += `
-          <div class="cfg-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
-            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-              <span style="font-size:14px; color:#0f172a;">🏢 <strong>${b}</strong> (${storeCatalog[b].length} Stores)</span>
-              <div>
-                <button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="addStorePrompt('${safeBrandKey}')">➕ Store</button>
-                <button class="btn-edit" onclick="editBrandPrompt('${safeBrandKey}')">✏️ Modifier</button>
-                <button class="btn-delete" onclick="deleteBrandPrompt('${safeBrandKey}')">🗑️ Supprimer</button>
-              </div>
-            </div>
-            <div style="padding-left:16px; display:flex; flex-wrap:wrap; gap:6px; width:100%; max-height:120px; overflow-y:auto;">
-              ${storeCatalog[b].map(s => `
-                <span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
-                  📍 ${s}
-                  <button onclick="deleteStore('${safeBrandKey}', '${encodeURIComponent(s)}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
-                </span>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      });
-
-      const tTree = document.getElementById('types-motifs-container');
-      if (!tTree) return;
-      tTree.innerHTML = '';
-      Object.keys(recTypesCatalog).forEach(t => {
-        const safeTypeKey = encodeURIComponent(t);
-        tTree.innerHTML += `
-          <div class="cfg-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
-            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-              <span style="font-size:14px; color:#0f172a;">🚨 Type: <strong>${t}</strong></span>
-              <div>
-                <button class="btn-action" style="padding:4px 8px; font-size:10px;" onclick="addMotifPrompt('${safeTypeKey}')">➕ Motif</button>
-                <button class="btn-delete" onclick="deleteRecTypePrompt('${safeTypeKey}')">🗑️ Supprimer Type</button>
-              </div>
-            </div>
-            <div style="padding-left:16px; display:flex; flex-wrap:wrap; gap:6px; width:100%;">
-              ${recTypesCatalog[t].map(m => `
-                <span style="background:#fef3c7; color:#92400e; padding:3px 8px; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
-                  ${m}
-                  <button onclick="deleteMotif('${safeTypeKey}', '${encodeURIComponent(m)}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
-                </span>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function addNewBrandPrompt() {
-      const name = prompt("Nom du nouveau Partenaire (Marque) :");
-      if (name && !storeCatalog[name]) {
-        storeCatalog[name] = [name + " Store Central"];
-        localStorage.setItem('fieldops_store_catalog_v30', JSON.stringify(storeCatalog));
-        initFormDropdowns();
-        renderConfigTree();
-      }
-    }
-
-    function editBrandPrompt(safeOldBrand) {
-      const oldBrand = decodeURIComponent(safeOldBrand);
-      const newBrand = prompt("Nouveau nom pour " + oldBrand + " :", oldBrand);
-      if (newBrand && newBrand !== oldBrand) {
-        storeCatalog[newBrand] = storeCatalog[oldBrand];
-        delete storeCatalog[oldBrand];
-        localStorage.setItem('fieldops_store_catalog_v30', JSON.stringify(storeCatalog));
-        initFormDropdowns();
-        renderConfigTree();
-      }
-    }
-
-    function deleteBrandPrompt(safeBrand) {
-      const brand = decodeURIComponent(safeBrand);
-      if (confirm("Supprimer le partenaire " + brand + " ?")) {
-        delete storeCatalog[brand];
-        localStorage.setItem('fieldops_store_catalog_v30', JSON.stringify(storeCatalog));
-        initFormDropdowns();
-        renderConfigTree();
-      }
-    }
-
-    function addStorePrompt(safeBrand) {
-      const brand = decodeURIComponent(safeBrand);
-      const storeName = prompt("Nom du nouveau Store pour " + brand + " :");
-      if (storeName) {
-        storeCatalog[brand].push(storeName);
-        localStorage.setItem('fieldops_store_catalog_v30', JSON.stringify(storeCatalog));
-        initFormDropdowns();
-        renderConfigTree();
-      }
-    }
-
-    function deleteStore(safeBrand, safeStore) {
-      const brand = decodeURIComponent(safeBrand);
-      const store = decodeURIComponent(safeStore);
-      storeCatalog[brand] = storeCatalog[brand].filter(s => s !== store);
-      localStorage.setItem('fieldops_store_catalog_v30', JSON.stringify(storeCatalog));
-      initFormDropdowns();
-      renderConfigTree();
-    }
-
-    function addNewRecTypePrompt() {
-      const typeName = prompt("Nom du nouveau Type de Réclamation :");
-      if (typeName && !recTypesCatalog[typeName]) {
-        recTypesCatalog[typeName] = ["Incident Général"];
-        localStorage.setItem('fieldops_rec_types_v30', JSON.stringify(recTypesCatalog));
-        initFormDropdowns();
-        renderConfigTree();
-      }
-    }
-
-    function deleteRecTypePrompt(safeType) {
-      const type = decodeURIComponent(safeType);
-      if (confirm("Supprimer le type " + type + " ?")) {
-        delete recTypesCatalog[type];
-        localStorage.setItem('fieldops_rec_types_v30', JSON.stringify(recTypesCatalog));
-        initFormDropdowns();
-        renderConfigTree();
-      }
-    }
-
-    function addMotifPrompt(safeType) {
-      const type = decodeURIComponent(safeType);
-      const motif = prompt("Nouveau motif pour " + type + " :");
-      if (motif) {
-        recTypesCatalog[type].push(motif);
-        localStorage.setItem('fieldops_rec_types_v30', JSON.stringify(recTypesCatalog));
-        initFormDropdowns();
-        renderConfigTree();
-      }
-    }
-
-    function deleteMotif(safeType, safeMotif) {
-      const type = decodeURIComponent(safeType);
-      const motif = decodeURIComponent(safeMotif);
-      recTypesCatalog[type] = recTypesCatalog[type].filter(m => m !== motif);
-      localStorage.setItem('fieldops_rec_types_v30', JSON.stringify(recTypesCatalog));
-      initFormDropdowns();
-      renderConfigTree();
-    }
-
-    function switchDashTab(tab) {
-      currentDashTab = tab;
-      document.getElementById('tab-part').classList.toggle('active', tab === 'Partenaire');
-      document.getElementById('tab-livr').classList.toggle('active', tab === 'Livreur');
-      renderReclamationStats();
-    }
-
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text);
-      alert(`📋 Copié dans le presse-papier : ${text}`);
-    }
-
-    function populateAgentMsgDropdown() {
-      const select = document.getElementById('msg-select-agent');
-      if (!select) return;
-      select.innerHTML = '';
-      fieldAgentsList.forEach(a => {
-        select.innerHTML += `<option value="${a.fname}">${a.fname} ${a.lname}</option>`;
-      });
-    }
-
-    function sendDirectMessage() {
-      const targetAgent = document.getElementById('msg-select-agent').value;
-      const text = document.getElementById('msg-input-text').value;
-      if (!text) return alert("Saisissez un message !");
-
-      directMessagesDB.push({
-        id: Date.now(),
-        from: `${currentUser.fname} ${currentUser.lname}`,
-        to: targetAgent,
-        text,
-        date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date().toLocaleDateString('fr-FR')
-      });
-
-      localStorage.setItem('fieldops_direct_msgs_v30', JSON.stringify(directMessagesDB));
-      alert(`✅ Message envoyé à ${targetAgent} !`);
-      document.getElementById('msg-input-text').value = '';
-      renderMessagesView();
-    }
-
-    function renderMessagesView() {
-      const container = document.getElementById('messages-list-container');
-      if (!container) return;
-      container.innerHTML = '';
-      if (directMessagesDB.length === 0) {
-        container.innerHTML = `<div style="padding:16px; background:#f8fafc; border-radius:10px; color:#64748b; font-weight:700;">Aucun message direct.</div>`;
-        return;
-      }
-
-      directMessagesDB.slice().reverse().forEach(m => {
-        container.innerHTML += `
-          <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:12px 16px; border-radius:12px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-              <strong style="color:#00875a; font-size:13px;">De: ${m.from} ➔ À: ${m.to}</strong>
-              <span style="font-size:11px; color:#94a3b8; font-weight:700;">${m.date}</span>
-            </div>
-            <p style="font-size:13px; font-weight:700; color:#1e293b;">${m.text}</p>
-          </div>
-        `;
-      });
-    }
-
-    function deleteReclamation(id) {
-      if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
-        claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
-        renderReclamationStats();
-      }
-    }
-
-    function renderReclamationStats() {
-      const tbody = document.getElementById('rec-dashboard-body');
-      const thead = document.getElementById('dash-table-head');
-      if (!tbody || !thead) return;
-      tbody.innerHTML = '';
-
-      if (currentDashTab === 'Partenaire') {
-        thead.innerHTML = `
-          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Danger</th><th>Statut</th><th>Action</th>
-        `;
-      } else {
-        thead.innerHTML = `
-          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Lien GPS</th><th>Commentaires</th><th>Récurence Danger</th><th>Statut</th><th>Action</th>
-        `;
-      }
-
-      let filtered = claimsDB.filter(c => c.type === currentDashTab);
-      const counts = {};
-      filtered.forEach(c => { counts[c.target] = (counts[c.target] || 0) + 1; });
-      filtered.sort((a, b) => (counts[b.target] || 0) - (counts[a.target] || 0));
-
-      filtered.forEach((c) => {
-        const count = counts[c.target] || 1;
-        let badge = `<span class="badge-green">${count} Rec.</span>`;
-        if (c.type === 'Partenaire') {
-          if (count >= 3 && count <= 5) badge = `<span class="badge-orange">⚠️ ${count} Rec. (Orange)</span>`;
-          if (count > 5) badge = `<span class="badge-red">🚨 ${count} Rec. (Rouge)</span>`;
-        } else {
-          if (count === 3) badge = `<span class="badge-orange">⚠️ ${count} Rec. (Orange)</span>`;
-          if (count >= 4) badge = `<span class="badge-red">🚨 ${count} Rec. (Rouge)</span>`;
-        }
-
-        const mapsUrl = c.gps ? `https://maps.google.com/?q=${c.gps}` : '#';
-        const gpsLinkHtml = c.gps ? `<a href="${mapsUrl}" target="_blank" style="color:#0284c7; font-weight:800;">🗺️ Maps</a><button class="btn-copy" onclick="copyToClipboard('${mapsUrl}')">📋</button>` : '-';
-        const orderHtml = `${c.orderNum || '-'} <button class="btn-copy" onclick="copyToClipboard('${c.orderNum}')">📋</button>`;
-        const targetHtml = `${c.target} <button class="btn-copy" onclick="copyToClipboard('${c.target}')">📋</button>`;
-
-        if (currentDashTab === 'Partenaire') {
-          tbody.innerHTML += `
-            <tr>
-              <td><strong>${c.agent}</strong></td>
-              <td><strong>${targetHtml}</strong></td>
-              <td><strong style="color:#00875a;">${c.sector || '-'}</strong></td>
-              <td>${c.motif}</td>
-              <td>${orderHtml}</td>
-              <td>${gpsLinkHtml}</td>
-              <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
-              <td>${badge}</td>
-              <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));">
-                  <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
-                  <option ${c.status==='Traité'?'selected':''}>Traité</option>
-                  <option ${c.status==='Classé'?'selected':''}>Classé</option>
-                </select>
-              </td>
-              <td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button></td>
-            </tr>
-          `;
-        } else {
-          tbody.innerHTML += `
-            <tr>
-              <td><strong>${c.agent}</strong></td>
-              <td><strong style="color:#2563eb;">${targetHtml}</strong></td>
-              <td>${c.motif}</td>
-              <td>${orderHtml}</td>
-              <td>${gpsLinkHtml}</td>
-              <td style="max-width:180px; font-size:11px;">${c.comment || '-'}</td>
-              <td>${badge}</td>
-              <td>
-                <select onchange="c.status=this.value; localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));">
-                  <option ${c.status==='En Cours'?'selected':''}>En Cours</option>
-                  <option ${c.status==='Traité'?'selected':''}>Traité</option>
-                  <option ${c.status==='Classé'?'selected':''}>Classé</option>
-                </select>
-              </td>
-              <td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button></td>
-            </tr>
-          `;
-        }
-      });
+      if (viewId === 'parametres') renderParametresView();
     }
 
     function getShiftClass(val) {
@@ -1055,11 +361,7 @@
             </td>
             <td style="text-align:left;">
               <select class="select-zone-box">
-                <option ${a.zone==='Temara - Oulad Mtaa'?'selected':''}>Temara - Oulad Mtaa</option>
-                <option ${a.zone==='Agdal - Carrousel'?'selected':''}>Agdal - Carrousel</option>
-                <option ${a.zone==='Salé - Medina'?'selected':''}>Salé - Medina</option>
-                <option ${a.zone==='Hay Riad - Soussi'?'selected':''}>Hay Riad - Soussi</option>
-                <option ${a.zone==='Technopolis'?'selected':''}>Technopolis</option>
+                ${planningZones.map(z => `<option ${a.zone===z?'selected':''}>${z}</option>`).join('')}
               </select>
             </td>
             ${a.shifts.map((s) => `
@@ -1076,20 +378,83 @@
       const name = prompt("Saisir le Nom & Prénom de l'agent terrain :");
       if (name) {
         fieldAgentsList.push({
-          fname: name, lname: "", zone: "Temara - Oulad Mtaa", shifts: ["10:00–17:00", "10:00–17:00", "10:00–17:00", "OFF", "10:00–18:00", "10:00–18:00", "10:00–17:00"]
+          fname: name, lname: "", zone: planningZones[0] || "Temara - Oulad Mtaa", shifts: ["10:00–17:00", "10:00–17:00", "10:00–17:00", "OFF", "10:00–18:00", "10:00–18:00", "10:00–17:00"]
         });
-        localStorage.setItem('fieldops_agents_screen_v30', JSON.stringify(fieldAgentsList));
+        localStorage.setItem('fieldops_agents_screen_v31', JSON.stringify(fieldAgentsList));
         renderPlanningTable();
       }
     }
 
-    function exportToCSV() {
-      let csv = "Agent,Type,Cible,Store,Motif,N° Commande,GPS,Commentaire,Date,Status\n";
-      claimsDB.forEach(c => { csv += `"${c.agent}","${c.type}","${c.target}","${c.sector}","${c.motif}","${c.orderNum}","${c.gps}","${c.comment}","${c.date}","${c.status}"\n`; });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;' }));
-      link.download = `Reclamations_Export.csv`;
-      link.click();
+    /* PARAMETRES PLANNING FUNCTIONS */
+    function renderParametresView() {
+      const zonesBox = document.getElementById('zones-list-container');
+      if (zonesBox) {
+        zonesBox.innerHTML = '';
+        planningZones.forEach(z => {
+          zonesBox.innerHTML += `
+            <span class="tag-item">
+              📍 ${z}
+              <button onclick="removeZone('${encodeURIComponent(z)}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
+            </span>
+          `;
+        });
+      }
+
+      const shiftsBox = document.getElementById('shifts-list-container');
+      if (shiftsBox) {
+        shiftsBox.innerHTML = '';
+        planningShifts.forEach(s => {
+          shiftsBox.innerHTML += `
+            <span class="tag-item" style="border-color:#a855f7; color:#6b21a8;">
+              ⏰ ${s}
+              <button onclick="removeShift('${encodeURIComponent(s)}')" style="border:none; background:none; cursor:pointer; color:red; font-weight:800;">×</button>
+            </span>
+          `;
+        });
+      }
+    }
+
+    function addZonePrompt() {
+      const zoneName = prompt("Nom de la nouvelle zone / secteur :");
+      if (zoneName && !planningZones.includes(zoneName)) {
+        planningZones.push(zoneName);
+        localStorage.setItem('fieldops_plan_zones_v31', JSON.stringify(planningZones));
+        renderParametresView();
+        renderPlanningTable();
+      }
+    }
+
+    function removeZone(safeZone) {
+      const zone = decodeURIComponent(safeZone);
+      if (confirm(`Supprimer la zone ${zone} ?`)) {
+        planningZones = planningZones.filter(z => z !== zone);
+        localStorage.setItem('fieldops_plan_zones_v31', JSON.stringify(planningZones));
+        renderParametresView();
+        renderPlanningTable();
+      }
+    }
+
+    function addShiftPrompt() {
+      const shiftName = prompt("Horaire du créneau (ex: 08:00–15:00) :");
+      if (shiftName && !planningShifts.includes(shiftName)) {
+        planningShifts.push(shiftName);
+        localStorage.setItem('fieldops_plan_shifts_v31', JSON.stringify(planningShifts));
+        renderParametresView();
+      }
+    }
+
+    function removeShift(safeShift) {
+      const shift = decodeURIComponent(safeShift);
+      if (confirm(`Supprimer le shift ${shift} ?`)) {
+        planningShifts = planningShifts.filter(s => s !== shift);
+        localStorage.setItem('fieldops_plan_shifts_v31', JSON.stringify(planningShifts));
+        renderParametresView();
+      }
+    }
+
+    function saveWeeklyHours() {
+      const val = document.getElementById('weekly-hours-input').value;
+      alert(`✅ Volume horaire enregistré à ${val} heures par semaine !`);
     }
 
     renderLockCards();
