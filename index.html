@@ -50,8 +50,8 @@
     .brand-header-lock h1 { font-size: 32px; font-weight: 800; color: var(--brand-gold); letter-spacing: -0.5px; }
     .brand-header-lock p { font-size: 13px; color: #94a3b8; font-weight: 500; margin-top: 4px; }
 
-    .agents-grid-container { width: 100%; max-width: 900px; margin-bottom: 24px; max-height: 380px; overflow-y: auto; padding: 10px; }
-    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; }
+    .agents-grid-container { width: 100%; max-width: 950px; margin-bottom: 24px; max-height: 420px; overflow-y: auto; padding: 10px; }
+    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
 
     .agent-card {
       background: rgba(255,255,255,0.05); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 14px;
@@ -611,7 +611,7 @@
         <div id="modal-chat-thread" style="max-height:160px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
         <div style="display:flex; gap:8px;">
           <input type="text" id="modal-chat-input" placeholder="Ecrire une remarque/réponse..." style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-weight:600; font-size:12px;" />
-          <button class="btn-action" style="padding:8px 14px; font-size:11px;" onclick="sendClaimThreadMessage()">S'abonner / Envoyer</button>
+          <button class="btn-action" style="padding:8px 14px; font-size:11px;" onclick="sendClaimThreadMessage()">Envoyer</button>
         </div>
       </div>
 
@@ -685,11 +685,21 @@
       { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
     ];
 
+    // LA LISTE COMPLÈTE DE TOUS LES AGENTS TERRAIN (13 AGENTS)
     const defaultAgents = [
       { id: "101", fname: "Yahya", lname: "RHALLAB", zone: "Temara - Oulad Mtaa", color: "#3b82f6", role: "field" },
       { id: "102", fname: "Mehdi", lname: "AIT JEBOUR", zone: "Temara - Oulad Mtaa", color: "#8b5cf6", role: "field" },
+      { id: "103", fname: "Ayman", lname: "CHLIFANE", zone: "Temara - Oulad Mtaa", color: "#ec4899", role: "field" },
       { id: "104", fname: "Mourad", lname: "CHERRADI", zone: "Agdal - Carrousel", color: "#10b981", role: "field" },
-      { id: "106", fname: "Ayoub", lname: "ABSSI", zone: "Agdal - Carrousel", color: "#ef4444", role: "field" }
+      { id: "105", fname: "Youssef", lname: "DERKAOUI", zone: "Agdal - Carrousel", color: "#f59e0b", role: "field" },
+      { id: "106", fname: "Ayoub", lname: "ABSSI", zone: "Agdal - Carrousel", color: "#ef4444", role: "field" },
+      { id: "107", fname: "Charaf", lname: "LOUMMIHI", zone: "Salé - Medina", color: "#06b6d4", role: "field" },
+      { id: "108", fname: "Hassan", lname: "AZGOUNE", zone: "Salé - Medina", color: "#84cc16", role: "field" },
+      { id: "109", fname: "Ayoub", lname: "BEN MALEK", zone: "Salé - Medina", color: "#6366f1", role: "field" },
+      { id: "110", fname: "Achraf", lname: "AKHLIJ", zone: "Hay Riad - Soussi", color: "#14b8a6", role: "field" },
+      { id: "111", fname: "Islam", lname: "ELMARDI", zone: "Hay Riad - Soussi", color: "#d97706", role: "field" },
+      { id: "112", fname: "Oussama", lname: "EL ATRACH", zone: "Hay Riad - Soussi", color: "#a855f7", role: "field" },
+      { id: "113", fname: "Zakariae", lname: "BENALI", zone: "Technopolis", color: "#64748b", role: "field" }
     ];
 
     let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v30')) || defaultStoreCatalog;
@@ -805,7 +815,7 @@
         target.appendChild(card);
       });
 
-      target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 14px;">🛵 Agents Terrain (Planning)</div>`;
+      target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 14px;">🛵 Agents Terrain (${defaultAgents.length} Agents)</div>`;
       defaultAgents.forEach(a => {
         const card = document.createElement('div');
         card.className = `agent-card ${selectedAgent && selectedAgent.id === a.id ? 'selected' : ''}`;
@@ -830,7 +840,6 @@
       document.getElementById('menu-sessions').classList.toggle('hidden', isFieldAgent);
       document.getElementById('menu-sec-resources').classList.toggle('hidden', isFieldAgent);
       
-      // VIP MENU AUDIT DISPONIBLE UNIQUEMENT POUR NAJIB HARATI ET MEHDI FADLI
       document.getElementById('menu-audit').classList.toggle('hidden', !isVipAuditUser);
 
       initFormDropdowns();
@@ -1061,7 +1070,6 @@
       logAuditEvent(`A créé la réclamation #${newClaim.id.toString().slice(-4)} (${newClaim.target})`);
       alert("✅ Réclamation transmise aux Responsables avec succès !");
 
-      // RESET FORMULAIRE PROPRE
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
       document.getElementById('rec-gps').value = '';
@@ -1084,14 +1092,13 @@
       activeOpenedClaim = claimsDB.find(c => c.id === claimId);
       if (!activeOpenedClaim) return;
 
-      // ACCUSÉ DE LECTURE AUTOMATIQUE SI C'EST UN RESPONSABLE
       if (currentUser.role === 'admin' || currentUser.role === 'decideur') {
         if (!activeOpenedClaim.readByResponsable) {
           activeOpenedClaim.readByResponsable = true;
           activeOpenedClaim.readByWho = `${currentUser.fname} ${currentUser.lname}`;
           logAuditEvent(`A lu et pris en charge la réclamation #${activeOpenedClaim.id.toString().slice(-4)}`);
         }
-        activeOpenedClaim.hasNewResponseFromAgent = false; // reset notification
+        activeOpenedClaim.hasNewResponseFromAgent = false;
         localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
       }
 
@@ -1167,7 +1174,7 @@
       });
 
       if (isAgent) {
-        activeOpenedClaim.hasNewResponseFromAgent = true; // Alert Responsable
+        activeOpenedClaim.hasNewResponseFromAgent = true;
         logAuditEvent(`L'agent ${currentUser.fname} a répondu sur la réclamation #${activeOpenedClaim.id.toString().slice(-4)}`);
       } else {
         logAuditEvent(`Le responsable ${currentUser.fname} a envoyé un message sur la réclamation #${activeOpenedClaim.id.toString().slice(-4)}`);
@@ -1207,13 +1214,11 @@
       activeEditClaim = claimsDB.find(c => c.id === claimId);
       if (!activeEditClaim) return;
 
-      // RÈGLE : LES RESPONSABLES N'ONT PAS LE DROIT DE MODIFIER LA RÉCLAMATION
       if (currentUser.role === 'admin' || currentUser.role === 'decideur') {
         alert("🔒 Interdiction : Seul l'Agent auteur a le droit de modifier le contenu de sa réclamation avant lecture !");
         return;
       }
 
-      // RÈGLE : SI DÉJÀ LUE PAR LE RESPONSABLE -> BLOQUÉE
       if (activeEditClaim.readByResponsable) {
         alert("🔒 Bloquée : Cette réclamation a déjà été lue par le Responsable. Vous ne pouvez plus la modifier !");
         return;
