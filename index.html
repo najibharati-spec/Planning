@@ -40,7 +40,7 @@
     body { background: var(--bg-app); color: var(--text-main); min-height: 100vh; display: flex; font-size: 14px; }
     .hidden { display: none !important; }
 
-    /* LOCK SCREEN ACCUEIL PRO GOLD */
+    /* LOCK SCREEN ACCUEIL PRO GOLD MULTI-USER */
     #lock-screen {
       width: 100%; min-height: 100vh; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 20px;
@@ -50,8 +50,8 @@
     .brand-header-lock h1 { font-size: 32px; font-weight: 800; color: var(--brand-gold); letter-spacing: -0.5px; }
     .brand-header-lock p { font-size: 13px; color: #94a3b8; font-weight: 500; margin-top: 4px; }
 
-    .agents-grid-container { width: 100%; max-width: 800px; margin-bottom: 24px; }
-    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+    .agents-grid-container { width: 100%; max-width: 900px; margin-bottom: 24px; max-height: 380px; overflow-y: auto; padding: 10px; }
+    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; }
 
     .agent-card {
       background: rgba(255,255,255,0.05); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 14px;
@@ -66,7 +66,7 @@
       align-items: center; justify-content: center; color: #ffffff; font-size: 16px; font-weight: 800;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
-    .agent-fname { font-size: 13px; font-weight: 700; color: #f8fafc; }
+    .agent-fname { font-size: 12.5px; font-weight: 700; color: #f8fafc; }
     .agent-lname { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
 
     .btn-unlock {
@@ -278,11 +278,11 @@
 </head>
 <body>
 
-  <!-- LOCK SCREEN FOR RESPONSABLES -->
+  <!-- LOCK SCREEN FOR RESPONSABLES & ALL FIELD AGENTS -->
   <div id="lock-screen">
     <div class="brand-header-lock">
-      <h1>FieldOps Executive</h1>
-      <p>Sélectionnez votre profil Responsable pour accéder au système</p>
+      <h1>FieldOps Control Center</h1>
+      <p>Sélectionnez votre profil (Responsable ou Agent Terrain) pour vous connecter</p>
     </div>
 
     <div class="agents-grid-container">
@@ -310,7 +310,7 @@
         <div class="nav-item" id="menu-plan" onclick="showView('planning', this)"><span>📅</span> Planning Agents</div>
       </div>
 
-      <div class="menu-section">
+      <div class="menu-section" id="menu-sec-resources">
         <div class="menu-label">Ressources</div>
         <div class="nav-item" id="menu-param" onclick="showView('parametres', this)"><span>⚙️</span> Paramètres</div>
       </div>
@@ -398,7 +398,7 @@
         </div>
       </div>
 
-      <!-- SESSIONS AGENTS (NOUVELLE VUE) -->
+      <!-- SESSIONS AGENTS -->
       <div id="view-sessions" class="content-card hidden">
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">👥 Gestion & Suivi des Sessions Agents Terrain</h3>
         <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Visualisez les agents connectés f l-terrain w l-historique d l-sessions dyalhom.</p>
@@ -410,37 +410,15 @@
                 <th>Agent Terrain</th><th>Zone Affectée</th><th>Dernière Connexion</th><th>Statut Session</th><th>Actions</th>
               </tr>
             </thead>
-            <tbody id="sessions-table-body">
-              <tr>
-                <td><strong>Yahya Rhallab</strong></td>
-                <td>Temara - Oulad Mtaa</td>
-                <td>Aujourd'hui à 10:15</td>
-                <td><span class="badge-green">🟢 Actif en ligne</span></td>
-                <td><button class="btn-delete" onclick="alert('Session déconnectée !')">🔒 Déconnecter</button></td>
-              </tr>
-              <tr>
-                <td><strong>Mehdi Ait Jebour</strong></td>
-                <td>Temara - Oulad Mtaa</td>
-                <td>Aujourd'hui à 17:00</td>
-                <td><span class="badge-green">🟢 Actif en ligne</span></td>
-                <td><button class="btn-delete" onclick="alert('Session déconnectée !')">🔒 Déconnecter</button></td>
-              </tr>
-              <tr>
-                <td><strong>Mourad Cherradi</strong></td>
-                <td>Agdal - Carrousel</td>
-                <td>Hier à 18:30</td>
-                <td><span class="badge-gold">⏸️ Déconnecté</span></td>
-                <td><button class="btn-action" style="padding:4px 8px; font-size:11px;" onclick="alert('Rappel envoyé !')">🔔 Relancer</button></td>
-              </tr>
-            </tbody>
+            <tbody id="sessions-table-body"></tbody>
           </table>
         </div>
       </div>
 
       <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION -->
       <div id="view-reclamations" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🚨 Saisie Nouvelle Réclamation (Responsable)</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Saisissez directement les réclamations terrain en tant que Responsable.</p>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🚨 Saisie Nouvelle Réclamation</h3>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Saisissez les informations de l'incident détecté sur le terrain.</p>
 
         <div class="form-grid">
           <div class="form-group" id="fgroup-type">
@@ -538,7 +516,7 @@
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">💬 Centre de Messagerie & Instructions Directes</h3>
         <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Communication directe entre l'Équipe de Gestion et les Agents Terrain.</p>
 
-        <div style="margin-bottom:20px; background:#f8fafc; padding:18px; border-radius:14px; border:1px solid #e2e8f0;">
+        <div style="margin-bottom:20px; background:#f8fafc; padding:18px; border-radius:14px; border:1px solid #e2e8f0;" id="box-send-message">
           <h4 style="font-size:14px; margin-bottom:12px; color:#0f172a; font-weight:800;">✉️ Envoyer un Message Direct :</h4>
           <div style="display:flex; gap:10px; flex-wrap:wrap;">
             <select id="msg-select-agent" style="padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-weight:700;"></select>
@@ -770,18 +748,35 @@
       { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
     ];
 
+    const defaultAgents = [
+      { id: "101", fname: "Yahya", lname: "RHALLAB", zone: "Temara - Oulad Mtaa", offDay: 0, shiftType: "matin", color: "#3b82f6", role: "field" },
+      { id: "102", fname: "Mehdi", lname: "AIT JEBOUR", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir17", color: "#8b5cf6", role: "field" },
+      { id: "103", fname: "Ayman", lname: "CHLIFANE", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir19", color: "#ec4899", role: "field" },
+      { id: "104", fname: "Mourad", lname: "CHERRADI", zone: "Agdal - Carrousel", offDay: 1, shiftType: "matin", color: "#10b981", role: "field" },
+      { id: "105", fname: "Youssef", lname: "DERKAOUI", zone: "Agdal - Carrousel", offDay: 0, shiftType: "soir17", color: "#f59e0b", role: "field" },
+      { id: "106", fname: "Ayoub", lname: "ABSSI", zone: "Agdal - Carrousel", offDay: 3, shiftType: "soir19", color: "#ef4444", role: "field" },
+      { id: "107", fname: "Charaf", lname: "LOUMMIHI", zone: "Salé - Medina", offDay: 1, shiftBaseIndex: 0, color: "#06b6d4", role: "field" },
+      { id: "108", fname: "Hassan", lname: "AZGOUNE", zone: "Salé - Medina", offDay: 2, shiftBaseIndex: 1, color: "#84cc16", role: "field" },
+      { id: "109", fname: "Ayoub", lname: "BEN MALEK", zone: "Salé - Medina", offDay: 0, shiftBaseIndex: 2, color: "#6366f1", role: "field" },
+      { id: "110", fname: "Achraf", lname: "AKHLIJ", zone: "Hay Riad - Soussi", offDay: 3, shiftType: "matin", color: "#14b8a6", role: "field" },
+      { id: "111", fname: "Islam", lname: "ELMARDI", zone: "Hay Riad - Soussi", offDay: 2, shiftType: "soir17", color: "#d97706", role: "field" },
+      { id: "112", fname: "Oussama", lname: "EL ATRACH", zone: "Hay Riad - Soussi", offDay: 0, shiftType: "soir19", color: "#a855f7", role: "field" },
+      { id: "113", fname: "Zakariae", lname: "BENALI", zone: "Technopolis", offDay: 0, shiftType: "techno", color: "#64748b", role: "field" }
+    ];
+
     let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v30')) || defaultStoreCatalog;
     let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v30')) || defaultRecTypes;
     let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v30')) || { order: true, sector: true, gps: true, comment: true };
     let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v30')) || [
       { id: 1, agent: "Najib HARATI (ADMIN)", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", comment: "Commande retardée de 25 min car trop d'affluence f le store.", date: "20/09/2026", status: "En Cours" },
-      { id: 2, agent: "Yahya Rhallab", type: "Livreur", target: "54932", sector: "-", motif: "Utilisation d'un compte non personnel (Compte loué/partagé)", orderNum: "#9921", gps: "33.9190, -6.9230", comment: "Livreur avec un profil sous le nom d'une autre personne.", date: "20/09/2026", status: "En Cours" }
+      { id: 2, agent: "Yahya RHALLAB", type: "Livreur", target: "54932", sector: "-", motif: "Utilisation d'un compte non personnel (Compte loué/partagé)", orderNum: "#9921", gps: "33.9190, -6.9230", comment: "Livreur avec un profil sous le nom d'une autre personne.", date: "20/09/2026", status: "En Cours" }
     ];
     let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v30')) || [];
 
     let currentDashTab = "Partenaire";
-    let selectedAgent = responsablesList[0];
-    let currentUser = responsablesList[0];
+    let allSystemUsers = [...responsablesList, ...defaultAgents];
+    let selectedAgent = allSystemUsers[0];
+    let currentUser = allSystemUsers[0];
     let activeOpenedClaim = null;
 
     /* ELECTRIC VIOLET PLANNING VARIABLES */
@@ -821,51 +816,64 @@
 
     const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 
-    const defaultAgents = [
-      { name: "Yahya Rhallab", zone: "Temara - Oulad Mtaa", offDay: 0, shiftType: "matin" },
-      { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir17" },
-      { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir19" },
-      { name: "Mourad Cherradi", zone: "Agdal - Carrousel", offDay: 1, shiftType: "matin" },
-      { name: "Youssef Derkaoui", zone: "Agdal - Carrousel", offDay: 0, shiftType: "soir17" },
-      { name: "Ayoub Abssi", zone: "Agdal - Carrousel", offDay: 3, shiftType: "soir19" },
-      { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftBaseIndex: 0 },
-      { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftBaseIndex: 1 },
-      { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftBaseIndex: 2 },
-      { name: "Achraf Akhlij", zone: "Hay Riad - Soussi", offDay: 3, shiftType: "matin" },
-      { name: "Islam Elmardi", zone: "Hay Riad - Soussi", offDay: 2, shiftType: "soir17" },
-      { name: "Oussama El Atrach", zone: "Hay Riad - Soussi", offDay: 0, shiftType: "soir19" },
-      { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno" }
-    ];
-
     let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v3')) || {};
 
     function renderLockCards() {
       const target = document.getElementById('agents-grid-target');
       target.innerHTML = '';
+
+      // RESPONSABLES SECTION
+      target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px;">👑 Équipe de Gestion (Responsables)</div>`;
       responsablesList.forEach(a => {
         const card = document.createElement('div');
         card.className = `agent-card ${selectedAgent && selectedAgent.id === a.id ? 'selected' : ''}`;
         card.onclick = () => { selectedAgent = a; renderLockCards(); };
-        card.innerHTML = `<div class="avatar-circle" style="background:${a.color}">${a.role==='admin'?'👑':a.fname.charAt(0)}</div><div class="agent-fname">${a.fname}</div><div class="agent-lname">${a.lname}</div>`;
+        card.innerHTML = `<div class="avatar-circle" style="background:${a.color}">👑</div><div class="agent-fname">${a.fname}</div><div class="agent-lname">${a.lname}</div>`;
+        target.appendChild(card);
+      });
+
+      // FIELD AGENTS SECTION
+      target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 14px;">🛵 Agents Terrain (Planning)</div>`;
+      defaultAgents.forEach(a => {
+        const card = document.createElement('div');
+        card.className = `agent-card ${selectedAgent && selectedAgent.id === a.id ? 'selected' : ''}`;
+        card.onclick = () => { selectedAgent = a; renderLockCards(); };
+        card.innerHTML = `<div class="avatar-circle" style="background:${a.color}">${a.fname.charAt(0)}</div><div class="agent-fname">${a.fname}</div><div class="agent-lname">${a.lname}</div>`;
         target.appendChild(card);
       });
     }
 
     function attemptUnlock() {
-      if (!selectedAgent) selectedAgent = responsablesList[0];
+      if (!selectedAgent) selectedAgent = allSystemUsers[0];
       currentUser = selectedAgent;
       document.getElementById('lock-screen').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
-      document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname}`;
+      document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname} ${currentUser.role === 'field' ? '(Agent Terrain)' : ''}`;
       
+      const isFieldAgent = currentUser.role === 'field';
+
+      // RESTRICT SIDEBAR MENU FOR FIELD AGENTS
+      document.getElementById('menu-dash').classList.toggle('hidden', isFieldAgent);
+      document.getElementById('menu-config').classList.toggle('hidden', isFieldAgent);
+      document.getElementById('menu-sessions').classList.toggle('hidden', isFieldAgent);
+      document.getElementById('menu-plan').classList.toggle('hidden', isFieldAgent);
+      document.getElementById('menu-sec-resources').classList.toggle('hidden', isFieldAgent);
+
       initFormDropdowns();
       populateFilterBrands();
       populateAgentMsgDropdown();
-      showView('planning', document.getElementById('menu-plan'));
-      renderReclamationStats();
+
+      if (isFieldAgent) {
+        showView('reclamations', document.getElementById('menu-rec'));
+      } else {
+        showView('dashboard', document.getElementById('menu-dash'));
+        renderReclamationStats();
+        renderSessionsTable();
+        renderConfigTree();
+        renderTable();
+      }
+
       renderMessagesView();
-      renderConfigTree();
-      renderTable();
     }
 
     function lockSystem() {
@@ -889,6 +897,7 @@
       
       if (viewId === 'messages') renderMessagesView();
       if (viewId === 'planning') renderTable();
+      if (viewId === 'sessions') renderSessionsTable();
     }
 
     function initFormDropdowns() {
@@ -1035,7 +1044,7 @@
 
       claimsDB.push({ 
         id: Date.now(), 
-        agent: `${currentUser.fname} (${currentUser.role.toUpperCase()})`, 
+        agent: `${currentUser.fname} ${currentUser.lname}`, 
         type, 
         target, 
         sector: type === 'Partenaire' ? sector : '-', 
@@ -1048,14 +1057,17 @@
       });
 
       localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
-      alert("✅ Réclamation enregistrée et ajoutée au Dashboard avec succès !");
+      alert("✅ Réclamation transmise aux Responsables avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
       document.getElementById('rec-gps').value = '';
       document.getElementById('custom-store-input').value = '';
       document.getElementById('gps-error-banner').classList.add('hidden');
-      renderReclamationStats();
-      showView('dashboard', document.getElementById('menu-dash'));
+      
+      if (currentUser.role === 'admin' || currentUser.role === 'decideur') {
+        renderReclamationStats();
+        showView('dashboard', document.getElementById('menu-dash'));
+      }
     }
 
     function openClaimDetailsModal(claimId) {
@@ -1096,6 +1108,24 @@
       activeOpenedClaim = null;
       document.getElementById('rec-detail-modal').classList.remove('active');
       renderReclamationStats();
+    }
+
+    function renderSessionsTable() {
+      const tbody = document.getElementById('sessions-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      defaultAgents.forEach(a => {
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>${a.fname} ${a.lname}</strong></td>
+            <td>${a.zone}</td>
+            <td>Aujourd'hui à 10:15</td>
+            <td><span class="badge-green">🟢 Actif en ligne</span></td>
+            <td><button class="btn-delete" onclick="alert('Session de ${a.fname} réinitialisée !')">🔒 Déconnecter</button></td>
+          </tr>
+        `;
+      });
     }
 
     function toggleFieldVisibility(fieldKey) {
@@ -1272,8 +1302,8 @@
       const select = document.getElementById('msg-select-agent');
       if (!select) return;
       select.innerHTML = '';
-      defaultAgents.forEach(a => {
-        select.innerHTML += `<option value="${a.name}">${a.name}</option>`;
+      allSystemUsers.forEach(a => {
+        select.innerHTML += `<option value="${a.fname} ${a.lname}">${a.fname} ${a.lname} (${a.role.toUpperCase()})</option>`;
       });
     }
 
@@ -1525,7 +1555,7 @@
         }
 
         return {
-          name: a.name,
+          name: `${a.fname} ${a.lname}`,
           zone: a.zone,
           shiftType: currentShiftType,
           shifts: shifts
