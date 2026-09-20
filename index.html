@@ -402,9 +402,10 @@
             </select>
           </div>
 
+          <!-- CALENDRIER DE RECHERCHE EXACTE D'UNE DATE -->
           <div>
-            <label>📅 Date exacte (JJ/MM/AAAA) :</label>
-            <input type="text" id="flt-date" placeholder="Ex: 20/09/2026" oninput="renderReclamationStats()" />
+            <label>📅 Sélectionner Date (Calendrier) :</label>
+            <input type="date" id="flt-date" onchange="renderReclamationStats()" style="cursor:pointer;" />
           </div>
 
           <div>
@@ -656,6 +657,17 @@
     </div>
   </div>
 
+  <!-- MODAL ZOOM PHOTO / IMAGE VIEWER -->
+  <div id="photo-zoom-modal" class="modal-overlay" style="z-index:1000;" onclick="closePhotoZoomModal()">
+    <div style="position:relative; max-width:90vw; max-height:90vh;" onclick="event.stopPropagation()">
+      <img id="zoomed-photo-img" src="" alt="Preuve Agrandie" style="max-width:100%; max-height:80vh; border-radius:14px; border:3px solid #059669; box-shadow:0 10px 30px rgba(0,0,0,0.5);" />
+      <div style="margin-top:12px; display:flex; justify-content:center; gap:12px;">
+        <a id="download-photo-btn" href="#" download="Preuve_Reclamation.jpg" class="btn-action" style="background:#059669; font-size:12px;">📥 Télécharger la Photo</a>
+        <button class="btn-reset-plan" style="padding:8px 16px; font-size:12px;" onclick="closePhotoZoomModal()">Fermer</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL EDIT RECLAMATION -->
   <div id="rec-edit-modal" class="modal-overlay">
     <div class="modal-card">
@@ -847,8 +859,8 @@
     let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v30')) || defaultRecTypes;
     let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v30')) || { order: true, sector: true, gps: true, comment: true };
     let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v30')) || [
-      { id: 1, agent: "Najib HARATI (ADMIN)", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Commande retardée de 25 min car trop d'affluence f le store.", date: "20/09/2026", status: "En Cours" },
-      { id: 2, agent: "Yahya RHALLAB", type: "Livreur", target: "54932", sector: "-", motif: "Utilisation d'un compte non personnel (Compte loué/partagé)", orderNum: "#9921", gps: "33.9190, -6.9230", photo: "", comment: "Livreur avec un profil sous le nom d'une autre personne.", date: "20/09/2026", status: "En Cours" }
+      { id: 1, agent: "Najib HARATI (ADMIN)", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Commande retardée de 25 min car trop d'affluence f le store.", date: "2026-09-20", status: "En Cours" },
+      { id: 2, agent: "Yahya RHALLAB", type: "Livreur", target: "54932", sector: "-", motif: "Utilisation d'un compte non personnel (Compte loué/partagé)", orderNum: "#9921", gps: "33.9190, -6.9230", photo: "", comment: "Livreur avec un profil sous le nom d'une autre personne.", date: "2026-09-20", status: "En Cours" }
     ];
     let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v30')) || [];
 
@@ -1168,6 +1180,8 @@
         target = sector;
       }
 
+      const todayIsoDate = new Date().toISOString().split('T')[0];
+
       claimsDB.push({ 
         id: Date.now(), 
         agent: `${currentUser.fname} ${currentUser.lname}`, 
@@ -1179,7 +1193,7 @@
         gps, 
         photo: uploadedPhotoBase64,
         comment: comment || '-', 
-        date: new Date().toLocaleDateString('fr-FR'), 
+        date: todayIsoDate, 
         status: 'En Cours' 
       });
 
@@ -1217,10 +1231,14 @@
       const body = document.getElementById('rec-detail-body');
       
       const mapsUrl = activeOpenedClaim.gps ? `https://maps.google.com/?q=${activeOpenedClaim.gps}` : '#';
+      
       const photoHtml = activeOpenedClaim.photo ? `
-        <div style="margin-top:10px;">
-          <span style="font-size:11px; font-weight:800; color:#64748b; display:block; margin-bottom:4px;">PHOTO JUSTIFICATIF :</span>
-          <img src="${activeOpenedClaim.photo}" alt="Photo Preuve" style="max-width:100%; max-height:220px; border-radius:10px; border:2px solid #059669; box-shadow:0 4px 12px rgba(0,0,0,0.15);" />
+        <div style="margin-top:12px; background:#f8fafc; padding:12px; border-radius:12px; border:1px solid #cbd5e1; text-align:center;">
+          <span style="font-size:11px; font-weight:800; color:#64748b; display:block; margin-bottom:8px;">📸 PHOTO JUSTIFICATIF (Cliquer pour agrandir) :</span>
+          <img src="${activeOpenedClaim.photo}" alt="Photo Preuve" style="max-width:100%; max-height:180px; border-radius:10px; border:2px solid #059669; box-shadow:0 4px 12px rgba(0,0,0,0.15); cursor:pointer;" onclick="openPhotoZoomModal('${activeOpenedClaim.photo}')" />
+          <div style="margin-top:8px;">
+            <a href="${activeOpenedClaim.photo}" download="Preuve_Rec_${activeOpenedClaim.id}.jpg" class="btn-action" style="padding:6px 12px; font-size:11px; background:#059669;">📥 Télécharger la Photo</a>
+          </div>
         </div>
       ` : '<div class="detail-row"><span class="detail-label">Photo:</span><span class="detail-value" style="color:#94a3b8;">Aucune photo fournie</span></div>';
 
@@ -1242,6 +1260,16 @@
       `;
 
       document.getElementById('rec-detail-modal').classList.add('active');
+    }
+
+    function openPhotoZoomModal(photoSrc) {
+      document.getElementById('zoomed-photo-img').src = photoSrc;
+      document.getElementById('download-photo-btn').href = photoSrc;
+      document.getElementById('photo-zoom-modal').classList.add('active');
+    }
+
+    function closePhotoZoomModal() {
+      document.getElementById('photo-zoom-modal').classList.remove('active');
     }
 
     function confirmCloseModal(markAsTraite) {
@@ -1575,7 +1603,7 @@
       const fltSearch = (document.getElementById('flt-search')?.value || '').toLowerCase().trim();
       const fltMotif = document.getElementById('flt-motif')?.value || '';
       const fltBrand = document.getElementById('flt-brand')?.value || '';
-      const fltDate = (document.getElementById('flt-date')?.value || '').trim();
+      const fltDate = document.getElementById('flt-date')?.value || '';
 
       let activeClaims = claimsDB.filter(c => c.type === currentDashTab && c.status === 'En Cours');
 
@@ -1597,7 +1625,7 @@
       }
 
       if (fltDate !== '') {
-        activeClaims = activeClaims.filter(c => c.date.includes(fltDate));
+        activeClaims = activeClaims.filter(c => c.date === fltDate);
       }
 
       let archivedClaims = claimsDB.filter(c => c.status === 'Traité' || c.status === 'Classé');
