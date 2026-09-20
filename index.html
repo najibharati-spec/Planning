@@ -278,7 +278,7 @@
     }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-card {
-      background: #ffffff; padding: 26px; border-radius: 18px; width: 100%; max-width: 540px;
+      background: #ffffff; padding: 26px; border-radius: 18px; width: 100%; max-width: 580px;
       box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.25); border: 1px solid #cbd5e1; max-height: 90vh; overflow-y: auto;
     }
 
@@ -324,7 +324,10 @@
           <span>📊 Dashboard</span>
           <span class="nav-badge-count" id="dash-badge-count">0</span>
         </div>
-        <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨 Saisie Réclamation</span></div>
+        <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)">
+          <span>🚨 Saisie Réclamation</span>
+          <span class="nav-badge-count hidden" id="rec-nav-badge">0</span>
+        </div>
         <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️ Config Dynamic</span></div>
         <div class="nav-item" id="menu-sessions" onclick="showView('sessions', this)"><span>👥 Sessions Agents</span></div>
         <div class="nav-item" id="menu-msg" onclick="showView('messages', this)">
@@ -674,11 +677,11 @@
     </div>
   </div>
 
-  <!-- MODAL DETAILS RECLAMATION ET CLOTURE VALIDATION -->
+  <!-- MODAL DETAILS RECLAMATION, CHAT INTERNE & CLOTURE VALIDATION -->
   <div id="rec-detail-modal" class="modal-overlay">
     <div class="modal-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
-        <h3 style="font-size:16px; font-weight:800; color:#0f172a;">📄 Détails Complets de la Réclamation</h3>
+        <h3 style="font-size:16px; font-weight:800; color:#0f172a;">📄 Détails de la Réclamation & Fil de Discussion</h3>
         <span id="detail-rec-id" class="badge-gold">ID: #000</span>
       </div>
 
@@ -686,11 +689,21 @@
         <!-- Dynamic content -->
       </div>
 
+      <!-- CHAT ROOM SPECIFIQUE A LA RECLAMATION -->
+      <div style="margin-top:16px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:14px;">
+        <h4 style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:8px;">💬 Discussion & Éclaircissements (Resp ⇄ Agent) :</h4>
+        <div id="claim-chat-messages-container" style="max-height:150px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; margin-bottom:10px; background:#fff; padding:10px; border-radius:8px; border:1px solid #e2e8f0;"></div>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="claim-chat-input" placeholder="Écrire un message ou demander des précisions..." style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-weight:600; font-size:12px;" />
+          <button class="btn-action" style="padding:8px 14px; font-size:12px;" onclick="sendClaimChatMessage()">Envoyer</button>
+        </div>
+      </div>
+
       <div style="margin-top:20px; padding-top:16px; border-top:2px solid #f1f5f9; display:flex; flex-direction:column; gap:10px;">
         <p style="font-size:12px; font-weight:800; color:#475569; text-align:center;">Action sur la Réclamation lors de la fermeture :</p>
         <div style="display:flex; gap:10px; justify-content:center;">
           <button class="btn-action" style="background:#059669; flex:1;" onclick="confirmCloseModal(true)">✅ Marquer comme TRAITÉ (Classer)</button>
-          <button class="btn-action" style="background:#64748b; flex:1;" onclick="confirmCloseModal(false)">⏳ Laisser EN COURS</button>
+          <button class="btn-action" style="background:#64748b; flex:1;" onclick="confirmCloseModal(false)">⏳ Laisser EN COURS & Fermer</button>
         </div>
       </div>
     </div>
@@ -898,8 +911,8 @@
     let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v30')) || defaultRecTypes;
     let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v30')) || { order: true, sector: true, gps: true, comment: true };
     let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v30')) || [
-      { id: 1, agent: "Najib HARATI (ADMIN)", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Commande retardée de 25 min car trop d'affluence f le store.", date: "2026-09-20", status: "En Cours" },
-      { id: 2, agent: "Yahya RHALLAB", type: "Livreur", target: "54932", sector: "-", motif: "Utilisation d'un compte non personnel (Compte loué/partagé)", orderNum: "#9921", gps: "33.9190, -6.9230", photo: "", comment: "Livreur avec un profil sous le nom d'une autre personne.", date: "2026-09-20", status: "En Cours" }
+      { id: 1, agent: "Najib HARATI", agentId: "1", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Commande retardée de 25 min car trop d'affluence f le store.", date: "2026-09-20", status: "En Cours", chat: [] },
+      { id: 2, agent: "Yahya RHALLAB", agentId: "101", type: "Livreur", target: "54932", sector: "-", motif: "Utilisation d'un compte non personnel (Compte loué/partagé)", orderNum: "#9921", gps: "33.9190, -6.9230", photo: "", comment: "Livreur avec un profil sous le nom d'une autre personne.", date: "2026-09-20", status: "En Cours", chat: [] }
     ];
     let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v30')) || [];
 
@@ -980,6 +993,24 @@
       if (msgBadge) {
         msgBadge.innerText = unreadMsgs;
         msgBadge.classList.toggle('hidden', unreadMsgs === 0);
+      }
+
+      // Check unread claim chats for notification
+      let unreadClaimChats = 0;
+      claimsDB.forEach(c => {
+        if (c.chat && c.chat.length > 0) {
+          const lastMsg = c.chat[c.chat.length - 1];
+          if (lastMsg.sender !== myName && !lastMsg.read) {
+            if (currentUser.role === 'field' && c.agentId === currentUser.id) unreadClaimChats++;
+            if (currentUser.role !== 'field') unreadClaimChats++;
+          }
+        }
+      });
+
+      const recNavBadge = document.getElementById('rec-nav-badge');
+      if (recNavBadge) {
+        recNavBadge.innerText = unreadClaimChats;
+        recNavBadge.classList.toggle('hidden', unreadClaimChats === 0);
       }
     }
 
@@ -1231,7 +1262,8 @@
 
       claimsDB.push({ 
         id: Date.now(), 
-        agent: `${currentUser.fname} ${currentUser.lname}`, 
+        agent: `${currentUser.fname} ${currentUser.lname}`,
+        agentId: currentUser.id,
         type, 
         target, 
         sector: type === 'Partenaire' ? sector : '-', 
@@ -1241,11 +1273,12 @@
         photo: uploadedPhotoBase64,
         comment: comment || '-', 
         date: todayIsoDate, 
-        status: 'En Cours' 
+        status: 'En Cours',
+        chat: []
       });
 
       localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
-      alert("✅ Réclamation transmise aux Responsables avec succès !");
+      alert("✅ Réclamation transmise avec succès !");
 
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
@@ -1272,6 +1305,16 @@
     function openClaimDetailsModal(claimId) {
       activeOpenedClaim = claimsDB.find(c => c.id === claimId);
       if (!activeOpenedClaim) return;
+
+      if (!activeOpenedClaim.chat) activeOpenedClaim.chat = [];
+
+      // Mark all chat messages as read for current user
+      const myName = `${currentUser.fname} ${currentUser.lname}`;
+      activeOpenedClaim.chat.forEach(msg => {
+        if (msg.sender !== myName) msg.read = true;
+      });
+      localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+      updateLiveClaimCounters();
 
       document.getElementById('detail-rec-id').innerText = `ID: #${activeOpenedClaim.id.toString().slice(-4)}`;
       const body = document.getElementById('rec-detail-body');
@@ -1305,7 +1348,53 @@
         </div>
       `;
 
+      renderClaimChatMessages();
       document.getElementById('rec-detail-modal').classList.add('active');
+    }
+
+    function renderClaimChatMessages() {
+      const container = document.getElementById('claim-chat-messages-container');
+      if (!container || !activeOpenedClaim) return;
+      container.innerHTML = '';
+
+      if (!activeOpenedClaim.chat || activeOpenedClaim.chat.length === 0) {
+        container.innerHTML = `<div style="font-size:11px; color:#94a3b8; font-weight:600; text-align:center; padding:10px;">Aucun message d'échange sur cette réclamation.</div>`;
+        return;
+      }
+
+      activeOpenedClaim.chat.forEach(m => {
+        const isMe = m.sender === `${currentUser.fname} ${currentUser.lname}`;
+        container.innerHTML += `
+          <div style="background:${isMe ? '#ecfdf5' : '#f1f5f9'}; border:1px solid ${isMe ? '#a7f3d0' : '#cbd5e1'}; padding:8px 12px; border-radius:8px; align-self:${isMe ? 'flex-end' : 'flex-start'}; max-width:85%;">
+            <div style="display:flex; justify-content:space-between; gap:12px; margin-bottom:2px;">
+              <strong style="font-size:11px; color:${isMe ? '#047857' : '#334155'};">${m.sender}</strong>
+              <span style="font-size:9.5px; color:#94a3b8;">${m.date}</span>
+            </div>
+            <p style="font-size:12px; font-weight:600; color:#0f172a;">${m.text}</p>
+          </div>
+        `;
+      });
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function sendClaimChatMessage() {
+      const input = document.getElementById('claim-chat-input');
+      const text = input.value.trim();
+      if (!text || !activeOpenedClaim) return;
+
+      if (!activeOpenedClaim.chat) activeOpenedClaim.chat = [];
+
+      activeOpenedClaim.chat.push({
+        sender: `${currentUser.fname} ${currentUser.lname}`,
+        text,
+        read: false,
+        date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+      });
+
+      localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+      input.value = '';
+      renderClaimChatMessages();
+      updateLiveClaimCounters();
     }
 
     function openPhotoZoomModal(photoSrc) {
@@ -1322,8 +1411,8 @@
       if (activeOpenedClaim) {
         if (markAsTraite) {
           activeOpenedClaim.status = "Traité";
-          localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
         }
+        localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
       }
       activeOpenedClaim = null;
       document.getElementById('rec-detail-modal').classList.remove('active');
@@ -1638,11 +1727,11 @@
 
       if (currentDashTab === 'Partenaire') {
         thead.innerHTML = `
-          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Danger</th><th>Statut</th><th>Détails & Clôture</th><th>Actions</th>
+          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Danger</th><th>Statut</th><th>Détails & Chat</th><th>Actions</th>
         `;
       } else {
         thead.innerHTML = `
-          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Danger</th><th>Statut</th><th>Détails & Clôture</th><th>Actions</th>
+          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Danger</th><th>Statut</th><th>Détails & Chat</th><th>Actions</th>
         `;
       }
 
@@ -1683,6 +1772,8 @@
         tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">🎉 Aucune réclamation correspondante aux filtres !</td></tr>`;
       }
 
+      const myName = `${currentUser.fname} ${currentUser.lname}`;
+
       activeClaims.forEach((c) => {
         const count = counts[c.target] || 1;
         let badge = `<span class="badge-green">${count} Rec.</span>`;
@@ -1693,6 +1784,14 @@
           if (count === 3) badge = `<span class="badge-orange">⚠️ ${count} Rec. (Orange)</span>`;
           if (count >= 4) badge = `<span class="badge-red">🚨 ${count} Rec. (Rouge)</span>`;
         }
+
+        // Check unread messages for this claim
+        let hasUnreadChat = false;
+        if (c.chat && c.chat.length > 0) {
+          const lastMsg = c.chat[c.chat.length - 1];
+          if (lastMsg.sender !== myName && !lastMsg.read) hasUnreadChat = true;
+        }
+        const chatNotificationBadge = hasUnreadChat ? '<span class="nav-badge-count" style="font-size:9px; padding:1px 5px; margin-left:4px;">NEW MSG</span>' : '';
 
         const orderHtml = `${c.orderNum || '-'} <button class="btn-copy" onclick="copyToClipboard('${c.orderNum}')">📋</button>`;
         const targetHtml = `${c.target} <button class="btn-copy" onclick="copyToClipboard('${c.target}')">📋</button>`;
@@ -1707,7 +1806,7 @@
               <td>${orderHtml}</td>
               <td>${badge}</td>
               <td><span class="badge-gold">${c.status}</span></td>
-              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">👁️ Voir & Traiter</button></td>
+              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Chat & Détails ${chatNotificationBadge}</button></td>
               <td>
                 <button class="btn-edit" onclick="openEditModal(${c.id})">✏️ Edit</button>
                 <button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️</button>
@@ -1723,7 +1822,7 @@
               <td>${orderHtml}</td>
               <td>${badge}</td>
               <td><span class="badge-gold">${c.status}</span></td>
-              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">👁️ Voir & Traiter</button></td>
+              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Chat & Détails ${chatNotificationBadge}</button></td>
               <td>
                 <button class="btn-edit" onclick="openEditModal(${c.id})">✏️ Edit</button>
                 <button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️</button>
