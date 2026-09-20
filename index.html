@@ -7,40 +7,27 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* PALETTE EXECUTIVE GOLD & EMERALD */
       --bg-app: #f8fafc;
       --card-bg: #ffffff;
       --card-border: #e2e8f0;
-      
       --brand-primary: #059669;
       --brand-primary-hover: #047857;
       --brand-gold: #f59e0b;
       --brand-gold-hover: #d97706;
       --brand-gold-light: #fffbeb;
-
       --violet-accent: #7c3aed;
       --sidebar-bg: #0f172a;
       --sidebar-text: #94a3b8;
       --sidebar-active: #1e293b;
-
       --text-main: #0f172a;
       --text-muted: #64748b;
-
       --badge-green-bg: #dcfce7; --badge-green-txt: #15803d;
       --badge-orange-bg: #ffedd5; --badge-orange-txt: #c2410c;
       --badge-red-bg: #fee2e2; --badge-red-txt: #b91c1c;
-
-      --matin-bg: #ede9fe; --matin-txt: #6d28d9; --matin-border: #c4b5fd;
-      --aprem-bg: #fae8ff; --aprem-txt: #86198f; --aprem-border: #f0abfc;
-      --soir-bg: #e0e7ff; --soir-txt: #3730a3; --soir-border: #a5b4fc;
-      --off-bg: #f8fafc; --off-txt: #94a3b8; --off-border: #e2e8f0;
     }
-
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
     body { background: var(--bg-app); color: var(--text-main); min-height: 100vh; display: flex; font-size: 14px; }
     .hidden { display: none !important; }
-
-    /* LOCK SCREEN ACCUEIL PRO GOLD MULTI-USER */
     #lock-screen {
       width: 100%; min-height: 100vh; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 20px;
@@ -49,10 +36,8 @@
     .brand-header-lock { text-align: center; margin-bottom: 24px; }
     .brand-header-lock h1 { font-size: 32px; font-weight: 800; color: var(--brand-gold); letter-spacing: -0.5px; }
     .brand-header-lock p { font-size: 13px; color: #94a3b8; font-weight: 500; margin-top: 4px; }
-
-    .agents-grid-container { width: 100%; max-width: 950px; margin-bottom: 24px; max-height: 420px; overflow-y: auto; padding: 10px; }
-    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
-
+    .agents-grid-container { width: 100%; max-width: 900px; margin-bottom: 24px; max-height: 380px; overflow-y: auto; padding: 10px; }
+    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; }
     .agent-card {
       background: rgba(255,255,255,0.05); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 14px;
       padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.25s ease;
@@ -60,7 +45,6 @@
     }
     .agent-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); border-color: var(--brand-gold); }
     .agent-card.selected { background: rgba(245, 158, 11, 0.15); border-color: var(--brand-gold); box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
-
     .avatar-circle {
       width: 42px; height: 42px; border-radius: 50%; display: flex;
       align-items: center; justify-content: center; color: #ffffff; font-size: 16px; font-weight: 800;
@@ -68,7 +52,6 @@
     }
     .agent-fname { font-size: 12.5px; font-weight: 700; color: #f8fafc; }
     .agent-lname { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
-
     .btn-unlock {
       width: 100%; max-width: 400px; padding: 14px; border-radius: 12px; border: none;
       background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-hover)); color: #ffffff;
@@ -76,8 +59,6 @@
       box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.4);
     }
     .btn-unlock:hover { transform: translateY(-1px); filter: brightness(1.1); }
-
-    /* MAIN EXECUTIVE APP STRUCTURE */
     #main-app { display: flex; width: 100%; min-height: 100vh; }
     .sidebar {
       width: 260px; background: var(--sidebar-bg); padding: 24px 16px;
@@ -90,18 +71,14 @@
       font-weight: 800; font-size: 20px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
     }
     .brand-title { font-size: 20px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; }
-
     .menu-section { display: flex; flex-direction: column; gap: 6px; }
     .menu-label { font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.8px; padding: 0 10px; margin-bottom: 4px; }
-    
     .nav-item {
       display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 10px;
       font-weight: 700; font-size: 13px; color: var(--sidebar-text); cursor: pointer; transition: all 0.2s ease;
     }
     .nav-item:hover { background: var(--sidebar-active); color: #f8fafc; }
     .nav-item.active { background: var(--brand-primary); color: #ffffff; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35); }
-
-    /* BADGE NOTIFICATION PULSE */
     .nav-badge-count {
       background: #ef4444; color: #ffffff; font-size: 11px; font-weight: 800;
       padding: 2px 8px; border-radius: 12px; box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
@@ -111,28 +88,22 @@
       background: #2563eb; color: #ffffff; font-size: 11px; font-weight: 800;
       padding: 2px 8px; border-radius: 12px; box-shadow: 0 0 10px rgba(37, 99, 235, 0.6);
     }
-
     @keyframes pulse-red {
       0% { transform: scale(1); }
       50% { transform: scale(1.1); }
       100% { transform: scale(1); }
     }
-
     .main-content { flex: 1; padding: 28px 36px; overflow-y: auto; }
-    
     .top-header-bar {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
       background: var(--card-bg); padding: 16px 24px; border-radius: 16px; border: 1px solid var(--card-border);
       box-shadow: 0 4px 15px -3px rgba(0,0,0,0.02);
     }
     .user-info-badge { display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 8px 14px; border-radius: 10px; border: 1px solid #e2e8f0; }
-
     .content-card {
       background: var(--card-bg); border-radius: 16px; border: 1px solid var(--card-border);
       padding: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); margin-bottom: 24px;
     }
-
-    /* TAB CONTROLS PRO */
     .tab-container { display: flex; gap: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 20px; }
     .tab-btn {
       padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer;
@@ -141,8 +112,6 @@
     }
     .tab-btn:hover { background: #e2e8f0; }
     .tab-btn.active { background: var(--brand-primary); color: #ffffff; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2); }
-
-    /* FILTERS PANEL EXECUTIVE */
     .filter-panel {
       background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; margin-bottom: 20px;
       display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: end;
@@ -151,27 +120,20 @@
     .filter-panel input, .filter-panel select {
       width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: 700; font-size: 12px; outline: none; background: #fff;
     }
-
-    /* BUTTONS EXECUTIVE */
     .btn-action {
       background: var(--brand-primary); color: #fff; padding: 10px 18px; border: none;
       border-radius: 10px; font-weight: 800; font-size: 12.5px; cursor: pointer; transition: all 0.2s;
       display: inline-flex; align-items: center; gap: 6px;
     }
     .btn-action:hover { background: var(--brand-primary-hover); transform: translateY(-1px); }
-
     .btn-gold {
       background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-hover));
       color: #fff; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 800; font-size: 11px; cursor: pointer;
       box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25); transition: all 0.2s;
     }
     .btn-gold:hover { transform: translateY(-1px); filter: brightness(1.05); }
-
-    .btn-copy { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; margin-left: 4px; }
     .btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 11px; }
     .btn-edit { background: #e0f2fe; color: #0369a1; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 11px; }
-
-    /* TABLES PRO */
     table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
     thead th {
       background: #f8fafc; color: var(--text-muted); font-size: 11px; font-weight: 800;
@@ -180,8 +142,6 @@
     tbody tr { transition: background 0.15s ease; }
     tbody tr:hover { background: #f8fafc; }
     td { padding: 14px 12px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
-
-    /* FORM ELEMENTS */
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group label { font-size: 12px; font-weight: 800; color: #334155; }
@@ -189,19 +149,26 @@
       padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; outline: none;
       font-size: 13px; font-weight: 600; background: #ffffff; transition: border-color 0.2s;
     }
-
     .search-input-box {
       padding: 10px 14px; border-radius: 10px; border: 2px solid var(--brand-primary); outline: none;
       font-size: 13px; font-weight: 700; background: #ecfdf5; margin-bottom: 4px; width: 100%;
     }
-
-    /* BADGES */
     .badge-orange { background: var(--badge-orange-bg); color: var(--badge-orange-txt); padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px; }
     .badge-red { background: var(--badge-red-bg); color: var(--badge-red-txt); padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px; }
     .badge-green { background: var(--badge-green-bg); color: var(--badge-green-txt); padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px; }
     .badge-gold { background: var(--brand-gold-light); color: var(--brand-gold-hover); border: 1px solid #fde68a; padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px; }
-
-    /* MODAL OVERLAYS */
+    
+    /* Nesting & Chat Styles inside Modal */
+    .nested-chat-box {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; margin-top: 14px;
+      display: flex; flex-direction: column; gap: 10px; max-height: 220px; overflow-y: auto;
+    }
+    .chat-bubble {
+      padding: 8px 12px; border-radius: 10px; font-size: 12px; font-weight: 600; max-width: 85%;
+    }
+    .chat-bubble.resp { background: #e0f2fe; color: #0369a1; align-self: flex-start; border-bottom-left-radius: 2px; }
+    .chat-bubble.agent { background: #dcfce7; color: #15803d; align-self: flex-end; border-bottom-right-radius: 2px; }
+    
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(5px);
@@ -210,41 +177,25 @@
     }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-card {
-      background: #ffffff; padding: 26px; border-radius: 18px; width: 100%; max-width: 580px;
+      background: #ffffff; padding: 26px; border-radius: 18px; width: 100%; max-width: 600px;
       box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.25); border: 1px solid #cbd5e1; max-height: 90vh; overflow-y: auto;
     }
-
     .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
     .detail-label { font-weight: 700; color: #64748b; }
     .detail-value { font-weight: 800; color: #0f172a; text-align: right; }
-
-    /* AUDIT TRAIL EXECUTIVE */
-    .audit-log-item {
-      padding: 10px 14px; background: #1e293b; border-left: 4px solid var(--brand-gold);
-      border-radius: 8px; color: #f8fafc; font-size: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
-    }
-
-    @media (max-width: 768px) {
-      #main-app { flex-direction: column; }
-      .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 14px; }
-      .main-content { padding: 16px; }
-      .agents-grid { grid-template-columns: repeat(2, 1fr); }
-    }
   </style>
 </head>
 <body>
 
-  <!-- LOCK SCREEN FOR RESPONSABLES & ALL FIELD AGENTS -->
+  <!-- LOCK SCREEN -->
   <div id="lock-screen">
     <div class="brand-header-lock">
       <h1>FieldOps Control Center</h1>
       <p>Sélectionnez votre profil pour accéder à votre espace</p>
     </div>
-
     <div class="agents-grid-container">
       <div class="agents-grid" id="agents-grid-target"></div>
     </div>
-
     <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER ACCÈS DIRECT</button>
   </div>
 
@@ -255,26 +206,18 @@
         <div class="brand-icon">O</div>
         <div class="brand-title">FieldOps</div>
       </div>
-
       <div class="menu-section">
         <div class="menu-label">Opérations Admin</div>
         <div class="nav-item active" id="menu-dash" onclick="showView('dashboard', this)">
-          <span>📊 Dashboard / Réclamations</span>
+          <span>📊 Dashboard / Suivi</span>
           <span class="nav-badge-count" id="dash-badge-count">0</span>
         </div>
-        <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨 Saisie Réclamation</span></div>
+        <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)">
+          <span>🚨 Saisie Réclamation</span>
+          <span id="agent-pending-badge" class="nav-badge-blue hidden">0</span>
+        </div>
         <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️ Config Dynamic</span></div>
         <div class="nav-item" id="menu-sessions" onclick="showView('sessions', this)"><span>👥 Sessions Agents</span></div>
-        <div class="nav-item" id="menu-msg" onclick="showView('messages', this)">
-          <span>💬 Messages Directs</span>
-          <span class="nav-badge-blue hidden" id="msg-badge-count">0</span>
-        </div>
-      </div>
-
-      <div class="menu-section" id="menu-sec-resources">
-        <div class="menu-label">Ressources & Audit</div>
-        <div class="nav-item hidden" id="menu-audit" onclick="showView('audit', this)"><span>📜 Audit & Traçabilité (VIP)</span></div>
-        <div class="nav-item" id="menu-param" onclick="showView('parametres', this)"><span>⚙️ Paramètres</span></div>
       </div>
     </div>
 
@@ -285,10 +228,6 @@
           <div id="dash-live-banner-part" class="badge-red" style="font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:10px; display:flex; align-items:center; gap:4px;">
             🏪 Partenaires: <span id="dash-pending-part-txt">0</span>
           </div>
-          <div id="dash-live-banner-livr" class="badge-orange" style="font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:10px; display:flex; align-items:center; gap:4px; background:#dbeafe; color:#1e40af;">
-            🛵 Livreurs: <span id="dash-pending-livr-txt">0</span>
-          </div>
-
           <div class="user-info-badge">
             <span id="logged-user-avatar" style="width:28px; height:28px; border-radius:50%; background:#059669; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:11px;">👤</span>
             <span id="logged-user-name" style="font-weight:800; font-size:13px; color:#1e293b;">-</span>
@@ -297,10 +236,10 @@
         </div>
       </div>
 
-      <!-- DASHBOARD AVEC FILTRES AVANCÉS MULTICRITÈRES -->
+      <!-- DASHBOARD / SUIVI -->
       <div id="view-dashboard" class="content-card">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📊 Centre de Traitement des Réclamations (En Cours)</h3>
-        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Filtrez les réclamations actives par motif, partenaire, agent, date ou code commande.</p>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📊 Centre de Traitement & Suivi des Réclamations</h3>
+        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Suivi direct, gestion des notifications de réponse et statuts de lecture.</p>
         
         <div class="tab-container">
           <button class="tab-btn active" id="tab-part" onclick="switchDashTab('Partenaire')">
@@ -313,42 +252,6 @@
           </button>
         </div>
 
-        <div class="filter-panel">
-          <div>
-            <label>🔎 Recherche (ID / Order# / Agent) :</label>
-            <input type="text" id="flt-search" placeholder="Ex: #8841, Yahya, 54932..." oninput="renderReclamationStats()" />
-          </div>
-
-          <div>
-            <label>🚨 Motif Incident :</label>
-            <select id="flt-motif" onchange="renderReclamationStats()">
-              <option value="">-- Tous les Motifs --</option>
-              <option value="Commande volée">Commande volée</option>
-              <option value="Utilisation d'un compte non personnel (Compte loué/partagé)">Compte Loué / Partagé</option>
-              <option value="Commande non prête (Retard excessif)">Retard Excessif Store</option>
-              <option value="Vol de commande par le livreur">Vol par Livreur</option>
-              <option value="Mauvais comportement">Mauvais comportement</option>
-            </select>
-          </div>
-
-          <div>
-            <label>🏬 Partenaire / Marque :</label>
-            <select id="flt-brand" onchange="renderReclamationStats()">
-              <option value="">-- Tous les Partenaires --</option>
-            </select>
-          </div>
-
-          <div>
-            <label>📅 Sélectionner Date (Calendrier) :</label>
-            <input type="date" id="flt-date" onchange="renderReclamationStats()" style="cursor:pointer;" />
-          </div>
-
-          <div>
-            <button class="btn-action" style="padding:8px 12px; font-size:11px; background:#64748b;" onclick="resetFilters()">🔄 Vider Filtres</button>
-            <button class="btn-action" style="padding:8px 12px; font-size:11px; margin-left:4px;" onclick="exportToCSV()">📥 Export CSV</button>
-          </div>
-        </div>
-
         <div style="overflow-x:auto;">
           <table>
             <thead>
@@ -357,492 +260,142 @@
             <tbody id="rec-dashboard-body"></tbody>
           </table>
         </div>
-
-        <!-- SECTION ARCHIVE HISTORIQUE -->
-        <div style="margin-top:30px; border-top:2px solid #e2e8f0; padding-top:20px;">
-          <h4 style="font-size:15px; font-weight:800; color:#059669; margin-bottom:10px;">✅ Historique des Réclamations Traitées & Classées</h4>
-          
-          <div class="filter-panel" style="background:#f0fdf4; border-color:#bbf7d0;">
-            <div>
-              <label>🔎 Chercher dans L'Historique :</label>
-              <input type="text" id="flt-arc-search" placeholder="Ex: Order #, Store, Agent..." oninput="renderReclamationStats()" />
-            </div>
-
-            <div>
-              <label>🚨 Motif Incident :</label>
-              <select id="flt-arc-motif" onchange="renderReclamationStats()">
-                <option value="">-- Tous les Motifs --</option>
-                <option value="Commande volée">Commande volée</option>
-                <option value="Utilisation d'un compte non personnel (Compte loué/partagé)">Compte Loué / Partagé</option>
-                <option value="Commande non prête (Retard excessif)">Retard Excessif Store</option>
-                <option value="Vol de commande par le livreur">Vol par Livreur</option>
-                <option value="Mauvais comportement">Mauvais comportement</option>
-              </select>
-            </div>
-
-            <div>
-              <label>📦 Type Cible :</label>
-              <select id="flt-arc-type" onchange="renderReclamationStats()">
-                <option value="">-- Tous les Types --</option>
-                <option value="Partenaire">Partenaire (Merchant)</option>
-                <option value="Livreur">Livreur (Courier)</option>
-              </select>
-            </div>
-
-            <div>
-              <label>📅 Date Exacte (Calendrier) :</label>
-              <input type="date" id="flt-arc-date" onchange="renderReclamationStats()" style="cursor:pointer;" />
-            </div>
-
-            <div>
-              <button class="btn-action" style="padding:8px 12px; font-size:11px; background:#64748b;" onclick="resetArchiveFilters()">🔄 Vider Filtres Archive</button>
-            </div>
-          </div>
-
-          <div style="overflow-x:auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Agent</th><th>Type</th><th>Cible / Store</th><th>Motif</th><th>Order #</th><th>Date</th><th>Statut</th><th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="rec-archive-body"></tbody>
-            </table>
-          </div>
-        </div>
       </div>
 
-      <!-- SESSIONS AGENTS -->
-      <div id="view-sessions" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">👥 Gestion & Suivi des Sessions Agents Terrain</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Visualisez les agents connectés f l-terrain w l-historique d l-sessions dyalhom.</p>
+      <!-- SAISIE RÉCLAMATION (POUR LES DRARI) -->
+      <div id="view-reclamations" class="content-card hidden">
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🚨 Saisie & Mes Réclamations En Cours</h3>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Vous pouvez modifier vos réclamations tant qu'elles n'ont pas encore été lues par un responsable.</p>
+        
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:18px; margin-bottom:24px;">
+          <h4 style="font-size:14px; font-weight:800; color:#059669; margin-bottom:12px;">➕ Soumettre une Nouvelle Réclamation</h4>
+          <div class="form-grid" style="margin-top:0;">
+            <div class="form-group">
+              <label>Type :</label>
+              <select id="rec-type" onchange="toggleRecType()"></select>
+            </div>
+            <div class="form-group" id="fgroup-partenaire">
+              <label>Marque Partenaire :</label>
+              <select id="rec-target-partenaire" onchange="filterStores()"></select>
+            </div>
+            <div class="form-group" id="fgroup-sector">
+              <label>Magasin Exact / Store :</label>
+              <select id="rec-store-sector"></select>
+            </div>
+            <div class="form-group hidden" id="fgroup-livreur">
+              <label>ID Livreur :</label>
+              <input type="text" id="rec-target-livreur" placeholder="Ex: 54932" />
+            </div>
+            <div class="form-group">
+              <label>Motif :</label>
+              <select id="rec-motif"></select>
+            </div>
+            <div class="form-group">
+              <label>N° de Commande :</label>
+              <input type="text" id="rec-order-num" placeholder="Ex: #8841" />
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:12px;">
+            <label>Commentaires :</label>
+            <textarea id="rec-comment" rows="2" placeholder="Détails..."></textarea>
+          </div>
+          <button class="btn-action" style="margin-top:14px;" onclick="submitReclamation()">Envoyer la Réclamation</button>
+        </div>
 
+        <h4 style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:10px;">📋 Mes Réclamations (Modifiables si non lues)</h4>
         <div style="overflow-x:auto;">
           <table>
             <thead>
               <tr>
-                <th>Agent Terrain</th><th>Zone Affectée</th><th>Dernière Connexion</th><th>Statut Session</th><th>Actions</th>
+                <th>ID</th><th>Type</th><th>Cible</th><th>Motif</th><th>Statut Lecture</th><th>Réponses / Messages</th><th>Actions</th>
               </tr>
             </thead>
-            <tbody id="sessions-table-body"></tbody>
+            <tbody id="agent-my-claims-body"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION -->
-      <div id="view-reclamations" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🚨 Saisie Nouvelle Réclamation</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Saisissez les informations de l'incident. Le formulaire se réinitialisera automatiquement pour en saisir une autre.</p>
-
-        <div class="form-grid">
-          <div class="form-group" id="fgroup-type">
-            <label>Type Réclamation :</label>
-            <select id="rec-type" onchange="toggleRecType()"></select>
-          </div>
-
-          <div class="form-group" id="fgroup-partenaire">
-            <label>Marque Partenaire :</label>
-            <select id="rec-target-partenaire" onchange="updateStoreLocations()"></select>
-          </div>
-
-          <div class="form-group" id="fgroup-sector">
-            <label>🔎 Magasin Exact / Store (Recherche) :</label>
-            <input type="text" id="store-search-input" class="search-input-box" placeholder="🔍 Taper pour chercher le Store..." oninput="filterStores()" />
-            <select id="rec-store-sector" onchange="checkCustomStore()"></select>
-            <input type="text" id="custom-store-input" class="hidden" placeholder="Saisir le nom du partenaire/store exact..." style="margin-top:6px; padding:10px; border-radius:8px; border:1px solid #cbd5e1;" />
-          </div>
-
-          <div class="form-group hidden" id="fgroup-livreur">
-            <label>ID Livreur :</label>
-            <input type="text" id="rec-target-livreur" placeholder="Ex: 54932" />
-          </div>
-
-          <div class="form-group" id="fgroup-motif">
-            <label>Motif Incident :</label>
-            <select id="rec-motif"></select>
-          </div>
-
-          <div class="form-group" id="fgroup-order">
-            <label>N° de Commande :</label>
-            <input type="text" id="rec-order-num" placeholder="Ex: #8841, #9902" />
-          </div>
-
-          <div class="form-group" id="fgroup-gps">
-            <label>Localisation GPS (Obligatoire) :</label>
-            <button type="button" onclick="getGPS()" style="padding:10px; background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; border-radius:8px; cursor:pointer; font-weight:800;">📍 Détecter Position GPS *</button>
-            <input type="text" id="rec-gps" readonly placeholder="Cliquer sur 'Détecter Position'..." style="background:#f8fafc;" />
-          </div>
-
-          <div class="form-group" id="fgroup-photo" style="grid-column: 1 / -1;">
-            <label>📸 Photo Justificatif (Preuve Partenaire / Livreur / Ticket) :</label>
-            <input type="file" id="rec-photo-input" accept="image/*" onchange="previewPhoto(event)" style="padding:8px; border:1px solid #cbd5e1; border-radius:8px;" />
-            <div id="photo-preview-box" class="hidden" style="margin-top:10px;">
-              <img id="photo-preview-img" src="" alt="Preuve Uploaded" style="max-width:200px; max-height:150px; border-radius:10px; border:2px solid #059669; box-shadow:0 4px 10px rgba(0,0,0,0.1);" />
-            </div>
-          </div>
-        </div>
-
-        <div id="gps-error-banner" style="background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; padding:12px; border-radius:10px; font-size:12px; font-weight:800; margin-top:14px;" class="hidden">
-          ⚠️ Attention : Vous devez obligatoirement cliquer sur "📍 Détecter Position GPS" pour valider la réclamation !
-        </div>
-
-        <div class="form-group" id="fgroup-comment" style="margin-top:14px;">
-          <label>Commentaires & Explications :</label>
-          <textarea id="rec-comment" rows="3" placeholder="Saisir les commentaires et détails..."></textarea>
-        </div>
-        <button class="btn-action" style="margin-top:16px; padding:12px 24px;" onclick="submitReclamation()">Envoyer la Réclamation</button>
-
-        <!-- MES RÉCLAMATIONS SAISIES -->
-        <div id="agent-my-claims-section" style="margin-top:30px; border-top:2px solid #e2e8f0; padding-top:20px;">
-          <h4 style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:12px;">📋 Mes Réclamations Envoyées & Statut de Lecture</h4>
-          <div style="overflow-x:auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th><th>Type</th><th>Cible / Store</th><th>Order #</th><th>Accusé Lecture</th><th>Modifiable ?</th><th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="agent-my-claims-body"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- AUDIT TRAIL VIP (UNIQUEMENT NAJIB HARATI & MEHDI FADLI) -->
-      <div id="view-audit" class="content-card hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-          <div>
-            <h3 style="font-size:18px; font-weight:800; color:#f59e0b;">📜 Journal d'Audit & Traçabilité System (VIP)</h3>
-            <p style="color:#64748b; font-size:12px;">Espace réservé exclusivement à Najib HARATI & Mehdi FADLI pour la traçabilité complète des actions.</p>
-          </div>
-          <button class="btn-action" style="background:#ef4444; font-size:11px;" onclick="clearAuditLog()">🗑️ Vider Audit Log</button>
-        </div>
-
-        <div id="audit-logs-container" style="max-height:500px; overflow-y:auto;"></div>
-      </div>
-
-      <!-- CONFIGURATION DYNAMIQUE -->
+      <!-- CONFIG DYNAMIC -->
       <div id="view-config" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🛠️ Configuration Dynamique du Formulaire Admin</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Gérez l'arborescence des Partenaires, Stores, Types de réclamation, Motifs et visibilité des champs.</p>
-
-        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:18px; margin-bottom:18px;">
-          <h4 style="font-size:14px; color:#059669; margin-bottom:12px; font-weight:800;">👁️ Visibilité des Champs dans le Formulaire Agent :</h4>
-          <div style="display:flex; gap:18px; flex-wrap:wrap;">
-            <label style="font-weight:700; font-size:13px; color:#334155;"><input type="checkbox" id="field-toggle-order" checked onchange="toggleFieldVisibility('order')" /> Champ N° Commande</label>
-            <label style="font-weight:700; font-size:13px; color:#334155;"><input type="checkbox" id="field-toggle-sector" checked onchange="toggleFieldVisibility('sector')" /> Champ Stores / Emplacement</label>
-            <label style="font-weight:700; font-size:13px; color:#334155;"><input type="checkbox" id="field-toggle-gps" checked onchange="toggleFieldVisibility('gps')" /> Champ Localisation GPS</label>
-            <label style="font-weight:700; font-size:13px; color:#334155;"><input type="checkbox" id="field-toggle-comment" checked onchange="toggleFieldVisibility('comment')" /> Champ Commentaires</label>
-          </div>
-        </div>
-
-        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:18px; margin-bottom:18px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
-            <h4 style="font-size:14px; color:#059669; font-weight:800;">🏬 Arborescence Partenaires & Stores :</h4>
-            <div style="display:flex; gap:8px; align-items:center;">
-              <input type="text" id="config-brand-search" class="search-input-box" style="margin:0; width:220px;" placeholder="🔍 Chercher Partenaire..." oninput="renderConfigTree()" />
-              <button class="btn-action" style="padding:8px 14px; font-size:12px;" onclick="addNewBrandPrompt()">➕ Ajouter Nouveau Partenaire</button>
-            </div>
-          </div>
-          
-          <div id="brands-tree-container"></div>
-        </div>
-
-        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:18px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-            <h4 style="font-size:14px; color:#059669; font-weight:800;">🚨 Types de Réclamation & Motifs :</h4>
-            <button class="btn-action" style="padding:8px 14px; font-size:12px;" onclick="addNewRecTypePrompt()">➕ Ajouter Type Réclamation</button>
-          </div>
-
-          <div id="types-motifs-container"></div>
-        </div>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🛠️ Configuration Dynamique</h3>
+        <div id="brands-tree-container"></div>
       </div>
 
-      <!-- MESSAGES DIRECTS -->
-      <div id="view-messages" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">💬 Centre de Messagerie & Instructions Directes</h3>
-        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Communication directe entre l'Équipe de Gestion et les Agents Terrain.</p>
-
-        <div style="margin-bottom:20px; background:#f8fafc; padding:18px; border-radius:14px; border:1px solid #e2e8f0;" id="box-send-message">
-          <h4 style="font-size:14px; margin-bottom:12px; color:#0f172a; font-weight:800;">✉️ Envoyer un Message Direct :</h4>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <select id="msg-select-agent" style="padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-weight:700;"></select>
-            <input type="text" id="msg-input-text" placeholder="Saisir votre instruction..." style="flex:1; min-width:240px; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1;" />
-            <button class="btn-action" style="margin:0;" onclick="sendDirectMessage()">Envoyer</button>
-          </div>
-        </div>
-
-        <div>
-          <h4 style="font-size:14px; margin-bottom:12px; color:#0f172a; font-weight:800;">📋 Boîte de Réception Messages :</h4>
-          <div id="messages-list-container" style="display:flex; flex-direction:column; gap:10px;"></div>
-        </div>
-      </div>
-
-      <!-- PARAMETRES -->
-      <div id="view-parametres" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">⚙️ Paramètres Système Admin</h3>
-        <p style="color:#64748b; font-size:12px; margin-bottom:16px;">Configuration globale de la plateforme, gestion des accès et exportations système.</p>
-        <div style="display:flex; flex-direction:column; gap:12px; max-width:400px;">
-          <button class="btn-action" style="background:#0284c7;" onclick="alert('Système réinitialisé aux valeurs par défaut !')">🔄 Réinitialiser Données Système</button>
-          <button class="btn-action" style="background:#059669;" onclick="exportToCSV()">📊 Télécharger l'ensemble des Réclamations (CSV)</button>
-        </div>
+      <!-- SESSIONS AGENTS -->
+      <div id="view-sessions" class="content-card hidden">
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">👥 Sessions Agents Terrain</h3>
+        <div id="sessions-table-body"></div>
       </div>
     </div>
   </div>
 
-  <!-- MODAL DETAILS RECLAMATION ET CHAT THREAD DIRECT -->
+  <!-- MODAL DETAILS & CHAT (RESPONSABLE & AGENT INTERACTION) -->
   <div id="rec-detail-modal" class="modal-overlay">
     <div class="modal-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
-        <h3 style="font-size:16px; font-weight:800; color:#0f172a;">📄 Détails Complets & Thread Réclamation</h3>
-        <span id="detail-rec-id" class="badge-gold">ID: #000</span>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">
+        <h3 style="font-size:16px; font-weight:800; color:#0f172a;" id="modal-claim-title">Détails de la Réclamation</h3>
+        <span id="detail-rec-status-badge" class="badge-gold">En Cours</span>
       </div>
+      
+      <div id="rec-detail-body"></div>
 
-      <div id="rec-detail-body">
-        <!-- Dynamic content -->
-      </div>
-
-      <div style="margin-top:16px; background:#f8fafc; padding:14px; border-radius:12px; border:1px solid #cbd5e1;">
-        <h4 style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:8px;">💬 Chat / Discussion Directe sur cette Réclamation :</h4>
-        <div id="modal-chat-thread" style="max-height:160px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
-        <div style="display:flex; gap:8px;">
-          <input type="text" id="modal-chat-input" placeholder="Ecrire une remarque/réponse..." style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-weight:600; font-size:12px;" />
-          <button class="btn-action" style="padding:8px 14px; font-size:11px;" onclick="sendClaimThreadMessage()">Envoyer</button>
+      <!-- Haja dakla f haja: Nested Chat / Discussion Box -->
+      <div style="margin-top:16px; border-top:1px solid #e2e8f0; padding-top:12px;">
+        <h4 style="font-size:13px; font-weight:800; color:#334155; margin-bottom:8px;">💬 Espace Discussion & Messages sur cette Réclamation :</h4>
+        <div class="nested-chat-box" id="modal-chat-messages-container"></div>
+        <div style="display:flex; gap:8px; margin-top:10px;">
+          <input type="text" id="modal-chat-input" placeholder="Écrire un message ou une instruction..." style="flex:1; padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-size:12px; font-weight:600;" />
+          <button class="btn-action" style="padding:10px 16px; font-size:12px;" onclick="sendClaimMessage()">Envoyer</button>
         </div>
       </div>
 
-      <div style="margin-top:20px; padding-top:16px; border-top:2px solid #f1f5f9; display:flex; flex-direction:column; gap:10px;">
-        <p style="font-size:12px; font-weight:800; color:#475569; text-align:center;">Action sur la Réclamation :</p>
-        <div style="display:flex; gap:10px; justify-content:center;">
-          <button class="btn-action" style="background:#059669; flex:1;" onclick="confirmCloseModal(true)">✅ Marquer comme TRAITÉ (Classer)</button>
-          <button class="btn-action" style="background:#64748b; flex:1;" onclick="confirmCloseModal(false)">⏳ Fermer le Modal</button>
-        </div>
+      <div style="margin-top:20px; padding-top:14px; border-top:2px solid #f1f5f9; display:flex; gap:10px; justify-content:flex-end;">
+        <button class="btn-action" style="background:#64748b;" onclick="closeClaimModal()">Fermer</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL ZOOM PHOTO -->
-  <div id="photo-zoom-modal" class="modal-overlay" style="z-index:1000;" onclick="closePhotoZoomModal()">
-    <div style="position:relative; max-width:90vw; max-height:90vh;" onclick="event.stopPropagation()">
-      <img id="zoomed-photo-img" src="" alt="Preuve Agrandie" style="max-width:100%; max-height:80vh; border-radius:14px; border:3px solid #059669; box-shadow:0 10px 30px rgba(0,0,0,0.5);" />
-      <div style="margin-top:12px; display:flex; justify-content:center; gap:12px;">
-        <a id="download-photo-btn" href="#" download="Preuve_Reclamation.jpg" class="btn-action" style="background:#059669; font-size:12px;">📥 Télécharger la Photo</a>
-        <button class="btn-action" style="background:#64748b; padding:8px 16px; font-size:12px;" onclick="closePhotoZoomModal()">Fermer</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL EDIT RECLAMATION -->
+  <!-- MODAL EDIT CLAIM (POUR LES DRARI SI NON LU) -->
   <div id="rec-edit-modal" class="modal-overlay">
     <div class="modal-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
-        <h3 style="font-size:16px; font-weight:800; color:#0f172a;">✏️ Modifier la Réclamation</h3>
-        <span id="edit-rec-id" class="badge-gold">ID: #000</span>
-      </div>
-
-      <div class="form-group" style="margin-bottom:12px;">
-        <label>N° Commande :</label>
-        <input type="text" id="edit-rec-order" style="padding:10px; border-radius:8px; border:1px solid #cbd5e1;" />
-      </div>
-
-      <div class="form-group" style="margin-bottom:12px;">
-        <label>Motif Incident :</label>
-        <input type="text" id="edit-rec-motif" style="padding:10px; border-radius:8px; border:1px solid #cbd5e1;" />
-      </div>
-
-      <div class="form-group" style="margin-bottom:12px;">
-        <label>Commentaire & Détails :</label>
-        <textarea id="edit-rec-comment" rows="3" style="padding:10px; border-radius:8px; border:1px solid #cbd5e1;"></textarea>
-      </div>
-
-      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+      <h3 style="font-size:16px; font-weight:800; color:#0f172a; margin-bottom:12px;">✏️ Modifier ma Réclamation</h3>
+      <input type="hidden" id="edit-claim-id" />
+      <div class="form-group" style="margin-bottom:12px;"><label>N° Commande :</label><input type="text" id="edit-rec-order" /></div>
+      <div class="form-group" style="margin-bottom:12px;"><label>Commentaire :</label><textarea id="edit-rec-comment" rows="3"></textarea></div>
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
         <button class="btn-action" style="background:#64748b;" onclick="closeEditModal()">Annuler</button>
-        <button class="btn-action" onclick="saveClaimEdit()">Enregistrer Modifs</button>
+        <button class="btn-action" onclick="saveClaimEdit()">Enregistrer les modifications</button>
       </div>
     </div>
   </div>
 
   <script>
-    // LA LISTE COMPLÈTE & DÉTAILLÉE DE TOUS LES PARTENAIRES & STORES
-    let defaultStoreCatalog = {
-      "McDonald's®": [
-        "McDonald's Temara - 46", "McDonald's Salé - 33", "McDonald's Marjane Hay Riad - 12",
-        "McDonald's Agdal - 05", "McDonald's Rabat Ville - 01", "McDonald's Route de Casablanca - 88",
-        "McDonald's Harhoura - 52", "McDonald's Zaer - 19"
-      ],
-      "Burger King": [
-        "Burger King Temara", "Burger King Mahaj Ryad", "Burger King Agdal",
-        "Burger King Salé - Route de Kénitra", "Burger King Ocean Rabat"
-      ],
-      "KFC": [
-        "KFC Sela Park Temara", "KFC Rabat Ville", "KFC Agdal", "KFC Salé Rda", "KFC Hay Riad"
-      ],
-      "Pizza Hut": [
-        "Pizza Hut Temara Wifaq", "Pizza Hut Agdal", "Pizza Hut Hay Riad", "Pizza Hut Salé Tabriquet"
-      ],
-      "Starbucks": [
-        "Starbucks Mahaj Riad", "Starbucks Agdal Avenue de France", "Starbucks Arribat Center"
-      ],
-      "Paul": [
-        "Paul Mahaj Riad", "Paul Agdal", "Paul Souissi", "Paul Harhoura"
-      ],
-      "Domino's Pizza": [
-        "Domino's Temara Massira", "Domino's Agdal", "Domino's Salé", "Domino's Hay Riad"
-      ],
-      "Tacos de Lyon": [
-        "Tacos de Lyon Temara", "Tacos de Lyon Agdal", "Tacos de Lyon Salé"
-      ],
-      "Kayser": [
-        "Maison Kayser Hay Riad", "Maison Kayser Agdal"
-      ],
-      "Venezia Ice": [
-        "Venezia Ice Harhoura", "Venezia Ice Agdal", "Venezia Ice Mahaj Riad"
-      ]
+    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v30')) || {
+      "McDonald's®": ["McDonald's Marjane Hay Riad", "McDonald's Temara"],
+      "Burger King": ["Burger King Temara", "Burger King Mahaj Ryad"]
     };
 
-    let defaultRecTypes = {
-      "Partenaire": ["Commande prête non reçue", "Commande non prête (Retard excessif)", "Commande volée", "Produits manquants dans la commande", "Mauvais emballage"],
-      "Livreur": ["Mauvais comportement", "Vol de commande par le livreur", "Utilisation d'un compte non personnel (Compte loué/partagé)", "Retard de livraison exagéré", "Absence du livreur au store"]
+    let recTypesCatalog = {
+      "Partenaire": ["Commande prête non reçue", "Commande non prête (Retard excessif)", "Commande volée"],
+      "Livreur": ["Mauvais comportement", "Vol de commande", "Compte Loué / Partagé"]
     };
 
-    const responsablesList = [
+    const allSystemUsers = [
       { id: "1", fname: "Najib", lname: "HARATI", color: "#f59e0b", role: "admin" },
-      { id: "2", fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur" },
-      { id: "3", fname: "Anass", lname: "FADLI", color: "#059669", role: "decideur" },
-      { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
+      { id: "101", fname: "Yahya", lname: "RHALLAB", color: "#3b82f6", role: "field" },
+      { id: "102", fname: "Mourad", lname: "CHERRADI", color: "#10b981", role: "field" }
     ];
 
-    const defaultAgents = [
-      { id: "101", fname: "Yahya", lname: "RHALLAB", zone: "Temara - Oulad Mtaa", color: "#3b82f6", role: "field" },
-      { id: "102", fname: "Mehdi", lname: "AIT JEBOUR", zone: "Temara - Oulad Mtaa", color: "#8b5cf6", role: "field" },
-      { id: "103", fname: "Ayman", lname: "CHLIFANE", zone: "Temara - Oulad Mtaa", color: "#ec4899", role: "field" },
-      { id: "104", fname: "Mourad", lname: "CHERRADI", zone: "Agdal - Carrousel", color: "#10b981", role: "field" },
-      { id: "105", fname: "Youssef", lname: "DERKAOUI", zone: "Agdal - Carrousel", color: "#f59e0b", role: "field" },
-      { id: "106", fname: "Ayoub", lname: "ABSSI", zone: "Agdal - Carrousel", color: "#ef4444", role: "field" },
-      { id: "107", fname: "Charaf", lname: "LOUMMIHI", zone: "Salé - Medina", color: "#06b6d4", role: "field" },
-      { id: "108", fname: "Hassan", lname: "AZGOUNE", zone: "Salé - Medina", color: "#84cc16", role: "field" },
-      { id: "109", fname: "Ayoub", lname: "BEN MALEK", zone: "Salé - Medina", color: "#6366f1", role: "field" },
-      { id: "110", fname: "Achraf", lname: "AKHLIJ", zone: "Hay Riad - Soussi", color: "#14b8a6", role: "field" },
-      { id: "111", fname: "Islam", lname: "ELMARDI", zone: "Hay Riad - Soussi", color: "#d97706", role: "field" },
-      { id: "112", fname: "Oussama", lname: "EL ATRACH", zone: "Hay Riad - Soussi", color: "#a855f7", role: "field" },
-      { id: "113", fname: "Zakariae", lname: "BENALI", zone: "Technopolis", color: "#64748b", role: "field" }
-    ];
-
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v31')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v31')) || defaultRecTypes;
-    let fieldVisibility = JSON.parse(localStorage.getItem('fieldops_vis_v31')) || { order: true, sector: true, gps: true, comment: true };
-    
-    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v31')) || [
-      { 
-        id: 1, 
-        agent: "Yahya RHALLAB", 
-        type: "Partenaire", 
-        target: "McDonald's®", 
-        sector: "McDonald's Temara - 46", 
-        motif: "Commande non prête (Retard excessif)", 
-        orderNum: "#8841", 
-        gps: "33.9182, -6.9211", 
-        photo: "", 
-        comment: "Commande retardée de 25 min car trop d'affluence f le store.", 
-        date: "2026-09-20", 
-        status: "En Cours",
-        readByResponsable: false,
-        readByWho: "",
-        hasNewResponseFromAgent: false,
-        thread: [
-          { sender: "Yahya RHALLAB", role: "field", text: "Signalement envoyé sur le store", date: "10:30" }
-        ]
-      }
-    ];
-
-    let auditLogsDB = JSON.parse(localStorage.getItem('fieldops_audit_logs_v31')) || [];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v31')) || [];
-
+    let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v31')) || [];
     let currentDashTab = "Partenaire";
-    let allSystemUsers = [...responsablesList, ...defaultAgents];
-    let selectedAgent = allSystemUsers[0];
     let currentUser = allSystemUsers[0];
-    let activeOpenedClaim = null;
-    let activeEditClaim = null;
-    let uploadedPhotoBase64 = "";
-
-    function logAuditEvent(actionText) {
-      const nowStr = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' (' + new Date().toLocaleDateString('fr-FR') + ')';
-      const entry = {
-        id: Date.now(),
-        user: `${currentUser.fname} ${currentUser.lname}`,
-        action: actionText,
-        timestamp: nowStr
-      };
-      auditLogsDB.unshift(entry);
-      localStorage.setItem('fieldops_audit_logs_v31', JSON.stringify(auditLogsDB));
-      renderAuditLogs();
-    }
-
-    function renderAuditLogs() {
-      const container = document.getElementById('audit-logs-container');
-      if (!container) return;
-      container.innerHTML = '';
-      if (auditLogsDB.length === 0) {
-        container.innerHTML = `<div style="padding:16px; background:#1e293b; color:#94a3b8; border-radius:10px;">Aucune action enregistrée pour le moment.</div>`;
-        return;
-      }
-      auditLogsDB.forEach(log => {
-        container.innerHTML += `
-          <div class="audit-log-item">
-            <div>
-              <strong style="color:#f59e0b;">[${log.user}]</strong> ${log.action}
-            </div>
-            <span style="font-size:10px; color:#94a3b8; font-weight:700;">${log.timestamp}</span>
-          </div>
-        `;
-      });
-    }
-
-    function clearAuditLog() {
-      if (confirm("Vider l'historique VIP d'audit ?")) {
-        auditLogsDB = [];
-        localStorage.setItem('fieldops_audit_logs_v31', JSON.stringify(auditLogsDB));
-        renderAuditLogs();
-      }
-    }
-
-    function updateLiveClaimCounters() {
-      const pendingPart = claimsDB.filter(c => c.status === 'En Cours' && c.type === 'Partenaire').length;
-      const pendingLivr = claimsDB.filter(c => c.status === 'En Cours' && c.type === 'Livreur').length;
-      const pendingTotal = pendingPart + pendingLivr;
-
-      const badgeNav = document.getElementById('dash-badge-count');
-      if (badgeNav) badgeNav.innerText = pendingTotal;
-
-      const partTxt = document.getElementById('dash-pending-part-txt');
-      if (partTxt) partTxt.innerText = pendingPart;
-
-      const livrTxt = document.getElementById('dash-pending-livr-txt');
-      if (livrTxt) livrTxt.innerText = pendingLivr;
-
-      const tabPartBadge = document.getElementById('tab-badge-part');
-      if (tabPartBadge) tabPartBadge.innerText = pendingPart;
-
-      const tabLivrBadge = document.getElementById('tab-badge-livr');
-      if (tabLivrBadge) tabLivrBadge.innerText = pendingLivr;
-    }
+    let selectedAgent = allSystemUsers[0];
+    let activeOpenedClaimId = null;
 
     function renderLockCards() {
       const target = document.getElementById('agents-grid-target');
       target.innerHTML = '';
-
-      target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px;">👑 Équipe de Gestion (Responsables)</div>`;
-      responsablesList.forEach(a => {
-        const card = document.createElement('div');
-        card.className = `agent-card ${selectedAgent && selectedAgent.id === a.id ? 'selected' : ''}`;
-        card.onclick = () => { selectedAgent = a; renderLockCards(); };
-        card.innerHTML = `<div class="avatar-circle" style="background:${a.color}">👑</div><div class="agent-fname">${a.fname}</div><div class="agent-lname">${a.lname}</div>`;
-        target.appendChild(card);
-      });
-
-      target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 14px;">🛵 Agents Terrain (${defaultAgents.length} Agents)</div>`;
-      defaultAgents.forEach(a => {
+      allSystemUsers.forEach(a => {
         const card = document.createElement('div');
         card.className = `agent-card ${selectedAgent && selectedAgent.id === a.id ? 'selected' : ''}`;
         card.onclick = () => { selectedAgent = a; renderLockCards(); };
@@ -856,33 +409,23 @@
       currentUser = selectedAgent;
       document.getElementById('lock-screen').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
-      document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname} ${currentUser.role === 'field' ? '(Agent Terrain)' : ''}`;
+      document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname}`;
       
-      const isFieldAgent = currentUser.role === 'field';
-      const isVipAuditUser = (currentUser.fname === 'Najib' && currentUser.lname === 'HARATI') || (currentUser.fname === 'Mehdi' && currentUser.lname === 'FADLI');
-
-      document.getElementById('menu-dash').classList.toggle('hidden', isFieldAgent);
-      document.getElementById('menu-config').classList.toggle('hidden', isFieldAgent);
-      document.getElementById('menu-sessions').classList.toggle('hidden', isFieldAgent);
-      document.getElementById('menu-sec-resources').classList.toggle('hidden', isFieldAgent);
+      const isField = currentUser.role === 'field';
       
-      document.getElementById('menu-audit').classList.toggle('hidden', !isVipAuditUser);
-
+      // Control Visibility of Menus based on role
+      document.getElementById('menu-dash').style.display = isField ? 'none' : 'flex';
+      
       initFormDropdowns();
-      populateFilterBrands();
-      updateLiveClaimCounters();
+      updateCounters();
 
-      if (isFieldAgent) {
+      if (isField) {
         showView('reclamations', document.getElementById('menu-rec'));
         renderAgentMyClaims();
       } else {
         showView('dashboard', document.getElementById('menu-dash'));
         renderReclamationStats();
-        renderSessionsTable();
-        renderConfigTree();
       }
-
-      if (isVipAuditUser) renderAuditLogs();
     }
 
     function lockSystem() {
@@ -895,387 +438,128 @@
     function showView(viewId, el) {
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       if(el) el.classList.add('active');
-      document.getElementById('view-dashboard').classList.add('hidden');
-      document.getElementById('view-reclamations').classList.add('hidden');
-      document.getElementById('view-messages').classList.add('hidden');
-      document.getElementById('view-sessions').classList.add('hidden');
-      document.getElementById('view-config').classList.add('hidden');
-      document.getElementById('view-parametres').classList.add('hidden');
-      document.getElementById('view-audit').classList.add('hidden');
-      
+      ['view-dashboard', 'view-reclamations', 'view-config', 'view-sessions'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
       document.getElementById('view-' + viewId).classList.remove('hidden');
-      
-      if (viewId === 'messages') renderMessagesView();
-      if (viewId === 'sessions') renderSessionsTable();
-      if (viewId === 'audit') renderAuditLogs();
-      updateLiveClaimCounters();
+      if (viewId === 'dashboard') renderReclamationStats();
+      if (viewId === 'reclamations') renderAgentMyClaims();
     }
 
     function initFormDropdowns() {
       const typeSel = document.getElementById('rec-type');
       if (!typeSel) return;
       typeSel.innerHTML = '';
-      Object.keys(recTypesCatalog).forEach(t => {
-        typeSel.innerHTML += `<option value="${t}">${t}</option>`;
-      });
-
+      Object.keys(recTypesCatalog).forEach(t => { typeSel.innerHTML += `<option value="${t}">${t}</option>`; });
+      
       const brandSel = document.getElementById('rec-target-partenaire');
       if (!brandSel) return;
       brandSel.innerHTML = '';
-      Object.keys(storeCatalog).forEach(b => {
-        brandSel.innerHTML += `<option value="${b}">${b}</option>`;
-      });
-
+      Object.keys(storeCatalog).forEach(b => { brandSel.innerHTML += `<option value="${b}">${b}</option>`; });
       toggleRecType();
     }
 
-    function populateFilterBrands() {
-      const fltBrand = document.getElementById('flt-brand');
-      if (!fltBrand) return;
-      fltBrand.innerHTML = '<option value="">-- Tous les Partenaires --</option>';
-      Object.keys(storeCatalog).forEach(b => {
-        fltBrand.innerHTML += `<option value="${b}">${b}</option>`;
-      });
-    }
-
-    function resetFilters() {
-      document.getElementById('flt-search').value = '';
-      document.getElementById('flt-motif').value = '';
-      document.getElementById('flt-brand').value = '';
-      document.getElementById('flt-date').value = '';
-      renderReclamationStats();
-    }
-
-    function resetArchiveFilters() {
-      document.getElementById('flt-arc-search').value = '';
-      document.getElementById('flt-arc-motif').value = '';
-      document.getElementById('flt-arc-type').value = '';
-      document.getElementById('flt-arc-date').value = '';
-      renderReclamationStats();
-    }
-
     function toggleRecType() {
-      const typeSel = document.getElementById('rec-type');
-      if (!typeSel) return;
-      const type = typeSel.value;
-      if (type === 'Partenaire') {
-        document.getElementById('fgroup-partenaire').classList.remove('hidden');
-        document.getElementById('fgroup-sector').classList.remove('hidden');
-        document.getElementById('fgroup-livreur').classList.add('hidden');
-      } else {
-        document.getElementById('fgroup-partenaire').classList.add('hidden');
-        document.getElementById('fgroup-sector').classList.add('hidden');
-        document.getElementById('fgroup-livreur').classList.remove('hidden');
-      }
+      const type = document.getElementById('rec-type').value;
+      document.getElementById('fgroup-partenaire').classList.toggle('hidden', type !== 'Partenaire');
+      document.getElementById('fgroup-sector').classList.toggle('hidden', type !== 'Partenaire');
+      document.getElementById('fgroup-livreur').classList.toggle('hidden', type === 'Partenaire');
 
       const motifSel = document.getElementById('rec-motif');
       motifSel.innerHTML = '';
-      (recTypesCatalog[type] || []).forEach(m => {
-        motifSel.innerHTML += `<option value="${m}">${m}</option>`;
-      });
-
-      updateStoreLocations();
-    }
-
-    function updateStoreLocations() {
-      const brandSel = document.getElementById('rec-target-partenaire');
-      if (!brandSel) return;
-      document.getElementById('store-search-input').value = '';
+      (recTypesCatalog[type] || []).forEach(m => { motifSel.innerHTML += `<option value="${m}">${m}</option>`; });
       filterStores();
     }
 
     function filterStores() {
-      const brandSel = document.getElementById('rec-target-partenaire');
-      if (!brandSel) return;
-      const brand = brandSel.value;
-      const searchVal = document.getElementById('store-search-input').value.toLowerCase().trim();
+      const brand = document.getElementById('rec-target-partenaire').value;
       const selector = document.getElementById('rec-store-sector');
       selector.innerHTML = '';
-
-      let listToDisplay = storeCatalog[brand] || [];
-
-      listToDisplay.forEach(s => {
-        if (s.toLowerCase().includes(searchVal)) {
-          selector.innerHTML += `<option value="${s}">${s}</option>`;
-        }
-      });
-
-      selector.innerHTML += `<option value="➕ Saisir manuellement un autre partenaire...">➕ Saisir manuellement un autre partenaire...</option>`;
-
-      if (selector.options.length === 1 && searchVal !== '') {
-        selector.selectedIndex = 0;
-      }
-
-      checkCustomStore();
-    }
-
-    function checkCustomStore() {
-      const storeVal = document.getElementById('rec-store-sector').value;
-      const customInput = document.getElementById('custom-store-input');
-      if (storeVal === "➕ Saisir manuellement un autre partenaire...") {
-        customInput.classList.remove('hidden');
-      } else {
-        customInput.classList.add('hidden');
-        customInput.value = '';
-      }
-    }
-
-    function previewPhoto(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          uploadedPhotoBase64 = e.target.result;
-          document.getElementById('photo-preview-img').src = uploadedPhotoBase64;
-          document.getElementById('photo-preview-box').classList.remove('hidden');
-        }
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function getGPS() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(p => {
-          document.getElementById('rec-gps').value = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
-          document.getElementById('gps-error-banner').classList.add('hidden');
-        }, () => {
-          document.getElementById('rec-gps').value = "33.9182, -6.9211";
-          document.getElementById('gps-error-banner').classList.add('hidden');
-        });
-      }
+      (storeCatalog[brand] || []).forEach(s => { selector.innerHTML += `<option value="${s}">${s}</option>`; });
     }
 
     function submitReclamation() {
       const type = document.getElementById('rec-type').value;
-      let target = type === 'Partenaire' ? document.getElementById('rec-target-partenaire').value : document.getElementById('rec-target-livreur').value;
-      let sector = document.getElementById('rec-store-sector').value;
+      const target = type === 'Partenaire' ? document.getElementById('rec-target-partenaire').value : document.getElementById('rec-target-livreur').value;
+      const sector = type === 'Partenaire' ? document.getElementById('rec-store-sector').value : '-';
       const motif = document.getElementById('rec-motif').value;
       const orderNum = document.getElementById('rec-order-num').value;
-      const gps = document.getElementById('rec-gps').value;
       const comment = document.getElementById('rec-comment').value;
 
-      if (!gps || gps.trim() === '') {
-        document.getElementById('gps-error-banner').classList.remove('hidden');
-        alert("⚠️ OBLIGATOIRE : Vous devez cliquer sur '📍 Détecter Position GPS' pour géolocaliser la réclamation !");
-        return;
-      }
-
-      if (sector === "➕ Saisir manuellement un autre partenaire...") {
-        const customVal = document.getElementById('custom-store-input').value;
-        if (!customVal) return alert("Veuillez saisir le nom du partenaire !");
-        sector = customVal;
-        target = customVal;
-      }
-
-      const todayIsoDate = new Date().toISOString().split('T')[0];
-
-      const newClaim = { 
-        id: Date.now(), 
-        agent: `${currentUser.fname} ${currentUser.lname}`, 
-        type, 
-        target, 
-        sector: type === 'Partenaire' ? sector : '-', 
-        motif, 
-        orderNum: orderNum || '-', 
-        gps, 
-        photo: uploadedPhotoBase64,
-        comment: comment || '-', 
-        date: todayIsoDate, 
+      claimsDB.push({
+        id: Date.now(),
+        agentId: currentUser.id,
+        agentName: `${currentUser.fname} ${currentUser.lname}`,
+        type, target, sector, motif, orderNum: orderNum || '#0000',
+        comment: comment || '-',
+        date: new Date().toISOString().split('T')[0],
         status: 'En Cours',
-        readByResponsable: false,
-        readByWho: "",
-        hasNewResponseFromAgent: false,
-        thread: [
-          { sender: `${currentUser.fname} ${currentUser.lname}`, role: "field", text: "Création de la réclamation", date: new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}) }
-        ]
-      };
+        isReadByResp: false,      // wach t9rata mn toraf responsable
+        hasNewAgentReply: false,  // notification l responsable bli l-dri jawb
+        hasNewRespMessage: false, // notification l dri bli jaouboh
+        messages: []              // chat / discussion array
+      });
 
-      claimsDB.push(newClaim);
       localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
-
-      logAuditEvent(`A créé la réclamation #${newClaim.id.toString().slice(-4)} (${newClaim.target})`);
-      alert("✅ Réclamation transmise aux Responsables avec succès !");
-
+      alert("✅ Réclamation soumise avec succès !");
       document.getElementById('rec-order-num').value = '';
       document.getElementById('rec-comment').value = '';
-      document.getElementById('rec-gps').value = '';
-      document.getElementById('rec-target-livreur').value = '';
-      document.getElementById('custom-store-input').value = '';
-      document.getElementById('custom-store-input').classList.add('hidden');
-      document.getElementById('store-search-input').value = '';
-      document.getElementById('rec-photo-input').value = '';
-      document.getElementById('photo-preview-img').src = '';
-      document.getElementById('photo-preview-box').classList.add('hidden');
-      uploadedPhotoBase64 = "";
-      document.getElementById('gps-error-banner').classList.add('hidden');
-      
-      initFormDropdowns();
-      updateLiveClaimCounters();
       renderAgentMyClaims();
+      updateCounters();
     }
 
-    function openClaimDetailsModal(claimId) {
-      activeOpenedClaim = claimsDB.find(c => c.id === claimId);
-      if (!activeOpenedClaim) return;
+    function updateCounters() {
+      const pendingPart = claimsDB.filter(c => c.status === 'En Cours').length;
+      document.getElementById('dash-badge-count').innerText = pendingPart;
+      document.getElementById('dash-pending-part-txt').innerText = pendingPart;
+      document.getElementById('tab-badge-part').innerText = claimsDB.filter(c => c.type === 'Partenaire' && c.status === 'En Cours').length;
+      document.getElementById('tab-badge-livr').innerText = claimsDB.filter(c => c.type === 'Livreur' && c.status === 'En Cours').length;
 
-      if (currentUser.role === 'admin' || currentUser.role === 'decideur') {
-        if (!activeOpenedClaim.readByResponsable) {
-          activeOpenedClaim.readByResponsable = true;
-          activeOpenedClaim.readByWho = `${currentUser.fname} ${currentUser.lname}`;
-          logAuditEvent(`A lu et pris en charge la réclamation #${activeOpenedClaim.id.toString().slice(-4)}`);
+      // Check agent notifications for replies
+      if (currentUser && currentUser.role === 'field') {
+        const unreadReplies = claimsDB.filter(c => c.agentId === currentUser.id && c.hasNewRespMessage).length;
+        const badge = document.getElementById('agent-pending-badge');
+        if (unreadReplies > 0) {
+          badge.innerText = unreadReplies;
+          badge.classList.remove('hidden');
+        } else {
+          badge.classList.add('hidden');
         }
-        activeOpenedClaim.hasNewResponseFromAgent = false;
-        localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
       }
-
-      document.getElementById('detail-rec-id').innerText = `ID: #${activeOpenedClaim.id.toString().slice(-4)}`;
-      const body = document.getElementById('rec-detail-body');
-      
-      const mapsUrl = activeOpenedClaim.gps ? `https://maps.google.com/?q=${activeOpenedClaim.gps}` : '#';
-      
-      const photoHtml = activeOpenedClaim.photo ? `
-        <div style="margin-top:12px; background:#f8fafc; padding:12px; border-radius:12px; border:1px solid #cbd5e1; text-align:center;">
-          <span style="font-size:11px; font-weight:800; color:#64748b; display:block; margin-bottom:8px;">📸 PHOTO JUSTIFICATIF :</span>
-          <img src="${activeOpenedClaim.photo}" alt="Photo Preuve" style="max-width:100%; max-height:180px; border-radius:10px; border:2px solid #059669; box-shadow:0 4px 12px rgba(0,0,0,0.15); cursor:pointer;" onclick="openPhotoZoomModal('${activeOpenedClaim.photo}')" />
-        </div>
-      ` : '';
-
-      body.innerHTML = `
-        <div class="detail-row"><span class="detail-label">Agent Saisie:</span><span class="detail-value">${activeOpenedClaim.agent}</span></div>
-        <div class="detail-row"><span class="detail-label">Type:</span><span class="detail-value">${activeOpenedClaim.type}</span></div>
-        <div class="detail-row"><span class="detail-label">Partenaire / Cible:</span><span class="detail-value">${activeOpenedClaim.target}</span></div>
-        <div class="detail-row"><span class="detail-label">Store Exact:</span><span class="detail-value" style="color:#059669;">${activeOpenedClaim.sector}</span></div>
-        <div class="detail-row"><span class="detail-label">Motif Incident:</span><span class="detail-value" style="color:#b91c1c;">${activeOpenedClaim.motif}</span></div>
-        <div class="detail-row"><span class="detail-label">N° Commande:</span><span class="detail-value">${activeOpenedClaim.orderNum}</span></div>
-        <div class="detail-row"><span class="detail-label">Statut Vue:</span><span class="detail-value">${activeOpenedClaim.readByResponsable ? '👁️ Lue par ' + activeOpenedClaim.readByWho : '⏳ Non encore lue par le Responsable'}</span></div>
-        <div class="detail-row"><span class="detail-label">Localisation GPS:</span><span class="detail-value"><a href="${mapsUrl}" target="_blank" style="color:#0284c7; font-weight:800;">📍 Ouvrir Maps</a></span></div>
-        ${photoHtml}
-        <div style="margin-top:12px; background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-          <span style="font-size:11px; font-weight:800; color:#64748b; display:block; margin-bottom:4px;">COMMENTAIRE DE SAISIE :</span>
-          <p style="font-size:13px; font-weight:700; color:#0f172a;">${activeOpenedClaim.comment}</p>
-        </div>
-      `;
-
-      renderClaimThread();
-      document.getElementById('rec-detail-modal').classList.add('active');
     }
 
-    function renderClaimThread() {
-      const container = document.getElementById('modal-chat-thread');
-      if (!container || !activeOpenedClaim) return;
-      container.innerHTML = '';
+    function renderReclamationStats() {
+      const tbody = document.getElementById('rec-dashboard-body');
+      const thead = document.getElementById('dash-table-head');
+      if (!tbody || !thead) return;
+      tbody.innerHTML = '';
 
-      if (!activeOpenedClaim.thread || activeOpenedClaim.thread.length === 0) {
-        container.innerHTML = `<div style="font-size:11px; color:#94a3b8;">Aucun message f ha l-réclamation.</div>`;
+      thead.innerHTML = `<th>Agent</th><th>Type</th><th>Cible / Store</th><th>Motif</th><th>Order #</th><th>Statut Lecture</th><th>Notification Réponse Dri</th><th>Actions</th>`;
+
+      let activeClaims = claimsDB.filter(c => c.type === currentDashTab && c.status === 'En Cours');
+      
+      if (activeClaims.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; padding:20px;">Aucune réclamation active.</td></tr>`;
         return;
       }
 
-      activeOpenedClaim.thread.forEach(msg => {
-        const isResp = msg.role === 'admin' || msg.role === 'decideur';
-        container.innerHTML += `
-          <div style="background:${isResp ? '#e0f2fe' : '#f1f5f9'}; border-left:3px solid ${isResp ? '#0284c7' : '#059669'}; padding:6px 10px; border-radius:8px;">
-            <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:800; color:${isResp ? '#0369a1' : '#15803d'}; margin-bottom:2px;">
-              <span>${msg.sender} ${isResp ? '(Responsable)' : '(Agent)'}</span>
-              <span style="color:#94a3b8;">${msg.date}</span>
-            </div>
-            <p style="font-size:12px; font-weight:700; color:#0f172a;">${msg.text}</p>
-          </div>
+      activeClaims.forEach(c => {
+        const readStatusHtml = c.isReadByResp ? `<span class="badge-green">🟢 Lue</span>` : `<span class="badge-red">🔴 Non Lue</span>`;
+        const agentReplyNotifHtml = c.hasNewRespMessage ? `<span class="badge-orange">⚠️ Nouveau Message !</span>` : `<span style="color:#94a3b8; font-size:12px;">Aucun</span>`;
+
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>${c.agentName}</strong></td>
+            <td>${c.type}</td>
+            <td><strong>${c.target}</strong> (${c.sector})</td>
+            <td>${c.motif}</td>
+            <td>${c.orderNum}</td>
+            <td>${readStatusHtml}</td>
+            <td>${agentReplyNotifHtml}</td>
+            <td><button class="btn-gold" onclick="openClaimModal(${c.id})">💬 Ouvrir & Discuter</button></td>
+          </tr>
         `;
       });
-    }
-
-    function sendClaimThreadMessage() {
-      const input = document.getElementById('modal-chat-input');
-      const text = input.value.trim();
-      if (!text || !activeOpenedClaim) return;
-
-      const isAgent = currentUser.role === 'field';
-
-      if (!activeOpenedClaim.thread) activeOpenedClaim.thread = [];
-      activeOpenedClaim.thread.push({
-        sender: `${currentUser.fname} ${currentUser.lname}`,
-        role: currentUser.role,
-        text,
-        date: new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'})
-      });
-
-      if (isAgent) {
-        activeOpenedClaim.hasNewResponseFromAgent = true;
-        logAuditEvent(`L'agent ${currentUser.fname} a répondu sur la réclamation #${activeOpenedClaim.id.toString().slice(-4)}`);
-      } else {
-        logAuditEvent(`Le responsable ${currentUser.fname} a envoyé un message sur la réclamation #${activeOpenedClaim.id.toString().slice(-4)}`);
-      }
-
-      localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
-      input.value = '';
-      renderClaimThread();
-      renderReclamationStats();
-      renderAgentMyClaims();
-    }
-
-    function openPhotoZoomModal(photoSrc) {
-      document.getElementById('zoomed-photo-img').src = photoSrc;
-      document.getElementById('download-photo-btn').href = photoSrc;
-      document.getElementById('photo-zoom-modal').classList.add('active');
-    }
-
-    function closePhotoZoomModal() {
-      document.getElementById('photo-zoom-modal').classList.remove('active');
-    }
-
-    function confirmCloseModal(markAsTraite) {
-      if (activeOpenedClaim && markAsTraite) {
-        activeOpenedClaim.status = "Traité";
-        logAuditEvent(`A marqué la réclamation #${activeOpenedClaim.id.toString().slice(-4)} comme TRAITÉ/CLASSÉ`);
-        localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
-      }
-      activeOpenedClaim = null;
-      document.getElementById('rec-detail-modal').classList.remove('active');
-      updateLiveClaimCounters();
-      renderReclamationStats();
-      renderAgentMyClaims();
-    }
-
-    function openEditModal(claimId) {
-      activeEditClaim = claimsDB.find(c => c.id === claimId);
-      if (!activeEditClaim) return;
-
-      if (currentUser.role === 'admin' || currentUser.role === 'decideur') {
-        alert("🔒 Interdiction : Seul l'Agent auteur a le droit de modifier le contenu de sa réclamation avant lecture !");
-        return;
-      }
-
-      if (activeEditClaim.readByResponsable) {
-        alert("🔒 Bloquée : Cette réclamation a déjà été lue par le Responsable. Vous ne pouvez plus la modifier !");
-        return;
-      }
-
-      document.getElementById('edit-rec-id').innerText = `ID: #${activeEditClaim.id.toString().slice(-4)}`;
-      document.getElementById('edit-rec-order').value = activeEditClaim.orderNum;
-      document.getElementById('edit-rec-motif').value = activeEditClaim.motif;
-      document.getElementById('edit-rec-comment').value = activeEditClaim.comment;
-
-      document.getElementById('rec-edit-modal').classList.add('active');
-    }
-
-    function closeEditModal() {
-      activeEditClaim = null;
-      document.getElementById('rec-edit-modal').classList.remove('active');
-    }
-
-    function saveClaimEdit() {
-      if (activeEditClaim) {
-        activeEditClaim.orderNum = document.getElementById('edit-rec-order').value;
-        activeEditClaim.motif = document.getElementById('edit-rec-motif').value;
-        activeEditClaim.comment = document.getElementById('edit-rec-comment').value;
-
-        logAuditEvent(`L'Agent a modifié sa réclamation #${activeEditClaim.id.toString().slice(-4)} avant lecture`);
-
-        localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
-        alert("✅ Réclamation modifiée avec succès !");
-        closeEditModal();
-        renderAgentMyClaims();
-      }
     }
 
     function renderAgentMyClaims() {
@@ -1283,155 +567,160 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      const myClaims = claimsDB.filter(c => c.agent.includes(currentUser.fname));
+      let myClaims = claimsDB.filter(c => c.agentId === currentUser.id);
 
       if (myClaims.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#64748b; font-weight:700; padding:16px;">Vous n'avez envoyé aucune réclamation pour l'instant.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#64748b; padding:20px;">Vous n'avez soumis aucune réclamation.</td></tr>`;
         return;
       }
 
-      myClaims.slice().reverse().forEach(c => {
-        const isRead = c.readByResponsable;
-        const readBadge = isRead ? `<span class="badge-green">👁️ Vu par le Responsable (${c.readByWho})</span>` : `<span class="badge-gold">⏳ Non encore lue</span>`;
-        const canEditBadge = !isRead ? `<span class="badge-green">✏️ Oui (Modifiable)</span>` : `<span class="badge-red">🔒 Verrouillée</span>`;
-        
-        const editBtn = !isRead ? `<button class="btn-edit" onclick="openEditModal(${c.id})">✏️ Modifier</button>` : `<button class="btn-action" style="background:#64748b; font-size:10px;" disabled>🔒 Verrouillé</button>`;
+      myClaims.forEach(c => {
+        // Condition: Illa t9rata (isReadByResp === true), ممنوع modifier!
+        const canEdit = !c.isReadByResp;
+        const readBadge = c.isReadByResp ? `<span class="badge-green">🟢 Lue par Responsable</span>` : `<span class="badge-orange">⏳ En attente de lecture</span>`;
+        const msgBadge = c.hasNewRespMessage ? `<span class="badge-red">🔔 Réponse reçue !</span>` : `<span style="color:#64748b; font-size:12px;">-</span>`;
 
         tbody.innerHTML += `
           <tr>
-            <td>${c.date}</td>
+            <td>#${c.id.toString().slice(-4)}</td>
             <td>${c.type}</td>
-            <td><strong>${c.target}</strong> (${c.sector})</td>
-            <td>${c.orderNum}</td>
+            <td>${c.target}</td>
+            <td>${c.motif}</td>
             <td>${readBadge}</td>
-            <td>${canEditBadge}</td>
+            <td>${msgBadge}</td>
             <td>
-              <button class="btn-gold" style="padding:4px 8px; font-size:10px;" onclick="openClaimDetailsModal(${c.id})">💬 Discussion / Voir</button>
-              ${editBtn}
+              <button class="btn-gold" onclick="openClaimModal(${c.id})">💬 Discussion (${c.messages.length})</button>
+              ${canEdit ? `<button class="btn-edit" style="margin-left:4px;" onclick="openEditModal(${c.id})">✏️ Modifier</button>` : `<span style="font-size:11px; color:#94a3b8; margin-left:6px;" title="Verrouillé car lu">🔒 Verrouillé</span>`}
             </td>
           </tr>
         `;
       });
     }
 
-    function renderReclamationStats() {
-      const tbody = document.getElementById('rec-dashboard-body');
-      const archiveBody = document.getElementById('rec-archive-body');
-      const thead = document.getElementById('dash-table-head');
-      if (!tbody || !thead) return;
-      tbody.innerHTML = '';
-      if (archiveBody) archiveBody.innerHTML = '';
+    function openClaimModal(id) {
+      activeOpenedClaimId = id;
+      const claim = claimsDB.find(c => c.id === id);
+      if (!claim) return;
 
-      if (currentDashTab === 'Partenaire') {
-        thead.innerHTML = `
-          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Danger</th><th>Discussion / Rep.</th><th>Statut</th><th>Actions</th>
-        `;
-      } else {
-        thead.innerHTML = `
-          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Danger</th><th>Discussion / Rep.</th><th>Statut</th><th>Actions</th>
-        `;
+      // Ila kan l-responsable howa lli hllaha, kanmarkiw bli rah t9rata (Lu)
+      if (currentUser.role !== 'field' && !claim.isReadByResp) {
+        claim.isReadByResp = true;
+        localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
       }
 
-      const fltSearch = (document.getElementById('flt-search')?.value || '').toLowerCase().trim();
-      const fltMotif = document.getElementById('flt-motif')?.value || '';
-      const fltBrand = document.getElementById('flt-brand')?.value || '';
-      const fltDate = document.getElementById('flt-date')?.value || '';
-
-      let activeClaims = claimsDB.filter(c => c.type === currentDashTab && c.status === 'En Cours');
-
-      if (fltSearch !== '') {
-        activeClaims = activeClaims.filter(c => 
-          c.agent.toLowerCase().includes(fltSearch) ||
-          c.target.toLowerCase().includes(fltSearch) ||
-          c.orderNum.toLowerCase().includes(fltSearch) ||
-          c.sector.toLowerCase().includes(fltSearch)
-        );
+      // Ila kan l-dri (agent) howa lli hllaha, kanms7o l-notification dyal message jdid
+      if (currentUser.role === 'field' && claim.agentId === currentUser.id) {
+        claim.hasNewRespMessage = false;
+        localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
+        updateCounters();
       }
 
-      if (fltMotif !== '') activeClaims = activeClaims.filter(c => c.motif === fltMotif);
-      if (fltBrand !== '') activeClaims = activeClaims.filter(c => c.target === fltBrand);
-      if (fltDate !== '') activeClaims = activeClaims.filter(c => c.date === fltDate);
+      document.getElementById('modal-claim-title').innerText = `Réclamation #${claim.id.toString().slice(-4)} - ${claim.target}`;
+      document.getElementById('detail-rec-status-badge').innerText = claim.isReadByResp ? "🟢 Lue" : "🔴 Non Lue";
 
-      const counts = {};
-      activeClaims.forEach(c => { counts[c.target] = (counts[c.target] || 0) + 1; });
+      document.getElementById('rec-detail-body').innerHTML = `
+        <div class="detail-row"><span class="detail-label">Agent Auteur:</span><span class="detail-value">${claim.agentName}</span></div>
+        <div class="detail-row"><span class="detail-label">Motif:</span><span class="detail-value">${claim.motif}</span></div>
+        <div class="detail-row"><span class="detail-label">N° Commande:</span><span class="detail-value">${claim.orderNum}</span></div>
+        <div class="detail-row"><span class="detail-label">Commentaire Initial:</span><span class="detail-value">${claim.comment}</span></div>
+      `;
 
-      if (activeClaims.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">🎉 Aucune réclamation correspondante aux filtres !</td></tr>`;
+      renderClaimChatMessages(claim);
+      document.getElementById('rec-detail-modal').classList.add('active');
+    }
+
+    function renderClaimChatMessages(claim) {
+      const container = document.getElementById('modal-chat-messages-container');
+      container.innerHTML = '';
+      if (!claim.messages || claim.messages.length === 0) {
+        container.innerHTML = `<div style="text-align:center; font-size:11.5px; color:#94a3b8; padding:10px;">Aucun message pour le moment. Commencez la discussion ici.</div>`;
+        return;
       }
 
-      activeClaims.forEach((c) => {
-        const count = counts[c.target] || 1;
-        let badge = `<span class="badge-green">${count} Rec.</span>`;
-        if (count >= 3 && count <= 5) badge = `<span class="badge-orange">⚠️ ${count} Rec.</span>`;
-        if (count > 5) badge = `<span class="badge-red">🚨 ${count} Rec.</span>`;
+      claim.messages.forEach(m => {
+        const isResp = m.senderRole !== 'field';
+        container.innerHTML += `<div class="chat-bubble ${isResp ? 'resp' : 'agent'}"><strong>${m.senderName}:</strong> ${m.text}</div>`;
+      });
+      container.scrollTop = container.scrollHeight;
+    }
 
-        const orderHtml = `${c.orderNum || '-'}`;
-        const targetHtml = `${c.target}`;
+    function sendClaimMessage() {
+      const input = document.getElementById('modal-chat-input');
+      const text = input.value.trim();
+      if (!text) return;
 
-        const respAlertBadge = c.hasNewResponseFromAgent ? `<span class="badge-red" style="font-size:10px; animation:pulse-red 1.5s infinite;">💬 Réponse Agent !</span>` : `<span class="badge-gold">💬 Chat</span>`;
+      const claim = claimsDB.find(c => c.id === activeOpenedClaimId);
+      if (!claim) return;
 
-        if (currentDashTab === 'Partenaire') {
-          tbody.innerHTML += `
-            <tr>
-              <td><strong>${c.agent}</strong></td>
-              <td><strong>${targetHtml}</strong></td>
-              <td><strong style="color:#059669;">${c.sector || '-'}</strong></td>
-              <td>${c.motif}</td>
-              <td>${orderHtml}</td>
-              <td>${badge}</td>
-              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">${respAlertBadge}</button></td>
-              <td><span class="badge-gold">${c.status}</span></td>
-              <td>
-                <button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Suppr</button>
-              </td>
-            </tr>
-          `;
-        } else {
-          tbody.innerHTML += `
-            <tr>
-              <td><strong>${c.agent}</strong></td>
-              <td><strong style="color:#2563eb;">${targetHtml}</strong></td>
-              <td>${c.motif}</td>
-              <td>${orderHtml}</td>
-              <td>${badge}</td>
-              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">${respAlertBadge}</button></td>
-              <td><span class="badge-gold">${c.status}</span></td>
-              <td>
-                <button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Suppr</button>
-              </td>
-            </tr>
-          `;
-        }
+      const isResp = currentUser.role !== 'field';
+
+      claim.messages.push({
+        senderId: currentUser.id,
+        senderName: `${currentUser.fname} ${currentUser.lname}`,
+        senderRole: currentUser.role,
+        text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       });
 
-      // HISTORIQUE ARCHIVE
-      const fltArcSearch = (document.getElementById('flt-arc-search')?.value || '').toLowerCase().trim();
-      let archivedClaims = claimsDB.filter(c => c.status === 'Traité' || c.status === 'Classé');
-
-      if (fltArcSearch !== '') {
-        archivedClaims = archivedClaims.filter(c => c.agent.toLowerCase().includes(fltArcSearch) || c.target.toLowerCase().includes(fltArcSearch) || c.orderNum.toLowerCase().includes(fltArcSearch));
+      // Notification logic:
+      if (isResp) {
+        // Responsable ssift message -> notification l dri
+        claim.hasNewRespMessage = true;
+      } else {
+        // Dri jawb -> notification l responsable
+        claim.hasNewRespMessage = false;
+        claim.hasNewAgentReply = true;
       }
 
-      if (archiveBody) {
-        if (archivedClaims.length === 0) {
-          archiveBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; font-weight:700; padding:14px;">Aucune réclamation archivée pour le moment.</td></tr>`;
-        } else {
-          archivedClaims.forEach(ac => {
-            archiveBody.innerHTML += `
-              <tr>
-                <td><strong>${ac.agent}</strong></td>
-                <td>${ac.type}</td>
-                <td><strong>${ac.target}</strong> (${ac.sector})</td>
-                <td>${ac.motif}</td>
-                <td>${ac.orderNum}</td>
-                <td>${ac.date}</td>
-                <td><span class="badge-green">✅ ${ac.status}</span></td>
-                <td><button class="btn-gold" style="padding:4px 8px; font-size:10px;" onclick="openClaimDetailsModal(${ac.id})">👁️ Voir</button></td>
-              </tr>
-            `;
-          });
-        }
+      localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
+      input.value = '';
+      renderClaimChatMessages(claim);
+      if (currentUser.role !== 'field') {
+        renderReclamationStats();
+      } else {
+        renderAgentMyClaims();
       }
+    }
+
+    function closeClaimModal() {
+      document.getElementById('rec-detail-modal').classList.remove('active');
+      activeOpenedClaimId = null;
+      if (currentUser.role !== 'field') {
+        renderReclamationStats();
+      } else {
+        renderAgentMyClaims();
+      }
+      updateCounters();
+    }
+
+    function openEditModal(id) {
+      const claim = claimsDB.find(c => c.id === id);
+      if (!claim || claim.isReadByResp) {
+        alert("⚠️ Cette réclamation a déjà été lue par un responsable et ne peut plus être modifiée !");
+        return;
+      }
+      document.getElementById('edit-claim-id').value = claim.id;
+      document.getElementById('edit-rec-order').value = claim.orderNum;
+      document.getElementById('edit-rec-comment').value = claim.comment;
+      document.getElementById('rec-edit-modal').classList.add('active');
+    }
+
+    function closeEditModal() {
+      document.getElementById('rec-edit-modal').classList.remove('active');
+    }
+
+    function saveClaimEdit() {
+      const id = parseInt(document.getElementById('edit-claim-id').value);
+      const claim = claimsDB.find(c => c.id === id);
+      if (!claim || claim.isReadByResp) return;
+
+      claim.orderNum = document.getElementById('edit-rec-order').value;
+      claim.comment = document.getElementById('edit-rec-comment').value;
+
+      localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
+      closeEditModal();
+      renderAgentMyClaims();
+      alert("✅ Réclamation modifiée avec succès !");
     }
 
     function switchDashTab(tab) {
@@ -1439,62 +728,6 @@
       document.getElementById('tab-part').classList.toggle('active', tab === 'Partenaire');
       document.getElementById('tab-livr').classList.toggle('active', tab === 'Livreur');
       renderReclamationStats();
-    }
-
-    function renderSessionsTable() {
-      const tbody = document.getElementById('sessions-table-body');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-
-      defaultAgents.forEach(a => {
-        tbody.innerHTML += `
-          <tr>
-            <td><strong>${a.fname} ${a.lname}</strong></td>
-            <td>${a.zone}</td>
-            <td>Aujourd'hui à 10:15</td>
-            <td><span class="badge-green">🟢 Actif en ligne</span></td>
-            <td><button class="btn-delete" onclick="alert('Session de ${a.fname} réinitialisée !')">🔒 Déconnecter</button></td>
-          </tr>
-        `;
-      });
-    }
-
-    function toggleFieldVisibility(fieldKey) {
-      fieldVisibility[fieldKey] = document.getElementById(`field-toggle-${fieldKey}`).checked;
-      localStorage.setItem('fieldops_vis_v31', JSON.stringify(fieldVisibility));
-    }
-
-    function renderConfigTree() {
-      const bTree = document.getElementById('brands-tree-container');
-      if (!bTree) return;
-      bTree.innerHTML = '';
-
-      Object.keys(storeCatalog).forEach(b => {
-        bTree.innerHTML += `
-          <div style="background:#fff; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; margin-top:8px;">
-            🏢 <strong>${b}</strong> (${storeCatalog[b].length} Stores)
-          </div>
-        `;
-      });
-    }
-
-    function deleteReclamation(id) {
-      if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
-        claimsDB = claimsDB.filter(c => c.id !== id);
-        localStorage.setItem('fieldops_claims_db_v31', JSON.stringify(claimsDB));
-        logAuditEvent(`A supprimé la réclamation #${id.toString().slice(-4)}`);
-        updateLiveClaimCounters();
-        renderReclamationStats();
-      }
-    }
-
-    function exportToCSV() {
-      let csv = "Agent,Type,Cible,Store,Motif,N° Commande,GPS,Commentaire,Date,Status\n";
-      claimsDB.forEach(c => { csv += `"${c.agent}","${c.type}","${c.target}","${c.sector}","${c.motif}","${c.orderNum}","${c.gps}","${c.comment}","${c.date}","${c.status}"\n`; });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;' }));
-      link.download = `Reclamations_Export.csv`;
-      link.click();
     }
 
     renderLockCards();
