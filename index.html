@@ -3,428 +3,831 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - System Admin & Planning Central</title>
+  <title>Planning Shift Management (44H) - Electric Violet</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-cream: #fbf7ee;
-      --card-cream: #fde8ad;
-      --card-hover: #f9dd93;
-      --green-primary: #00875a;
-      --green-dark: #005a3c;
-      --sidebar-bg: #f8f6fc;
-      --border-subtle: #e9e5f0;
-      --text-dark: #1e293b;
+      --bg-gradient: linear-gradient(135deg, #fbf7ff 0%, #f3e8ff 100%);
+      --header-bg: linear-gradient(90deg, #4c1d95 0%, #581c87 50%, #6b21a8 100%);
+      --card-bg: #ffffff;
+      --border-color: #f3e8ff;
+      --border-subtle: #e9d5ff;
+      --text-main: #3b0764;
+      --text-muted: #6b21a8;
+      --text-sub: #86198f;
       
-      /* COULEURS DES ZONES */
-      --zone-sale: #0284c7;        /* Salé - Bleu Fixe */
-      --zone-temara: #059669;      /* Temara - Vert */
-      --zone-hayriad: #7c3aed;     /* Hay Riad - Violet */
-      --zone-agdal: #ea580c;       /* Agdal - Orange */
-      --zone-techno: #db2777;      /* Technopolis - Rose */
+      --matin-bg: #ede9fe;
+      --matin-txt: #6d28d9;
+      --matin-border: #c4b5fd;
+
+      --aprem-bg: #fae8ff;
+      --aprem-txt: #86198f;
+      --aprem-border: #f0abfc;
+
+      --soir-bg: #e0e7ff;
+      --soir-txt: #3730a3;
+      --soir-border: #a5b4fc;
+
+      --off-bg: #f8fafc;
+      --off-txt: #94a3b8;
+      --off-border: #e2e8f0;
+
+      --ok-bg: #dcfce7;
+      --ok-txt: #15803d;
+      --ok-border: #86efac;
+
+      --alert-bg: #fee2e2;
+      --alert-txt: #b91c1c;
+      --alert-border: #fca5a5;
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
-    body { background: var(--bg-cream); color: var(--text-dark); min-height: 100vh; display: flex; }
-    .hidden { display: none !important; }
-
-    /* LOCK SCREEN */
-    #lock-screen {
-      width: 100%; min-height: 100vh; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 10px;
-    }
-    .brand-header { text-align: center; margin-bottom: 12px; }
-    .brand-header h1 { font-size: 26px; font-weight: 800; color: #005a3c; }
-    .brand-header p { font-size: 12px; color: #78716c; font-weight: 600; }
-
-    .agents-grid-container { width: 100%; max-width: 900px; padding: 4px; margin-bottom: 12px; }
-    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
-
-    .agent-card {
-      background: var(--card-cream); border: 2px solid transparent; border-radius: 12px;
-      padding: 8px 4px; text-align: center; cursor: pointer; transition: all 0.2s ease;
-      display: flex; flex-direction: column; align-items: center; gap: 2px;
-    }
-    .agent-card:hover { background: var(--card-hover); transform: translateY(-2px); }
-    .agent-card.selected { background: #e6f4ea; border-color: var(--green-primary); }
-
-    .avatar-circle {
-      width: 36px; height: 36px; border-radius: 50%; display: flex;
-      align-items: center; justify-content: center; color: #ffffff; font-size: 15px; font-weight: 800;
+    
+    body {
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text-main);
+      padding: 24px;
     }
 
-    .agent-fname { font-size: 11.5px; font-weight: 800; color: #1c1917; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-    .agent-lname { font-size: 9px; font-weight: 700; color: #78716c; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-
-    .login-box { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 8px; }
-    .btn-unlock {
-      width: 100%; padding: 12px; border-radius: 12px; border: none;
-      background: var(--green-primary); color: #ffffff; font-size: 14px; font-weight: 800; cursor: pointer;
+    .container {
+      max-width: 1650px;
+      margin: 0 auto;
     }
 
-    /* MAIN APP */
-    #main-app { display: flex; width: 100%; min-height: 100vh; background: #fefcf6; }
-    .sidebar { width: 250px; background: var(--sidebar-bg); border-right: 1px solid var(--border-subtle); padding: 20px 14px; display: flex; flex-direction: column; gap: 20px; flex-shrink: 0; }
-    .brand { display: flex; align-items: center; gap: 10px; padding-left: 6px; }
-    .brand-icon { width: 36px; height: 36px; background: var(--green-primary); color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; }
-    .brand-title { font-size: 18px; font-weight: 800; color: #0f172a; }
-
-    .menu-section { display: flex; flex-direction: column; gap: 4px; }
-    .menu-label { font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; padding: 0 10px; margin-bottom: 4px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; font-weight: 700; font-size: 13px; color: #475569; cursor: pointer; }
-    .nav-item:hover { background: #eeeaf8; color: var(--green-dark); }
-    .nav-item.active { background: var(--green-primary); color: #ffffff; box-shadow: 0 4px 12px rgba(0, 135, 90, 0.25); }
-
-    .main-content { flex: 1; padding: 24px; overflow-y: auto; }
-    .top-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; }
-    .user-info-badge { display: flex; align-items: center; gap: 10px; background: #ffffff; padding: 6px 14px; border-radius: 10px; border: 1px solid #e2e8f0; }
-
-    .content-card { background: #ffffff; border-radius: 16px; border: 1px solid var(--border-subtle); padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 20px; }
-
-    .btn-action { background: var(--green-primary); color: #fff; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
-    .btn-purple { background: #6d28d9; color: #fff; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
-    .btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 11px; }
-
-    /* PLANNING STYLES MATCHING ROTATION */
-    .planning-table-container { overflow-x: auto; border-radius: 12px; border: 1px solid #e2e8f0; }
-    .plan-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #ffffff; }
-    .plan-table th { background: #4c1d95; color: #ffffff; padding: 12px 8px; font-size: 11px; font-weight: 800; text-align: center; text-transform: uppercase; }
-    .plan-table th.first-col { text-align: left; padding-left: 16px; background: #3b0764; }
-    .plan-table td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; text-align: center; vertical-align: middle; }
-
-    .select-agent-box {
-      width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid #d8b4fe; background: #ffffff; font-weight: 700; font-size: 12px; color: #1e1b4b; outline: none;
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      background: var(--card-bg);
+      padding: 18px 28px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(76, 29, 149, 0.08);
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 22px;
     }
 
-    /* BADGES DE ZONES AVEC COULEURS SPECIFIQUES */
-    .zone-badge {
-      display: inline-block; padding: 6px 12px; border-radius: 8px; font-weight: 800; font-size: 11px; color: #ffffff; width: 100%; text-align: center;
-    }
-    .zone-sale { background: var(--zone-sale); }
-    .zone-temara { background: var(--zone-temara); }
-    .zone-hayriad { background: var(--zone-hayriad); }
-    .zone-agdal { background: var(--zone-agdal); }
-    .zone-techno { background: var(--zone-techno); }
-
-    /* SHIFTS DESIGN */
-    .shift-select {
-      width: 100%; padding: 6px; border-radius: 8px; font-size: 11px; font-weight: 800; border: 1px solid #cbd5e1; outline: none; text-align: center; cursor: pointer;
-    }
-    .shift-morning { background: #e0f2fe; color: #0369a1; }
-    .shift-evening { background: #fce7f3; color: #be185d; }
-    .shift-night { background: #ede9fe; color: #6d28d9; }
-    .shift-off { background: #f1f5f9; color: #94a3b8; }
-    .shift-conge { background: #dcfce7; color: #15803d; }
-    .shift-absent { background: #fee2e2; color: #b91c1c; }
-
-    .alert-banner-warning {
-      background: #fffbebf5; border: 1px solid #fcd34d; color: #92400e; padding: 12px 16px; border-radius: 10px; font-size: 12px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
-    @media (max-width: 768px) {
-      #main-app { flex-direction: column; }
-      .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 12px; }
-      .main-content { padding: 14px; }
-      .agents-grid { grid-template-columns: repeat(3, 1fr); }
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #7c3aed, #4c1d95);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
+
+    .brand-title h1 {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #4c1d95, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-title p {
+      font-size: 12px;
+      color: #7c3aed;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .week-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #faf5ff;
+      padding: 6px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .week-nav span {
+      font-weight: 700;
+      font-size: 13.5px;
+      color: #581c87;
+    }
+
+    .status-pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 8px;
+      margin-left: 6px;
+    }
+    .pill-locked { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+    .pill-unlocked { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 9px 16px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-nav {
+      background: #ffffff;
+      color: #6b21a8;
+      border: 1px solid var(--border-subtle);
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+    .btn-nav:hover {
+      background: #f3e8ff;
+      color: #4c1d95;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #581c87);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #6d28d9, #4c1d95);
+      transform: translateY(-1px);
+    }
+
+    .btn-reset {
+      background: #ffffff;
+      color: #6b21a8;
+      border: 1px solid var(--border-subtle);
+    }
+    .btn-reset:hover {
+      background: #faf5ff;
+      border-color: #c4b5fd;
+    }
+
+    #lock-banner {
+      display: none;
+      background: #fffbeb;
+      border: 1.5px solid #fde68a;
+      color: #b45309;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .table-container {
+      background: var(--card-bg);
+      border-radius: 18px;
+      overflow-x: auto;
+      box-shadow: 0 12px 35px -10px rgba(76, 29, 149, 0.1);
+      border: 1px solid var(--border-subtle);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 1450px;
+      text-align: center;
+    }
+
+    thead th {
+      background: var(--header-bg);
+      color: #ffffff;
+      padding: 15px 8px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      border-bottom: 2px solid #3b0764;
+    }
+
+    th:first-child { border-top-left-radius: 16px; }
+    th:last-child { border-top-right-radius: 16px; }
+
+    th .day-name { display: block; font-size: 13px; font-weight: 800; }
+    th .day-date { display: block; font-size: 11px; font-weight: 500; color: #e9d5ff; margin-top: 3px; }
+
+    th.col-agent { width: 190px; text-align: left; padding-left: 20px; }
+    th.col-zone { width: 190px; text-align: left; padding-left: 14px; }
+    th.col-total { width: 230px; }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border-color);
+      transition: background 0.15s ease;
+    }
+
+    tbody tr:hover {
+      background: #faf5ff;
+    }
+
+    tbody tr:last-child td:first-child { border-bottom-left-radius: 16px; }
+    tbody tr:last-child td:last-child { border-bottom-right-radius: 16px; }
+
+    td {
+      padding: 10px 4px;
+      font-size: 13px;
+      border-bottom: 1px solid #f3e8ff;
+    }
+
+    td.cell-agent { text-align: left; padding-left: 16px; }
+    td.cell-zone { text-align: left; padding-left: 12px; }
+
+    .field-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fbf7ff;
+      border: 1px solid #f3e8ff;
+      border-radius: 8px;
+      padding: 5px 8px;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .field-box:hover {
+      border-color: #c4b5fd;
+      background: #ffffff;
+    }
+
+    .field-text {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 135px;
+    }
+
+    .field-text.zone-txt {
+      color: #6b21a8;
+      font-weight: 600;
+    }
+
+    .btn-edit-small {
+      background: #f3e8ff;
+      color: #7c3aed;
+      border: 1px solid #e9d5ff;
+      font-size: 11px;
+      padding: 3px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      line-height: 1;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .btn-edit-small:hover {
+      background: #7c3aed;
+      color: #ffffff;
+      border-color: #7c3aed;
+    }
+    .btn-edit-small:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    select.shift-select {
+      width: 100%;
+      padding: 9px 4px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid transparent;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s ease;
+      text-align-last: center;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    select.shift-select:disabled {
+      cursor: not-allowed;
+      opacity: 0.85;
+    }
+
+    select.matin { background: var(--matin-bg); color: var(--matin-txt); border-color: var(--matin-border); }
+    select.aprem { background: var(--aprem-bg); color: var(--aprem-txt); border-color: var(--aprem-border); }
+    select.soir { background: var(--soir-bg); color: var(--soir-txt); border-color: var(--soir-border); }
+    select.off { background: var(--off-bg); color: var(--off-txt); border-color: var(--off-border); }
+
+    select optgroup { font-weight: 800; color: #4c1d95; background: #ffffff; }
+    select option { font-weight: 600; padding: 6px; }
+
+    .total-action-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .hours-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 9px;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 11.5px;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .badge-ok {
+      background: var(--ok-bg);
+      color: var(--ok-txt);
+      border: 1.5px solid var(--ok-border);
+    }
+
+    .badge-alert {
+      background: var(--alert-bg);
+      color: var(--alert-txt);
+      border: 1.5px solid var(--alert-border);
+      animation: pulseAlert 1.6s infinite;
+    }
+
+    @keyframes pulseAlert {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    select.btn-shift-choice {
+      padding: 6px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 8px;
+      background: #faf5ff;
+      color: #6b21a8;
+      border: 1.5px solid #c4b5fd;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s;
+    }
+    select.btn-shift-choice:hover {
+      background: #f3e8ff;
+      border-color: #7c3aed;
+    }
+    select.btn-shift-choice:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .btn-del {
+      background: transparent;
+      color: #c4b5fd;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-del:hover {
+      color: #ef4444;
+      background: #fee2e2;
+    }
+    .btn-del:disabled {
+      cursor: not-allowed;
+      opacity: 0.3;
     }
   </style>
 </head>
 <body>
 
-  <!-- LOCK SCREEN FOR RESPONSABLES -->
-  <div id="lock-screen">
-    <div class="brand-header">
-      <h1>FieldOps Admin</h1>
-      <p>Sélectionnez votre profil Responsable pour accéder au système</p>
+<div class="container">
+  <div class="top-bar">
+    <div class="brand-title">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <h1>Operational Shift Planning (44H)</h1>
+        <p>Boutons Modifier Nom & Zone • Thème Electric Violet • Sauvegarde Permanente</p>
+      </div>
     </div>
 
-    <div class="agents-grid-container">
-      <div class="agents-grid" id="agents-grid-target"></div>
+    <div class="week-nav">
+      <button class="btn-nav" onclick="changeWeek(-1)">◀ Précédent</button>
+      <span id="current-week-label">Semaine ...</span>
+      <span id="lock-status-pill" class="status-pill"></span>
+      <button class="btn-nav" onclick="changeWeek(1)">Suivant ▶</button>
+      <button class="btn-nav" style="margin-left: 6px;" onclick="goToCurrentWeek()">Aujourd'hui</button>
     </div>
 
-    <div class="login-box">
-      <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER ACCÈS DIRECT</button>
+    <div class="btn-group">
+      <button class="btn-primary" onclick="handleAddNewAgent()">+ Ajouter Agent</button>
+      <button class="btn-reset" onclick="resetToDefault()">🔄 Réinitialiser</button>
     </div>
   </div>
 
-  <!-- MAIN APP -->
-  <div id="main-app" class="hidden">
-    <div class="sidebar">
-      <div class="brand">
-        <div class="brand-icon">O</div>
-        <div class="brand-title">FieldOps</div>
-      </div>
-
-      <div class="menu-section">
-        <div class="menu-label">Opérations Admin</div>
-        <div class="nav-item active" id="menu-dash" onclick="showView('dashboard', this)"><span>📊</span> Dashboard</div>
-        <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨</span> Saisie Réclamation</div>
-        <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️</span> Config Dynamic</div>
-        <div class="nav-item" id="menu-msg" onclick="showView('messages', this)"><span>💬</span> Messages Directs</div>
-        <div class="nav-item" id="menu-plan" onclick="showView('planning', this)"><span>📅</span> Planning Agents</div>
-      </div>
-
-      <div class="menu-section">
-        <div class="menu-label">Ressources</div>
-        <div class="nav-item" id="menu-param" onclick="showView('parametres', this)"><span>⚙️</span> Paramètres Planning</div>
-      </div>
+  <div id="lock-banner">
+    <div>
+      🔒 <strong>Semaine en cours verrouillée :</strong> Cliquez sur <strong>(Suivant ▶)</strong> pour modifier le planning de la semaine prochaine.
     </div>
+    <button class="btn-nav" onclick="forceUnlockCurrentWeek()" style="background:#fff; font-size:11px;">🔓 Déverrouiller Exceptionnellement</button>
+  </div>
 
-    <div class="main-content">
-      <div class="top-header-bar">
-        <h2 id="current-view-title" style="font-size:20px; font-weight:800; color:#0f172a;">Dashboard Admin</h2>
-        <div class="user-info-badge">
-          <span id="logged-user-avatar" style="width:26px; height:26px; border-radius:50%; background:#00875a; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:11px;">👤</span>
-          <span id="logged-user-name" style="font-weight:800; font-size:13px; color:#1e293b;">-</span>
-          <button onclick="lockSystem()" style="background:#fee2e2; color:#b91c1c; border:none; padding:5px 10px; border-radius:8px; font-weight:800; cursor:pointer; font-size:11px; margin-left:8px;">🔒 Déconnexion</button>
-        </div>
-      </div>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr id="table-header"></tr>
+      </thead>
+      <tbody id="planning-body"></tbody>
+    </table>
+  </div>
+</div>
 
-      <!-- DASHBOARD -->
-      <div id="view-dashboard" class="content-card">
-        <h3>📊 Centre de Traitement des Réclamations</h3>
-        <p style="color:#64748b; margin-bottom:14px; font-size:12px;">Suivi temps réel avec tri prioritaire par récurrence.</p>
-        
-        <div style="overflow-x:auto;">
-          <table style="width:100%; border-collapse:collapse;">
-            <thead>
-              <tr id="dash-table-head"></tr>
-            </thead>
-            <tbody id="rec-dashboard-body"></tbody>
-          </table>
-        </div>
-      </div>
+<script>
+  let currentWeekOffset = 0;
+  let manualUnlock = false;
 
-      <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION -->
-      <div id="view-reclamations" class="content-card hidden">
-        <h3>🚨 Saisie Nouvelle Réclamation (Responsable)</h3>
-      </div>
+  const SHIFTS = {
+    "OFF": { hours: 0, class: "off" },
+    "10:00-17:00": { hours: 7, class: "matin" },
+    "10:00-18:00": { hours: 8, class: "matin" },
+    "17:00-00:00": { hours: 7, class: "aprem" },
+    "17:00-01:00": { hours: 8, class: "aprem" },
+    "19:00-02:00": { hours: 7, class: "soir" },
+    "18:00-02:00": { hours: 8, class: "soir" },
+    "12:00-19:00": { hours: 7, class: "soir" },
+    "12:00-20:00": { hours: 8, class: "soir" }
+  };
 
-      <!-- CONFIGURATION DYNAMIQUE -->
-      <div id="view-config" class="content-card hidden">
-        <h3>🛠️ Configuration Dynamique du Formulaire Admin</h3>
-      </div>
+  const SHIFT_GROUPS = [
+    { label: "🔴 REPOS", items: ["OFF"] },
+    { label: "☀️ MATIN (10H)", items: ["10:00-17:00", "10:00-18:00"] },
+    { label: "🌅 SOIR (17H)", items: ["17:00-00:00", "17:00-01:00"] },
+    { label: "🌙 SOIR (19H)", items: ["19:00-02:00", "18:00-02:00"] },
+    { label: "⚡ AUTRES", items: ["12:00-19:00", "12:00-20:00"] }
+  ];
 
-      <!-- MESSAGES DIRECTS -->
-      <div id="view-messages" class="content-card hidden">
-        <h3>💬 Centre de Messagerie Directe</h3>
-      </div>
+  const KNOWN_ZONES = [
+    "Temara - Oulad Mtaa",
+    "Temara - Fouarat",
+    "Agdal - Carrousel",
+    "Salé - Medina",
+    "Hay Riad - Soussi",
+    "Technopolis",
+    "Harhoura",
+    "El Wifaq"
+  ];
 
-      <!-- PLANNING AGENTS TERRAIN ROTATIF -->
-      <div id="view-planning" class="content-card hidden">
-        
-        <!-- BANNIERE AVERTISSEMENT MODIFICATION SEMAINE EN COURS -->
-        <div id="current-week-alert" class="alert-banner-warning hidden">
-          <span>⚠️ <strong>ATTENTION :</strong> Vous êtes en train de modifier le planning de la <u>Semaine en Cours</u> ! Tout changement impactera directement le shift de l'agent aujourd'hui.</span>
-          <button onclick="document.getElementById('current-week-alert').classList.add('hidden')" style="border:none; background:none; cursor:pointer; font-weight:800; color:#92400e;">×</button>
-        </div>
+  const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
-          <div>
-            <h3 style="font-size:18px; font-weight:800; color:#3b0764;">📅 Planning Hebdomadaire Rotatif (44H/Agent)</h3>
-            <p style="color:#64748b; font-size:12px;">Rotation automatique Salé (Fixe) / Temara / Hay Riad / Agdal par semaine.</p>
+  const defaultAgents = [
+    { name: "Yahya Rhallab", zone: "Temara - Oulad Mtaa", offDay: 0, shiftType: "matin" },
+    { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir17" },
+    { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir19" },
+    { name: "Mourad Cherradi", zone: "Agdal - Carrousel", offDay: 1, shiftType: "matin" },
+    { name: "Youssef Derkaoui", zone: "Agdal - Carrousel", offDay: 0, shiftType: "soir17" },
+    { name: "Ayoub Abssi", zone: "Agdal - Carrousel", offDay: 3, shiftType: "soir19" },
+    { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftBaseIndex: 0 },
+    { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftBaseIndex: 1 },
+    { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftBaseIndex: 2 },
+    { name: "Achraf Akhlij", zone: "Hay Riad - Soussi", offDay: 3, shiftType: "matin" },
+    { name: "Islam Elmardi", zone: "Hay Riad - Soussi", offDay: 2, shiftType: "soir17" },
+    { name: "Oussama El Atrach", zone: "Hay Riad - Soussi", offDay: 0, shiftType: "soir19" },
+    { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno" }
+  ];
+
+  let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v3')) || {};
+
+  function getMonday(d) {
+    d = new Date(d);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+  }
+
+  function getWeekKey(monday) {
+    return `${monday.getFullYear()}-W${getWeekNumber(monday)}`;
+  }
+
+  function getWeekNumber(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  }
+
+  function getShiftForDay(type, dayIdx) {
+    const is8h = (dayIdx === 4 || dayIdx === 5);
+    if (type === "matin")  return is8h ? "10:00-18:00" : "10:00-17:00";
+    if (type === "soir17") return is8h ? "17:00-01:00" : "17:00-00:00";
+    if (type === "soir19") return is8h ? "18:00-02:00" : "19:00-02:00";
+    if (type === "techno") return is8h ? "12:00-20:00" : "12:00-19:00";
+    return "OFF";
+  }
+
+  function renderHeader(monday) {
+    const headerRow = document.getElementById('table-header');
+    let html = `
+      <th class="col-agent">Agent</th>
+      <th class="col-zone">Zone</th>
+    `;
+
+    for (let i = 0; i < 7; i++) {
+      const current = new Date(monday);
+      current.setDate(monday.getDate() + i);
+      const dateStr = current.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+      html += `
+        <th>
+          <span class="day-name">${DAYS[i]}</span>
+          <span class="day-date">${dateStr}</span>
+        </th>
+      `;
+    }
+
+    html += `<th class="col-total">Total & Action Ligne</th><th></th>`;
+    headerRow.innerHTML = html;
+  }
+
+  function getCurrentWeekAgents(weekKey, weekNumber) {
+    if (planningDB[weekKey]) {
+      return planningDB[weekKey];
+    }
+
+    const rotationTypes = ["matin", "soir17", "soir19"];
+    const generated = defaultAgents.map(a => {
+      let currentShiftType = a.shiftType;
+      if (a.zone && a.zone.includes("Salé") && a.shiftBaseIndex !== undefined) {
+        const rotatedIndex = (a.shiftBaseIndex + weekNumber) % 3;
+        currentShiftType = rotationTypes[rotatedIndex];
+      }
+
+      const shifts = [];
+      for (let day = 0; day < 7; day++) {
+        if (day === a.offDay) {
+          shifts.push("OFF");
+        } else {
+          shifts.push(getShiftForDay(currentShiftType, day));
+        }
+      }
+
+      return {
+        name: a.name,
+        zone: a.zone,
+        shiftType: currentShiftType,
+        shifts: shifts
+      };
+    });
+
+    planningDB[weekKey] = generated;
+    saveDB();
+    return generated;
+  }
+
+  function renderTable() {
+    const now = new Date();
+    const currentMonday = getMonday(now);
+    const viewedMonday = new Date(currentMonday);
+    viewedMonday.setDate(currentMonday.getDate() + (currentWeekOffset * 7));
+    
+    const weekNumber = getWeekNumber(viewedMonday);
+    const weekKey = getWeekKey(viewedMonday);
+    const sunday = new Date(viewedMonday);
+    sunday.setDate(viewedMonday.getDate() + 6);
+
+    const isCurrentWeek = currentWeekOffset === 0;
+    const isLocked = isCurrentWeek && !manualUnlock;
+
+    const banner = document.getElementById('lock-banner');
+    const pill = document.getElementById('lock-status-pill');
+
+    if (isLocked) {
+      banner.style.display = 'flex';
+      pill.className = 'status-pill pill-locked';
+      pill.innerText = '🔒 Verrouillée';
+    } else {
+      banner.style.display = 'none';
+      pill.className = 'status-pill pill-unlocked';
+      pill.innerText = '🔓 Modifiable';
+    }
+
+    document.getElementById('current-week-label').innerText = 
+      `Semaine ${weekNumber} (${viewedMonday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit'})} - ${sunday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric'})})`;
+
+    renderHeader(viewedMonday);
+
+    const tbody = document.getElementById('planning-body');
+    tbody.innerHTML = '';
+
+    const agents = getCurrentWeekAgents(weekKey, weekNumber);
+
+    agents.forEach((agent, agentIdx) => {
+      const tr = document.createElement('tr');
+
+      let html = `
+        <td class="cell-agent">
+          <div class="field-box">
+            <span class="field-text" title="${agent.name}">${agent.name}</span>
+            <button class="btn-edit-small" ${isLocked ? 'disabled' : ''} title="Changer le nom de l'agent" onclick="promptChangeAgent('${weekKey}', ${agentIdx})">✏️</button>
           </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <select id="week-selector" onchange="switchPlanningWeek()" style="padding:8px 12px; border-radius:8px; border:2px solid #6d28d9; font-weight:800; font-size:12px; background:#f5f3ff;">
-              <option value="S1">Semaine 1 (21/09 - 27/09) [En cours]</option>
-              <option value="S2">Semaine 2 (28/09 - 04/10) [Rotation]</option>
-              <option value="S3">Semaine 3 (05/10 - 11/10) [Rotation]</option>
+        </td>
+        <td class="cell-zone">
+          <div class="field-box">
+            <span class="field-text zone-txt" title="${agent.zone}">${agent.zone}</span>
+            <button class="btn-edit-small" ${isLocked ? 'disabled' : ''} title="Changer la zone" onclick="promptChangeZone('${weekKey}', ${agentIdx})">✏️</button>
+          </div>
+        </td>
+      `;
+
+      agent.shifts.forEach((shift, dayIdx) => {
+        const shiftClass = SHIFTS[shift] ? SHIFTS[shift].class : 'off';
+        
+        let selectOptions = '';
+        SHIFT_GROUPS.forEach(grp => {
+          selectOptions += `<optgroup label="${grp.label}">`;
+          grp.items.forEach(opt => {
+            selectOptions += `<option value="${opt}" ${opt === shift ? 'selected' : ''}>${opt}</option>`;
+          });
+          selectOptions += `</optgroup>`;
+        });
+
+        html += `
+          <td>
+            <select class="shift-select ${shiftClass}" ${isLocked ? 'disabled' : ''} onchange="updateShift('${weekKey}', ${agentIdx}, ${dayIdx}, this.value)">
+              ${selectOptions}
             </select>
-            <button class="btn-purple" style="padding:8px 14px; font-size:12px;" onclick="addAgentToPlanningPrompt()">➕ Ajouter Agent</button>
-            <button class="btn-action" style="padding:8px 14px; font-size:12px; background:#0284c7;" onclick="window.print()">🖨️ Imprimer</button>
-          </div>
-        </div>
-
-        <div class="planning-table-container">
-          <table class="plan-table">
-            <thead>
-              <tr>
-                <th class="first-col" style="min-width:160px;">AGENT</th>
-                <th style="min-width:160px; text-align:left; padding-left:10px;">ZONE AFFECTÉE</th>
-                <th>DIM<br><span style="font-weight:600; font-size:10px;">(7H)</span></th>
-                <th>LUN<br><span style="font-weight:600; font-size:10px;">(7H)</span></th>
-                <th>MAR<br><span style="font-weight:600; font-size:10px;">(7H)</span></th>
-                <th>MER<br><span style="font-weight:600; font-size:10px;">(7H)</span></th>
-                <th>JEU<br><span style="font-weight:600; font-size:10px;">(7H)</span></th>
-                <th>VEN<br><span style="font-weight:600; font-size:10px;">(8H)</span></th>
-                <th>SAM<br><span style="font-weight:600; font-size:10px;">(8H)</span></th>
-                <th>TOTAL</th>
-              </tr>
-            </thead>
-            <tbody id="planning-table-body"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- PARAMETRES -->
-      <div id="view-parametres" class="content-card hidden">
-        <h3 style="color:#4c1d95; font-size:18px; margin-bottom:6px;">⚙️ Paramètres système Admin</h3>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const responsablesList = [
-      { id: "1", fname: "Najib", lname: "HARATI", color: "#00875a", role: "admin" },
-      { id: "2", fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur" },
-      { id: "3", fname: "Anass", lname: "FADLI", color: "#059669", role: "decideur" },
-      { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
-    ];
-
-    // ROTATION ZONES PER WEEK: Salé (Fixe), Temara, Hay Riad, Agdal
-    const zoneRotation = {
-      "S1": { "G1": "Salé - Medina", "G2": "Temara - Oulad Mtaa", "G3": "Hay Riad - Soussi", "G4": "Agdal - Carrousel" },
-      "S2": { "G1": "Salé - Medina", "G2": "Hay Riad - Soussi", "G3": "Agdal - Carrousel", "G4": "Temara - Oulad Mtaa" },
-      "S3": { "G1": "Salé - Medina", "G2": "Agdal - Carrousel", "G3": "Temara - Oulad Mtaa", "G4": "Hay Riad - Soussi" }
-    };
-
-    const initialAgents = [
-      { id: "1", fname: "Charaf", lname: "Loummihi", group: "G1", offDay: 1 },
-      { id: "2", fname: "Hassan", lname: "Azgoune", group: "G1", offDay: 2 },
-      { id: "3", fname: "Ayoub", lname: "Ben Malek", group: "G1", offDay: 3 },
-      { id: "4", fname: "Yahya", lname: "Rhallab", group: "G2", offDay: 1 },
-      { id: "5", fname: "Mehdi", lname: "Ait Jebour", group: "G2", offDay: 2 },
-      { id: "6", fname: "Ayman", lname: "Chlifane", group: "G2", offDay: 3 },
-      { id: "7", fname: "Achraf", lname: "Akhlij", group: "G3", offDay: 1 },
-      { id: "8", fname: "Islam", lname: "Elmardi", group: "G3", offDay: 2 },
-      { id: "9", fname: "Oussama", lname: "El Atrach", group: "G3", offDay: 3 },
-      { id: "10", fname: "Mourad", lname: "Cherradi", group: "G4", offDay: 1 },
-      { id: "11", fname: "Youssef", lname: "Derkaoui", group: "G4", offDay: 2 },
-      { id: "12", fname: "Ayoub", lname: "Abssi", group: "G4", offDay: 3 }
-    ];
-
-    let currentWeek = "S1";
-    let selectedAgent = responsablesList[0];
-    let currentUser = responsablesList[0];
-
-    function renderLockCards() {
-      const target = document.getElementById('agents-grid-target');
-      target.innerHTML = '';
-      responsablesList.forEach(a => {
-        const card = document.createElement('div');
-        card.className = `agent-card ${selectedAgent && selectedAgent.id === a.id ? 'selected' : ''}`;
-        card.onclick = () => { selectedAgent = a; renderLockCards(); };
-        card.innerHTML = `<div class="avatar-circle" style="background:${a.color}">${a.role==='admin'?'👑':a.fname.charAt(0)}</div><div class="agent-fname">${a.fname}</div><div class="agent-lname">${a.lname}</div>`;
-        target.appendChild(card);
-      });
-    }
-
-    function attemptUnlock() {
-      if (!selectedAgent) selectedAgent = responsablesList[0];
-      currentUser = selectedAgent;
-      document.getElementById('lock-screen').classList.add('hidden');
-      document.getElementById('main-app').classList.remove('hidden');
-      document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname}`;
-      showView('planning', document.getElementById('menu-plan'));
-      renderPlanningTable();
-    }
-
-    function lockSystem() {
-      currentUser = null; selectedAgent = null;
-      document.getElementById('main-app').classList.add('hidden');
-      document.getElementById('lock-screen').classList.remove('hidden');
-      renderLockCards();
-    }
-
-    function showView(viewId, el) {
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      if(el) el.classList.add('active');
-      document.getElementById('view-dashboard').classList.add('hidden');
-      document.getElementById('view-reclamations').classList.add('hidden');
-      document.getElementById('view-planning').classList.add('hidden');
-      document.getElementById('view-messages').classList.add('hidden');
-      document.getElementById('view-config').classList.add('hidden');
-      document.getElementById('view-parametres').classList.add('hidden');
-      document.getElementById('view-' + viewId).classList.remove('hidden');
-    }
-
-    function getZoneBadgeClass(zoneName) {
-      if (zoneName.includes('Salé')) return 'zone-sale';
-      if (zoneName.includes('Temara')) return 'zone-temara';
-      if (zoneName.includes('Hay Riad')) return 'zone-hayriad';
-      if (zoneName.includes('Agdal')) return 'zone-agdal';
-      return 'zone-techno';
-    }
-
-    function switchPlanningWeek() {
-      currentWeek = document.getElementById('week-selector').value;
-      if (currentWeek === 'S1') {
-        document.getElementById('current-week-alert').classList.remove('hidden');
-      } else {
-        document.getElementById('current-week-alert').classList.add('hidden');
-      }
-      renderPlanningTable();
-    }
-
-    function handleShiftChange(selectEl) {
-      if (currentWeek === 'S1') {
-        document.getElementById('current-week-alert').classList.remove('hidden');
-        alert("⚠️ RAPPEL : Vous modifiez le planning de la semaine en cours ! L'agent en sera informé.");
-      }
-      updateSelectColor(selectEl);
-    }
-
-    function updateSelectColor(selectEl) {
-      selectEl.className = 'shift-select';
-      const val = selectEl.value;
-      if (val.includes('10:00')) selectEl.classList.add('shift-morning');
-      else if (val.includes('17:00')) selectEl.classList.add('shift-evening');
-      else if (val.includes('19:00')) selectEl.classList.add('shift-night');
-      else if (val === 'OFF') selectEl.classList.add('shift-off');
-      else if (val === 'CONGÉ') selectEl.classList.add('shift-conge');
-      else if (val === 'ABSENT') selectEl.classList.add('shift-absent');
-    }
-
-    function renderPlanningTable() {
-      const tbody = document.getElementById('planning-table-body');
-      tbody.innerHTML = '';
-
-      initialAgents.forEach((a) => {
-        const assignedZone = zoneRotation[currentWeek][a.group] || "Salé - Medina";
-        const zoneClass = getZoneBadgeClass(assignedZone);
-
-        tbody.innerHTML += `
-          <tr>
-            <td style="text-align:left; padding-left:12px;">
-              <strong style="font-size:12px; color:#0f172a;">${a.fname} ${a.lname}</strong>
-            </td>
-            <td style="text-align:left;">
-              <span class="zone-badge ${zoneClass}">📍 ${assignedZone}</span>
-            </td>
-            ${[0, 1, 2, 3, 4, 5, 6].map((dayIdx) => {
-              const isOff = dayIdx === a.offDay;
-              const defaultShift = isOff ? 'OFF' : (dayIdx >= 5 ? '17:00–01:00' : '10:00–17:00');
-              const shiftClass = isOff ? 'shift-off' : (dayIdx >= 5 ? 'shift-evening' : 'shift-morning');
-
-              return `
-                <td>
-                  <select class="shift-select ${shiftClass}" onchange="handleShiftChange(this)">
-                    <option value="10:00–17:00" ${defaultShift==='10:00–17:00'?'selected':''}>10:00–17:00 (7H)</option>
-                    <option value="17:00–00:00" ${defaultShift==='17:00–00:00'?'selected':''}>17:00–00:00 (7H)</option>
-                    <option value="17:00–01:00" ${defaultShift==='17:00–01:00'?'selected':''}>17:00–01:00 (8H)</option>
-                    <option value="19:00–02:00" ${defaultShift==='19:00–02:00'?'selected':''}>19:00–02:00 (7H)</option>
-                    <option value="OFF" ${defaultShift==='OFF'?'selected':''}>💤 OFF</option>
-                    <option value="CONGÉ">🏖️ CONGÉ</option>
-                    <option value="ABSENT">🚨 ABSENT</option>
-                  </select>
-                </td>
-              `;
-            }).join('')}
-            <td><strong style="color:#00875a; font-size:12px;">44H</strong></td>
-          </tr>
+          </td>
         `;
       });
-    }
 
-    function addAgentToPlanningPrompt() {
-      const name = prompt("Saisir le Prénom et Nom de l'agent :");
-      if (name) {
-        initialAgents.push({ id: Date.now().toString(), fname: name, lname: "", group: "G2", offDay: 1 });
-        renderPlanningTable();
+      const totalHours = agent.shifts.reduce((sum, s) => sum + (SHIFTS[s] ? SHIFTS[s].hours : 0), 0);
+      const isExact44 = totalHours === 44;
+      const diff = totalHours - 44;
+      const badgeClass = isExact44 ? 'badge-ok' : 'badge-alert';
+      const badgeText = isExact44 ? '44h OK' : (diff > 0 ? `${totalHours}h (+${diff}h)` : `${totalHours}h (${diff}h)`);
+
+      html += `
+        <td>
+          <div class="total-action-box">
+            <span class="hours-badge ${badgeClass}">${badgeText}</span>
+            <select class="btn-shift-choice" ${isLocked ? 'disabled' : ''} onchange="applyShiftChoice('${weekKey}', ${agentIdx}, this.value)">
+              <option value="" disabled selected>⚡ Shift Ligne</option>
+              <optgroup label="☀️ MATIN">
+                <option value="matin">☀️ Matin (10h)</option>
+              </optgroup>
+              <optgroup label="🌙 SOIR">
+                <option value="soir17">🌅 Soir (17h - Minuit)</option>
+                <option value="soir19">🌙 Soir (19h - 02h)</option>
+              </optgroup>
+              <optgroup label="⚡ AUTRE">
+                <option value="techno">⚡ Techno (12h)</option>
+              </optgroup>
+            </select>
+          </div>
+        </td>
+        <td><button class="btn-del" ${isLocked ? 'disabled' : ''} title="Supprimer" onclick="deleteAgent('${weekKey}', ${agentIdx})">✕</button></td>
+      `;
+
+      tr.innerHTML = html;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function promptChangeAgent(weekKey, agentIdx) {
+    if (currentWeekOffset === 0 && !manualUnlock) {
+      alert("⚠️ La semaine en cours est verrouillée !");
+      return;
+    }
+    const currentName = planningDB[weekKey][agentIdx].name;
+    const newName = prompt("Entrez le nouveau nom de l'agent :", currentName);
+    if (newName && newName.trim() !== "" && newName.trim() !== currentName) {
+      planningDB[weekKey][agentIdx].name = newName.trim();
+      saveDB();
+      renderTable();
+    }
+  }
+
+  function promptChangeZone(weekKey, agentIdx) {
+    if (currentWeekOffset === 0 && !manualUnlock) {
+      alert("⚠️ La semaine en cours est verrouillée !");
+      return;
+    }
+    const currentZone = planningDB[weekKey][agentIdx].zone;
+    let listText = "Choisissez ou entrez une nouvelle zone :\n\n";
+    KNOWN_ZONES.forEach((z, i) => { listText += `${i + 1}. ${z}\n`; });
+    listText += "\n(Entrez le numéro ou écrivez directement le nom de la zone) :";
+
+    const input = prompt(listText, currentZone);
+    if (input && input.trim() !== "") {
+      const num = parseInt(input.trim());
+      let finalZone = input.trim();
+      if (!isNaN(num) && num >= 1 && num <= KNOWN_ZONES.length) {
+        finalZone = KNOWN_ZONES[num - 1];
       }
+      planningDB[weekKey][agentIdx].zone = finalZone;
+      saveDB();
+      renderTable();
     }
+  }
 
-    renderLockCards();
-  </script>
+  function applyShiftChoice(weekKey, agentIdx, shiftType) {
+    if (currentWeekOffset === 0 && !manualUnlock) {
+      alert("⚠️ La semaine en cours est verrouillée ! Cliquez sur (Suivant ▶) pour modifier la semaine prochaine.");
+      return;
+    }
+    const agent = planningDB[weekKey][agentIdx];
+    agent.shiftType = shiftType;
+
+    for (let day = 0; day < 7; day++) {
+      if (agent.shifts[day] === "OFF") continue;
+      agent.shifts[day] = getShiftForDay(shiftType, day);
+    }
+    saveDB();
+    renderTable();
+  }
+
+  function updateShift(weekKey, agentIdx, dayIdx, val) {
+    if (currentWeekOffset === 0 && !manualUnlock) {
+      alert("⚠️ La semaine en cours est verrouillée !");
+      return;
+    }
+    planningDB[weekKey][agentIdx].shifts[dayIdx] = val;
+    saveDB();
+    renderTable();
+  }
+
+  function changeWeek(direction) {
+    currentWeekOffset += direction;
+    manualUnlock = false;
+    renderTable();
+  }
+
+  function goToCurrentWeek() {
+    currentWeekOffset = 0;
+    manualUnlock = false;
+    renderTable();
+  }
+
+  function forceUnlockCurrentWeek() {
+    if (confirm("Voulez-vous vraiment déverrouiller la semaine en cours pour modification exceptionnelle ?")) {
+      manualUnlock = true;
+      renderTable();
+    }
+  }
+
+  function handleAddNewAgent() {
+    if (currentWeekOffset === 0 && !manualUnlock) {
+      alert("⚠️ Vous êtes sur la semaine en cours verrouillée. Cliquez sur (Suivant ▶) pour préparer la semaine prochaine !");
+      return;
+    }
+    const now = new Date();
+    const currentMonday = getMonday(now);
+    const viewedMonday = new Date(currentMonday);
+    viewedMonday.setDate(currentMonday.getDate() + (currentWeekOffset * 7));
+    const weekKey = getWeekKey(viewedMonday);
+
+    planningDB[weekKey].push({
+      name: "Nouvel Agent",
+      zone: "Temara - Oulad Mtaa",
+      shiftType: "matin",
+      shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "10:00-17:00"]
+    });
+    saveDB();
+    renderTable();
+  }
+
+  function deleteAgent(weekKey, idx) {
+    if (confirm("Supprimer cet agent ?")) {
+      planningDB[weekKey].splice(idx, 1);
+      saveDB();
+      renderTable();
+    }
+  }
+
+  function resetToDefault() {
+    if (confirm("Réinitialiser toutes les modifications enregistrées ?")) {
+      localStorage.removeItem('shift_db_permanent_v3');
+      planningDB = {};
+      renderTable();
+    }
+  }
+
+  function saveDB() {
+    localStorage.setItem('shift_db_permanent_v3', JSON.stringify(planningDB));
+  }
+
+  renderTable();
+</script>
+
 </body>
 </html>
