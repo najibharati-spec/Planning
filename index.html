@@ -34,31 +34,31 @@
       align-items: center; justify-content: center; padding: 20px;
       background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%); color: #fff;
     }
-    .brand-header-lock { text-align: center; margin-bottom: 24px; }
+    .brand-header-lock { text-align: center; margin-bottom: 20px; }
     .brand-header-lock h1 { font-size: 32px; font-weight: 800; color: var(--brand-gold); letter-spacing: -0.5px; }
     .brand-header-lock p { font-size: 13px; color: #94a3b8; font-weight: 500; margin-top: 4px; }
 
-    .agents-grid-container { width: 100%; max-width: 650px; margin-bottom: 24px; }
-    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+    .agents-grid-container { width: 100%; max-width: 900px; margin-bottom: 20px; max-height: 360px; overflow-y: auto; padding: 10px; }
+    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; }
 
     .agent-card {
       background: rgba(255,255,255,0.05); border: 2px solid rgba(245, 158, 11, 0.2); border-radius: 14px;
-      padding: 18px 10px; text-align: center; cursor: pointer; transition: all 0.25s ease;
-      display: flex; flex-direction: column; align-items: center; gap: 8px; backdrop-filter: blur(8px);
+      padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.25s ease;
+      display: flex; flex-direction: column; align-items: center; gap: 6px; backdrop-filter: blur(8px);
     }
     .agent-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); border-color: var(--brand-gold); }
     .agent-card.selected { background: rgba(245, 158, 11, 0.4); border-color: var(--brand-gold); box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); transform: translateY(-2px); }
 
     .avatar-circle {
-      width: 48px; height: 48px; border-radius: 50%; display: flex;
-      align-items: center; justify-content: center; color: #ffffff; font-size: 18px; font-weight: 800;
+      width: 42px; height: 42px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; color: #ffffff; font-size: 16px; font-weight: 800;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
-    .agent-fname { font-size: 13.5px; font-weight: 700; color: #f8fafc; }
-    .agent-lname { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
+    .agent-fname { font-size: 12.5px; font-weight: 700; color: #f8fafc; }
+    .agent-lname { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
 
     .btn-unlock {
-      width: 100%; max-width: 380px; padding: 14px; border-radius: 12px; border: none;
+      width: 100%; max-width: 400px; padding: 14px; border-radius: 12px; border: none;
       background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-hover)); color: #ffffff;
       font-size: 14px; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
       box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.4);
@@ -204,14 +204,14 @@
   <div id="lock-screen">
     <div class="brand-header-lock">
       <h1>FieldOps Control Center</h1>
-      <p>Sélectionnez votre profil de responsable pour accéder au centre de contrôle</p>
+      <p>Sélectionnez votre profil pour accéder à votre espace</p>
     </div>
 
     <div class="agents-grid-container">
-      <div class="agents-grid" id="resp-grid-target"></div>
+      <div class="agents-grid" id="agents-grid-target"></div>
     </div>
 
-    <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER ACCÈS RESPONSABLE</button>
+    <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER ACCÈS DIRECT</button>
   </div>
 
   <div id="main-app" class="hidden">
@@ -229,7 +229,7 @@
         </div>
         <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨 Saisir Réclamation</span></div>
         <div class="nav-item" id="menu-my-claims" onclick="showView('my-claims', this)">
-          <span>📂 Historique Réclamations</span>
+          <span>📂 Historique Réclamations Agent</span>
           <span class="nav-badge-count hidden" id="my-claims-badge">0</span>
         </div>
         <div class="nav-item" id="menu-history" onclick="showView('history', this)">
@@ -327,8 +327,8 @@
       </div>
 
       <div id="view-my-claims" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📂 Historique des Réclamations</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Consultez ici l'ensemble des réclamations ainsi que les messages et notifications.</p>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📂 Historique Réclamations Agent</h3>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Consultez ici l'ensemble de vos réclamations soumises ainsi que les messages et notifications des responsables.</p>
 
         <div style="overflow-x:auto;">
           <table>
@@ -739,12 +739,25 @@
       "Livreur": ["Mauvais comportement", "Vol de commande par le livreur", "Utilisation d'un compte non personnel (Compte loué/partagé)"]
     };
 
-    // Gérer uniquement les 4 responsables
-    const responsablesList = [
+    // Kolchi m-qadd m3a baḍathoum (Najib, Mehdi, Anass, Youssef w les agents b nfs l-chkl w l-avatar d l-harf)
+    const allUsersList = [
       { fname: "Najib", lname: "HARATI", color: "#f59e0b", role: "admin" },
       { fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur" },
       { fname: "Anass", lname: "FADLI", color: "#059669", role: "decideur" },
-      { fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
+      { fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" },
+      { fname: "Yahya", lname: "RHALLAB", zone: "Temara - Oulad Mtaa", color: "#3b82f6", role: "field" },
+      { fname: "Mehdi", lname: "AIT JEBOUR", zone: "Temara - Oulad Mtaa", color: "#8b5cf6", role: "field" },
+      { fname: "Ayman", lname: "CHLIFANE", zone: "Temara - Oulad Mtaa", color: "#ec4899", role: "field" },
+      { fname: "Mourad", lname: "CHERRADI", zone: "Agdal - Carrousel", color: "#10b981", role: "field" },
+      { fname: "Youssef", lname: "DERKAOUI", zone: "Agdal - Carrousel", color: "#f59e0b", role: "field" },
+      { fname: "Ayoub", lname: "ABSSI", zone: "Agdal - Carrousel", color: "#ef4444", role: "field" },
+      { fname: "Charaf", lname: "LOUMMIHI", zone: "Salé - Medina", color: "#06b6d4", role: "field" },
+      { fname: "Hassan", lname: "AZGOUNE", zone: "Salé - Medina", color: "#84cc16", role: "field" },
+      { fname: "Ayoub", lname: "BEN MALEK", zone: "Salé - Medina", color: "#6366f1", role: "field" },
+      { fname: "Achraf", lname: "AKHLIJ", zone: "Hay Riad - Soussi", color: "#14b8a6", role: "field" },
+      { fname: "Islam", lname: "ELMARDI", zone: "Hay Riad - Soussi", color: "#d97706", role: "field" },
+      { fname: "Oussama", lname: "EL ATRACH", zone: "Hay Riad - Soussi", color: "#a855f7", role: "field" },
+      { fname: "Zakariae", lname: "BENALI", zone: "Technopolis", color: "#64748b", role: "field" }
     ];
 
     let storeCatalog = defaultStoreCatalog;
@@ -753,7 +766,7 @@
       { id: 1, agent: "Yahya RHALLAB", agentId: "agent_101", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Retard excessif au store.", date: "2026-09-20", status: "En Cours", chat: [], auditTrail: [] }
     ];
 
-    let selectedRespIndex = 0; 
+    let selectedGlobalIndex = 0; 
     let currentUser = null;
     let activeOpenedClaim = null;
     let uploadedPhotoBase64 = "";
@@ -790,18 +803,21 @@
 
       if (!currentUser) return;
       const myName = `${currentUser.fname} ${currentUser.lname}`;
-      let unreadClaims = 0;
+      let unreadAgentClaims = 0;
       claimsDB.forEach(c => {
         if (c.chat && c.chat.length > 0) {
           const lastMsg = c.chat[c.chat.length - 1];
-          if (lastMsg.sender !== myName && !lastMsg.read) unreadClaims++;
+          if (lastMsg.sender !== myName && !lastMsg.read) {
+            if (currentUser.role === 'field' && (c.agent === myName)) unreadAgentClaims++;
+            if (currentUser.role !== 'field') unreadAgentClaims++;
+          }
         }
       });
 
       const myClaimsBadge = document.getElementById('my-claims-badge');
       if (myClaimsBadge) {
-        myClaimsBadge.innerText = unreadClaims;
-        myClaimsBadge.classList.toggle('hidden', unreadClaims === 0);
+        myClaimsBadge.innerText = unreadAgentClaims;
+        myClaimsBadge.classList.toggle('hidden', unreadAgentClaims === 0);
       }
     }
 
@@ -829,47 +845,59 @@
       }
     }, 3000);
 
-    function renderRespCards() {
-      const target = document.getElementById('resp-grid-target');
+    function renderLockCards() {
+      const target = document.getElementById('agents-grid-target');
       if (!target) return;
       target.innerHTML = '';
 
-      responsablesList.forEach((a, index) => {
+      allUsersList.forEach((a, index) => {
+        const globalIdx = index;
         const card = document.createElement('div');
-        card.className = `agent-card ${selectedRespIndex === index ? 'selected' : ''}`;
+        card.className = `agent-card ${selectedGlobalIndex === globalIdx ? 'selected' : ''}`;
         card.onclick = () => {
-          selectedRespIndex = index;
-          renderRespCards();
+          selectedGlobalIndex = globalIdx;
+          renderLockCards();
         };
-        card.innerHTML = `<div class="avatar-circle" style="background:${a.color}">👑</div><div class="agent-fname">${a.fname}</div><div class="agent-lname">${a.lname}</div>`;
+        card.innerHTML = `<div class="avatar-circle" style="background:${a.color}">${a.fname.charAt(0)}</div><div class="agent-fname">${a.fname}</div><div class="agent-lname">${a.lname}</div>`;
         target.appendChild(card);
       });
     }
 
     function attemptUnlock() {
-      currentUser = responsablesList[selectedRespIndex] || responsablesList[0];
-      launchMainApp();
-    }
-
-    function launchMainApp() {
+      currentUser = allUsersList[selectedGlobalIndex] || allUsersList[0];
+      
       document.getElementById('lock-screen').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
-      document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname} (Responsable)`;
+      document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname} ${currentUser.role === 'field' ? '(Agent Terrain)' : '(Responsable)'}`;
       
+      const isFieldAgent = currentUser.role === 'field';
+
+      document.getElementById('menu-dash').classList.toggle('hidden', isFieldAgent);
+      document.getElementById('menu-config').classList.toggle('hidden', isFieldAgent);
+      document.getElementById('menu-sessions').classList.toggle('hidden', isFieldAgent);
+      document.getElementById('menu-plan').classList.toggle('hidden', isFieldAgent);
+      document.getElementById('menu-sec-resources').classList.toggle('hidden', isFieldAgent);
+      document.getElementById('menu-my-claims').classList.remove('hidden');
+      document.getElementById('menu-history').classList.toggle('hidden', isFieldAgent);
+
       initFormDropdowns();
       populateFilterBrands();
       updateLiveClaimCounters();
 
-      showView('dashboard', document.getElementById('menu-dash'));
-      renderReclamationStats();
+      if (isFieldAgent) {
+        showView('my-claims', document.getElementById('menu-my-claims'));
+      } else {
+        showView('dashboard', document.getElementById('menu-dash'));
+        renderReclamationStats();
+      }
     }
 
     function lockSystem() {
       currentUser = null; 
-      selectedRespIndex = 0;
+      selectedGlobalIndex = 0;
       document.getElementById('main-app').classList.add('hidden');
       document.getElementById('lock-screen').classList.remove('hidden');
-      renderRespCards();
+      renderLockCards();
     }
 
     function showView(viewId, el) {
@@ -1043,7 +1071,7 @@
       claimsDB.push({ 
         id: Date.now(), 
         agent: `${currentUser.fname} ${currentUser.lname}`,
-        agentId: 'resp',
+        agentId: currentUser.id || 'user',
         type, 
         target, 
         sector: type === 'Partenaire' ? sector : '-', 
@@ -1083,15 +1111,17 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      if (claimsDB.length === 0) {
+      const myName = `${currentUser.fname} ${currentUser.lname}`;
+      const myClaims = currentUser.role === 'field' ? claimsDB.filter(c => c.agent === myName) : claimsDB;
+
+      if (myClaims.length === 0) {
         tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">Aucune réclamation enregistrée.</td></tr>`;
         return;
       }
 
-      claimsDB.slice().reverse().forEach(c => {
+      myClaims.slice().reverse().forEach(c => {
         if (!c.chat) c.chat = [];
         let hasUnread = false;
-        const myName = `${currentUser.fname} ${currentUser.lname}`;
         if (c.chat.length > 0) {
           const lastMsg = c.chat[c.chat.length - 1];
           if (lastMsg.sender !== myName && !lastMsg.read) hasUnread = true;
@@ -1166,7 +1196,7 @@
       if (!activeOpenedClaim.chat) activeOpenedClaim.chat = [];
       if (!activeOpenedClaim.auditTrail) activeOpenedClaim.auditTrail = [];
 
-      const viewerName = `${currentUser.fname} ${currentUser.lname} (Responsable)`;
+      const viewerName = `${currentUser.fname} ${currentUser.lname} (${currentUser.role === 'field' ? 'Agent' : 'Responsable'})`;
       const nowTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       
       const lastAudit = activeOpenedClaim.auditTrail[activeOpenedClaim.auditTrail.length - 1];
@@ -1246,7 +1276,7 @@
       container.innerHTML = '';
 
       if (!activeOpenedClaim.chat || activeOpenedClaim.chat.length === 0) {
-        container.innerHTML = `<div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">Aucun message dans cette discussion.</div>`;
+        container.innerHTML = `<div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">Aucun message dans cette discussion pour le moment.</div>`;
         return;
       }
 
@@ -1293,8 +1323,12 @@
       activeOpenedClaim = null;
       document.getElementById('rec-detail-modal').classList.remove('active');
       updateLiveClaimCounters();
-      renderReclamationStats();
-      renderHistoryView();
+      if (currentUser.role === 'field') {
+        renderMyClaimsHistory();
+      } else {
+        renderReclamationStats();
+        renderHistoryView();
+      }
     }
 
     function switchDashTab(tab) {
@@ -1383,7 +1417,7 @@
       }
     }
 
-    renderRespCards();
+    renderLockCards();
   </script>
 </body>
 </html>
