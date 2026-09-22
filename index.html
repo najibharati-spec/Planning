@@ -93,10 +93,6 @@
       padding: 2px 8px; border-radius: 12px; box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
       animation: pulse-red 2s infinite;
     }
-    .nav-badge-blue {
-      background: #2563eb; color: #ffffff; font-size: 11px; font-weight: 800;
-      padding: 2px 8px; border-radius: 12px; box-shadow: 0 0 10px rgba(37, 99, 235, 0.6);
-    }
 
     @keyframes pulse-red {
       0% { transform: scale(1); }
@@ -205,7 +201,7 @@
 </head>
 <body>
 
-  <!-- LOCK SCREEN FOR RESPONSABLES & ALL FIELD AGENTS -->
+  <!-- LOCK SCREEN -->
   <div id="lock-screen">
     <div class="brand-header-lock">
       <h1>FieldOps Control Center</h1>
@@ -243,10 +239,7 @@
         </div>
         <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️ Config Dynamic</span></div>
         <div class="nav-item" id="menu-sessions" onclick="showView('sessions', this)"><span>👥 Sessions Agents</span></div>
-        <div class="nav-item" id="menu-msg" onclick="showView('messages', this)">
-          <span>💬 Messages Directs</span>
-          <span class="nav-badge-blue hidden" id="msg-badge-count">0</span>
-        </div>
+        <div class="nav-item" id="menu-msg" onclick="showView('messages', this)"><span>💬 Messages Directs</span></div>
         <div class="nav-item" id="menu-plan" onclick="showView('planning', this)"><span>📅 Planning Agents</span></div>
       </div>
 
@@ -339,7 +332,7 @@
       <!-- HESTOIR RECLAMATION AGENT -->
       <div id="view-my-claims" class="content-card hidden">
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📂 Hestoir Réclamation Agent (Historique & Chat)</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Hna katban lik kol réclamation dfa3tiha, w ila sifet lik l-responsable chi message kayban lik b notification.</p>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Hna katban lik kol réclamation dfa3tiha, w ila sifet lik l-responsable chi message kayban lik b notification wada7a.</p>
 
         <div style="overflow-x:auto;">
           <table>
@@ -377,7 +370,7 @@
           <table>
             <thead>
               <tr>
-                <th>ID</th><th>Agent</th><th>Type</th><th>Cible / Store</th><th>Motif</th><th>Order #</th><th>Date</th><th>Statut</th><th>Détails</th>
+                <th>ID</th><th>Agent</th><th>Type</th><th>Cible / Store</th><th>Motif</th><th>Order #</th><th>Date</th><th>Statut</th><th>Détails</th><th>Action Admin</th>
               </tr>
             </thead>
             <tbody id="history-tbody"></tbody>
@@ -467,7 +460,7 @@
     </div>
   </div>
 
-  <!-- MODAL DETAILS RECLAMATION & CHAT INTERNE -->
+  <!-- MODAL DETAILS RECLAMATION & CHAT -->
   <div id="rec-detail-modal" class="modal-overlay">
     <div class="modal-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
@@ -641,6 +634,10 @@
     let currentUser = allSystemUsers[0];
     let activeOpenedClaim = null;
     let uploadedPhotoBase64 = "";
+
+    function isNajibAdmin() {
+      return currentUser && currentUser.fname.toLowerCase() === "najib" && currentUser.lname.toLowerCase() === "harati";
+    }
 
     function updateLiveClaimCounters() {
       const pendingPart = claimsDB.filter(c => c.status === 'En Cours' && c.type === 'Partenaire').length;
@@ -1006,12 +1003,16 @@
       }
 
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">Aucun historique trouvé.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">Aucun historique trouvé.</td></tr>`;
         return;
       }
 
+      const canDelete = isNajibAdmin();
+
       list.slice().reverse().forEach(c => {
         const badgeStyle = c.status === 'En Cours' ? 'badge-gold' : 'badge-green';
+        const deleteBtnHtml = canDelete ? `<button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button>` : `<span style="color:#94a3b8; font-size:11px;">Restreint (Admin uniquement)</span>`;
+
         tbody.innerHTML += `
           <tr>
             <td><strong>#${c.id.toString().slice(-4)}</strong></td>
@@ -1023,6 +1024,7 @@
             <td>${c.date}</td>
             <td><span class="${badgeStyle}">${c.status}</span></td>
             <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">👁️ Voir</button></td>
+            <td>${deleteBtnHtml}</td>
           </tr>
         `;
       });
@@ -1139,16 +1141,17 @@
 
       if (currentDashTab === 'Partenaire') {
         thead.innerHTML = `
-          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Statut</th><th>Chat & Messages</th><th>Actions</th>
+          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Statut</th><th>Chat & Messages</th><th>Actions Admin</th>
         `;
       } else {
         thead.innerHTML = `
-          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Statut</th><th>Chat & Messages</th><th>Actions</th>
+          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Statut</th><th>Chat & Messages</th><th>Actions Admin</th>
         `;
       }
 
       let activeClaims = claimsDB.filter(c => c.type === currentDashTab && c.status === 'En Cours');
       const myName = `${currentUser.fname} ${currentUser.lname}`;
+      const canDelete = isNajibAdmin();
 
       activeClaims.forEach((c) => {
         if (!c.chat) c.chat = [];
@@ -1158,6 +1161,7 @@
           if (lastMsg.sender !== myName && !lastMsg.read) hasUnread = true;
         }
         const notifBadge = hasUnread ? '<span class="nav-badge-count" style="font-size:9px; padding:2px 5px;">NEW MSG 🔴</span>' : '';
+        const deleteBtnHtml = canDelete ? `<button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button>` : `<span style="color:#94a3b8; font-size:11px;">Restreint</span>`;
 
         if (currentDashTab === 'Partenaire') {
           tbody.innerHTML += `
@@ -1169,7 +1173,7 @@
               <td>${c.orderNum}</td>
               <td><span class="badge-gold">${c.status}</span></td>
               <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Chat & Détails ${notifBadge}</button></td>
-              <td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️</button></td>
+              <td>${deleteBtnHtml}</td>
             </tr>
           `;
         } else {
@@ -1181,7 +1185,7 @@
               <td>${c.orderNum}</td>
               <td><span class="badge-gold">${c.status}</span></td>
               <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Chat & Détails ${notifBadge}</button></td>
-              <td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️</button></td>
+              <td>${deleteBtnHtml}</td>
             </tr>
           `;
         }
@@ -1189,7 +1193,11 @@
     }
 
     function deleteReclamation(id) {
-      if(confirm("Supprimer cette réclamation ?")) {
+      if (!isNajibAdmin()) {
+        alert("⚠️ Accès refusé ! Had l-amaria khassa b Najib Harati waḥdu.");
+        return;
+      }
+      if(confirm("Wakha bɣiti t-msaḥ had la réclamation نهائياً?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
         localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
         updateLiveClaimCounters();
