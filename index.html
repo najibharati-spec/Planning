@@ -183,7 +183,7 @@
     }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-card {
-      background: #ffffff; padding: 26px; border-radius: 18px; width: 100%; max-width: 580px;
+      background: #ffffff; padding: 26px; border-radius: 18px; width: 100%; max-width: 620px;
       box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.25); border: 1px solid #cbd5e1; max-height: 90vh; overflow-y: auto;
     }
 
@@ -240,12 +240,12 @@
         <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️ Configuration Dynamique</span></div>
         <div class="nav-item" id="menu-sessions" onclick="showView('sessions', this)"><span>👥 Sessions Agents</span></div>
         <div class="nav-item" id="menu-msg" onclick="showView('messages', this)"><span>💬 Messages Directs</span></div>
-        <div class="nav-item" id="menu-plan" onclick="showView('planning', this)"><span>📅 Planning Agents</span></div>
+        <div class="nav-item" id="menu-plan" onclick="showView('planning', this)"><span>📅 Planning Agents (44H)</span></div>
       </div>
 
       <div class="menu-section" id="menu-sec-resources">
         <div class="menu-label">Ressources</div>
-        <div class="nav-item" id="menu-param" onclick="showView('parametres', this)"><span>⚙️ Paramètres</span></div>
+        <div class="nav-item" id="menu-param" onclick="showView('parametres', this)"><span>⚙️ Paramètres du Système</span></div>
       </div>
     </div>
 
@@ -446,10 +446,161 @@
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">💬 Centre de Messagerie Directe</h3>
       </div>
 
-      <!-- PLANNING AGENTS -->
-      <div id="view-planning" class="hidden">
-        <div style="background:#ffffff; padding:20px 24px; border-radius:16px; border:1px solid #e9d5ff; margin-bottom:22px;">
-          <h1 style="font-size:20px; font-weight:800; color:#581c87;">Planning des Équipes (44H)</h1>
+      <!-- PLANNING AGENTS (44H) -->
+      <div id="view-planning" class="content-card hidden">
+        <h3 style="font-size:18px; font-weight:800; color:#581c87; margin-bottom:4px;">📅 Planning Opérationnel des Agents (44 Heures / Semaine)</h3>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Répartition hebdomadaire des shifts (44H par agent) pour les 12 agents de terrain sous la supervision de Najib Harati.</p>
+
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr style="background:#f3e8ff; color:#581c87;">
+                <th>Agent Terrain</th>
+                <th>Zone / Secteur</th>
+                <th>Lundi (8h)</th>
+                <th>Mardi (8h)</th>
+                <th>Mercredi (8h)</th>
+                <th>Jeudi (8h)</th>
+                <th>Vendredi (8h)</th>
+                <th>Samedi (4h)</th>
+                <th>Total Heures</th>
+              </tr>
+            </thead>
+            <tbody id="planning-tbody">
+              <tr>
+                <td><strong>Yahya RHALLAB</strong></td>
+                <td>Temara - Oulad Mtaa</td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-gold">08:00 - 12:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Mehdi AIT JEBOUR</strong></td>
+                <td>Temara - Oulad Mtaa</td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-gold">08:00 - 12:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Ayman CHLIFANE</strong></td>
+                <td>Temara - Oulad Mtaa</td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-gold">12:00 - 16:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Mourad CHERRADI</strong></td>
+                <td>Agdal - Carrousel</td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-gold">08:00 - 12:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Youssef DERKAOUI</strong></td>
+                <td>Agdal - Carrousel</td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-gold">12:00 - 16:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Ayoub ABSSI</strong></td>
+                <td>Agdal - Carrousel</td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-gold">08:00 - 12:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Charaf LOUMMIHI</strong></td>
+                <td>Salé - Medina</td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-gold">08:00 - 12:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Hassan AZGOUNE</strong></td>
+                <td>Salé - Medina</td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-gold">12:00 - 16:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Ayoub BEN MALEK</strong></td>
+                <td>Salé - Medina</td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-gold">08:00 - 12:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Achraf AKHLIJ</strong></td>
+                <td>Hay Riad - Soussi</td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-gold">08:00 - 12:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Islam ELMARDI</strong></td>
+                <td>Hay Riad - Soussi</td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-green">12:00 - 20:30</span></td>
+                <td><span class="badge-gold">12:00 - 16:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Oussama EL ATRACH</strong></td>
+                <td>Hay Riad - Soussi</td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-green">08:00 - 16:30</span></td>
+                <td><span class="badge-gold">08:00 - 12:00</span></td>
+                <td><strong>44H / Semaine</strong></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -460,7 +611,7 @@
     </div>
   </div>
 
-  <!-- MODAL DETAILS & DISCUSSION -->
+  <!-- MODAL DETAILS & DISCUSSION & TRACABILITE -->
   <div id="rec-detail-modal" class="modal-overlay">
     <div class="modal-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
@@ -469,6 +620,12 @@
       </div>
 
       <div id="rec-detail-body"></div>
+
+      <!-- TRACABILITE / JOURNAL DES CONSULTATIONS -->
+      <div style="margin-top:14px; background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:10px 14px;">
+        <h4 style="font-size:11.5px; font-weight:800; color:#b45309; margin-bottom:6px;">🛡️ Journal d'Audit (Qui a consulté cette réclamation ?) :</h4>
+        <div id="audit-trail-container" style="font-size:11px; color:#78350f; max-height:80px; overflow-y:auto; display:flex; flex-direction:column; gap:3px;"></div>
+      </div>
 
       <div style="margin-top:16px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:14px;">
         <h4 style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:8px;">💬 Fil de Discussion (Responsable ⇄ Agent) :</h4>
@@ -624,11 +781,9 @@
     let storeCatalog = defaultStoreCatalog;
     let recTypesCatalog = defaultRecTypes;
     let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v30')) || [
-      { id: 1, agent: "Yahya RHALLAB", agentId: "101", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Retard excessif au store.", date: "2026-09-20", status: "En Cours", chat: [] }
+      { id: 1, agent: "Yahya RHALLAB", agentId: "101", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Retard excessif au store.", date: "2026-09-20", status: "En Cours", chat: [], auditTrail: [] }
     ];
-    let directMessagesDB = [];
 
-    let currentDashTab = "Partenaire";
     let allSystemUsers = [...responsablesList, ...defaultAgents];
     let selectedAgent = allSystemUsers[0];
     let currentUser = allSystemUsers[0];
@@ -640,6 +795,11 @@
     }
 
     function updateLiveClaimCounters() {
+      const savedData = localStorage.getItem('fieldops_claims_db_v30');
+      if (savedData) {
+        try { claimsDB = JSON.parse(savedData); } catch(e){}
+      }
+
       const pendingPart = claimsDB.filter(c => c.status === 'En Cours' && c.type === 'Partenaire').length;
       const pendingLivr = claimsDB.filter(c => c.status === 'En Cours' && c.type === 'Livreur').length;
       const pendingTotal = pendingPart + pendingLivr;
@@ -677,6 +837,30 @@
         myClaimsBadge.classList.toggle('hidden', unreadAgentClaims === 0);
       }
     }
+
+    setInterval(() => {
+      if (currentUser && document.getElementById('main-app') && !document.getElementById('main-app').classList.contains('hidden')) {
+        const savedData = localStorage.getItem('fieldops_claims_db_v30');
+        if (savedData) {
+          let parsed = JSON.parse(savedData);
+          if (JSON.stringify(parsed) !== JSON.stringify(claimsDB)) {
+            claimsDB = parsed;
+            updateLiveClaimCounters();
+            if (!document.getElementById('view-dashboard').classList.contains('hidden')) renderReclamationStats();
+            if (!document.getElementById('view-my-claims').classList.contains('hidden')) renderMyClaimsHistory();
+            if (!document.getElementById('view-history').classList.contains('hidden')) renderHistoryView();
+            if (activeOpenedClaim) {
+              let latest = claimsDB.find(c => c.id === activeOpenedClaim.id);
+              if (latest) {
+                activeOpenedClaim = latest;
+                renderClaimChatMessages();
+                renderAuditTrail();
+              }
+            }
+          }
+        }
+      }
+    }, 3000);
 
     function renderLockCards() {
       const target = document.getElementById('agents-grid-target');
@@ -920,7 +1104,8 @@
         comment: comment || '-', 
         date: todayIsoDate, 
         status: 'En Cours',
-        chat: []
+        chat: [],
+        auditTrail: []
       });
 
       localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
@@ -1034,6 +1219,20 @@
       activeOpenedClaim = claimsDB.find(c => c.id === claimId);
       if (!activeOpenedClaim) return;
       if (!activeOpenedClaim.chat) activeOpenedClaim.chat = [];
+      if (!activeOpenedClaim.auditTrail) activeOpenedClaim.auditTrail = [];
+
+      const viewerName = `${currentUser.fname} ${currentUser.lname} (${currentUser.role === 'field' ? 'Agent' : 'Responsable'})`;
+      const nowTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      
+      const lastAudit = activeOpenedClaim.auditTrail[activeOpenedClaim.auditTrail.length - 1];
+      if (!lastAudit || lastAudit.user !== viewerName || (Date.now() - lastAudit.timestamp > 10000)) {
+        activeOpenedClaim.auditTrail.push({
+          user: viewerName,
+          time: nowTime,
+          timestamp: Date.now()
+        });
+        localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+      }
 
       const myName = `${currentUser.fname} ${currentUser.lname}`;
       activeOpenedClaim.chat.forEach(msg => {
@@ -1061,8 +1260,25 @@
         </div>
       `;
 
+      renderAuditTrail();
       renderClaimChatMessages();
       document.getElementById('rec-detail-modal').classList.add('active');
+    }
+
+    function renderAuditTrail() {
+      const container = document.getElementById('audit-trail-container');
+      if (!container || !activeOpenedClaim || !activeOpenedClaim.auditTrail) return;
+      container.innerHTML = '';
+
+      if (activeOpenedClaim.auditTrail.length === 0) {
+        container.innerHTML = `<div>Aucune trace enregistrée.</div>`;
+        return;
+      }
+
+      activeOpenedClaim.auditTrail.forEach(audit => {
+        container.innerHTML += `<div>👁️ <strong>${audit.user}</strong> a consulté ce dossier à <strong>${audit.time}</strong></div>`;
+      });
+      container.scrollTop = container.scrollHeight;
     }
 
     function renderClaimChatMessages() {
