@@ -899,6 +899,7 @@
       document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname} ${currentUser.role === 'field' ? '(Agent Terrain)' : ''}`;
       
       const isFieldAgent = currentUser.role === 'field';
+      const isAdminOrDecideur = currentUser.role === 'admin' || currentUser.role === 'decideur';
 
       document.getElementById('menu-dash').classList.toggle('hidden', isFieldAgent);
       document.getElementById('menu-config').classList.toggle('hidden', isFieldAgent);
