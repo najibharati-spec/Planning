@@ -235,11 +235,11 @@
         </div>
         <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨 Saisie Réclamation</span></div>
         <div class="nav-item" id="menu-my-claims" onclick="showView('my-claims', this)">
-          <span>📂 PRO</span>
+          <span>📂 Hestoir Réclamation Agent</span>
           <span class="nav-badge-count hidden" id="my-claims-badge">0</span>
         </div>
         <div class="nav-item" id="menu-history" onclick="showView('history', this)">
-          <span>📜 Historique Réclamations</span>
+          <span>📜 Historique Global</span>
         </div>
         <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️ Config Dynamic</span></div>
         <div class="nav-item" id="menu-sessions" onclick="showView('sessions', this)"><span>👥 Sessions Agents</span></div>
@@ -336,9 +336,9 @@
         </div>
       </div>
 
-      <!-- PRO (ESPACE AGENT) -->
+      <!-- HESTOIR RECLAMATION AGENT -->
       <div id="view-my-claims" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📂 Espace PRO (Historique & Chat)</h3>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📂 Hestoir Réclamation Agent (Historique & Chat)</h3>
         <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Hna katban lik kol réclamation dfa3tiha, w ila sifet lik l-responsable chi message kayban lik b notification.</p>
 
         <div style="overflow-x:auto;">
@@ -353,10 +353,10 @@
         </div>
       </div>
 
-      <!-- HISTORIQUE DES RECLAMATIONS (GLOBAL) -->
+      <!-- HISTORIQUE GLOBAL -->
       <div id="view-history" class="content-card hidden">
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📜 Historique Global des Réclamations</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Gaɛ les réclamations lli tdatou f système (En cours wla Traité wla Classé) b l-historique w les détails dyalhom.</p>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Gaɛ les réclamations lli tdatou f système b l-historique w les détails dyalhom.</p>
 
         <div class="filter-panel" style="margin-bottom: 16px;">
           <div>
@@ -1153,7 +1153,7 @@
       activeClaims.forEach((c) => {
         if (!c.chat) c.chat = [];
         let hasUnread = false;
-        if (c.chat.length > 1) {
+        if (c.chat.length > 0) {
           const lastMsg = c.chat[c.chat.length - 1];
           if (lastMsg.sender !== myName && !lastMsg.read) hasUnread = true;
         }
