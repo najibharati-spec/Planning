@@ -15,7 +15,6 @@
       --brand-gold: #f59e0b;
       --brand-gold-hover: #d97706;
       --brand-gold-light: #fffbeb;
-      --violet-accent: #7c3aed;
       --sidebar-bg: #0f172a;
       --sidebar-text: #94a3b8;
       --sidebar-active: #1e293b;
@@ -157,7 +156,6 @@
 
     .btn-copy { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; margin-left: 4px; }
     .btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 11px; }
-    .btn-edit { background: #e0f2fe; color: #0369a1; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 11px; }
 
     table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
     thead th {
@@ -185,73 +183,6 @@
     .badge-red { background: var(--badge-red-bg); color: var(--badge-red-txt); padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px; }
     .badge-green { background: var(--badge-green-bg); color: var(--badge-green-txt); padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px; }
     .badge-gold { background: var(--brand-gold-light); color: var(--brand-gold-hover); border: 1px solid #fde68a; padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px; }
-
-    .top-bar-plan {
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
-      background: #ffffff; padding: 20px 24px; border-radius: 16px; border: 1px solid #e9d5ff; margin-bottom: 22px;
-      box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.08);
-    }
-    .brand-title-plan { display: flex; align-items: center; gap: 14px; }
-    .brand-icon-plan {
-      width: 44px; height: 44px; background: linear-gradient(135deg, #7c3aed, #4c1d95); border-radius: 12px;
-      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px;
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-    }
-    .brand-title-plan h1 {
-      font-size: 20px; font-weight: 800; background: linear-gradient(90deg, #4c1d95, #7c3aed);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px;
-    }
-
-    .week-nav { display: flex; align-items: center; gap: 10px; background: #faf5ff; padding: 6px 14px; border-radius: 12px; border: 1px solid #e9d5ff; }
-    .status-pill { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 8px; }
-    .pill-locked { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-    .pill-unlocked { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-
-    .btn-nav { background: #ffffff; color: #6b21a8; border: 1px solid #e9d5ff; padding: 8px 14px; font-size: 12px; font-weight: 700; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
-    .btn-nav:hover { background: #f3e8ff; color: #4c1d95; }
-
-    .btn-primary-plan { background: linear-gradient(135deg, #7c3aed, #581c87); color: #ffffff; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3); }
-    .btn-primary-plan:hover { background: linear-gradient(135deg, #6d28d9, #4c1d95); transform: translateY(-1px); }
-    .btn-reset-plan { background: #ffffff; color: #6b21a8; border: 1px solid #e9d5ff; padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; }
-
-    #lock-banner {
-      display: none; background: #fffbeb; border: 1.5px solid #fde68a; color: #b45309; padding: 14px 20px; border-radius: 14px; font-size: 13px; font-weight: 700; margin-bottom: 20px; align-items: center; justify-content: space-between;
-    }
-
-    .table-container-plan { background: #ffffff; border-radius: 18px; overflow-x: auto; border: 1px solid #e9d5ff; box-shadow: 0 12px 35px -10px rgba(76, 29, 149, 0.1); }
-    .table-plan { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1500px; text-align: center; }
-    .table-plan thead th { background: linear-gradient(90deg, #4c1d95, #6b21a8); color: #ffffff; padding: 16px 8px; font-size: 12px; font-weight: 800; text-transform: uppercase; border-bottom: 2px solid #3b0764; letter-spacing: 0.6px; }
-    .table-plan th.col-agent { width: 210px; text-align: left; padding-left: 20px; }
-    .table-plan th.col-zone { width: 200px; text-align: left; padding-left: 14px; }
-    .table-plan th.col-total { width: 240px; }
-    
-    .table-plan td { padding: 12px 6px; font-size: 13px; border-bottom: 1px solid #f3e8ff; vertical-align: middle; }
-    .table-plan td.cell-agent { text-align: left; padding-left: 16px; }
-    .table-plan td.cell-zone { text-align: left; padding-left: 12px; }
-
-    .field-box { display: flex; align-items: center; justify-content: space-between; background: #fbf7ff; border: 1px solid #f3e8ff; border-radius: 8px; padding: 6px 10px; gap: 6px; }
-    .field-text { font-size: 12.5px; font-weight: 700; color: #3b0764; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
-    .field-text.zone-txt { color: #6b21a8; font-weight: 600; }
-
-    .btn-edit-small { background: #f3e8ff; color: #7c3aed; border: 1px solid #e9d5ff; font-size: 11px; padding: 4px 6px; border-radius: 6px; cursor: pointer; font-weight: 700; line-height: 1; }
-    .btn-edit-small:disabled { cursor: not-allowed; opacity: 0.4; }
-
-    select.shift-select { width: 100%; padding: 9px 4px; border-radius: 10px; font-size: 12px; font-weight: 800; border: 1px solid transparent; cursor: pointer; text-align-last: center; outline: none; appearance: none; -webkit-appearance: none; }
-    select.shift-select:disabled { cursor: not-allowed; opacity: 0.85; }
-
-    select.matin { background: var(--matin-bg); color: var(--matin-txt); border-color: var(--matin-border); }
-    select.aprem { background: var(--aprem-bg); color: var(--aprem-txt); border-color: var(--aprem-border); }
-    select.soir { background: var(--soir-bg); color: var(--soir-txt); border-color: var(--soir-border); }
-    select.off { background: var(--off-bg); color: var(--off-txt); border-color: var(--off-border); }
-
-    .total-action-box { display: flex; align-items: center; justify-content: center; gap: 6px; }
-    .hours-badge { display: inline-flex; align-items: center; justify-content: center; padding: 6px 10px; border-radius: 16px; font-weight: 800; font-size: 11.5px; white-space: nowrap; }
-    .badge-ok { background: #dcfce7; color: #15803d; border: 1.5px solid #86efac; }
-    .badge-alert { background: #fee2e2; color: #b91c1c; border: 1.5px solid #fca5a5; }
-
-    select.btn-shift-choice { padding: 6px 8px; font-size: 11px; font-weight: 800; border-radius: 8px; background: #faf5ff; color: #6b21a8; border: 1.5px solid #c4b5fd; cursor: pointer; outline: none; }
-    .btn-del { background: transparent; color: #c4b5fd; font-size: 16px; cursor: pointer; padding: 6px 8px; border-radius: 8px; border: none; }
-    .btn-del:hover { color: #ef4444; background: #fee2e2; }
 
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -394,7 +325,6 @@
 
           <div>
             <button class="btn-action" style="padding:8px 12px; font-size:11px; background:#64748b;" onclick="resetFilters()">🔄 Vider Filtres</button>
-            <button class="btn-action" style="padding:8px 12px; font-size:11px; margin-left:4px;" onclick="exportToCSV()">📥 Export CSV</button>
           </div>
         </div>
 
@@ -406,27 +336,12 @@
             <tbody id="rec-dashboard-body"></tbody>
           </table>
         </div>
-
-        <!-- SECTION ARCHIVE HISTORIQUE -->
-        <div style="margin-top:30px; border-top:2px solid #e2e8f0; padding-top:20px;">
-          <h4 style="font-size:15px; font-weight:800; color:#059669; margin-bottom:10px;">✅ Historique des Réclamations Traitées & Classées</h4>
-          <div style="overflow-x:auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Agent</th><th>Type</th><th>Cible / Store</th><th>Motif</th><th>Order #</th><th>Date</th><th>Statut</th><th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="rec-archive-body"></tbody>
-            </table>
-          </div>
-        </div>
       </div>
 
       <!-- RECLAMATIONS DYALI (POUR LES AGENTS) -->
       <div id="view-my-claims" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📂 Réclamations Dyali (Historique Personnel & Chat)</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Hna katban lik kol réclamation dfa3tiha, w ila sifet lik l-responsable chi message wla istifsar kayban lik fih notification.</p>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📂 Réclamations Dyali (Historique & Chat)</h3>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Hna katban lik kol réclamation dfa3tiha, w ila sifet lik l-responsable chi message kayban lik b notification.</p>
 
         <div style="overflow-x:auto;">
           <table>
@@ -458,7 +373,7 @@
       <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION -->
       <div id="view-reclamations" class="content-card hidden">
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🚨 Saisie Nouvelle Réclamation</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Saisissez les informations de l'incident. La réclamation s'ajoutera directement dans "Réclamations Dyali".</p>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Saisissez les informations de l'incident.</p>
 
         <div class="form-grid">
           <div class="form-group" id="fgroup-type">
@@ -521,62 +436,24 @@
 
       <!-- CONFIGURATION DYNAMIQUE -->
       <div id="view-config" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🛠️ Configuration Dynamique du Formulaire Admin</h3>
-        <div id="brands-tree-container"></div>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🛠️ Configuration Dynamique</h3>
       </div>
 
       <!-- MESSAGES DIRECTS -->
       <div id="view-messages" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">💬 Centre de Messagerie & Instructions Directes</h3>
-        <div style="margin-bottom:20px; background:#f8fafc; padding:18px; border-radius:14px; border:1px solid #e2e8f0;">
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <select id="msg-select-agent" style="padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-weight:700;"></select>
-            <input type="text" id="msg-input-text" placeholder="Saisir votre instruction..." style="flex:1; min-width:240px; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1;" />
-            <button class="btn-action" style="margin:0;" onclick="sendDirectMessage()">Envoyer</button>
-          </div>
-        </div>
-        <div id="messages-list-container" style="display:flex; flex-direction:column; gap:10px;"></div>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">💬 Centre de Messagerie Directe</h3>
       </div>
 
       <!-- PLANNING AGENTS -->
       <div id="view-planning" class="hidden">
-        <div class="top-bar-plan">
-          <div class="brand-title-plan">
-            <div class="brand-icon-plan">⚡</div>
-            <div>
-              <h1>Operational Shift Planning (44H)</h1>
-            </div>
-          </div>
-          <div class="week-nav">
-            <button class="btn-nav" onclick="changeWeek(-1)">◀ Précédent</button>
-            <span id="current-week-label" style="font-weight:800; font-size:13.5px; color:#581c87;">Semaine ...</span>
-            <span id="lock-status-pill" class="status-pill"></span>
-            <button class="btn-nav" onclick="changeWeek(1)">Suivant ▶</button>
-            <button class="btn-nav" style="margin-left: 6px;" onclick="goToCurrentWeek()">Aujourd'hui</button>
-          </div>
-          <div style="display:flex; gap:10px;">
-            <button class="btn-primary-plan" onclick="handleAddNewAgent()">+ Ajouter Agent</button>
-            <button class="btn-reset-plan" onclick="resetToDefault()">🔄 Réinitialiser</button>
-          </div>
-        </div>
-
-        <div id="lock-banner">
-          <div>🔒 <strong>Semaine en cours verrouillée.</strong></div>
-        </div>
-
-        <div class="table-container-plan">
-          <table class="table-plan">
-            <thead>
-              <tr id="table-header"></tr>
-            </thead>
-            <tbody id="planning-body"></tbody>
-          </table>
+        <div style="background:#ffffff; padding:20px 24px; border-radius:16px; border:1px solid #e9d5ff; margin-bottom:22px;">
+          <h1 style="font-size:20px; font-weight:800; color:#581c87;">Operational Shift Planning (44H)</h1>
         </div>
       </div>
 
       <!-- PARAMETRES -->
       <div id="view-parametres" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">⚙️ Paramètres Système Admin</h3>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">⚙️ Paramètres Système</h3>
       </div>
     </div>
   </div>
@@ -612,10 +489,109 @@
 
   <script>
     let defaultStoreCatalog = {
-      "McDonald's®": ["McDonald's Marjane Hay Riad - 12", "McDonald's Salé - 33", "McDonald's Temara - 46"],
-      "Burger King": ["Burger King Temara", "Burger King Mahaj Ryad"]
+      "McDonald's®": [
+        "McDonald's Marjane Hay Riad - 12", "McDonald's Salé - 33", "McDonald's Temara - 46",
+        "McDonald's Carrousel-93", "McDonald's Rabat ville - 22", "McDonald's Gare LGV Agdal - 48",
+        "McDonald's Agdal - 2", "McDonald's El Menzeh"
+      ],
+      "Primos Chicken": [
+        "Primos Agdal", "Primos Chicken Hay Riad", "Primos Salé", "Primos Temara",
+        "Primos Chicken Massira", "Primos Centre Ville", "Primos Chicken CARROUSSEL", "Primos Ocean"
+      ],
+      "Burger King": [
+        "Burger King Temara", "Burger King Mahaj Ryad", "Burger King Carrefour Salé",
+        "Burger King Agdal", "Burger King Marina Salé", "Burger King Arribat Center",
+        "Burger King Harhoura", "Burger King LGB Zaer", "Burger King Kitea Géant"
+      ],
+      "KFC": [
+        "KFC Sela Park", "KFC Hassan", "KFC Hay Riad", "KFC Rabat Ville",
+        "KFC Agdal", "KFC Le Carrousel", "KFC Arribat Center"
+      ],
+      "Little Mamma": [
+        "Little Mamma Mahaj Riad", "Little Mamma Agdal", "Little Mamma Centre Ville Rabat"
+      ],
+      "Carrefour Market / Express": [
+        "Carrefour Express Temara Wifak 2", "Carrefour Market WIFAK", "Carrefour Express Temara",
+        "Carrefour Mehdi Ben Barka", "Carrefour Market Riad", "Carrefour Gourmet",
+        "Carrefour Market Souissi", "Carrefour Market Oqba", "Carrefour Market Al Manal"
+      ],
+      "Pizza Hut": [
+        "Pizza Hut Mahaj Ryad", "Pizza Hut Agdal", "Temara Square – Av Hassan 2",
+        "Pizza Hut Carrefour Salé - PHD24", "Pizza Hut - Marjane Bouregreg", "Pizza Hut Souissi",
+        "Pizza Hut Hay Riad", "Pizza Hut Harhoura", "Pizza Hut El Menzeh"
+      ],
+      "Tacos by L.Y.O.N.": [
+        "T2L Fal Ould Oumeir", "T2L Mohamed V RBT", "T2L Arribat Center"
+      ],
+      "Yoka Sushi": [
+        "Yoka Sushi Agdal", "Yoka Sushi Hay Riad", "Yoka Sushi Temara",
+        "Yoka Sushi Label'Gallery", "Yoka Sushi Salé", "Yoka Sushi Harhoura"
+      ],
+      "Domino's Pizza": [
+        "Domino's Agdal", "Domino's Harhoura", "Domino's Prestigia Rabat",
+        "Domino's Mahaj Riad", "Domino's Mega Mall", "Domino's Label Gallery Rabat"
+      ],
+      "Sushi Box": [
+        "Sushi Box Mahaj Ryad", "Sushi Box Harhoura", "Sushi Box Labelvie RBT", "Sushi Box Arribat Center"
+      ],
+      "Papa John's": [
+        "Papa John's Hay Riad", "Papa John's Harhoura"
+      ],
+      "Dunkin'": [
+        "Dunkin' Harhoura", "Dunkin' Arribat Center", "Dunkin' Prestigia Rabat",
+        "Dunkin' Mahaj Riad", "Dunkin' Label Gallery Rabat", "Dunkin' Le Marché Dar Essalam"
+      ],
+      "📍 Autres Partenaires / Restaurants": [
+        "ALL_PARTNERS"
+      ]
     };
-    let allPartnersList = ["175 KG", "218 BROS", "Burger King Agdal", "KFC Agdal"];
+
+    let allPartnersList = [
+      "175 KG", "218 BROS", "44brunch", "AGHA CHAM", "AM Fast Food", "ARZAK", "ATHLETIC PIZZA", "AYAMEK YA CHAM", "Addawk Chami", "Ahl alcham",
+      "Air Stick", "Al Andalous grille&co", "Albayt Dimashki", "Allo Sushi Restaurant (Salé)", "Amaya", "Amigo Tacos", "As'iette", "As'iam", "Assil Acham",
+      "Au P'tit Coin", "Awal", "Ayourino", "BA Fares", "BAYT AL QUDS", "BTB Sweets", "Bacara Cafe Restaurantmajid", "Babek Abtal", "Babek Hay Riad",
+      "BbT Agdal", "Beauty Market", "Beauty Success", "Bella mamma", "Beyti Istanbul", "Black coffee", "Bling bling chicken", "Bo Burger", "Bocadillo Del Norte",
+      "Bocadillos Los Hermanos", "Boho Café", "Bricoma Hay Riad", "Bricoma Quamra", "Bricoma Salé Marina", "Bricoma Temara",
+      "Burger King Agdal", "Burger King Arribat Center", "Burger King Carrefour Salé", "Burger King Harhoura", "Burger King Kitea Géant", "Burger King LGB Zaer",
+      "Burger King Marina Salé", "Burger King Mahaj Ryad", "Burger King Temara", "CAP GOURMET", "COCOC Chicken", "Café Nezonya", "Café Tulip Yazane", "Café snack arc de paris",
+      "Capital Vape", "Caribou Coffee Gare Agdal", "Caribou Coffee Hay Riad", "Caribou Coffee La villa 16", "Carrefour Express Temara", "Carrefour Gourmet",
+      "Carrefour Market WIFAK", "Carrefour Mehdi Ben Barka", "Castle Fish", "Chez Ouazzani", "Chez musty", "Chouwaya Al Akhawayn", "Chrono Pizza Temara", "Ch’hiwa food",
+      "Coin délices", "Coq Chef", "Costa coffee caroussel", "Crispeat", "Crispy Food", "Crusty Hay Riad", "D'VAPE", "DAR AL FAWAKIH RABAT - AGDAL", "Da Milena",
+      "Dajaji", "Dalla Zia", "Di Villaggio", "Domino's Agdal", "Domino's Harhoura", "Domino's Label Gallery Rabat", "Domino's Mahaj Riad", "Domino's Mega Mall",
+      "Domino's Prestigia Rabat", "Dunkin' Arribat Center", "Dunkin' Harhoura", "Dunkin' Label Gallery Rabat", "Dunkin' Le Marché Dar Essalam", "Dunkin' Mahaj Riad",
+      "Dunkin' Prestigia Rabat", "EASY VAPE SALE", "EASY VAPE Rabat", "Eatalia", "ElBayt El Dimashki", "Electroshine", "Encas", "Face Burger", "Fakihat Saada",
+      "Fast Ryad", "Fast Pizza", "Fast & delicious", "Fino Resto", "First Pizza", "Flavour Crêpe", "Flormar", "Food Delice", "FreCheese", "Ghost Kitchen",
+      "Go Frero Carrousel", "Good Flowers", "Goodway", "Green Village Rabat", "Grillade Al Andalous", "Hortensia café &more", "Huna", "I AM SUSHI", "IMIM SNACK",
+      "Il Giardino", "Indian Flavors", "Instafood", "J and J", "Japonezà", "Juicy Vapes", "KFC Agdal", "KFC Arribat Center", "KFC Hassan", "KFC Hay Riad",
+      "KFC Le Carrousel", "KFC Rabat Ville", "KFC Sela Park", "Kitchen Ryad", "Kitchen 59", "Koko Chicken", "Kool Smoothies AFRIQUIA HAY RIAD", "Kool Smoothies Arribat Center",
+      "Krispy Kreme - Agdal", "Krispy Kreme - Arribat Center", "L'Atelier Burger Hay Riad", "L'Atelier Burger Temara", "LA CASA GRANDE", "LA MAISON Fresh & Bio",
+      "LA PORTE DE LA MER", "LE PORT", "LE 40", "LE GOÛT DU FRUIT", "LES FRÈRES BOUCHERS", "La Déliciosa", "La Dinette", "La Mamma’s Pizza", "La Ola", "La Spezia",
+      "La pause 88 Mix Food", "La tasse verte", "Lamjarred Boutique Patisserie", "Latium", "Le Chill", "Le Macaron Maitre Artisan", "Le Roissant", "Le Rôti", "Le Smash",
+      "Lea Joy", "Liogelato", "Little Mamma Agdal", "Little Mamma Centre Ville Rabat", "Little Mamma Mahaj Riad", "Lovely Sheep", "Louai’s", "L’gordo", "MAC Cosmetics",
+      "MK Cloud", "Mademoiselle Framboise Rabat", "Mahaj Alfawakih", "Maison du Pain", "Maison du chou", "Mamito", "Marjane Hyper Hay Riad", "Masked Chicken", "Mawaid chabab",
+      "Maymana", "Maymana Souissi", "McDonald's Agdal - 2", "McDonald's Carrousel-93", "McDonald's El Menzeh", "McDonald's Gare LGV Agdal - 48", "McDonald's Marjane Hay Riad - 12",
+      "McDonald's Rabat ville - 22", "McDonald's Salé - 33", "McDonald's Temara - 46", "Meka Sushi", "Mevico", "Michwatkom", "Michouat al akhaouayne", "Mister Chicken Sale",
+      "Mitsuki Arribat Center", "Mitsuki Carrousel", "Mitsuki Gare", "Moissons", "Mr Bricolage Salé", "Mr Brunch", "Mr Kool", "Mr. Bricolage", "Muskaan Nikkei", "My Eataly",
+      "My Poke & Salads", "Natus Marrakech", "O'Caprices", "O'BOCADILLO'S", "O'charbon", "OMB Arribat Center", "OMB Hay Riad", "Oasis Café Express- Hay Riad", "Oben Coffee shop",
+      "Ocrepino", "Oliveri Hay Ryad", "Oppa Chicken", "Otantik Restaurant cuisine méditerranéenne", "Ouafaa Cakes Delivery", "PRODIET", "Panda", "Panda Crepe Marina",
+      "Papa John's Harhoura", "Papa John's Hay Riad", "Para Acima Harhoura", "Para Ain Atiq", "Para Dana", "Para MAGNOLIA", "Para Outlet", "Para Rivage", "Para Saliha NewShop",
+      "Para Al mohit", "Para Kounouz", "Para lagrande pharmacie", "Parapharmacie Beauty Skin", "Parapharmacie COSMOBIO", "Parasquare", "Paradise", "Pâtisserie Fennich",
+      "Pet Corner", "Pet Partner", "Pets Club", "Pets boutique RBT", "Pinchos Hassan", "Pinchos Mahaj Riad", "Pincho's Hassane", "Pizza Hut Agdal", "Pizza Hut Harhoura",
+      "Pizza Hut Hay Riad", "Pizza Hut Mahaj Ryad", "Pizza Hut Souissi", "Pizza Rio", "Pizza Vera", "Pizzeria silvia", "Pokawa Harhoura", "Pomme de pain Rabat", "Pop and Top",
+      "Pousse-Pousse", "Pralinor", "Prestigia", "Primos Agdal", "Primos CARROUSSEL", "Primos Centre Ville", "Primos Chicken Hay Riad", "Primos Chicken Massira",
+      "Primos Chicken Ocean", "Primos Salé", "Primos Temara", "Qaouti House", "Quick - Ryad square", "Quickpara", "RBT Arribat Center Av. Omar Ibn Al Khattab",
+      "RBT Aswak Assalam Av Mehdi Ben Barka - 1", "RBT Mega Mall Av. Mohamed VI", "Rafa Food", "Ragueb Para", "Raihani Food", "Rayan Nehmé", "Regalito", "Restaurant BACI",
+      "Restaurant Sabah al sham", "Ryad Square Gen2", "S Tacos Hay Riad", "S Tacos Salé", "S Tacos Témara", "SKY VAPE", "SOttoSOpra", "Safe and tasty", "Sama Juice ساماجوس",
+      "Sharxclub", "Shawarma Ghali Acham", "Shölk Maître Chocolatier", "Snack ABC", "Snack Ariwak Adahabi", "Snack Bacha", "Snack El Karam", "Snack Tempo", "Snack chamal",
+      "So Chicken", "Starbucks Agdal", "Starbucks Gare Rabat Agdal", "Starbucks Hay Riad", "Sunset on Fire", "Sushi Box Arribat Center", "Sushi Box Harhoura",
+      "Sushi Box Labelvie RBT", "Sushi Box Mahaj Ryad", "Sushi ARIJ", "Sushi youzar", "Sushi yanyan prestigia", "Sweet stoune", "SWEETOPIA", "T2L Arribat Center",
+      "T2L Fal Ould Oumeir", "T2L Mohamed V RBT", "Tac'N'roll", "Tacos Pescara", "Tacos Avenue", "Tacos de Nice", "Tacos slimani", "Tacos ismail", "tacos monalisa",
+      "Tasty Chicken", "Tender fish", "Temara Square – Av Hassan 2", "The Burger Meister", "The number one", "Thaitaam", "U Express Mega Mall", "VAPENERGY", "Valdi divce",
+      "Vape Market", "Verzatis", "Vida Souss", "Villa My Pearl", "WINO FOOD", "Win Win", "World Burger", "YAMA SUSHI", "Yaha", "Yas Gadgets", "Yoka Sushi Agdal",
+      "Yoka Sushi Harhoura", "Yoka Sushi Hay Riad", "Yoka Sushi Label'Gallery", "Yoka Sushi Salé", "Yoka Sushi Temara", "Yummy Délices By Bennani", "ZA7MA", "Zehn Electronic",
+      "Zenacham", "Zayyane", "bocadillos A 48", "delish bun", "samraa", "tacos ismail"
+    ];
+
     let defaultRecTypes = {
       "Partenaire": ["Commande prête non reçue", "Commande non prête (Retard excessif)", "Commande volée"],
       "Livreur": ["Mauvais comportement", "Vol de commande par le livreur", "Utilisation d'un compte non personnel (Compte loué/partagé)"]
@@ -623,21 +599,33 @@
 
     const responsablesList = [
       { id: "1", fname: "Najib", lname: "HARATI", color: "#f59e0b", role: "admin" },
-      { id: "2", fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur" }
+      { id: "2", fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur" },
+      { id: "3", fname: "Anass", lname: "FADLI", color: "#059669", role: "decideur" },
+      { id: "4", fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
     ];
 
     const defaultAgents = [
-      { id: "101", fname: "Yahya", lname: "RHALLAB", zone: "Temara - Oulad Mtaa", offDay: 0, shiftType: "matin", color: "#3b82f6", role: "field" },
-      { id: "102", fname: "Mehdi", lname: "AIT JEBOUR", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir17", color: "#8b5cf6", role: "field" },
-      { id: "104", fname: "Mourad", lname: "CHERRADI", zone: "Agdal - Carrousel", offDay: 1, shiftType: "matin", color: "#10b981", role: "field" }
+      { id: "101", fname: "Yahya", lname: "RHALLAB", zone: "Temara - Oulad Mtaa", color: "#3b82f6", role: "field" },
+      { id: "102", fname: "Mehdi", lname: "AIT JEBOUR", zone: "Temara - Oulad Mtaa", color: "#8b5cf6", role: "field" },
+      { id: "103", fname: "Ayman", lname: "CHLIFANE", zone: "Temara - Oulad Mtaa", color: "#ec4899", role: "field" },
+      { id: "104", fname: "Mourad", lname: "CHERRADI", zone: "Agdal - Carrousel", color: "#10b981", role: "field" },
+      { id: "105", fname: "Youssef", lname: "DERKAOUI", zone: "Agdal - Carrousel", color: "#f59e0b", role: "field" },
+      { id: "106", fname: "Ayoub", lname: "ABSSI", zone: "Agdal - Carrousel", color: "#ef4444", role: "field" },
+      { id: "107", fname: "Charaf", lname: "LOUMMIHI", zone: "Salé - Medina", color: "#06b6d4", role: "field" },
+      { id: "108", fname: "Hassan", lname: "AZGOUNE", zone: "Salé - Medina", color: "#84cc16", role: "field" },
+      { id: "109", fname: "Ayoub", lname: "BEN MALEK", zone: "Salé - Medina", color: "#6366f1", role: "field" },
+      { id: "110", fname: "Achraf", lname: "AKHLIJ", zone: "Hay Riad - Soussi", color: "#14b8a6", role: "field" },
+      { id: "111", fname: "Islam", lname: "ELMARDI", zone: "Hay Riad - Soussi", color: "#d97706", role: "field" },
+      { id: "112", fname: "Oussama", lname: "EL ATRACH", zone: "Hay Riad - Soussi", color: "#a855f7", role: "field" },
+      { id: "113", fname: "Zakariae", lname: "BENALI", zone: "Technopolis", color: "#64748b", role: "field" }
     ];
 
-    let storeCatalog = JSON.parse(localStorage.getItem('fieldops_store_catalog_v30')) || defaultStoreCatalog;
-    let recTypesCatalog = JSON.parse(localStorage.getItem('fieldops_rec_types_v30')) || defaultRecTypes;
+    let storeCatalog = defaultStoreCatalog;
+    let recTypesCatalog = defaultRecTypes;
     let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v30')) || [
       { id: 1, agent: "Yahya RHALLAB", agentId: "101", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Retard excessif f le store.", date: "2026-09-20", status: "En Cours", chat: [] }
     ];
-    let directMessagesDB = JSON.parse(localStorage.getItem('fieldops_direct_msgs_v30')) || [];
+    let directMessagesDB = [];
 
     let currentDashTab = "Partenaire";
     let allSystemUsers = [...responsablesList, ...defaultAgents];
@@ -645,10 +633,6 @@
     let currentUser = allSystemUsers[0];
     let activeOpenedClaim = null;
     let uploadedPhotoBase64 = "";
-
-    let currentWeekOffset = 0;
-    let manualUnlock = false;
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v3')) || {};
 
     function updateLiveClaimCounters() {
       const pendingPart = claimsDB.filter(c => c.status === 'En Cours' && c.type === 'Partenaire').length;
@@ -731,7 +715,6 @@
 
       initFormDropdowns();
       populateFilterBrands();
-      populateAgentMsgDropdown();
       updateLiveClaimCounters();
 
       if (isFieldAgent) {
@@ -763,7 +746,7 @@
       document.getElementById('view-' + viewId).classList.remove('hidden');
       
       if (viewId === 'my-claims') renderMyClaimsHistory();
-      if (viewId === 'planning') renderTable();
+      if (viewId === 'dashboard') renderReclamationStats();
       updateLiveClaimCounters();
     }
 
@@ -840,7 +823,13 @@
       const selector = document.getElementById('rec-store-sector');
       selector.innerHTML = '';
 
-      let listToDisplay = storeCatalog[brand] || allPartnersList;
+      let listToDisplay = [];
+      if (brand === "📍 Autres Partenaires / Restaurants" || (storeCatalog[brand] && storeCatalog[brand][0] === "ALL_PARTNERS")) {
+        listToDisplay = allPartnersList;
+      } else if (storeCatalog[brand]) {
+        listToDisplay = storeCatalog[brand];
+      }
+
       listToDisplay.forEach(s => {
         if (s.toLowerCase().includes(searchVal)) {
           selector.innerHTML += `<option value="${s}">${s}</option>`;
@@ -998,7 +987,6 @@
 
       document.getElementById('detail-rec-id').innerText = `ID: #${activeOpenedClaim.id.toString().slice(-4)}`;
       const body = document.getElementById('rec-detail-body');
-      
       const mapsUrl = activeOpenedClaim.gps ? `https://maps.google.com/?q=${activeOpenedClaim.gps}` : '#';
 
       body.innerHTML = `
@@ -1080,17 +1068,30 @@
       }
     }
 
+    function switchDashTab(tab) {
+      currentDashTab = tab;
+      document.getElementById('tab-part').classList.toggle('active', tab === 'Partenaire');
+      document.getElementById('tab-livr').classList.toggle('active', tab === 'Livreur');
+      renderReclamationStats();
+    }
+
     function renderReclamationStats() {
       const tbody = document.getElementById('rec-dashboard-body');
       const thead = document.getElementById('dash-table-head');
       if (!tbody || !thead) return;
       tbody.innerHTML = '';
 
-      thead.innerHTML = `
-        <th>Agent Saisie</th><th>Cible</th><th>Motif</th><th>Order #</th><th>Statut</th><th>Chat & Messages</th><th>Actions</th>
-      `;
+      if (currentDashTab === 'Partenaire') {
+        thead.innerHTML = `
+          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Statut</th><th>Chat & Messages</th><th>Actions</th>
+        `;
+      } else {
+        thead.innerHTML = `
+          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Statut</th><th>Chat & Messages</th><th>Actions</th>
+        `;
+      }
 
-      let activeClaims = claimsDB.filter(c => c.status === 'En Cours');
+      let activeClaims = claimsDB.filter(c => c.type === currentDashTab && c.status === 'En Cours');
       const myName = `${currentUser.fname} ${currentUser.lname}`;
 
       activeClaims.forEach((c) => {
@@ -1102,17 +1103,32 @@
         }
         const notifBadge = hasUnread ? '<span class="nav-badge-count" style="font-size:9px; padding:2px 5px;">NEW MSG 🔴</span>' : '';
 
-        tbody.innerHTML += `
-          <tr>
-            <td><strong>${c.agent}</strong></td>
-            <td><strong>${c.target}</strong></td>
-            <td>${c.motif}</td>
-            <td>${c.orderNum}</td>
-            <td><span class="badge-gold">${c.status}</span></td>
-            <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Chat & Détails ${notifBadge}</button></td>
-            <td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️</button></td>
-          </tr>
-        `;
+        if (currentDashTab === 'Partenaire') {
+          tbody.innerHTML += `
+            <tr>
+              <td><strong>${c.agent}</strong></td>
+              <td><strong>${c.target}</strong></td>
+              <td><strong style="color:#059669;">${c.sector || '-'}</strong></td>
+              <td>${c.motif}</td>
+              <td>${c.orderNum}</td>
+              <td><span class="badge-gold">${c.status}</span></td>
+              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Chat & Détails ${notifBadge}</button></td>
+              <td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️</button></td>
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML += `
+            <tr>
+              <td><strong>${c.agent}</strong></td>
+              <td><strong style="color:#2563eb;">${c.target}</strong></td>
+              <td>${c.motif}</td>
+              <td>${c.orderNum}</td>
+              <td><span class="badge-gold">${c.status}</span></td>
+              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Chat & Détails ${notifBadge}</button></td>
+              <td><button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️</button></td>
+            </tr>
+          `;
+        }
       });
     }
 
@@ -1124,11 +1140,6 @@
         renderReclamationStats();
       }
     }
-
-    function populateAgentMsgDropdown() {}
-    function sendDirectMessage() {}
-    function renderConfigTree() {}
-    function exportToCSV() {}
 
     renderLockCards();
   </script>
