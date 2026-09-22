@@ -34,43 +34,31 @@
       align-items: center; justify-content: center; padding: 20px;
       background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%); color: #fff;
     }
-    .brand-header-lock { text-align: center; margin-bottom: 20px; }
+    .brand-header-lock { text-align: center; margin-bottom: 24px; }
     .brand-header-lock h1 { font-size: 32px; font-weight: 800; color: var(--brand-gold); letter-spacing: -0.5px; }
     .brand-header-lock p { font-size: 13px; color: #94a3b8; font-weight: 500; margin-top: 4px; }
 
-    .direct-test-box {
-      background: rgba(255,255,255,0.08); border: 1px solid rgba(245, 158, 11, 0.4);
-      padding: 12px 20px; border-radius: 12px; margin-bottom: 20px; width: 100%; max-width: 500px;
-      display: flex; gap: 10px; align-items: center; backdrop-filter: blur(10px);
-    }
-    .direct-test-box input {
-      flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: 700; font-size: 13px; outline: none; background: #fff; color: #0f172a;
-    }
-    .direct-test-box button {
-      background: var(--brand-primary); color: #fff; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 12px;
-    }
-
-    .agents-grid-container { width: 100%; max-width: 900px; margin-bottom: 20px; max-height: 320px; overflow-y: auto; padding: 10px; }
-    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; }
+    .agents-grid-container { width: 100%; max-width: 650px; margin-bottom: 24px; }
+    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
 
     .agent-card {
       background: rgba(255,255,255,0.05); border: 2px solid rgba(245, 158, 11, 0.2); border-radius: 14px;
-      padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.25s ease;
-      display: flex; flex-direction: column; align-items: center; gap: 6px; backdrop-filter: blur(8px);
+      padding: 18px 10px; text-align: center; cursor: pointer; transition: all 0.25s ease;
+      display: flex; flex-direction: column; align-items: center; gap: 8px; backdrop-filter: blur(8px);
     }
     .agent-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); border-color: var(--brand-gold); }
     .agent-card.selected { background: rgba(245, 158, 11, 0.4); border-color: var(--brand-gold); box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); transform: translateY(-2px); }
 
     .avatar-circle {
-      width: 42px; height: 42px; border-radius: 50%; display: flex;
-      align-items: center; justify-content: center; color: #ffffff; font-size: 16px; font-weight: 800;
+      width: 48px; height: 48px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; color: #ffffff; font-size: 18px; font-weight: 800;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
-    .agent-fname { font-size: 12.5px; font-weight: 700; color: #f8fafc; }
-    .agent-lname { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .agent-fname { font-size: 13.5px; font-weight: 700; color: #f8fafc; }
+    .agent-lname { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
 
     .btn-unlock {
-      width: 100%; max-width: 400px; padding: 14px; border-radius: 12px; border: none;
+      width: 100%; max-width: 380px; padding: 14px; border-radius: 12px; border: none;
       background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-hover)); color: #ffffff;
       font-size: 14px; font-weight: 800; cursor: pointer; transition: all 0.2s ease;
       box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.4);
@@ -216,19 +204,14 @@
   <div id="lock-screen">
     <div class="brand-header-lock">
       <h1>FieldOps Control Center</h1>
-      <p>Sélectionnez votre profil ou tapez votre nom pour accéder</p>
-    </div>
-
-    <div class="direct-test-box">
-      <input type="text" id="direct-name-input" placeholder="Ex: Mehdi, Anass, Youssef, Najib..." />
-      <button onclick="loginDirectByName()">🚀 Dakhil Direct</button>
+      <p>Sélectionnez votre profil de responsable pour accéder au centre de contrôle</p>
     </div>
 
     <div class="agents-grid-container">
-      <div class="agents-grid" id="agents-grid-target"></div>
+      <div class="agents-grid" id="resp-grid-target"></div>
     </div>
 
-    <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER ACCÈS SÉLECTIONNÉ</button>
+    <button class="btn-unlock" onclick="attemptUnlock()">DÉVERROUILLER ACCÈS RESPONSABLE</button>
   </div>
 
   <div id="main-app" class="hidden">
@@ -246,7 +229,7 @@
         </div>
         <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨 Saisir Réclamation</span></div>
         <div class="nav-item" id="menu-my-claims" onclick="showView('my-claims', this)">
-          <span>📂 Historique Réclamations Agent</span>
+          <span>📂 Historique Réclamations</span>
           <span class="nav-badge-count hidden" id="my-claims-badge">0</span>
         </div>
         <div class="nav-item" id="menu-history" onclick="showView('history', this)">
@@ -344,8 +327,8 @@
       </div>
 
       <div id="view-my-claims" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📂 Historique Réclamations Agent</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Consultez ici l'ensemble de vos réclamations soumises ainsi que les messages et notifications des responsables.</p>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📂 Historique des Réclamations</h3>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Consultez ici l'ensemble des réclamations ainsi que les messages et notifications.</p>
 
         <div style="overflow-x:auto;">
           <table>
@@ -629,10 +612,10 @@
       </div>
 
       <div style="margin-top:16px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:14px;">
-        <h4 style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:8px;">💬 Fil de Discussion (Responsable ⇄ Agent) :</h4>
+        <h4 style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:8px;">💬 Fil de Discussion :</h4>
         <div id="claim-chat-messages-container" style="max-height:160px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; margin-bottom:10px; background:#fff; padding:10px; border-radius:8px; border:1px solid #e2e8f0;"></div>
         <div style="display:flex; gap:8px;">
-          <input type="text" id="claim-chat-input" placeholder="Écrire un message ou demander des précisions..." style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-weight:600; font-size:12px;" />
+          <input type="text" id="claim-chat-input" placeholder="Écrire un message..." style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-weight:600; font-size:12px;" />
           <button class="btn-action" style="padding:8px 14px; font-size:12px;" onclick="sendClaimChatMessage()">Envoyer</button>
         </div>
       </div>
@@ -726,7 +709,7 @@
       "Krispy Kreme - Agdal", "Krispy Kreme - Arribat Center", "L'Atelier Burger Hay Riad", "L'Atelier Burger Temara", "LA CASA GRANDE", "LA MAISON Fresh & Bio",
       "LA PORTE DE LA MER", "LE PORT", "LE 40", "LE GOÛT DU FRUIT", "LES FRÈRES BOUCHERS", "La Déliciosa", "La Dinette", "La Mamma’s Pizza", "La Ola", "La Spezia",
       "La pause 88 Mix Food", "La tasse verte", "Lamjarred Boutique Patisserie", "Latium", "Le Chill", "Le Macaron Maitre Artisan", "Le Roissant", "Le Rôti", "Le Smash",
-      "Lea Joy", "Liogelato", "Little Mamma Agdal", "Little Mamma Centre Ville Rabat", "Lovely Sheep", "Louai’s", "L’gordo", "MAC Cosmetics",
+      "Lea Joy", "Liogelato", "Little Mamma Agdal", "Little Mamma Centre Ville Rabat", "Little Mamma Mahaj Riad", "Lovely Sheep", "Louai’s", "L’gordo", "MAC Cosmetics",
       "MK Cloud", "Mademoiselle Framboise Rabat", "Mahaj Alfawakih", "Maison du Pain", "Maison du chou", "Mamito", "Marjane Hyper Hay Riad", "Masked Chicken", "Mawaid chabab",
       "Maymana", "Maymana Souissi", "McDonald's Agdal - 2", "McDonald's Carrousel-93", "McDonald's El Menzeh", "McDonald's Gare LGV Agdal - 48", "McDonald's Marjane Hay Riad - 12",
       "McDonald's Rabat ville - 22", "McDonald's Salé - 33", "McDonald's Temara - 46", "Meka Sushi", "Mevico", "Michwatkom", "Michouat al akhaouayne", "Mister Chicken Sale",
@@ -756,27 +739,12 @@
       "Livreur": ["Mauvais comportement", "Vol de commande par le livreur", "Utilisation d'un compte non personnel (Compte loué/partagé)"]
     };
 
+    // Gérer uniquement les 4 responsables
     const responsablesList = [
       { fname: "Najib", lname: "HARATI", color: "#f59e0b", role: "admin" },
       { fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur" },
       { fname: "Anass", lname: "FADLI", color: "#059669", role: "decideur" },
       { fname: "Youssef", lname: "AKHLIJ", color: "#7c3aed", role: "decideur" }
-    ];
-
-    const defaultAgents = [
-      { fname: "Yahya", lname: "RHALLAB", zone: "Temara - Oulad Mtaa", color: "#3b82f6", role: "field" },
-      { fname: "Mehdi", lname: "AIT JEBOUR", zone: "Temara - Oulad Mtaa", color: "#8b5cf6", role: "field" },
-      { fname: "Ayman", lname: "CHLIFANE", zone: "Temara - Oulad Mtaa", color: "#ec4899", role: "field" },
-      { fname: "Mourad", lname: "CHERRADI", zone: "Agdal - Carrousel", color: "#10b981", role: "field" },
-      { fname: "Youssef", lname: "DERKAOUI", zone: "Agdal - Carrousel", color: "#f59e0b", role: "field" },
-      { fname: "Ayoub", lname: "ABSSI", zone: "Agdal - Carrousel", color: "#ef4444", role: "field" },
-      { fname: "Charaf", lname: "LOUMMIHI", zone: "Salé - Medina", color: "#06b6d4", role: "field" },
-      { fname: "Hassan", lname: "AZGOUNE", zone: "Salé - Medina", color: "#84cc16", role: "field" },
-      { fname: "Ayoub", lname: "BEN MALEK", zone: "Salé - Medina", color: "#6366f1", role: "field" },
-      { fname: "Achraf", lname: "AKHLIJ", zone: "Hay Riad - Soussi", color: "#14b8a6", role: "field" },
-      { fname: "Islam", lname: "ELMARDI", zone: "Hay Riad - Soussi", color: "#d97706", role: "field" },
-      { fname: "Oussama", lname: "EL ATRACH", zone: "Hay Riad - Soussi", color: "#a855f7", role: "field" },
-      { fname: "Zakariae", lname: "BENALI", zone: "Technopolis", color: "#64748b", role: "field" }
     ];
 
     let storeCatalog = defaultStoreCatalog;
@@ -785,11 +753,7 @@
       { id: 1, agent: "Yahya RHALLAB", agentId: "agent_101", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Retard excessif au store.", date: "2026-09-20", status: "En Cours", chat: [], auditTrail: [] }
     ];
 
-    let allUsersList = [
-      ...responsablesList.map(u => ({...u, type: 'resp'})),
-      ...defaultAgents.map(a => ({...a, type: 'agent'}))
-    ];
-    let selectedGlobalIndex = 0; 
+    let selectedRespIndex = 0; 
     let currentUser = null;
     let activeOpenedClaim = null;
     let uploadedPhotoBase64 = "";
@@ -826,21 +790,18 @@
 
       if (!currentUser) return;
       const myName = `${currentUser.fname} ${currentUser.lname}`;
-      let unreadAgentClaims = 0;
+      let unreadClaims = 0;
       claimsDB.forEach(c => {
         if (c.chat && c.chat.length > 0) {
           const lastMsg = c.chat[c.chat.length - 1];
-          if (lastMsg.sender !== myName && !lastMsg.read) {
-            if (currentUser.role === 'field' && (c.agent === myName)) unreadAgentClaims++;
-            if (currentUser.role !== 'field') unreadAgentClaims++;
-          }
+          if (lastMsg.sender !== myName && !lastMsg.read) unreadClaims++;
         }
       });
 
       const myClaimsBadge = document.getElementById('my-claims-badge');
       if (myClaimsBadge) {
-        myClaimsBadge.innerText = unreadAgentClaims;
-        myClaimsBadge.classList.toggle('hidden', unreadAgentClaims === 0);
+        myClaimsBadge.innerText = unreadClaims;
+        myClaimsBadge.classList.toggle('hidden', unreadClaims === 0);
       }
     }
 
@@ -868,99 +829,47 @@
       }
     }, 3000);
 
-    function renderLockCards() {
-      const target = document.getElementById('agents-grid-target');
+    function renderRespCards() {
+      const target = document.getElementById('resp-grid-target');
       if (!target) return;
       target.innerHTML = '';
 
-      target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #f59e0b; text-transform: uppercase; margin-top: 4px;">👑 Équipe de Gestion (Responsables)</div>`;
-      
       responsablesList.forEach((a, index) => {
-        const globalIdx = index; 
         const card = document.createElement('div');
-        card.className = `agent-card ${selectedGlobalIndex === globalIdx ? 'selected' : ''}`;
+        card.className = `agent-card ${selectedRespIndex === index ? 'selected' : ''}`;
         card.onclick = () => {
-          selectedGlobalIndex = globalIdx;
-          renderLockCards();
+          selectedRespIndex = index;
+          renderRespCards();
         };
         card.innerHTML = `<div class="avatar-circle" style="background:${a.color}">👑</div><div class="agent-fname">${a.fname}</div><div class="agent-lname">${a.lname}</div>`;
         target.appendChild(card);
       });
-
-      target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; margin-top: 14px;">🛵 Agents Terrain (Réclamations & Discussion)</div>`;
-      
-      defaultAgents.forEach((a, index) => {
-        const globalIdx = responsablesList.length + index; 
-        const card = document.createElement('div');
-        card.className = `agent-card ${selectedGlobalIndex === globalIdx ? 'selected' : ''}`;
-        card.onclick = () => {
-          selectedGlobalIndex = globalIdx;
-          renderLockCards();
-        };
-        card.innerHTML = `<div class="avatar-circle" style="background:${a.color}">${a.fname.charAt(0)}</div><div class="agent-fname">${a.fname}</div><div class="agent-lname">${a.lname}</div>`;
-        target.appendChild(card);
-      });
-    }
-
-    function loginDirectByName() {
-      const query = (document.getElementById('direct-name-input').value || '').toLowerCase().trim();
-      if (!query) {
-        alert("Veuillez saisir un prénom ou nom (Ex: Mehdi, Anass, Youssef...)");
-        return;
-      }
-      
-      // Recherche souple (partielle sur le prénom ou nom)
-      const found = allUsersList.find(u => {
-        const full = `${u.fname} ${u.lname}`.toLowerCase();
-        return full.includes(query) || u.fname.toLowerCase().includes(query) || u.lname.toLowerCase().includes(query);
-      });
-
-      if (found) {
-        currentUser = found;
-        launchMainApp();
-      } else {
-        alert("Aucun utilisateur trouvé avec ce nom ! Vérifiez l'orthographe (Ex: Mehdi)");
-      }
     }
 
     function attemptUnlock() {
-      currentUser = allUsersList[selectedGlobalIndex] || responsablesList[0];
+      currentUser = responsablesList[selectedRespIndex] || responsablesList[0];
       launchMainApp();
     }
 
     function launchMainApp() {
       document.getElementById('lock-screen').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
-      document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname} ${currentUser.role === 'field' ? '(Agent Terrain)' : ''}`;
+      document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname} (Responsable)`;
       
-      const isFieldAgent = currentUser.role === 'field';
-
-      document.getElementById('menu-dash').classList.toggle('hidden', isFieldAgent);
-      document.getElementById('menu-config').classList.toggle('hidden', isFieldAgent);
-      document.getElementById('menu-sessions').classList.toggle('hidden', isFieldAgent);
-      document.getElementById('menu-plan').classList.toggle('hidden', isFieldAgent);
-      document.getElementById('menu-sec-resources').classList.toggle('hidden', isFieldAgent);
-      document.getElementById('menu-my-claims').classList.remove('hidden');
-      document.getElementById('menu-history').classList.toggle('hidden', isFieldAgent);
-
       initFormDropdowns();
       populateFilterBrands();
       updateLiveClaimCounters();
 
-      if (isFieldAgent) {
-        showView('my-claims', document.getElementById('menu-my-claims'));
-      } else {
-        showView('dashboard', document.getElementById('menu-dash'));
-        renderReclamationStats();
-      }
+      showView('dashboard', document.getElementById('menu-dash'));
+      renderReclamationStats();
     }
 
     function lockSystem() {
       currentUser = null; 
-      selectedGlobalIndex = 0;
+      selectedRespIndex = 0;
       document.getElementById('main-app').classList.add('hidden');
       document.getElementById('lock-screen').classList.remove('hidden');
-      renderLockCards();
+      renderRespCards();
     }
 
     function showView(viewId, el) {
@@ -1134,7 +1043,7 @@
       claimsDB.push({ 
         id: Date.now(), 
         agent: `${currentUser.fname} ${currentUser.lname}`,
-        agentId: currentUser.id || 'resp',
+        agentId: 'resp',
         type, 
         target, 
         sector: type === 'Partenaire' ? sector : '-', 
@@ -1174,17 +1083,15 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      const myName = `${currentUser.fname} ${currentUser.lname}`;
-      const myClaims = claimsDB.filter(c => c.agent === myName);
-
-      if (myClaims.length === 0) {
+      if (claimsDB.length === 0) {
         tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">Aucune réclamation enregistrée.</td></tr>`;
         return;
       }
 
-      myClaims.slice().reverse().forEach(c => {
+      claimsDB.slice().reverse().forEach(c => {
         if (!c.chat) c.chat = [];
         let hasUnread = false;
+        const myName = `${currentUser.fname} ${currentUser.lname}`;
         if (c.chat.length > 0) {
           const lastMsg = c.chat[c.chat.length - 1];
           if (lastMsg.sender !== myName && !lastMsg.read) hasUnread = true;
@@ -1259,7 +1166,7 @@
       if (!activeOpenedClaim.chat) activeOpenedClaim.chat = [];
       if (!activeOpenedClaim.auditTrail) activeOpenedClaim.auditTrail = [];
 
-      const viewerName = `${currentUser.fname} ${currentUser.lname} (${currentUser.role === 'field' ? 'Agent' : 'Responsable'})`;
+      const viewerName = `${currentUser.fname} ${currentUser.lname} (Responsable)`;
       const nowTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       
       const lastAudit = activeOpenedClaim.auditTrail[activeOpenedClaim.auditTrail.length - 1];
@@ -1339,7 +1246,7 @@
       container.innerHTML = '';
 
       if (!activeOpenedClaim.chat || activeOpenedClaim.chat.length === 0) {
-        container.innerHTML = `<div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">Aucun message dans cette discussion pour le moment.</div>`;
+        container.innerHTML = `<div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">Aucun message dans cette discussion.</div>`;
         return;
       }
 
@@ -1386,12 +1293,8 @@
       activeOpenedClaim = null;
       document.getElementById('rec-detail-modal').classList.remove('active');
       updateLiveClaimCounters();
-      if (currentUser.role === 'field') {
-        renderMyClaimsHistory();
-      } else {
-        renderReclamationStats();
-        renderHistoryView();
-      }
+      renderReclamationStats();
+      renderHistoryView();
     }
 
     function switchDashTab(tab) {
@@ -1480,7 +1383,7 @@
       }
     }
 
-    renderLockCards();
+    renderRespCards();
   </script>
 </body>
 </html>
