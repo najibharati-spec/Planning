@@ -42,12 +42,12 @@
     .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 12px; }
 
     .agent-card {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 14px;
+      background: rgba(255,255,255,0.05); border: 2px solid rgba(245, 158, 11, 0.2); border-radius: 14px;
       padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.25s ease;
       display: flex; flex-direction: column; align-items: center; gap: 6px; backdrop-filter: blur(8px);
     }
     .agent-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); border-color: var(--brand-gold); }
-    .agent-card.selected { background: rgba(245, 158, 11, 0.15); border-color: var(--brand-gold); box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
+    .agent-card.selected { background: rgba(245, 158, 11, 0.25); border-color: var(--brand-gold); box-shadow: 0 0 25px rgba(245, 158, 11, 0.5); transform: translateY(-2px); }
 
     .avatar-circle {
       width: 42px; height: 42px; border-radius: 50%; display: flex;
@@ -782,8 +782,8 @@
     ];
 
     let allSystemUsers = [...responsablesList, ...defaultAgents];
-    let selectedAgent = allSystemUsers[0];
-    let currentUser = allSystemUsers[0];
+    let selectedAgent = allSystemUsers[0]; // Najib par défaut
+    let currentUser = null;
     let activeOpenedClaim = null;
     let uploadedPhotoBase64 = "";
     let currentDashTab = "Partenaire";
@@ -817,6 +817,7 @@
       const tabLivrBadge = document.getElementById('tab-badge-livr');
       if (tabLivrBadge) tabLivrBadge.innerText = pendingLivr;
 
+      if (!currentUser) return;
       const myName = `${currentUser.fname} ${currentUser.lname}`;
       let unreadAgentClaims = 0;
       claimsDB.forEach(c => {
@@ -869,7 +870,10 @@
       responsablesList.forEach(a => {
         const card = document.createElement('div');
         card.className = `agent-card ${selectedAgent && selectedAgent.id === a.id ? 'selected' : ''}`;
-        card.onclick = () => { selectedAgent = a; renderLockCards(); };
+        card.onclick = () => { 
+          selectedAgent = a; 
+          renderLockCards(); 
+        };
         card.innerHTML = `<div class="avatar-circle" style="background:${a.color}">👑</div><div class="agent-fname">${a.fname}</div><div class="agent-lname">${a.lname}</div>`;
         target.appendChild(card);
       });
@@ -878,14 +882,17 @@
       defaultAgents.forEach(a => {
         const card = document.createElement('div');
         card.className = `agent-card ${selectedAgent && selectedAgent.id === a.id ? 'selected' : ''}`;
-        card.onclick = () => { selectedAgent = a; renderLockCards(); };
+        card.onclick = () => { 
+          selectedAgent = a; 
+          renderLockCards(); 
+        };
         card.innerHTML = `<div class="avatar-circle" style="background:${a.color}">${a.fname.charAt(0)}</div><div class="agent-fname">${a.fname}</div><div class="agent-lname">${a.lname}</div>`;
         target.appendChild(card);
       });
     }
 
     function attemptUnlock() {
-      if (!selectedAgent) selectedAgent = allSystemUsers[0];
+      if (!selectedAgent) selectedAgent = responsablesList[0];
       currentUser = selectedAgent;
       document.getElementById('lock-screen').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
@@ -914,7 +921,8 @@
     }
 
     function lockSystem() {
-      currentUser = null; selectedAgent = null;
+      currentUser = null; 
+      selectedAgent = responsablesList[0];
       document.getElementById('main-app').classList.add('hidden');
       document.getElementById('lock-screen').classList.remove('hidden');
       renderLockCards();
@@ -1171,7 +1179,6 @@
 
       const searchVal = (document.getElementById('hist-search')?.value || '').toLowerCase().trim();
 
-      // FILTRAGE STRICT : SEULEMENT LES RECLAMATIONS TRAITEES (TRAITE)
       let list = claimsDB.filter(c => c.status === 'Traité');
 
       if (searchVal !== '') {
@@ -1241,6 +1248,19 @@
       const body = document.getElementById('rec-detail-body');
       const mapsUrl = activeOpenedClaim.gps ? `https://maps.google.com/?q=${activeOpenedClaim.gps}` : '#';
 
+      let photoHtml = `<div style="margin-top:12px; background:#f8fafc; padding:12px; border-radius:10px; text-align:center;"><span style="font-size:11px; font-weight:800; color:#64748b; display:block; margin-bottom:6px;">📸 PHOTO JUSTIFICATIVE (PREUVE) :</span><span style="font-size:12px; color:#94a3b8; font-weight:700;">Aucune photo jointe</span></div>`;
+      if (activeOpenedClaim.photo && activeOpenedClaim.photo.startsWith('data:image')) {
+        photoHtml = `
+          <div style="margin-top:12px; background:#f8fafc; padding:12px; border-radius:10px; text-align:center;">
+            <span style="font-size:11px; font-weight:800; color:#059669; display:block; margin-bottom:8px;">📸 PHOTO JUSTIFICATIVE (PREUVE) :</span>
+            <a href="${activeOpenedClaim.photo}" target="_blank" title="Cliquer pour voir en grand">
+              <img src="${activeOpenedClaim.photo}" alt="Preuve" style="max-width:100%; max-height:260px; border-radius:10px; border:2px solid #059669; box-shadow:0 4px 12px rgba(0,0,0,0.1); cursor:pointer;" />
+            </a>
+            <div style="font-size:10.5px; color:#64748b; margin-top:4px;">(Cliquez sur l'image pour l'agrandir)</div>
+          </div>
+        `;
+      }
+
       body.innerHTML = `
         <div class="detail-row"><span class="detail-label">Agent Saisie :</span><span class="detail-value">${activeOpenedClaim.agent}</span></div>
         <div class="detail-row"><span class="detail-label">Type :</span><span class="detail-value">${activeOpenedClaim.type}</span></div>
@@ -1254,6 +1274,7 @@
           <span style="font-size:11px; font-weight:800; color:#64748b; display:block;">COMMENTAIRE :</span>
           <p style="font-size:13px; font-weight:700; color:#0f172a;">${activeOpenedClaim.comment}</p>
         </div>
+        ${photoHtml}
       `;
 
       renderAuditTrail();
