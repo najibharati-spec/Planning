@@ -38,7 +38,6 @@
     .brand-header-lock h1 { font-size: 32px; font-weight: 800; color: var(--brand-gold); letter-spacing: -0.5px; }
     .brand-header-lock p { font-size: 13px; color: #94a3b8; font-weight: 500; margin-top: 4px; }
 
-    /* TEST BY NAME BOX */
     .direct-test-box {
       background: rgba(255,255,255,0.08); border: 1px solid rgba(245, 158, 11, 0.4);
       padding: 12px 20px; border-radius: 12px; margin-bottom: 20px; width: 100%; max-width: 500px;
@@ -60,7 +59,7 @@
       display: flex; flex-direction: column; align-items: center; gap: 6px; backdrop-filter: blur(8px);
     }
     .agent-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); border-color: var(--brand-gold); }
-    .agent-card.selected { background: rgba(245, 158, 11, 0.35); border-color: var(--brand-gold); box-shadow: 0 0 25px rgba(245, 158, 11, 0.7); transform: translateY(-2px); }
+    .agent-card.selected { background: rgba(245, 158, 11, 0.4); border-color: var(--brand-gold); box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); transform: translateY(-2px); }
 
     .avatar-circle {
       width: 42px; height: 42px; border-radius: 50%; display: flex;
@@ -217,11 +216,11 @@
   <div id="lock-screen">
     <div class="brand-header-lock">
       <h1>FieldOps Control Center</h1>
-      <p>Sélectionnez votre profil ou tapez directement votre prénom pour tester</p>
+      <p>Sélectionnez votre profil ou tapez votre nom pour accéder</p>
     </div>
 
     <div class="direct-test-box">
-      <input type="text" id="direct-name-input" placeholder="Ex: Mehdi, Anass, Youssef, Yahya..." />
+      <input type="text" id="direct-name-input" placeholder="Ex: Mehdi, Anass, Youssef, Najib..." />
       <button onclick="loginDirectByName()">🚀 Dakhil Direct</button>
     </div>
 
@@ -727,7 +726,7 @@
       "Krispy Kreme - Agdal", "Krispy Kreme - Arribat Center", "L'Atelier Burger Hay Riad", "L'Atelier Burger Temara", "LA CASA GRANDE", "LA MAISON Fresh & Bio",
       "LA PORTE DE LA MER", "LE PORT", "LE 40", "LE GOÛT DU FRUIT", "LES FRÈRES BOUCHERS", "La Déliciosa", "La Dinette", "La Mamma’s Pizza", "La Ola", "La Spezia",
       "La pause 88 Mix Food", "La tasse verte", "Lamjarred Boutique Patisserie", "Latium", "Le Chill", "Le Macaron Maitre Artisan", "Le Roissant", "Le Rôti", "Le Smash",
-      "Lea Joy", "Liogelato", "Little Mamma Agdal", "Little Mamma Centre Ville Rabat", "Little Mamma Mahaj Riad", "Lovely Sheep", "Louai’s", "L’gordo", "MAC Cosmetics",
+      "Lea Joy", "Liogelato", "Little Mamma Agdal", "Little Mamma Centre Ville Rabat", "Lovely Sheep", "Louai’s", "L’gordo", "MAC Cosmetics",
       "MK Cloud", "Mademoiselle Framboise Rabat", "Mahaj Alfawakih", "Maison du Pain", "Maison du chou", "Mamito", "Marjane Hyper Hay Riad", "Masked Chicken", "Mawaid chabab",
       "Maymana", "Maymana Souissi", "McDonald's Agdal - 2", "McDonald's Carrousel-93", "McDonald's El Menzeh", "McDonald's Gare LGV Agdal - 48", "McDonald's Marjane Hay Riad - 12",
       "McDonald's Rabat ville - 22", "McDonald's Salé - 33", "McDonald's Temara - 46", "Meka Sushi", "Mevico", "Michwatkom", "Michouat al akhaouayne", "Mister Chicken Sale",
@@ -906,15 +905,21 @@
     function loginDirectByName() {
       const query = (document.getElementById('direct-name-input').value || '').toLowerCase().trim();
       if (!query) {
-        alert("Veuillez saisir un prénom (Ex: Mehdi, Anass, Youssef...)");
+        alert("Veuillez saisir un prénom ou nom (Ex: Mehdi, Anass, Youssef...)");
         return;
       }
-      const found = allUsersList.find(u => u.fname.toLowerCase().includes(query) || u.lname.toLowerCase().includes(query));
+      
+      // Recherche souple (partielle sur le prénom ou nom)
+      const found = allUsersList.find(u => {
+        const full = `${u.fname} ${u.lname}`.toLowerCase();
+        return full.includes(query) || u.fname.toLowerCase().includes(query) || u.lname.toLowerCase().includes(query);
+      });
+
       if (found) {
         currentUser = found;
         launchMainApp();
       } else {
-        alert("Aucun utilisateur trouvé avec ce nom !");
+        alert("Aucun utilisateur trouvé avec ce nom ! Vérifiez l'orthographe (Ex: Mehdi)");
       }
     }
 
