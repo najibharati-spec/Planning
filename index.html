@@ -23,10 +23,6 @@
       --badge-green-bg: #dcfce7; --badge-green-txt: #15803d;
       --badge-orange-bg: #ffedd5; --badge-orange-txt: #c2410c;
       --badge-red-bg: #fee2e2; --badge-red-txt: #b91c1c;
-      --matin-bg: #ede9fe; --matin-txt: #6d28d9; --matin-border: #c4b5fd;
-      --aprem-bg: #fae8ff; --aprem-txt: #86198f; --aprem-border: #f0abfc;
-      --soir-bg: #e0e7ff; --soir-txt: #3730a3; --soir-border: #a5b4fc;
-      --off-bg: #f8fafc; --off-txt: #94a3b8; --off-border: #e2e8f0;
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
@@ -242,6 +238,9 @@
           <span>📂 PRO</span>
           <span class="nav-badge-count hidden" id="my-claims-badge">0</span>
         </div>
+        <div class="nav-item" id="menu-history" onclick="showView('history', this)">
+          <span>📜 Historique Réclamations</span>
+        </div>
         <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️ Config Dynamic</span></div>
         <div class="nav-item" id="menu-sessions" onclick="showView('sessions', this)"><span>👥 Sessions Agents</span></div>
         <div class="nav-item" id="menu-msg" onclick="showView('messages', this)">
@@ -276,7 +275,7 @@
         </div>
       </div>
 
-      <!-- DASHBOARD AVEC FILTRES AVANCÉS -->
+      <!-- DASHBOARD -->
       <div id="view-dashboard" class="content-card">
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📊 Centre de Traitement des Réclamations (En Cours)</h3>
         <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Filtrez les réclamations actives par motif, partenaire, agent, date ou code commande.</p>
@@ -354,65 +353,78 @@
         </div>
       </div>
 
-      <!-- SESSIONS AGENTS -->
-      <div id="view-sessions" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">👥 Gestion & Suivi des Sessions Agents Terrain</h3>
+      <!-- HISTORIQUE DES RECLAMATIONS (GLOBAL) -->
+      <div id="view-history" class="content-card hidden">
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📜 Historique Global des Réclamations</h3>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Gaɛ les réclamations lli tdatou f système (En cours wla Traité wla Classé) b l-historique w les détails dyalhom.</p>
+
+        <div class="filter-panel" style="margin-bottom: 16px;">
+          <div>
+            <label>🔎 Recherche (Agent, Store, Commande) :</label>
+            <input type="text" id="hist-search" placeholder="Rechercher..." oninput="renderHistoryView()" />
+          </div>
+          <div>
+            <label>📌 Statut :</label>
+            <select id="hist-status" onchange="renderHistoryView()">
+              <option value="">-- Tous --</option>
+              <option value="En Cours">En Cours</option>
+              <option value="Traité">Traité</option>
+            </select>
+          </div>
+        </div>
+
         <div style="overflow-x:auto;">
           <table>
             <thead>
               <tr>
-                <th>Agent Terrain</th><th>Zone Affectée</th><th>Dernière Connexion</th><th>Statut Session</th><th>Actions</th>
+                <th>ID</th><th>Agent</th><th>Type</th><th>Cible / Store</th><th>Motif</th><th>Order #</th><th>Date</th><th>Statut</th><th>Détails</th>
               </tr>
             </thead>
-            <tbody id="sessions-table-body"></tbody>
+            <tbody id="history-tbody"></tbody>
           </table>
         </div>
+      </div>
+
+      <!-- SESSIONS AGENTS -->
+      <div id="view-sessions" class="content-card hidden">
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">👥 Gestion & Suivi des Sessions Agents Terrain</h3>
       </div>
 
       <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION -->
       <div id="view-reclamations" class="content-card hidden">
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🚨 Saisie Nouvelle Réclamation</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Saisissez les informations de l'incident.</p>
-
         <div class="form-grid">
           <div class="form-group" id="fgroup-type">
             <label>Type Réclamation :</label>
             <select id="rec-type" onchange="toggleRecType()"></select>
           </div>
-
           <div class="form-group" id="fgroup-partenaire">
             <label>Marque Partenaire :</label>
             <select id="rec-target-partenaire" onchange="updateStoreLocations()"></select>
           </div>
-
           <div class="form-group" id="fgroup-sector">
             <label>🔎 Magasin Exact / Store (Recherche) :</label>
             <input type="text" id="store-search-input" class="search-input-box" placeholder="🔍 Taper pour chercher le Store..." oninput="filterStores()" />
             <select id="rec-store-sector" onchange="checkCustomStore()"></select>
             <input type="text" id="custom-store-input" class="hidden" placeholder="Saisir le nom du partenaire/store exact..." style="margin-top:6px; padding:10px; border-radius:8px; border:1px solid #cbd5e1;" />
           </div>
-
           <div class="form-group hidden" id="fgroup-livreur">
             <label>ID Livreur :</label>
             <input type="text" id="rec-target-livreur" placeholder="Ex: 54932" />
           </div>
-
           <div class="form-group" id="fgroup-motif">
             <label>Motif Incident :</label>
             <select id="rec-motif"></select>
           </div>
-
           <div class="form-group" id="fgroup-order">
             <label>N° de Commande :</label>
             <input type="text" id="rec-order-num" placeholder="Ex: #8841, #9902" />
           </div>
-
           <div class="form-group" id="fgroup-gps">
             <label>Localisation GPS (Obligatoire) :</label>
             <button type="button" onclick="getGPS()" style="padding:10px; background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; border-radius:8px; cursor:pointer; font-weight:800;">📍 Détecter Position GPS *</button>
             <input type="text" id="rec-gps" readonly placeholder="Cliquer sur 'Détecter Position'..." style="background:#f8fafc;" />
           </div>
-
           <div class="form-group" id="fgroup-photo" style="grid-column: 1 / -1;">
             <label>📸 Photo Justificatif (Preuve) :</label>
             <input type="file" id="rec-photo-input" accept="image/*" onchange="previewPhoto(event)" style="padding:8px; border:1px solid #cbd5e1; border-radius:8px;" />
@@ -421,11 +433,9 @@
             </div>
           </div>
         </div>
-
         <div id="gps-error-banner" style="background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; padding:12px; border-radius:10px; font-size:12px; font-weight:800; margin-top:14px;" class="hidden">
           ⚠️ Attention : Vous devez obligatoirement cliquer sur "📍 Détecter Position GPS" !
         </div>
-
         <div class="form-group" id="fgroup-comment" style="margin-top:14px;">
           <label>Commentaires & Explications :</label>
           <textarea id="rec-comment" rows="3" placeholder="Saisir les commentaires et détails..."></textarea>
@@ -433,7 +443,7 @@
         <button class="btn-action" style="margin-top:16px; padding:12px 24px;" onclick="submitReclamation()">Envoyer la Réclamation</button>
       </div>
 
-      <!-- CONFIGURATION DYNAMIQUE -->
+      <!-- CONFIGURATION -->
       <div id="view-config" class="content-card hidden">
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🛠️ Configuration Dynamique</h3>
       </div>
@@ -467,7 +477,6 @@
 
       <div id="rec-detail-body"></div>
 
-      <!-- CHAT ROOM SPECIFIQUE A LA RECLAMATION -->
       <div style="margin-top:16px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:14px;">
         <h4 style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:8px;">💬 Fil de Discussion (Responsable ⇄ Agent) :</h4>
         <div id="claim-chat-messages-container" style="max-height:160px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; margin-bottom:10px; background:#fff; padding:10px; border-radius:8px; border:1px solid #e2e8f0;"></div>
@@ -711,6 +720,7 @@
       document.getElementById('menu-plan').classList.toggle('hidden', isFieldAgent);
       document.getElementById('menu-sec-resources').classList.toggle('hidden', isFieldAgent);
       document.getElementById('menu-my-claims').classList.remove('hidden');
+      document.getElementById('menu-history').classList.toggle('hidden', isFieldAgent);
 
       initFormDropdowns();
       populateFilterBrands();
@@ -737,6 +747,7 @@
       document.getElementById('view-dashboard').classList.add('hidden');
       document.getElementById('view-reclamations').classList.add('hidden');
       document.getElementById('view-my-claims').classList.add('hidden');
+      document.getElementById('view-history').classList.add('hidden');
       document.getElementById('view-planning').classList.add('hidden');
       document.getElementById('view-messages').classList.add('hidden');
       document.getElementById('view-sessions').classList.add('hidden');
@@ -746,6 +757,7 @@
       
       if (viewId === 'my-claims') renderMyClaimsHistory();
       if (viewId === 'dashboard') renderReclamationStats();
+      if (viewId === 'history') renderHistoryView();
       updateLiveClaimCounters();
     }
 
@@ -972,6 +984,50 @@
       });
     }
 
+    function renderHistoryView() {
+      const tbody = document.getElementById('history-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const searchVal = (document.getElementById('hist-search')?.value || '').toLowerCase().trim();
+      const statusVal = document.getElementById('hist-status')?.value || '';
+
+      let list = claimsDB;
+      if (searchVal !== '') {
+        list = list.filter(c => 
+          c.agent.toLowerCase().includes(searchVal) ||
+          c.target.toLowerCase().includes(searchVal) ||
+          c.orderNum.toLowerCase().includes(searchVal) ||
+          c.sector.toLowerCase().includes(searchVal)
+        );
+      }
+      if (statusVal !== '') {
+        list = list.filter(c => c.status === statusVal);
+      }
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">Aucun historique trouvé.</td></tr>`;
+        return;
+      }
+
+      list.slice().reverse().forEach(c => {
+        const badgeStyle = c.status === 'En Cours' ? 'badge-gold' : 'badge-green';
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>#${c.id.toString().slice(-4)}</strong></td>
+            <td>${c.agent}</td>
+            <td>${c.type}</td>
+            <td><strong>${c.target}</strong> (${c.sector})</td>
+            <td>${c.motif}</td>
+            <td>${c.orderNum}</td>
+            <td>${c.date}</td>
+            <td><span class="${badgeStyle}">${c.status}</span></td>
+            <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">👁️ Voir</button></td>
+          </tr>
+        `;
+      });
+    }
+
     function openClaimDetailsModal(claimId) {
       activeOpenedClaim = claimsDB.find(c => c.id === claimId);
       if (!activeOpenedClaim) return;
@@ -1064,6 +1120,7 @@
         renderMyClaimsHistory();
       } else {
         renderReclamationStats();
+        renderHistoryView();
       }
     }
 
@@ -1096,7 +1153,7 @@
       activeClaims.forEach((c) => {
         if (!c.chat) c.chat = [];
         let hasUnread = false;
-        if (c.chat.length > 0) {
+        if (c.chat.length > 1) {
           const lastMsg = c.chat[c.chat.length - 1];
           if (lastMsg.sender !== myName && !lastMsg.read) hasUnread = true;
         }
@@ -1137,6 +1194,7 @@
         localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
         updateLiveClaimCounters();
         renderReclamationStats();
+        renderHistoryView();
       }
     }
 
