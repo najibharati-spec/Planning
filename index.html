@@ -204,7 +204,7 @@
   <div id="lock-screen">
     <div class="brand-header-lock">
       <h1>FieldOps Control Center</h1>
-      <p>Sélectionnez votre profil pour accéder à votre espace</p>
+      <p>Sélectionnez votre profil (Responsable ou Agent) pour accéder à votre espace</p>
     </div>
 
     <div class="agents-grid-container">
@@ -768,8 +768,11 @@
       { id: 1, agent: "Yahya RHALLAB", agentId: "agent_101", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Retard excessif au store.", date: "2026-09-20", status: "En Cours", chat: [], auditTrail: [] }
     ];
 
-    let allUsersList = [...responsablesList.map(u => ({...u, type: 'resp'})), ...defaultAgents.map(a => ({...a, type: 'agent'}))];
-    let selectedGlobalIndex = 0; // Index dyal l-user lli m-sélectioni b ḍabt
+    let allUsersList = [
+      ...responsablesList.map(u => ({...u, type: 'resp'})),
+      ...defaultAgents.map(a => ({...a, type: 'agent'}))
+    ];
+    let selectedGlobalIndex = 0; 
     let currentUser = null;
     let activeOpenedClaim = null;
     let uploadedPhotoBase64 = "";
@@ -856,7 +859,7 @@
       target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #f59e0b; text-transform: uppercase; margin-top: 4px;">👑 Équipe de Gestion (Responsables)</div>`;
       
       responsablesList.forEach((a, index) => {
-        const globalIdx = index; // 0 to 3
+        const globalIdx = index; 
         const card = document.createElement('div');
         card.className = `agent-card ${selectedGlobalIndex === globalIdx ? 'selected' : ''}`;
         card.onclick = () => {
@@ -870,7 +873,7 @@
       target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; margin-top: 14px;">🛵 Agents Terrain (Réclamations & Discussion)</div>`;
       
       defaultAgents.forEach((a, index) => {
-        const globalIdx = responsablesList.length + index; // 4 onwards
+        const globalIdx = responsablesList.length + index; 
         const card = document.createElement('div');
         card.className = `agent-card ${selectedGlobalIndex === globalIdx ? 'selected' : ''}`;
         card.onclick = () => {
