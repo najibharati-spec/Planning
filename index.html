@@ -226,18 +226,18 @@
       <div class="menu-section">
         <div class="menu-label">Opérations Admin</div>
         <div class="nav-item active" id="menu-dash" onclick="showView('dashboard', this)">
-          <span>📊 Dashboard</span>
+          <span>📊 Tableau de Bord</span>
           <span class="nav-badge-count" id="dash-badge-count">0</span>
         </div>
-        <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨 Saisie Réclamation</span></div>
+        <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨 Saisir Réclamation</span></div>
         <div class="nav-item" id="menu-my-claims" onclick="showView('my-claims', this)">
-          <span>📂 Hestoir Réclamation Agent</span>
+          <span>📂 Historique Réclamations Agent</span>
           <span class="nav-badge-count hidden" id="my-claims-badge">0</span>
         </div>
         <div class="nav-item" id="menu-history" onclick="showView('history', this)">
           <span>📜 Historique Global</span>
         </div>
-        <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️ Config Dynamic</span></div>
+        <div class="nav-item" id="menu-config" onclick="showView('config', this)"><span>🛠️ Configuration Dynamique</span></div>
         <div class="nav-item" id="menu-sessions" onclick="showView('sessions', this)"><span>👥 Sessions Agents</span></div>
         <div class="nav-item" id="menu-msg" onclick="showView('messages', this)"><span>💬 Messages Directs</span></div>
         <div class="nav-item" id="menu-plan" onclick="showView('planning', this)"><span>📅 Planning Agents</span></div>
@@ -251,13 +251,13 @@
 
     <div class="main-content">
       <div class="top-header-bar">
-        <h2 id="current-view-title" style="font-size:20px; font-weight:800; color:#0f172a;">Dashboard Admin</h2>
+        <h2 id="current-view-title" style="font-size:20px; font-weight:800; color:#0f172a;">Centre de Contrôle</h2>
         <div style="display:flex; align-items:center; gap:12px;">
           <div id="dash-live-banner-part" class="badge-red" style="font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:10px; display:flex; align-items:center; gap:4px;">
-            🏪 Partenaires: <span id="dash-pending-part-txt">0</span>
+            🏪 Partenaires : <span id="dash-pending-part-txt">0</span>
           </div>
           <div id="dash-live-banner-livr" class="badge-orange" style="font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:10px; display:flex; align-items:center; gap:4px; background:#dbeafe; color:#1e40af;">
-            🛵 Livreurs: <span id="dash-pending-livr-txt">0</span>
+            🛵 Livreurs : <span id="dash-pending-livr-txt">0</span>
           </div>
 
           <div class="user-info-badge">
@@ -268,10 +268,10 @@
         </div>
       </div>
 
-      <!-- DASHBOARD -->
+      <!-- TABLEAU DE BORD -->
       <div id="view-dashboard" class="content-card">
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📊 Centre de Traitement des Réclamations (En Cours)</h3>
-        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Filtrez les réclamations actives par motif, partenaire, agent, date ou code commande.</p>
+        <p style="color:#64748b; margin-bottom:16px; font-size:12px;">Filtrez les réclamations actives par motif, partenaire, agent, date ou code de commande.</p>
         
         <div class="tab-container">
           <button class="tab-btn active" id="tab-part" onclick="switchDashTab('Partenaire')">
@@ -286,12 +286,12 @@
 
         <div class="filter-panel">
           <div>
-            <label>🔎 Recherche (ID / Order# / Agent) :</label>
+            <label>🔎 Recherche (ID / Commande / Agent) :</label>
             <input type="text" id="flt-search" placeholder="Ex: #8841, Yahya..." oninput="renderReclamationStats()" />
           </div>
 
           <div>
-            <label>🚨 Motif Incident :</label>
+            <label>🚨 Motif de l'Incident :</label>
             <select id="flt-motif" onchange="renderReclamationStats()">
               <option value="">-- Tous les Motifs --</option>
               <option value="Commande volée">Commande volée</option>
@@ -310,12 +310,12 @@
           </div>
 
           <div>
-            <label>📅 Sélectionner Date (Calendrier) :</label>
+            <label>📅 Sélectionner la Date :</label>
             <input type="date" id="flt-date" onchange="renderReclamationStats()" style="cursor:pointer;" />
           </div>
 
           <div>
-            <button class="btn-action" style="padding:8px 12px; font-size:11px; background:#64748b;" onclick="resetFilters()">🔄 Vider Filtres</button>
+            <button class="btn-action" style="padding:8px 12px; font-size:11px; background:#64748b;" onclick="resetFilters()">🔄 Réinitialiser</button>
           </div>
         </div>
 
@@ -329,16 +329,16 @@
         </div>
       </div>
 
-      <!-- HESTOIR RECLAMATION AGENT -->
+      <!-- HISTORIQUE RÉCLAMATIONS AGENT -->
       <div id="view-my-claims" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📂 Hestoir Réclamation Agent (Historique & Chat)</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Hna katban lik kol réclamation dfa3tiha, w ila sifet lik l-responsable chi message kayban lik b notification wada7a.</p>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📂 Historique Réclamations Agent</h3>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Consultez ici l'ensemble de vos réclamations soumises ainsi que les messages et notifications des responsables.</p>
 
         <div style="overflow-x:auto;">
           <table>
             <thead>
               <tr>
-                <th>ID</th><th>Type</th><th>Cible</th><th>Motif</th><th>Order #</th><th>Date</th><th>Statut</th><th>Chat & Messages</th>
+                <th>ID</th><th>Type</th><th>Cible</th><th>Motif</th><th>N° Commande</th><th>Date</th><th>Statut</th><th>Discussion & Messages</th>
               </tr>
             </thead>
             <tbody id="my-claims-tbody"></tbody>
@@ -349,7 +349,7 @@
       <!-- HISTORIQUE GLOBAL -->
       <div id="view-history" class="content-card hidden">
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">📜 Historique Global des Réclamations</h3>
-        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Gaɛ les réclamations lli tdatou f système b l-historique w les détails dyalhom.</p>
+        <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Visualisez toutes les réclamations enregistrées dans le système avec leurs détails complets.</p>
 
         <div class="filter-panel" style="margin-bottom: 16px;">
           <div>
@@ -370,7 +370,7 @@
           <table>
             <thead>
               <tr>
-                <th>ID</th><th>Agent</th><th>Type</th><th>Cible / Store</th><th>Motif</th><th>Order #</th><th>Date</th><th>Statut</th><th>Détails</th><th>Action Admin</th>
+                <th>ID</th><th>Agent</th><th>Type</th><th>Cible / Store</th><th>Motif</th><th>N° Commande</th><th>Date</th><th>Statut</th><th>Détails</th><th>Action Admin</th>
               </tr>
             </thead>
             <tbody id="history-tbody"></tbody>
@@ -383,12 +383,12 @@
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">👥 Gestion & Suivi des Sessions Agents Terrain</h3>
       </div>
 
-      <!-- FORMULAIRE DE SAISIE DE RÉCLAMATION -->
+      <!-- SAISIE DE RÉCLAMATION -->
       <div id="view-reclamations" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🚨 Saisie Nouvelle Réclamation</h3>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">🚨 Saisir une Nouvelle Réclamation</h3>
         <div class="form-grid">
           <div class="form-group" id="fgroup-type">
-            <label>Type Réclamation :</label>
+            <label>Type de Réclamation :</label>
             <select id="rec-type" onchange="toggleRecType()"></select>
           </div>
           <div class="form-group" id="fgroup-partenaire">
@@ -397,16 +397,16 @@
           </div>
           <div class="form-group" id="fgroup-sector">
             <label>🔎 Magasin Exact / Store (Recherche) :</label>
-            <input type="text" id="store-search-input" class="search-input-box" placeholder="🔍 Taper pour chercher le Store..." oninput="filterStores()" />
+            <input type="text" id="store-search-input" class="search-input-box" placeholder="🔍 Taper pour chercher le store..." oninput="filterStores()" />
             <select id="rec-store-sector" onchange="checkCustomStore()"></select>
             <input type="text" id="custom-store-input" class="hidden" placeholder="Saisir le nom du partenaire/store exact..." style="margin-top:6px; padding:10px; border-radius:8px; border:1px solid #cbd5e1;" />
           </div>
           <div class="form-group hidden" id="fgroup-livreur">
-            <label>ID Livreur :</label>
+            <label>ID du Livreur :</label>
             <input type="text" id="rec-target-livreur" placeholder="Ex: 54932" />
           </div>
           <div class="form-group" id="fgroup-motif">
-            <label>Motif Incident :</label>
+            <label>Motif de l'Incident :</label>
             <select id="rec-motif"></select>
           </div>
           <div class="form-group" id="fgroup-order">
@@ -415,19 +415,19 @@
           </div>
           <div class="form-group" id="fgroup-gps">
             <label>Localisation GPS (Obligatoire) :</label>
-            <button type="button" onclick="getGPS()" style="padding:10px; background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; border-radius:8px; cursor:pointer; font-weight:800;">📍 Détecter Position GPS *</button>
-            <input type="text" id="rec-gps" readonly placeholder="Cliquer sur 'Détecter Position'..." style="background:#f8fafc;" />
+            <button type="button" onclick="getGPS()" style="padding:10px; background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; border-radius:8px; cursor:pointer; font-weight:800;">📍 Détecter la Position GPS *</button>
+            <input type="text" id="rec-gps" readonly placeholder="Cliquer sur 'Détecter la Position'..." style="background:#f8fafc;" />
           </div>
           <div class="form-group" id="fgroup-photo" style="grid-column: 1 / -1;">
-            <label>📸 Photo Justificatif (Preuve) :</label>
+            <label>📸 Photo Justificative (Preuve) :</label>
             <input type="file" id="rec-photo-input" accept="image/*" onchange="previewPhoto(event)" style="padding:8px; border:1px solid #cbd5e1; border-radius:8px;" />
             <div id="photo-preview-box" class="hidden" style="margin-top:10px;">
-              <img id="photo-preview-img" src="" alt="Preuve Uploaded" style="max-width:200px; max-height:150px; border-radius:10px; border:2px solid #059669;" />
+              <img id="photo-preview-img" src="" alt="Preuve" style="max-width:200px; max-height:150px; border-radius:10px; border:2px solid #059669;" />
             </div>
           </div>
         </div>
         <div id="gps-error-banner" style="background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; padding:12px; border-radius:10px; font-size:12px; font-weight:800; margin-top:14px;" class="hidden">
-          ⚠️ Attention : Vous devez obligatoirement cliquer sur "📍 Détecter Position GPS" !
+          ⚠️ Attention : Vous devez obligatoirement cliquer sur "📍 Détecter la Position GPS" !
         </div>
         <div class="form-group" id="fgroup-comment" style="margin-top:14px;">
           <label>Commentaires & Explications :</label>
@@ -449,22 +449,22 @@
       <!-- PLANNING AGENTS -->
       <div id="view-planning" class="hidden">
         <div style="background:#ffffff; padding:20px 24px; border-radius:16px; border:1px solid #e9d5ff; margin-bottom:22px;">
-          <h1 style="font-size:20px; font-weight:800; color:#581c87;">Operational Shift Planning (44H)</h1>
+          <h1 style="font-size:20px; font-weight:800; color:#581c87;">Planning des Équipes (44H)</h1>
         </div>
       </div>
 
-      <!-- PARAMETRES -->
+      <!-- PARAMÈTRES -->
       <div id="view-parametres" class="content-card hidden">
-        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">⚙️ Paramètres Système</h3>
+        <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">⚙️ Paramètres du Système</h3>
       </div>
     </div>
   </div>
 
-  <!-- MODAL DETAILS RECLAMATION & CHAT -->
+  <!-- MODAL DETAILS & DISCUSSION -->
   <div id="rec-detail-modal" class="modal-overlay">
     <div class="modal-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
-        <h3 style="font-size:16px; font-weight:800; color:#0f172a;">📄 Détails de la Réclamation & Chat</h3>
+        <h3 style="font-size:16px; font-weight:800; color:#0f172a;">📄 Détails de la Réclamation & Discussion</h3>
         <span id="detail-rec-id" class="badge-gold">ID: #000</span>
       </div>
 
@@ -481,7 +481,7 @@
 
       <div style="margin-top:20px; padding-top:16px; border-top:2px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center;">
         <div id="admin-close-buttons" style="display:flex; gap:10px; width:100%;">
-          <button class="btn-action" style="background:#059669; flex:1;" onclick="confirmCloseModal(true)">✅ Marquer TRAITÉ</button>
+          <button class="btn-action" style="background:#059669; flex:1;" onclick="confirmCloseModal(true)">✅ Marquer comme TRAITÉ</button>
           <button class="btn-action" style="background:#64748b; flex:1;" onclick="confirmCloseModal(false)">⏳ Fermer (En Cours)</button>
         </div>
       </div>
@@ -624,7 +624,7 @@
     let storeCatalog = defaultStoreCatalog;
     let recTypesCatalog = defaultRecTypes;
     let claimsDB = JSON.parse(localStorage.getItem('fieldops_claims_db_v30')) || [
-      { id: 1, agent: "Yahya RHALLAB", agentId: "101", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Retard excessif f le store.", date: "2026-09-20", status: "En Cours", chat: [] }
+      { id: 1, agent: "Yahya RHALLAB", agentId: "101", type: "Partenaire", target: "McDonald's®", sector: "McDonald's Temara - 46", motif: "Commande non prête (Retard excessif)", orderNum: "#8841", gps: "33.9182, -6.9211", photo: "", comment: "Retard excessif au store.", date: "2026-09-20", status: "En Cours", chat: [] }
     ];
     let directMessagesDB = [];
 
@@ -692,7 +692,7 @@
         target.appendChild(card);
       });
 
-      target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; margin-top: 14px;">🛵 Agents Terrain (Réclamations & Chat)</div>`;
+      target.innerHTML += `<div style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; margin-top: 14px;">🛵 Agents Terrain (Réclamations & Discussion)</div>`;
       defaultAgents.forEach(a => {
         const card = document.createElement('div');
         card.className = `agent-card ${selectedAgent && selectedAgent.id === a.id ? 'selected' : ''}`;
@@ -894,7 +894,7 @@
 
       if (!gps || gps.trim() === '') {
         document.getElementById('gps-error-banner').classList.remove('hidden');
-        alert("⚠️ OBLIGATOIRE : Cliquez sur '📍 Détecter Position GPS' !");
+        alert("⚠️ Attention : Vous devez obligatoirement cliquer sur '📍 Détecter la Position GPS' !");
         return;
       }
 
@@ -952,7 +952,7 @@
       const myClaims = claimsDB.filter(c => c.agent === myName || c.agentId === currentUser.id);
 
       if (myClaims.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">Maandk hta réclamation msajla.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">Aucune réclamation enregistrée.</td></tr>`;
         return;
       }
 
@@ -975,7 +975,7 @@
             <td>${c.orderNum}</td>
             <td>${c.date}</td>
             <td><span class="${statusStyle}">${c.status}</span></td>
-            <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Ouvrir Chat & Détails ${notifBadge}</button></td>
+            <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Ouvrir Discussion ${notifBadge}</button></td>
           </tr>
         `;
       });
@@ -1011,7 +1011,7 @@
 
       list.slice().reverse().forEach(c => {
         const badgeStyle = c.status === 'En Cours' ? 'badge-gold' : 'badge-green';
-        const deleteBtnHtml = canDelete ? `<button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button>` : `<span style="color:#94a3b8; font-size:11px;">Restreint (Admin uniquement)</span>`;
+        const deleteBtnHtml = canDelete ? `<button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button>` : `<span style="color:#94a3b8; font-size:11px;">Restreint</span>`;
 
         tbody.innerHTML += `
           <tr>
@@ -1047,14 +1047,14 @@
       const mapsUrl = activeOpenedClaim.gps ? `https://maps.google.com/?q=${activeOpenedClaim.gps}` : '#';
 
       body.innerHTML = `
-        <div class="detail-row"><span class="detail-label">Agent Saisie:</span><span class="detail-value">${activeOpenedClaim.agent}</span></div>
-        <div class="detail-row"><span class="detail-label">Type:</span><span class="detail-value">${activeOpenedClaim.type}</span></div>
-        <div class="detail-row"><span class="detail-label">Cible:</span><span class="detail-value">${activeOpenedClaim.target}</span></div>
-        <div class="detail-row"><span class="detail-label">Motif:</span><span class="detail-value" style="color:#b91c1c;">${activeOpenedClaim.motif}</span></div>
-        <div class="detail-row"><span class="detail-label">N° Commande:</span><span class="detail-value">${activeOpenedClaim.orderNum}</span></div>
-        <div class="detail-row"><span class="detail-label">Date:</span><span class="detail-value">${activeOpenedClaim.date}</span></div>
-        <div class="detail-row"><span class="detail-label">Statut:</span><span class="detail-value">${activeOpenedClaim.status}</span></div>
-        <div class="detail-row"><span class="detail-label">GPS:</span><span class="detail-value"><a href="${mapsUrl}" target="_blank" style="color:#0284c7;">📍 Ouvrir Maps</a></span></div>
+        <div class="detail-row"><span class="detail-label">Agent Saisie :</span><span class="detail-value">${activeOpenedClaim.agent}</span></div>
+        <div class="detail-row"><span class="detail-label">Type :</span><span class="detail-value">${activeOpenedClaim.type}</span></div>
+        <div class="detail-row"><span class="detail-label">Cible :</span><span class="detail-value">${activeOpenedClaim.target}</span></div>
+        <div class="detail-row"><span class="detail-label">Motif :</span><span class="detail-value" style="color:#b91c1c;">${activeOpenedClaim.motif}</span></div>
+        <div class="detail-row"><span class="detail-label">N° Commande :</span><span class="detail-value">${activeOpenedClaim.orderNum}</span></div>
+        <div class="detail-row"><span class="detail-label">Date :</span><span class="detail-value">${activeOpenedClaim.date}</span></div>
+        <div class="detail-row"><span class="detail-label">Statut :</span><span class="detail-value">${activeOpenedClaim.status}</span></div>
+        <div class="detail-row"><span class="detail-label">GPS :</span><span class="detail-value"><a href="${mapsUrl}" target="_blank" style="color:#0284c7;">📍 Ouvrir sur Maps</a></span></div>
         <div style="margin-top:12px; background:#f8fafc; padding:12px; border-radius:10px;">
           <span style="font-size:11px; font-weight:800; color:#64748b; display:block;">COMMENTAIRE :</span>
           <p style="font-size:13px; font-weight:700; color:#0f172a;">${activeOpenedClaim.comment}</p>
@@ -1071,7 +1071,7 @@
       container.innerHTML = '';
 
       if (!activeOpenedClaim.chat || activeOpenedClaim.chat.length === 0) {
-        container.innerHTML = `<div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">Aucun message dans ce chat. Le responsable peut vous envoyer un message ici.</div>`;
+        container.innerHTML = `<div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">Aucun message dans cette discussion pour le moment.</div>`;
         return;
       }
 
@@ -1141,11 +1141,11 @@
 
       if (currentDashTab === 'Partenaire') {
         thead.innerHTML = `
-          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Statut</th><th>Chat & Messages</th><th>Actions Admin</th>
+          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Statut</th><th>Discussion</th><th>Action Admin</th>
         `;
       } else {
         thead.innerHTML = `
-          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Statut</th><th>Chat & Messages</th><th>Actions Admin</th>
+          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Statut</th><th>Discussion</th><th>Action Admin</th>
         `;
       }
 
@@ -1172,7 +1172,7 @@
               <td>${c.motif}</td>
               <td>${c.orderNum}</td>
               <td><span class="badge-gold">${c.status}</span></td>
-              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Chat & Détails ${notifBadge}</button></td>
+              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Ouvrir ${notifBadge}</button></td>
               <td>${deleteBtnHtml}</td>
             </tr>
           `;
@@ -1184,7 +1184,7 @@
               <td>${c.motif}</td>
               <td>${c.orderNum}</td>
               <td><span class="badge-gold">${c.status}</span></td>
-              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Chat & Détails ${notifBadge}</button></td>
+              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Ouvrir ${notifBadge}</button></td>
               <td>${deleteBtnHtml}</td>
             </tr>
           `;
@@ -1194,10 +1194,10 @@
 
     function deleteReclamation(id) {
       if (!isNajibAdmin()) {
-        alert("⚠️ Accès refusé ! Had l-amaria khassa b Najib Harati waḥdu.");
+        alert("⚠️ Accès refusé ! Cette action est réservée à l'administrateur.");
         return;
       }
-      if(confirm("Wakha bɣiti t-msaḥ had la réclamation نهائياً?")) {
+      if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
         claimsDB = claimsDB.filter(c => c.id !== id);
         localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
         updateLiveClaimCounters();
