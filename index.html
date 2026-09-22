@@ -228,7 +228,7 @@
           <span class="nav-badge-count" id="dash-badge-count">0</span>
         </div>
         <div class="nav-item" id="menu-rec" onclick="showView('reclamations', this)"><span>🚨 Saisir Réclamation</span></div>
-        <div class="nav-item" id="menu-my-claims" onclick="showView('my-claims', this)">
+        <div class="nav-item hidden" id="menu-my-claims" onclick="showView('my-claims', this)">
           <span>📂 Historique Réclamations Agent</span>
           <span class="nav-badge-count hidden" id="my-claims-badge">0</span>
         </div>
@@ -739,7 +739,6 @@
       "Livreur": ["Mauvais comportement", "Vol de commande par le livreur", "Utilisation d'un compte non personnel (Compte loué/partagé)"]
     };
 
-    // Kolchi m-qadd m3a baḍathoum (Najib, Mehdi, Anass, Youssef w les agents b nfs l-chkl w l-avatar d l-harf)
     const allUsersList = [
       { fname: "Najib", lname: "HARATI", color: "#f59e0b", role: "admin" },
       { fname: "Mehdi", lname: "FADLI", color: "#2563eb", role: "decideur" },
@@ -871,21 +870,30 @@
       document.getElementById('logged-user-name').innerText = `${currentUser.fname} ${currentUser.lname} ${currentUser.role === 'field' ? '(Agent Terrain)' : '(Responsable)'}`;
       
       const isFieldAgent = currentUser.role === 'field';
+      const isResp = (currentUser.role === 'decideur' || currentUser.role === 'admin');
 
+      // Masquer/Afficher les menus selon s'il est Responsable (Najib, Mehdi, Anass, Youssef) ou Agent Terrain
       document.getElementById('menu-dash').classList.toggle('hidden', isFieldAgent);
       document.getElementById('menu-config').classList.toggle('hidden', isFieldAgent);
       document.getElementById('menu-sessions').classList.toggle('hidden', isFieldAgent);
       document.getElementById('menu-plan').classList.toggle('hidden', isFieldAgent);
       document.getElementById('menu-sec-resources').classList.toggle('hidden', isFieldAgent);
-      document.getElementById('menu-my-claims').classList.remove('hidden');
       document.getElementById('menu-history').classList.toggle('hidden', isFieldAgent);
+
+      // Si c'est un responsable (Mehdi, Anass, Youssef, Najib), on cache l'historique réclamations agent (ma-klam)
+      const myClaimsMenu = document.getElementById('menu-my-claims');
+      if (isResp) {
+        myClaimsMenu.classList.add('hidden');
+      } else {
+        myClaimsMenu.classList.remove('hidden');
+      }
 
       initFormDropdowns();
       populateFilterBrands();
       updateLiveClaimCounters();
 
       if (isFieldAgent) {
-        showView('my-claims', document.getElementById('menu-my-claims'));
+        showView('my-claims', myClaimsMenu);
       } else {
         showView('dashboard', document.getElementById('menu-dash'));
         renderReclamationStats();
@@ -1103,7 +1111,11 @@
       
       initFormDropdowns();
       updateLiveClaimCounters();
-      showView('my-claims', document.getElementById('menu-my-claims'));
+      if (currentUser.role === 'field') {
+        showView('my-claims', document.getElementById('menu-my-claims'));
+      } else {
+        showView('dashboard', document.getElementById('menu-dash'));
+      }
     }
 
     function renderMyClaimsHistory() {
@@ -1112,7 +1124,7 @@
       tbody.innerHTML = '';
 
       const myName = `${currentUser.fname} ${currentUser.lname}`;
-      const myClaims = currentUser.role === 'field' ? claimsDB.filter(c => c.agent === myName) : claimsDB;
+      const myClaims = claimsDB.filter(c => c.agent === myName);
 
       if (myClaims.length === 0) {
         tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">Aucune réclamation enregistrée.</td></tr>`;
