@@ -758,7 +758,7 @@
             <div class="brand-icon">⚡</div>
             <div>
               <h1>Operational Shift Planning (44H)</h1>
-              <p>Zones Fixes & Rotation Salé • Thème Electric Violet • Sauvegarde Permanente</p>
+              <p>Rotation Temara/Riad/Agdal • Salé & Techno Fixes • Thème Electric Violet</p>
             </div>
           </div>
 
@@ -978,7 +978,7 @@
     let uploadedPhotoBase64 = "";
     let currentDashTab = "Partenaire";
 
-    // Planning Specific Variables & Functions (Zones Fixes, Salé Rotation Shift Only)
+    // Planning Specific Variables & Functions (Rotation Zone Temara/Riad/Agdal, Salé & Techno Fixes)
     let currentWeekOffset = 0;
     let manualUnlock = false;
 
@@ -1016,22 +1016,24 @@
     const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 
     const defaultAgents = [
-      { name: "Yahya Rhallab", zone: "Temara - Oulad Mtaa", offDay: 0, shiftType: "matin" },
-      { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir15" },
-      { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir18" },
-      { name: "Mourad Cherradi", zone: "Agdal - Carrousel", offDay: 1, shiftType: "matin" },
-      { name: "Youssef Derkaoui", zone: "Agdal - Carrousel", offDay: 0, shiftType: "soir15" },
-      { name: "Ayoub Abssi", zone: "Agdal - Carrousel", offDay: 3, shiftType: "soir18" },
-      { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftBaseIndex: 0 },
-      { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftBaseIndex: 1 },
-      { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftBaseIndex: 2 },
-      { name: "Achraf Akhlij", zone: "Hay Riad - Soussi", offDay: 3, shiftType: "matin" },
-      { name: "Islam Elmardi", zone: "Hay Riad - Soussi", offDay: 2, shiftType: "soir15" },
-      { name: "Oussama El Atrach", zone: "Hay Riad - Soussi", offDay: 0, shiftType: "soir18" },
-      { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno" }
+      { name: "Yahya Rhallab", zone: "Temara - Oulad Mtaa", offDay: 0, shiftType: "matin", zoneBaseIndex: 0 },
+      { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir15", zoneBaseIndex: 0 },
+      { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir18", zoneBaseIndex: 0 },
+      { name: "Mourad Cherradi", zone: "Agdal - Carrousel", offDay: 1, shiftType: "matin", zoneBaseIndex: 1 },
+      { name: "Youssef Derkaoui", zone: "Agdal - Carrousel", offDay: 0, shiftType: "soir15", zoneBaseIndex: 1 },
+      { name: "Ayoub Abssi", zone: "Agdal - Carrousel", offDay: 3, shiftType: "soir18", zoneBaseIndex: 1 },
+      { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftBaseIndex: 0, fixedZone: true },
+      { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftBaseIndex: 1, fixedZone: true },
+      { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftBaseIndex: 2, fixedZone: true },
+      { name: "Achraf Akhlij", zone: "Hay Riad - Soussi", offDay: 3, shiftType: "matin", zoneBaseIndex: 2 },
+      { name: "Islam Elmardi", zone: "Hay Riad - Soussi", offDay: 2, shiftType: "soir15", zoneBaseIndex: 2 },
+      { name: "Oussama El Atrach", zone: "Hay Riad - Soussi", offDay: 0, shiftType: "soir18", zoneBaseIndex: 2 },
+      { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno", fixedZone: true }
     ];
 
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v6_fixed')) || {};
+    const ZONE_ROTATION_LIST = ["Temara - Oulad Mtaa", "Hay Riad - Soussi", "Agdal - Carrousel"];
+
+    let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v7_groups')) || {};
 
     function isNajibAdmin() {
       return currentUser && currentUser.fname.toLowerCase() === "najib" && currentUser.lname.toLowerCase() === "harati";
@@ -1667,7 +1669,7 @@
     }
 
     // =======================================================
-    // PLANNING ELECTRIC VIOLET LOGIC (ZONES FIXES, SALÉ ROTATION)
+    // PLANNING ELECTRIC VIOLET LOGIC (ROTATION TEMARA/RIAD/AGDAL, SALÉ & TECHNO FIXED)
     // =======================================================
     function getMonday(d) {
       d = new Date(d);
@@ -1725,15 +1727,14 @@
         return planningDB[weekKey];
       }
 
-      const rotationTypes = ["matin", "soir15", "soir18"];
       const generated = defaultAgents.map(a => {
         let currentShiftType = a.shiftType;
-        let currentZone = a.zone; // Zone fixe par défaut
+        let currentZone = a.zone;
 
-        // Salé agents rotatent leurs shifts (matin, soir15, soir18) mais restent fixes à Salé
-        if (a.zone && a.zone.includes("Salé") && a.shiftBaseIndex !== undefined) {
-          const rotatedIndex = (a.shiftBaseIndex + weekNumber) % 3;
-          currentShiftType = rotationTypes[rotatedIndex];
+        // Rotation des zones (Temara <-> Hay Riad <-> Agdal) pour les groupes concernés
+        if (!a.fixedZone && a.zoneBaseIndex !== undefined) {
+          const zoneIndex = (a.zoneBaseIndex + weekNumber) % ZONE_ROTATION_LIST.length;
+          currentZone = ZONE_ROTATION_LIST[zoneIndex];
         }
 
         const shifts = [];
@@ -1999,13 +2000,13 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('shift_db_permanent_v6_fixed');
+      localStorage.removeItem('shift_db_permanent_v7_groups');
       planningDB = {};
       renderPlanningTable();
     }
 
     function saveDB() {
-      localStorage.setItem('shift_db_permanent_v6_fixed', JSON.stringify(planningDB));
+      localStorage.setItem('shift_db_permanent_v7_groups', JSON.stringify(planningDB));
     }
 
     renderLockCards();
