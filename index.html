@@ -514,7 +514,7 @@
 </head>
 <body>
 
-  <!-- LOCK SCREEN -->
+  <!-- LOCK SCREEN (ORIGINAL CARDS DESIGN) -->
   <div id="lock-screen">
     <div class="brand-header-lock">
       <h1>FieldOps Control Center</h1>
@@ -1033,7 +1033,7 @@
 
     const ZONE_ROTATION_LIST = ["Temara - Oulad Mtaa", "Agdal - Carrousel", "Hay Riad - Soussi"];
 
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v4_zones')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v5_zones')) || {};
 
     function isNajibAdmin() {
       return currentUser && currentUser.fname.toLowerCase() === "najib" && currentUser.lname.toLowerCase() === "harati";
@@ -1142,3 +1142,879 @@
       currentUser = null; 
       selectedGlobalIndex = 0;
       document.getElementById('main-app').classList.add('hidden');
+      document.getElementById('lock-screen').classList.remove('hidden');
+      renderLockCards();
+    }
+
+    function showView(viewId, el) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if(el) el.classList.add('active');
+      document.getElementById('view-dashboard').classList.add('hidden');
+      document.getElementById('view-reclamations').classList.add('hidden');
+      document.getElementById('view-my-claims').classList.add('hidden');
+      document.getElementById('view-history').classList.add('hidden');
+      document.getElementById('view-planning').classList.add('hidden');
+      document.getElementById('view-messages').classList.add('hidden');
+      document.getElementById('view-sessions').classList.add('hidden');
+      document.getElementById('view-config').classList.add('hidden');
+      document.getElementById('view-parametres').classList.add('hidden');
+      document.getElementById('view-' + viewId).classList.remove('hidden');
+      
+      if (viewId === 'my-claims') renderMyClaimsHistory();
+      if (viewId === 'dashboard') renderReclamationStats();
+      if (viewId === 'history') renderHistoryView();
+      if (viewId === 'planning') renderPlanningTable();
+      updateLiveClaimCounters();
+    }
+
+    function initFormDropdowns() {
+      const typeSel = document.getElementById('rec-type');
+      if (!typeSel) return;
+      typeSel.innerHTML = '';
+      Object.keys(recTypesCatalog).forEach(t => {
+        typeSel.innerHTML += `<option value="${t}">${t}</option>`;
+      });
+
+      const brandSel = document.getElementById('rec-target-partenaire');
+      if (!brandSel) return;
+      brandSel.innerHTML = '';
+      Object.keys(storeCatalog).forEach(b => {
+        brandSel.innerHTML += `<option value="${b}">${b}</option>`;
+      });
+
+      toggleRecType();
+    }
+
+    function populateFilterBrands() {
+      const fltBrand = document.getElementById('flt-brand');
+      if (!fltBrand) return;
+      fltBrand.innerHTML = '<option value="">-- Tous les Partenaires --</option>';
+      Object.keys(storeCatalog).forEach(b => {
+        fltBrand.innerHTML += `<option value="${b}">${b}</option>`;
+      });
+    }
+
+    function resetFilters() {
+      document.getElementById('flt-search').value = '';
+      document.getElementById('flt-motif').value = '';
+      document.getElementById('flt-brand').value = '';
+      document.getElementById('flt-date').value = '';
+      renderReclamationStats();
+    }
+
+    function toggleRecType() {
+      const typeSel = document.getElementById('rec-type');
+      if (!typeSel) return;
+      const type = typeSel.value;
+      if (type === 'Partenaire') {
+        document.getElementById('fgroup-partenaire').classList.remove('hidden');
+        document.getElementById('fgroup-sector').classList.remove('hidden');
+        document.getElementById('fgroup-livreur').classList.add('hidden');
+      } else {
+        document.getElementById('fgroup-partenaire').classList.add('hidden');
+        document.getElementById('fgroup-sector').classList.add('hidden');
+        document.getElementById('fgroup-livreur').classList.remove('hidden');
+      }
+
+      const motifSel = document.getElementById('rec-motif');
+      motifSel.innerHTML = '';
+      (recTypesCatalog[type] || []).forEach(m => {
+        motifSel.innerHTML += `<option value="${m}">${m}</option>`;
+      });
+
+      updateStoreLocations();
+    }
+
+    function updateStoreLocations() {
+      const brandSel = document.getElementById('rec-target-partenaire');
+      if (!brandSel) return;
+      document.getElementById('store-search-input').value = '';
+      filterStores();
+    }
+
+    function filterStores() {
+      const brandSel = document.getElementById('rec-target-partenaire');
+      if (!brandSel) return;
+      const brand = brandSel.value;
+      const searchVal = document.getElementById('store-search-input').value.toLowerCase().trim();
+      const selector = document.getElementById('rec-store-sector');
+      selector.innerHTML = '';
+
+      let listToDisplay = [];
+      if (brand === "📍 Autres Partenaires / Restaurants" || (storeCatalog[brand] && storeCatalog[brand][0] === "ALL_PARTNERS")) {
+        listToDisplay = allPartnersList;
+      } else if (storeCatalog[brand]) {
+        listToDisplay = storeCatalog[brand];
+      }
+
+      listToDisplay.forEach(s => {
+        if (s.toLowerCase().includes(searchVal)) {
+          selector.innerHTML += `<option value="${s}">${s}</option>`;
+        }
+      });
+      selector.innerHTML += `<option value="➕ Saisir manuellement un autre partenaire...">➕ Saisir manuellement un autre partenaire...</option>`;
+      checkCustomStore();
+    }
+
+    function checkCustomStore() {
+      const storeVal = document.getElementById('rec-store-sector').value;
+      const customInput = document.getElementById('custom-store-input');
+      if (storeVal === "➕ Saisir manuellement un autre partenaire...") {
+        customInput.classList.remove('hidden');
+      } else {
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      }
+    }
+
+    function previewPhoto(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedPhotoBase64 = e.target.result;
+          document.getElementById('photo-preview-img').src = uploadedPhotoBase64;
+          document.getElementById('photo-preview-box').classList.remove('hidden');
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function getGPS() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(p => {
+          document.getElementById('rec-gps').value = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
+          document.getElementById('gps-error-banner').classList.add('hidden');
+        }, () => {
+          document.getElementById('rec-gps').value = "33.9182, -6.9211";
+          document.getElementById('gps-error-banner').classList.add('hidden');
+        });
+      }
+    }
+
+    function submitReclamation() {
+      const type = document.getElementById('rec-type').value;
+      let target = type === 'Partenaire' ? document.getElementById('rec-target-partenaire').value : document.getElementById('rec-target-livreur').value;
+      let sector = document.getElementById('rec-store-sector').value;
+      const motif = document.getElementById('rec-motif').value;
+      const orderNum = document.getElementById('rec-order-num').value;
+      const gps = document.getElementById('rec-gps').value;
+      const comment = document.getElementById('rec-comment').value;
+
+      if (!gps || gps.trim() === '') {
+        document.getElementById('gps-error-banner').classList.remove('hidden');
+        alert("⚠ Attention : Vous devez obligatoirement cliquer sur '📍 Détecter la Position GPS' !");
+        return;
+      }
+
+      if (sector === "➕ Saisir manuellement un autre partenaire...") {
+        const customVal = document.getElementById('custom-store-input').value;
+        if (!customVal) return alert("Veuillez saisir le nom !");
+        sector = customVal; target = customVal;
+      }
+
+      const todayIsoDate = new Date().toISOString().split('T')[0];
+
+      claimsDB.push({ 
+        id: Date.now(), 
+        agent: `${currentUser.fname} ${currentUser.lname}`,
+        agentId: currentUser.id || 'user',
+        type, 
+        target, 
+        sector: type === 'Partenaire' ? sector : '-', 
+        motif, 
+        orderNum: orderNum || '-', 
+        gps, 
+        photo: uploadedPhotoBase64,
+        comment: comment || '-', 
+        date: todayIsoDate, 
+        status: 'En Cours',
+        chat: [],
+        auditTrail: []
+      });
+
+      localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+      alert("✅ Réclamation transmise avec succès !");
+
+      document.getElementById('rec-order-num').value = '';
+      document.getElementById('rec-comment').value = '';
+      document.getElementById('rec-gps').value = '';
+      document.getElementById('rec-target-livreur').value = '';
+      document.getElementById('custom-store-input').value = '';
+      document.getElementById('custom-store-input').classList.add('hidden');
+      document.getElementById('store-search-input').value = '';
+      document.getElementById('rec-photo-input').value = '';
+      document.getElementById('photo-preview-img').src = '';
+      document.getElementById('photo-preview-box').classList.add('hidden');
+      uploadedPhotoBase64 = "";
+      
+      initFormDropdowns();
+      updateLiveClaimCounters();
+      if (currentUser.role === 'field') {
+        showView('my-claims', document.getElementById('menu-my-claims'));
+      } else {
+        showView('dashboard', document.getElementById('menu-dash'));
+      }
+    }
+
+    function renderMyClaimsHistory() {
+      const tbody = document.getElementById('my-claims-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const myName = `${currentUser.fname} ${currentUser.lname}`;
+      const myClaims = claimsDB.filter(c => c.agent === myName);
+
+      if (myClaims.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">Aucune réclamation enregistrée.</td></tr>`;
+        return;
+      }
+
+      myClaims.slice().reverse().forEach(c => {
+        if (!c.chat) c.chat = [];
+        let hasUnread = false;
+        if (c.chat.length > 0) {
+          const lastMsg = c.chat[c.chat.length - 1];
+          if (lastMsg.sender !== myName && !lastMsg.read) hasUnread = true;
+        }
+        const notifBadge = hasUnread ? '<span class="nav-badge-count" style="font-size:9px; padding:2px 6px; margin-left:4px;">NEW MSG 🔴</span>' : '';
+        const statusStyle = c.status === 'En Cours' ? 'badge-gold' : 'badge-green';
+
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>#${c.id.toString().slice(-4)}</strong></td>
+            <td>${c.type}</td>
+            <td><strong>${c.target}</strong></td>
+            <td>${c.motif}</td>
+            <td>${c.orderNum}</td>
+            <td>${c.date}</td>
+            <td><span class="${statusStyle}">${c.status}</span></td>
+            <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Ouvrir Discussion ${notifBadge}</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderHistoryView() {
+      const tbody = document.getElementById('history-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const searchVal = (document.getElementById('hist-search')?.value || '').toLowerCase().trim();
+
+      let list = claimsDB.filter(c => c.status === 'Traité');
+
+      if (searchVal !== '') {
+        list = list.filter(c => 
+          c.agent.toLowerCase().includes(searchVal) ||
+          c.target.toLowerCase().includes(searchVal) ||
+          c.orderNum.toLowerCase().includes(searchVal) ||
+          c.sector.toLowerCase().includes(searchVal)
+        );
+      }
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">Aucune réclamation traitée trouvée dans l'historique.</td></tr>`;
+        return;
+      }
+
+      const canDelete = isNajibAdmin();
+
+      list.slice().reverse().forEach(c => {
+        const badgeStyle = 'badge-green';
+        const deleteBtnHtml = canDelete ? `<button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button>` : `<span style="color:#94a3b8; font-size:11px;">Restreint</span>`;
+
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>#${c.id.toString().slice(-4)}</strong></td>
+            <td>${c.agent}</td>
+            <td>${c.type}</td>
+            <td><strong>${c.target}</strong> (${c.sector})</td>
+            <td>${c.motif}</td>
+            <td>${c.orderNum}</td>
+            <td>${c.date}</td>
+            <td><span class="${badgeStyle}">${c.status}</span></td>
+            <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">👁️ Voir</button></td>
+            <td>${deleteBtnHtml}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function openClaimDetailsModal(claimId) {
+      activeOpenedClaim = claimsDB.find(c => c.id === claimId);
+      if (!activeOpenedClaim) return;
+      if (!activeOpenedClaim.chat) activeOpenedClaim.chat = [];
+      if (!activeOpenedClaim.auditTrail) activeOpenedClaim.auditTrail = [];
+
+      const viewerName = `${currentUser.fname} ${currentUser.lname} (${currentUser.role === 'field' ? 'Agent' : 'Responsable'})`;
+      const nowTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      
+      const lastAudit = activeOpenedClaim.auditTrail[activeOpenedClaim.auditTrail.length - 1];
+      if (!lastAudit || lastAudit.user !== viewerName || (Date.now() - lastAudit.timestamp > 10000)) {
+        activeOpenedClaim.auditTrail.push({
+          user: viewerName,
+          time: nowTime,
+          timestamp: Date.now()
+        });
+        localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+      }
+
+      const myName = `${currentUser.fname} ${currentUser.lname}`;
+      activeOpenedClaim.chat.forEach(msg => {
+        if (msg.sender !== myName) msg.read = true;
+      });
+      localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+      updateLiveClaimCounters();
+
+      document.getElementById('detail-rec-id').innerText = `ID: #${activeOpenedClaim.id.toString().slice(-4)}`;
+      const body = document.getElementById('rec-detail-body');
+      const mapsUrl = activeOpenedClaim.gps ? `https://maps.google.com/?q=${activeOpenedClaim.gps}` : '#';
+
+      let photoHtml = `<div style="margin-top:12px; background:#f8fafc; padding:12px; border-radius:10px; text-align:center;"><span style="font-size:11px; font-weight:800; color:#64748b; display:block; margin-bottom:6px;">📸 PHOTO JUSTIFICATIVE (PREUVE) :</span><span style="font-size:12px; color:#94a3b8; font-weight:700;">Aucune photo jointe</span></div>`;
+      if (activeOpenedClaim.photo && activeOpenedClaim.photo.startsWith('data:image')) {
+        photoHtml = `
+          <div style="margin-top:12px; background:#f8fafc; padding:12px; border-radius:10px; text-align:center;">
+            <span style="font-size:11px; font-weight:800; color:#059669; display:block; margin-bottom:8px;">📸 PHOTO JUSTIFICATIVE (PREUVE) :</span>
+            <a href="${activeOpenedClaim.photo}" target="_blank" title="Cliquer pour voir en grand">
+              <img src="${activeOpenedClaim.photo}" alt="Preuve" style="max-width:100%; max-height:260px; border-radius:10px; border:2px solid #059669; box-shadow:0 4px 12px rgba(0,0,0,0.1); cursor:pointer;" />
+            </a>
+            <div style="font-size:10.5px; color:#64748b; margin-top:4px;">(Cliquez sur l'image pour l'agrandir)</div>
+          </div>
+        `;
+      }
+
+      body.innerHTML = `
+        <div class="detail-row"><span class="detail-label">Agent Saisie :</span><span class="detail-value">${activeOpenedClaim.agent}</span></div>
+        <div class="detail-row"><span class="detail-label">Type :</span><span class="detail-value">${activeOpenedClaim.type}</span></div>
+        <div class="detail-row"><span class="detail-label">Cible :</span><span class="detail-value">${activeOpenedClaim.target}</span></div>
+        <div class="detail-row"><span class="detail-label">Motif :</span><span class="detail-value" style="color:#b91c1c;">${activeOpenedClaim.motif}</span></div>
+        <div class="detail-row"><span class="detail-label">N° Commande :</span><span class="detail-value">${activeOpenedClaim.orderNum}</span></div>
+        <div class="detail-row"><span class="detail-label">Date :</span><span class="detail-value">${activeOpenedClaim.date}</span></div>
+        <div class="detail-row"><span class="detail-label">Statut :</span><span class="detail-value">${activeOpenedClaim.status}</span></div>
+        <div class="detail-row"><span class="detail-label">GPS :</span><span class="detail-value"><a href="${mapsUrl}" target="_blank" style="color:#0284c7;">📍 Ouvrir sur Maps</a></span></div>
+        <div style="margin-top:12px; background:#f8fafc; padding:12px; border-radius:10px;">
+          <span style="font-size:11px; font-weight:800; color:#64748b; display:block;">COMMENTAIRE :</span>
+          <p style="font-size:13px; font-weight:700; color:#0f172a;">${activeOpenedClaim.comment}</p>
+        </div>
+        ${photoHtml}
+      `;
+
+      renderAuditTrail();
+      renderClaimChatMessages();
+      document.getElementById('rec-detail-modal').classList.add('active');
+    }
+
+    function renderAuditTrail() {
+      const container = document.getElementById('audit-trail-container');
+      if (!container || !activeOpenedClaim || !activeOpenedClaim.auditTrail) return;
+      container.innerHTML = '';
+
+      if (activeOpenedClaim.auditTrail.length === 0) {
+        container.innerHTML = `<div>Aucune trace enregistrée.</div>`;
+        return;
+      }
+
+      activeOpenedClaim.auditTrail.forEach(audit => {
+        container.innerHTML += `<div>👁️ <strong>${audit.user}</strong> a consulté ce dossier à <strong>${audit.time}</strong></div>`;
+      });
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function renderClaimChatMessages() {
+      const container = document.getElementById('claim-chat-messages-container');
+      if (!container || !activeOpenedClaim) return;
+      container.innerHTML = '';
+
+      if (!activeOpenedClaim.chat || activeOpenedClaim.chat.length === 0) {
+        container.innerHTML = `<div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">Aucun message dans cette discussion pour le moment.</div>`;
+        return;
+      }
+
+      activeOpenedClaim.chat.forEach(m => {
+        const isMe = m.sender === `${currentUser.fname} ${currentUser.lname}`;
+        container.innerHTML += `
+          <div style="background:${isMe ? '#ecfdf5' : '#f1f5f9'}; border:1px solid ${isMe ? '#a7f3d0' : '#cbd5e1'}; padding:8px 12px; border-radius:8px; align-self:${isMe ? 'flex-end' : 'flex-start'}; max-width:85%;">
+            <div style="display:flex; justify-content:space-between; gap:12px; margin-bottom:2px;">
+              <strong style="font-size:11px; color:${isMe ? '#047857' : '#334155'};">${m.sender}</strong>
+              <span style="font-size:9.5px; color:#94a3b8;">${m.date}</span>
+            </div>
+            <p style="font-size:12px; font-weight:600; color:#0f172a;">${m.text}</p>
+          </div>
+        `;
+      });
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function sendClaimChatMessage() {
+      const input = document.getElementById('claim-chat-input');
+      const text = input.value.trim();
+      if (!text || !activeOpenedClaim) return;
+
+      if (!activeOpenedClaim.chat) activeOpenedClaim.chat = [];
+
+      activeOpenedClaim.chat.push({
+        sender: `${currentUser.fname} ${currentUser.lname}`,
+        text,
+        read: false,
+        date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+      });
+
+      localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+      input.value = '';
+      renderClaimChatMessages();
+      updateLiveClaimCounters();
+    }
+
+    function confirmCloseModal(markAsTraite) {
+      if (activeOpenedClaim) {
+        if (markAsTraite) activeOpenedClaim.status = "Traité";
+        localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+      }
+      activeOpenedClaim = null;
+      document.getElementById('rec-detail-modal').classList.remove('active');
+      updateLiveClaimCounters();
+      if (currentUser.role === 'field') {
+        renderMyClaimsHistory();
+      } else {
+        renderReclamationStats();
+        renderHistoryView();
+      }
+    }
+
+    function switchDashTab(tab) {
+      currentDashTab = tab;
+      document.getElementById('tab-part').classList.toggle('active', tab === 'Partenaire');
+      document.getElementById('tab-livr').classList.toggle('active', tab === 'Livreur');
+      renderReclamationStats();
+    }
+
+    function renderReclamationStats() {
+      const tbody = document.getElementById('rec-dashboard-body');
+      const thead = document.getElementById('dash-table-head');
+      if (!tbody || !thead) return;
+      tbody.innerHTML = '';
+
+      if (currentDashTab === 'Partenaire') {
+        thead.innerHTML = `
+          <th>Agent Saisie</th><th>Marque</th><th>Store Exact</th><th>Motif</th><th>N° Commande</th><th>Statut</th><th>Discussion</th><th>Action Admin</th>
+        `;
+      } else {
+        thead.innerHTML = `
+          <th>Agent Saisie</th><th>ID Livreur</th><th>Motif Incident</th><th>N° Commande</th><th>Statut</th><th>Discussion</th><th>Action Admin</th>
+        `;
+      }
+
+      let activeClaims = claimsDB.filter(c => c.type === currentDashTab && c.status === 'En Cours');
+      const myName = `${currentUser.fname} ${currentUser.lname}`;
+      const canDelete = isNajibAdmin();
+
+      if (activeClaims.length === 0) {
+        const colSpanNum = currentDashTab === 'Partenaire' ? 8 : 7;
+        tbody.innerHTML = `<tr><td colspan="${colSpanNum}" style="text-align:center; color:#64748b; font-weight:700; padding:20px;">Aucune réclamation active "En Cours" pour ${currentDashTab}.</td></tr>`;
+        return;
+      }
+
+      activeClaims.forEach((c) => {
+        if (!c.chat) c.chat = [];
+        let hasUnread = false;
+        if (c.chat.length > 0) {
+          const lastMsg = c.chat[c.chat.length - 1];
+          if (lastMsg.sender !== myName && !lastMsg.read) hasUnread = true;
+        }
+        const notifBadge = hasUnread ? '<span class="nav-badge-count" style="font-size:9px; padding:2px 5px;">NEW MSG 🔴</span>' : '';
+        const deleteBtnHtml = canDelete ? `<button class="btn-delete" onclick="deleteReclamation(${c.id})">🗑️ Supprimer</button>` : `<span style="color:#94a3b8; font-size:11px;">Restreint</span>`;
+
+        if (currentDashTab === 'Partenaire') {
+          tbody.innerHTML += `
+            <tr>
+              <td><strong>${c.agent}</strong></td>
+              <td><strong>${c.target}</strong></td>
+              <td><strong style="color:#059669;">${c.sector || '-'}</strong></td>
+              <td>${c.motif}</td>
+              <td>${c.orderNum}</td>
+              <td><span class="badge-gold">${c.status}</span></td>
+              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Ouvrir ${notifBadge}</button></td>
+              <td>${deleteBtnHtml}</td>
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML += `
+            <tr>
+              <td><strong>${c.agent}</strong></td>
+              <td><strong style="color:#2563eb;">${c.target}</strong></td>
+              <td>${c.motif}</td>
+              <td>${c.orderNum}</td>
+              <td><span class="badge-gold">${c.status}</span></td>
+              <td><button class="btn-gold" onclick="openClaimDetailsModal(${c.id})">💬 Ouvrir ${notifBadge}</button></td>
+              <td>${deleteBtnHtml}</td>
+            </tr>
+          `;
+        }
+      });
+    }
+
+    function deleteReclamation(id) {
+      if (!isNajibAdmin()) {
+        alert("⚠️ Accès refusé ! Cette action est réservée à l'administrateur.");
+        return;
+      }
+      if(confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
+        claimsDB = claimsDB.filter(c => c.id !== id);
+        localStorage.setItem('fieldops_claims_db_v30', JSON.stringify(claimsDB));
+        updateLiveClaimCounters();
+        renderReclamationStats();
+        renderHistoryView();
+      }
+    }
+
+    // =======================================================
+    // PLANNING ELECTRIC VIOLET LOGIC (ROTATING ZONES + SALÉ FIXED)
+    // =======================================================
+    function getMonday(d) {
+      d = new Date(d);
+      const day = d.getDay();
+      const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+      return new Date(d.setDate(diff));
+    }
+
+    function getWeekKey(monday) {
+      return `${monday.getFullYear()}-W${getWeekNumber(monday)}`;
+    }
+
+    function getWeekNumber(d) {
+      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    }
+
+    function getShiftForDay(type, dayIdx) {
+      const is8h = (dayIdx === 4 || dayIdx === 5);
+      if (type === "matin")  return is8h ? "09:00-17:00" : "09:00-16:00";
+      if (type === "soir15") return is8h ? "15:00-23:00" : "15:00-22:00";
+      if (type === "soir18") return is8h ? "18:00-02:00" : "18:00-01:00";
+      if (type === "techno") return is8h ? "12:00-20:00" : "12:00-19:00";
+      return "OFF";
+    }
+
+    function renderHeader(monday) {
+      const headerRow = document.getElementById('table-header');
+      if (!headerRow) return;
+      let html = `
+        <th class="col-agent">Agent</th>
+        <th class="col-zone">Zone</th>
+      `;
+
+      for (let i = 0; i < 7; i++) {
+        const current = new Date(monday);
+        current.setDate(monday.getDate() + i);
+        const dateStr = current.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+        html += `
+          <th>
+            <span class="day-name">${DAYS[i]}</span>
+            <span class="day-date">${dateStr}</span>
+          </th>
+        `;
+      }
+
+      html += `<th class="col-total">Total & Action Ligne</th><th></th>`;
+      headerRow.innerHTML = html;
+    }
+
+    function getCurrentWeekAgents(weekKey, weekNumber) {
+      if (planningDB[weekKey]) {
+        return planningDB[weekKey];
+      }
+
+      const rotationTypes = ["matin", "soir15", "soir18"];
+      const generated = defaultAgents.map(a => {
+        let currentShiftType = a.shiftType;
+        let currentZone = a.zone;
+
+        if (a.zone && a.zone.includes("Salé") && a.shiftBaseIndex !== undefined) {
+          const rotatedIndex = (a.shiftBaseIndex + weekNumber) % 3;
+          currentShiftType = rotationTypes[rotatedIndex];
+        }
+
+        if (!a.fixedZone && a.zoneBaseIndex !== undefined) {
+          const zoneIndex = (a.zoneBaseIndex + weekNumber) % ZONE_ROTATION_LIST.length;
+          currentZone = ZONE_ROTATION_LIST[zoneIndex];
+        }
+
+        const shifts = [];
+        for (let day = 0; day < 7; day++) {
+          if (day === a.offDay) {
+            shifts.push("OFF");
+          } else {
+            shifts.push(getShiftForDay(currentShiftType, day));
+          }
+        }
+
+        return {
+          name: a.name,
+          zone: currentZone,
+          shiftType: currentShiftType,
+          shifts: shifts
+        };
+      });
+
+      planningDB[weekKey] = generated;
+      saveDB();
+      return generated;
+    }
+
+    function renderPlanningTable() {
+      const now = new Date();
+      const currentMonday = getMonday(now);
+      const viewedMonday = new Date(currentMonday);
+      viewedMonday.setDate(currentMonday.getDate() + (currentWeekOffset * 7));
+      
+      const weekNumber = getWeekNumber(viewedMonday);
+      const weekKey = getWeekKey(viewedMonday);
+      const sunday = new Date(viewedMonday);
+      sunday.setDate(viewedMonday.getDate() + 6);
+
+      const isCurrentWeek = currentWeekOffset === 0;
+      const isLocked = isCurrentWeek && !manualUnlock;
+
+      const banner = document.getElementById('lock-banner');
+      const pill = document.getElementById('lock-status-pill');
+
+      if (isLocked) {
+        if(banner) banner.style.display = 'flex';
+        if(pill) { pill.className = 'status-pill pill-locked'; pill.innerText = '🔒 Verrouillée'; }
+      } else {
+        if(banner) banner.style.display = 'none';
+        if(pill) { pill.className = 'status-pill pill-unlocked'; pill.innerText = '🔓 Modifiable'; }
+      }
+
+      const weekLbl = document.getElementById('current-week-label');
+      if (weekLbl) {
+        weekLbl.innerText = `Semaine ${weekNumber} (${viewedMonday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit'})} - ${sunday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric'})})`;
+      }
+
+      renderHeader(viewedMonday);
+
+      const tbody = document.getElementById('planning-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const agents = getCurrentWeekAgents(weekKey, weekNumber);
+
+      agents.forEach((agent, agentIdx) => {
+        const tr = document.createElement('tr');
+
+        let html = `
+          <td class="cell-agent">
+            <div class="field-box">
+              <span class="field-text" title="${agent.name}">${agent.name}</span>
+              <button class="btn-edit-small" ${isLocked ? 'disabled' : ''} title="Changer le nom de l'agent" onclick="promptChangeAgent('${weekKey}', ${agentIdx})">✏️</button>
+            </div>
+          </td>
+          <td class="cell-zone">
+            <div class="field-box">
+              <span class="field-text zone-txt" title="${agent.zone}">${agent.zone}</span>
+              <button class="btn-edit-small" ${isLocked ? 'disabled' : ''} title="Changer la zone" onclick="promptChangeZone('${weekKey}', ${agentIdx})">✏️</button>
+            </div>
+          </td>
+        `;
+
+        agent.shifts.forEach((shift, dayIdx) => {
+          const shiftClass = SHIFTS[shift] ? SHIFTS[shift].class : 'off';
+          
+          let selectOptions = '';
+          SHIFT_GROUPS.forEach(grp => {
+            selectOptions += `<optgroup label="${grp.label}">`;
+            grp.items.forEach(opt => {
+              selectOptions += `<option value="${opt}" ${opt === shift ? 'selected' : ''}>${opt}</option>`;
+            });
+            selectOptions += `</optgroup>`;
+          });
+
+          html += `
+            <td>
+              <select class="shift-select ${shiftClass}" ${isLocked ? 'disabled' : ''} onchange="updateShift('${weekKey}', ${agentIdx}, ${dayIdx}, this.value)">
+                ${selectOptions}
+              </select>
+            </td>
+          `;
+        });
+
+        const totalHours = agent.shifts.reduce((sum, s) => sum + (SHIFTS[s] ? SHIFTS[s].hours : 0), 0);
+        const isExact44 = totalHours === 44;
+        const diff = totalHours - 44;
+        const badgeClass = isExact44 ? 'badge-ok' : 'badge-alert';
+        const badgeText = isExact44 ? '44h OK' : (diff > 0 ? `${totalHours}h (+${diff}h)` : `${totalHours}h (${diff}h)`);
+
+        html += `
+          <td>
+            <div class="total-action-box">
+              <span class="hours-badge ${badgeClass}">${badgeText}</span>
+              <select class="btn-shift-choice" ${isLocked ? 'disabled' : ''} onchange="applyShiftChoice('${weekKey}', ${agentIdx}, this.value)">
+                <option value="" disabled selected>⚡ Shift Ligne</option>
+                <optgroup label="☀️ MATIN">
+                  <option value="matin">☀️ Matin (09h)</option>
+                </optgroup>
+                <optgroup label="🌙 SOIR">
+                  <option value="soir15">🌅 Soir (15h - 22h/23h)</option>
+                  <option value="soir18">🌙 Soir (18h - 01h/02h)</option>
+                </optgroup>
+                <optgroup label="⚡ AUTRE">
+                  <option value="techno">⚡ Techno (12h)</option>
+                </optgroup>
+              </select>
+            </div>
+          </td>
+          <td><button class="btn-del" ${isLocked ? 'disabled' : ''} title="Supprimer" onclick="deleteAgent('${weekKey}', ${agentIdx})">✕</button></td>
+        `;
+
+        tr.innerHTML = html;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openModal(title, bodyHTML, onSave) {
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-body-content').innerHTML = bodyHTML;
+      const saveBtn = document.getElementById('modal-save-btn');
+      
+      saveBtn.onclick = () => {
+        onSave();
+        closeModal();
+      };
+      
+      document.getElementById('planning-custom-modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('planning-custom-modal').classList.remove('active');
+    }
+
+    function promptChangeAgent(weekKey, agentIdx) {
+      if (currentWeekOffset === 0 && !manualUnlock) return;
+      const currentName = planningDB[weekKey][agentIdx].name;
+      
+      const bodyHTML = `
+        <label>Nom de l'agent :</label>
+        <input type="text" id="edit-agent-name" value="${currentName}" autofocus />
+      `;
+
+      openModal("Modifier Nom Agent", bodyHTML, () => {
+        const val = document.getElementById('edit-agent-name').value;
+        if (val && val.trim() !== "") {
+          planningDB[weekKey][agentIdx].name = val.trim();
+          saveDB();
+          renderPlanningTable();
+        }
+      });
+    }
+
+    function promptChangeZone(weekKey, agentIdx) {
+      if (currentWeekOffset === 0 && !manualUnlock) return;
+      const currentZone = planningDB[weekKey][agentIdx].zone;
+      
+      let options = KNOWN_ZONES.map(z => `<option value="${z}" ${z === currentZone ? 'selected' : ''}>${z}</option>`).join('');
+      
+      const bodyHTML = `
+        <label>Sélectionner une zone prédéfinie :</label>
+        <select id="edit-zone-select">${options}</select>
+        <label>Ou entrer une nouvelle zone :</label>
+        <input type="text" id="edit-zone-custom" placeholder="Autre zone..." />
+      `;
+
+      openModal("Modifier Zone", bodyHTML, () => {
+        const customVal = document.getElementById('edit-zone-custom').value;
+        const selectVal = document.getElementById('edit-zone-select').value;
+        const finalZone = (customVal && customVal.trim() !== "") ? customVal.trim() : selectVal;
+
+        if (finalZone) {
+          planningDB[weekKey][agentIdx].zone = finalZone;
+          saveDB();
+          renderPlanningTable();
+        }
+      });
+    }
+
+    function applyShiftChoice(weekKey, agentIdx, shiftType) {
+      if (currentWeekOffset === 0 && !manualUnlock) return;
+      const agent = planningDB[weekKey][agentIdx];
+      agent.shiftType = shiftType;
+
+      for (let day = 0; day < 7; day++) {
+        if (agent.shifts[day] === "OFF") continue;
+        agent.shifts[day] = getShiftForDay(shiftType, day);
+      }
+      saveDB();
+      renderPlanningTable();
+    }
+
+    function updateShift(weekKey, agentIdx, dayIdx, val) {
+      if (currentWeekOffset === 0 && !manualUnlock) return;
+      planningDB[weekKey][agentIdx].shifts[dayIdx] = val;
+      saveDB();
+      renderPlanningTable();
+    }
+
+    function changeWeek(direction) {
+      currentWeekOffset += direction;
+      manualUnlock = false;
+      renderPlanningTable();
+    }
+
+    function goToCurrentWeek() {
+      currentWeekOffset = 0;
+      manualUnlock = false;
+      renderPlanningTable();
+    }
+
+    function forceUnlockCurrentWeek() {
+      manualUnlock = true;
+      renderPlanningTable();
+    }
+
+    function handleAddNewAgent() {
+      if (currentWeekOffset === 0 && !manualUnlock) {
+        alert("⚠️ Vous êtes sur la semaine en cours verrouillée. Cliquez sur (Suivant ▶) pour préparer la semaine prochaine !");
+        return;
+      }
+      const now = new Date();
+      const currentMonday = getMonday(now);
+      const viewedMonday = new Date(currentMonday);
+      viewedMonday.setDate(currentMonday.getDate() + (currentWeekOffset * 7));
+      const weekKey = getWeekKey(viewedMonday);
+
+      if(!planningDB[weekKey]) planningDB[weekKey] = [];
+
+      planningDB[weekKey].push({
+        name: "Nouvel Agent",
+        zone: "Temara - Oulad Mtaa",
+        shiftType: "matin",
+        shifts: ["OFF", "09:00-16:00", "09:00-16:00", "09:00-16:00", "09:00-17:00", "09:00-17:00", "09:00-16:00"]
+      });
+      saveDB();
+      renderPlanningTable();
+    }
+
+    function deleteAgent(weekKey, idx) {
+      if(planningDB[weekKey]) {
+        planningDB[weekKey].splice(idx, 1);
+        saveDB();
+        renderPlanningTable();
+      }
+    }
+
+    function resetToDefault() {
+      localStorage.removeItem('shift_db_permanent_v5_zones');
+      planningDB = {};
+      renderPlanningTable();
+    }
+
+    function saveDB() {
+      localStorage.setItem('shift_db_permanent_v5_zones', JSON.stringify(planningDB));
+    }
+
+    renderLockCards();
+  </script>
+</body>
+</html>
