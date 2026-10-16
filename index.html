@@ -487,7 +487,6 @@
     }
     #view-planning .btn-del:hover:not(:disabled) { color: #ef4444; background: #fee2e2; }
 
-    /* Modal spécifique planning violet */
     #planning-custom-modal.modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
@@ -660,7 +659,7 @@
         </div>
       </div>
 
-      <!-- HISTORIQUE GLOBAL (TRAITE SEULEMENT) -->
+      <!-- HISTORIQUE GLOBAL -->
       <div id="view-history" class="content-card hidden">
         <h3 style="font-size:18px; font-weight:800; color:#059669; margin-bottom:4px;">📜 Historique Global des Réclamations Traitées</h3>
         <p style="color:#64748b; margin-bottom:18px; font-size:12px;">Visualisez uniquement les réclamations ayant le statut <strong>"Traité"</strong> dans le système.</p>
@@ -752,14 +751,14 @@
         <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">💬 Centre de Messagerie Directe</h3>
       </div>
 
-      <!-- PLANNING AGENTS (44H) - CODE EXACT INTÉGRÉ -->
+      <!-- PLANNING AGENTS (44H) - MIS À JOUR AVEC LES NOUVEAUX HORAIRES -->
       <div id="view-planning" class="hidden">
         <div class="top-bar">
           <div class="brand-title">
             <div class="brand-icon">⚡</div>
             <div>
               <h1>Operational Shift Planning (44H)</h1>
-              <p>Boutons Modifier Nom & Zone • Thème Electric Violet • Sauvegarde Permanente</p>
+              <p>Horaires Mis à Jour • Thème Electric Violet • Sauvegarde Permanente</p>
             </div>
           </div>
 
@@ -811,7 +810,6 @@
 
       <div id="rec-detail-body"></div>
 
-      <!-- TRACABILITE / JOURNAL DES CONSULTATIONS -->
       <div style="margin-top:14px; background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:10px 14px;">
         <h4 style="font-size:11.5px; font-weight:800; color:#b45309; margin-bottom:6px;">🛡️ Journal d'Audit (Qui a consulté cette réclamation ?) :</h4>
         <div id="audit-trail-container" style="font-size:11px; color:#78350f; max-height:80px; overflow-y:auto; display:flex; flex-direction:column; gap:3px;"></div>
@@ -980,17 +978,17 @@
     let uploadedPhotoBase64 = "";
     let currentDashTab = "Partenaire";
 
-    // Planning Specific Variables & Functions
+    // Planning Specific Variables & Functions (Updated Horaires)
     let currentWeekOffset = 0;
     let manualUnlock = false;
 
     const SHIFTS = {
       "OFF": { hours: 0, class: "off" },
-      "10:00-17:00": { hours: 7, class: "matin" },
-      "10:00-18:00": { hours: 8, class: "matin" },
-      "17:00-00:00": { hours: 7, class: "aprem" },
-      "17:00-01:00": { hours: 8, class: "aprem" },
-      "19:00-02:00": { hours: 7, class: "soir" },
+      "09:00-16:00": { hours: 7, class: "matin" },
+      "09:00-17:00": { hours: 8, class: "matin" },
+      "15:00-22:00": { hours: 7, class: "aprem" },
+      "15:00-23:00": { hours: 8, class: "aprem" },
+      "18:00-01:00": { hours: 7, class: "soir" },
       "18:00-02:00": { hours: 8, class: "soir" },
       "12:00-19:00": { hours: 7, class: "soir" },
       "12:00-20:00": { hours: 8, class: "soir" }
@@ -998,9 +996,9 @@
 
     const SHIFT_GROUPS = [
       { label: "🔴 REPOS", items: ["OFF"] },
-      { label: "☀️️ MATIN (10H)", items: ["10:00-17:00", "10:00-18:00"] },
-      { label: "🌅 SOIR (17H)", items: ["17:00-00:00", "17:00-01:00"] },
-      { label: "🌙 SOIR (19H)", items: ["19:00-02:00", "18:00-02:00"] },
+      { label: "☀️ MATIN (09H)", items: ["09:00-16:00", "09:00-17:00"] },
+      { label: "🌅 SOIR (15H)", items: ["15:00-22:00", "15:00-23:00"] },
+      { label: "🌙 SOIR (18H)", items: ["18:00-01:00", "18:00-02:00"] },
       { label: "⚡ AUTRES", items: ["12:00-19:00", "12:00-20:00"] }
     ];
 
@@ -1019,21 +1017,21 @@
 
     const defaultAgents = [
       { name: "Yahya Rhallab", zone: "Temara - Oulad Mtaa", offDay: 0, shiftType: "matin" },
-      { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir17" },
-      { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir19" },
+      { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir15" },
+      { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir18" },
       { name: "Mourad Cherradi", zone: "Agdal - Carrousel", offDay: 1, shiftType: "matin" },
-      { name: "Youssef Derkaoui", zone: "Agdal - Carrousel", offDay: 0, shiftType: "soir17" },
-      { name: "Ayoub Abssi", zone: "Agdal - Carrousel", offDay: 3, shiftType: "soir19" },
+      { name: "Youssef Derkaoui", zone: "Agdal - Carrousel", offDay: 0, shiftType: "soir15" },
+      { name: "Ayoub Abssi", zone: "Agdal - Carrousel", offDay: 3, shiftType: "soir18" },
       { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftBaseIndex: 0 },
       { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftBaseIndex: 1 },
       { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftBaseIndex: 2 },
       { name: "Achraf Akhlij", zone: "Hay Riad - Soussi", offDay: 3, shiftType: "matin" },
-      { name: "Islam Elmardi", zone: "Hay Riad - Soussi", offDay: 2, shiftType: "soir17" },
-      { name: "Oussama El Atrach", zone: "Hay Riad - Soussi", offDay: 0, shiftType: "soir19" },
+      { name: "Islam Elmardi", zone: "Hay Riad - Soussi", offDay: 2, shiftType: "soir15" },
+      { name: "Oussama El Atrach", zone: "Hay Riad - Soussi", offDay: 0, shiftType: "soir18" },
       { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno" }
     ];
 
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v3')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('shift_db_permanent_v3_new')) || {};
 
     function isNajibAdmin() {
       return currentUser && currentUser.fname.toLowerCase() === "najib" && currentUser.lname.toLowerCase() === "harati";
@@ -1303,7 +1301,7 @@
 
       if (!gps || gps.trim() === '') {
         document.getElementById('gps-error-banner').classList.remove('hidden');
-        alert("⚠️️ Attention : Vous devez obligatoirement cliquer sur '📍 Détecter la Position GPS' !");
+        alert("⚠ Attention : Vous devez obligatoirement cliquer sur '📍 Détecter la Position GPS' !");
         return;
       }
 
@@ -1669,7 +1667,7 @@
     }
 
     // =======================================================
-    // PLANNING ELECTRIC VIOLET LOGIC FUNCTIONS (EXACT MATCH)
+    // PLANNING ELECTRIC VIOLET LOGIC FUNCTIONS (UPDATED SHIFTS)
     // =======================================================
     function getMonday(d) {
       d = new Date(d);
@@ -1691,9 +1689,9 @@
 
     function getShiftForDay(type, dayIdx) {
       const is8h = (dayIdx === 4 || dayIdx === 5);
-      if (type === "matin")  return is8h ? "10:00-18:00" : "10:00-17:00";
-      if (type === "soir17") return is8h ? "17:00-01:00" : "17:00-00:00";
-      if (type === "soir19") return is8h ? "18:00-02:00" : "19:00-02:00";
+      if (type === "matin")  return is8h ? "09:00-17:00" : "09:00-16:00";
+      if (type === "soir15") return is8h ? "15:00-23:00" : "15:00-22:00";
+      if (type === "soir18") return is8h ? "18:00-02:00" : "18:00-01:00";
       if (type === "techno") return is8h ? "12:00-20:00" : "12:00-19:00";
       return "OFF";
     }
@@ -1727,7 +1725,7 @@
         return planningDB[weekKey];
       }
 
-      const rotationTypes = ["matin", "soir17", "soir19"];
+      const rotationTypes = ["matin", "soir15", "soir18"];
       const generated = defaultAgents.map(a => {
         let currentShiftType = a.shiftType;
         if (a.zone && a.zone.includes("Salé") && a.shiftBaseIndex !== undefined) {
@@ -1847,11 +1845,11 @@
               <select class="btn-shift-choice" ${isLocked ? 'disabled' : ''} onchange="applyShiftChoice('${weekKey}', ${agentIdx}, this.value)">
                 <option value="" disabled selected>⚡ Shift Ligne</option>
                 <optgroup label="☀️ MATIN">
-                  <option value="matin">☀️ Matin (10h)</option>
+                  <option value="matin">☀️ Matin (09h)</option>
                 </optgroup>
                 <optgroup label="🌙 SOIR">
-                  <option value="soir17">🌅 Soir (17h - Minuit)</option>
-                  <option value="soir19">🌙 Soir (19h - 02h)</option>
+                  <option value="soir15">🌅 Soir (15h - 22h/23h)</option>
+                  <option value="soir18">🌙 Soir (18h - 01h/02h)</option>
                 </optgroup>
                 <optgroup label="⚡ AUTRE">
                   <option value="techno">⚡ Techno (12h)</option>
@@ -1983,7 +1981,7 @@
         name: "Nouvel Agent",
         zone: "Temara - Oulad Mtaa",
         shiftType: "matin",
-        shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "10:00-17:00"]
+        shifts: ["OFF", "09:00-16:00", "09:00-16:00", "09:00-16:00", "09:00-17:00", "09:00-17:00", "09:00-16:00"]
       });
       saveDB();
       renderPlanningTable();
@@ -1998,13 +1996,13 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('shift_db_permanent_v3');
+      localStorage.removeItem('shift_db_permanent_v3_new');
       planningDB = {};
       renderPlanningTable();
     }
 
     function saveDB() {
-      localStorage.setItem('shift_db_permanent_v3', JSON.stringify(planningDB));
+      localStorage.setItem('shift_db_permanent_v3_new', JSON.stringify(planningDB));
     }
 
     renderLockCards();
