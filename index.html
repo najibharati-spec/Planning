@@ -334,7 +334,7 @@
         <div class="brand-icon">⚡</div>
         <div>
           <h1>Operational Shift Planning (44H)</h1>
-          <p>Rotation Temara ⇄ Hay Riad ⇄ Agdal • Salé & Techno Fixes • Sauvegarde Permanente</p>
+          <p>Le Marché (Islam & Derkaoui) • Rotation Temara/Riad/Agdal • Salé & Techno Fixes</p>
         </div>
       </div>
 
@@ -387,8 +387,9 @@
 
     const SHIFTS = {
       "OFF": { hours: 0, class: "off" },
-      "09:00-16:00": { hours: 7, class: "matin" },
-      "09:00-17:00": { hours: 8, class: "matin" },
+      "10:00-17:00": { hours: 7, class: "matin" },
+      "10:00-18:00": { hours: 8, class: "matin" },
+      "17:00-00:00": { hours: 7, class: "soir" },
       "15:00-22:00": { hours: 7, class: "aprem" },
       "15:00-23:00": { hours: 8, class: "aprem" },
       "18:00-01:00": { hours: 7, class: "soir" },
@@ -399,13 +400,16 @@
 
     const SHIFT_GROUPS = [
       { label: "🔴 REPOS", items: ["OFF"] },
-      { label: "☀️ MATIN (09H)", items: ["09:00-16:00", "09:00-17:00"] },
+      { label: "☀️ LE MARCHÉ (10H - 17H / 18H)", items: ["10:00-17:00", "10:00-18:00"] },
+      { label: "🌙 LE MARCHÉ (LIL 17H - 00H)", items: ["17:00-00:00"] },
+      { label: "☀️ MATIN STANDARD (09H)", items: ["09:00-16:00", "09:00-17:00"] },
       { label: "🌅 SOIR (15H)", items: ["15:00-22:00", "15:00-23:00"] },
       { label: "🌙 SOIR (18H)", items: ["18:00-01:00", "18:00-02:00"] },
       { label: "⚡ AUTRES", items: ["12:00-19:00", "12:00-20:00"] }
     ];
 
     const KNOWN_ZONES = [
+      "Le Marché",
       "Temara - Oulad Mtaa",
       "Temara - Fouarat",
       "Agdal - Carrousel",
@@ -423,20 +427,20 @@
       { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir15", zoneBaseIndex: 0 },
       { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir18", zoneBaseIndex: 0 },
       { name: "Mourad Cherradi", zone: "Hay Riad - Soussi", offDay: 1, shiftType: "matin", zoneBaseIndex: 1 },
-      { name: "Youssef Derkaoui", zone: "Hay Riad - Soussi", offDay: 0, shiftType: "soir15", zoneBaseIndex: 1 },
+      { name: "Youssef Derkaoui", zone: "Le Marché", offDay: 0, fixedZone: true, isLeMarche: true },
+      { name: "Islam Elmardi", zone: "Le Marché", offDay: 1, fixedZone: true, isLeMarche: true },
       { name: "Ayoub Abssi", zone: "Hay Riad - Soussi", offDay: 3, shiftType: "soir18", zoneBaseIndex: 1 },
       { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftType: "matin", fixedZone: true },
       { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftType: "soir15", fixedZone: true },
       { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftType: "soir18", fixedZone: true },
       { name: "Achraf Akhlij", zone: "Agdal - Carrousel", offDay: 3, shiftType: "matin", zoneBaseIndex: 2 },
-      { name: "Islam Elmardi", zone: "Agdal - Carrousel", offDay: 2, shiftType: "soir15", zoneBaseIndex: 2 },
       { name: "Oussama El Atrach", zone: "Agdal - Carrousel", offDay: 0, shiftType: "soir18", zoneBaseIndex: 2 },
       { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno", fixedZone: true }
     ];
 
     const ZONE_ROTATION_LIST = ["Temara - Oulad Mtaa", "Hay Riad - Soussi", "Agdal - Carrousel"];
 
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_pure_planning_v1')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v1')) || {};
 
     function getMonday(d) {
       d = new Date(d);
@@ -457,11 +461,13 @@
     }
 
     function getShiftForDay(type, dayIdx) {
-      const is8h = (dayIdx === 4 || dayIdx === 5);
-      if (type === "matin")  return is8h ? "09:00-17:00" : "09:00-16:00";
+      const is8h = (dayIdx === 4 || dayIdx === 5); // Jummu3a (4) w Sabt (5)
+      if (type === "matin")  return is8h ? "10:00-18:00" : "10:00-17:00";
       if (type === "soir15") return is8h ? "15:00-23:00" : "15:00-22:00";
       if (type === "soir18") return is8h ? "18:00-02:00" : "18:00-01:00";
       if (type === "techno") return is8h ? "12:00-20:00" : "12:00-19:00";
+      if (type === "lemarche_matin") return is8h ? "10:00-18:00" : "10:00-17:00";
+      if (type === "lemarche_soir")  return "17:00-00:00";
       return "OFF";
     }
 
@@ -498,7 +504,6 @@
         let currentShiftType = a.shiftType;
         let currentZone = a.zone;
 
-        // Rotation des zones entre Temara, Hay Riad et Agdal semaine par semaine, Salé et Techno fixes
         if (!a.fixedZone && a.zoneBaseIndex !== undefined) {
           const zoneIndex = (a.zoneBaseIndex + weekNumber) % ZONE_ROTATION_LIST.length;
           currentZone = ZONE_ROTATION_LIST[zoneIndex];
@@ -509,7 +514,18 @@
           if (day === a.offDay) {
             shifts.push("OFF");
           } else {
-            shifts.push(getShiftForDay(currentShiftType, day));
+            if (a.isLeMarche) {
+              // Règle spécifique Islam w Derkaoui (Le Marché)
+              // Lun-Jeu (0-3): 7h (10-17) wla 8h (10-18) selon rotation ou bien alternance, Jummu3a-Sabt (4-5): 8h (10-18)
+              if (day === 4 || day === 5) {
+                shifts.push("10:00-18:00");
+              } else {
+                // Alternance 7h / 8h lnadam
+                shifts.push(day % 2 === 0 ? "10:00-17:00" : "10:00-18:00");
+              }
+            } else {
+              shifts.push(getShiftForDay(currentShiftType, day));
+            }
           }
         }
 
@@ -517,7 +533,8 @@
           name: a.name,
           zone: currentZone,
           shiftType: currentShiftType,
-          shifts: shifts
+          shifts: shifts,
+          isLeMarche: a.isLeMarche || false
         };
       });
 
@@ -609,22 +626,27 @@
         const badgeClass = isExact44 ? 'badge-ok' : 'badge-alert';
         const badgeText = isExact44 ? '44h OK' : (diff > 0 ? `${totalHours}h (+${diff}h)` : `${totalHours}h (${diff}h)`);
 
+        let quickShiftOptions = `
+          <option value="" disabled selected>⚡ Shift Ligne</option>
+          <optgroup label="☀️ LE MARCHÉ">
+            <option value="lemarche_matin">☀️ 10:00-17:00 / 18:00</option>
+            <option value="lemarche_soir">🌙 Lil 17:00-00:00</option>
+          </optgroup>
+          <optgroup label="☀️ MATIN">
+            <option value="matin">☀️ Matin (09h)</option>
+          </optgroup>
+          <optgroup label="🌙 SOIR">
+            <option value="soir15">🌅 Soir (15h)</option>
+            <option value="soir18">🌙 Soir (18h)</option>
+          </optgroup>
+        `;
+
         html += `
           <td>
             <div class="total-action-box">
               <span class="hours-badge ${badgeClass}">${badgeText}</span>
               <select class="btn-shift-choice" ${isLocked ? 'disabled' : ''} onchange="applyShiftChoice('${weekKey}', ${agentIdx}, this.value)">
-                <option value="" disabled selected>⚡ Shift Ligne</option>
-                <optgroup label="☀️ MATIN">
-                  <option value="matin">☀️ Matin (09h)</option>
-                </optgroup>
-                <optgroup label="🌙 SOIR">
-                  <option value="soir15">🌅 Soir (15h - 22h/23h)</option>
-                  <option value="soir18">🌙 Soir (18h - 01h/02h)</option>
-                </optgroup>
-                <optgroup label="⚡ AUTRE">
-                  <option value="techno">⚡ Techno (12h)</option>
-                </optgroup>
+                ${quickShiftOptions}
               </select>
             </div>
           </td>
@@ -756,7 +778,7 @@
         name: "Nouvel Agent",
         zone: "Temara - Oulad Mtaa",
         shiftType: "matin",
-        shifts: ["OFF", "09:00-16:00", "09:00-16:00", "09:00-16:00", "09:00-17:00", "09:00-17:00", "09:00-16:00"]
+        shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "10:00-17:00"]
       });
       saveDB();
       renderPlanningTable();
@@ -771,13 +793,13 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('shift_db_pure_planning_v1');
+      localStorage.removeItem('shift_db_le_marche_v1');
       planningDB = {};
       renderPlanningTable();
     }
 
     function saveDB() {
-      localStorage.setItem('shift_db_pure_planning_v1', JSON.stringify(planningDB));
+      localStorage.setItem('shift_db_le_marche_v1', JSON.stringify(planningDB));
     }
 
     renderPlanningTable();
