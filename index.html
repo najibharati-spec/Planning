@@ -208,7 +208,7 @@
     #view-planning th .day-date { display: block; font-size: 11px; font-weight: 500; color: #e9d5ff; margin-top: 3px; }
 
     #view-planning th.col-agent { width: 230px; text-align: left; padding-left: 20px; }
-    #view-planning th.col-zone { width: 220px; text-align: left; padding-left: 14px; }
+    #view-planning th.col-zone { width: 200px; text-align: left; padding-left: 14px; }
     #view-planning th.col-total { width: 240px; }
 
     #view-planning tbody tr {
@@ -218,9 +218,10 @@
     #view-planning tbody tr:hover { background: #faf5ff; }
 
     #view-planning td {
-      padding: 12px 6px;
-      font-size: 13px;
+      padding: 10px 4px;
+      font-size: 12.5px;
       border-bottom: 1px solid #f3e8ff;
+      vertical-align: middle;
     }
     #view-planning td.cell-agent { text-align: left; padding-left: 16px; }
     #view-planning td.cell-zone { text-align: left; padding-left: 12px; }
@@ -247,16 +248,15 @@
       max-width: 120px;
     }
     #view-planning .field-text.zone-txt { color: #6b21a8; font-weight: 600; }
-    #view-planning .field-text.hotspot-txt { color: #c2410c; font-weight: 800; }
 
     .move-btns { display: inline-flex; gap: 2px; }
-    .btn-move {
+    .move-btns .btn-move {
       background: #ede9fe; color: #7c3aed; border: 1px solid #c4b5fd; font-size: 10px;
       width: 22px; height: 22px; border-radius: 6px; cursor: pointer; font-weight: 800;
       display: inline-flex; align-items: center; justify-content: center;
     }
-    .btn-move:hover:not(:disabled) { background: #7c3aed; color: #fff; }
-    .btn-move:disabled { cursor: not-allowed; opacity: 0.3; }
+    .move-btns .btn-move:hover:not(:disabled) { background: #7c3aed; color: #fff; }
+    .move-btns .btn-move:disabled { cursor: not-allowed; opacity: 0.3; }
 
     #view-planning .btn-edit-small {
       background: #f3e8ff;
@@ -273,26 +273,49 @@
     }
     #view-planning .btn-edit-small:disabled { cursor: not-allowed; opacity: 0.4; }
 
-    #view-planning select.shift-select {
-      width: 100%;
-      padding: 9px 4px;
+    /* Design cellule shift avec Horaire en haut et Zone en bas (comme l'image demandée) */
+    .shift-cell-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 4px;
       border-radius: 10px;
+      transition: background 0.15s ease;
+    }
+    .shift-cell-container:hover {
+      background: #f3e8ff;
+    }
+
+    .shift-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 8px;
       font-size: 12px;
       font-weight: 800;
-      border: 1px solid transparent;
-      cursor: pointer;
-      outline: none;
-      text-align-last: center;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
     }
-    #view-planning select.shift-select:disabled { cursor: not-allowed; opacity: 0.85; }
+    .shift-badge.matin { background: #dcfce7; color: #15803d; border: 1.5px solid #86efac; }
+    .shift-badge.aprem { background: #fae8ff; color: #86198f; border: 1.5px solid #f0abfc; }
+    .shift-badge.soir  { background: #e0e7ff; color: #3730a3; border: 1.5px solid #a5b4fc; }
+    .shift-badge.off   { background: #f8fafc; color: #94a3b8; border: 1.5px solid #e2e8f0; }
+    .shift-badge.hotspot { background: #ffedd5; color: #c2410c; border: 1.5px solid #fdba74; }
 
-    #view-planning select.matin { background: var(--matin-bg); color: var(--matin-txt); border-color: var(--matin-border); }
-    #view-planning select.aprem { background: var(--aprem-bg); color: var(--aprem-txt); border-color: var(--aprem-border); }
-    #view-planning select.soir { background: var(--soir-bg); color: var(--soir-txt); border-color: var(--soir-border); }
-    #view-planning select.off { background: var(--off-bg); color: var(--off-txt); border-color: var(--off-border); }
-    #view-planning select.hotspot { background: var(--hotspot-bg); color: var(--hotspot-txt); border-color: var(--hotspot-border); }
-
-    #view-planning select optgroup { font-weight: 800; color: #4c1d95; background: #ffffff; }
+    .sub-zone-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6b21a8;
+      max-width: 90px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sub-zone-label.is-hotspot {
+      color: #c2410c;
+      font-weight: 800;
+    }
 
     #view-planning .total-action-box { display: flex; align-items: center; justify-content: center; gap: 6px; }
 
@@ -346,7 +369,7 @@
         <div class="brand-icon">⚡</div>
         <div>
           <h1>Operational Shift Planning (44H)</h1>
-          <p>Option Hotspot Intégrée • Gestion Zones & Remplacements • Sauvegarde Permanente</p>
+          <p>Affichage Heure + Zone en dessous • Gestion OFF & Hotspot Individualisée</p>
         </div>
       </div>
 
@@ -381,10 +404,10 @@
     </div>
   </div>
 
-  <!-- Modal Dialog for Planning Input/Edits -->
+  <!-- Modal Dialog for Shift & Day-Zone Editing -->
   <div id="planning-custom-modal" class="modal-overlay">
     <div class="modal-card">
-      <div class="modal-header" id="modal-title">Edit Field</div>
+      <div class="modal-header" id="modal-title">Modifier le Shift et la Zone du Jour</div>
       <div class="modal-body" id="modal-body-content"></div>
       <div class="modal-actions">
         <button class="btn-reset" onclick="closePlanningModal()">Annuler</button>
@@ -419,17 +442,7 @@
       return Math.round(diffHours * 10) / 10;
     }
 
-    const SHIFT_GROUPS = [
-      { label: "🔥 HOTSPOT (REMPLACEMENT / APPUI)", items: ["HOTSPOT"] },
-      { label: "🔴 REPOS", items: ["OFF"] },
-      { label: "☀️ LE MARCHÉ (SBAH 7H / 8H)", items: ["10:00-17:00", "10:00-18:00"] },
-      { label: "🌙 LE MARCHÉ (LIL 7H / 8H)", items: ["17:00-00:00", "17:00-01:00"] },
-      { label: "☀️ MATIN STANDARD", items: ["09:00-16:00", "09:00-17:00"] },
-      { label: "🌅 SOIR", items: ["15:00-22:00", "15:00-23:00", "18:00-01:00", "18:00-02:00"] }
-    ];
-
     const KNOWN_ZONES = [
-      "🔥 HOTSPOT (Zone d'appui / Remplacement)",
       "Le Marché",
       "Temara - Oulad Mtaa",
       "Temara - Fouarat",
@@ -438,7 +451,8 @@
       "Hay Riad - Soussi",
       "Technopolis",
       "Harhoura",
-      "El Wifaq"
+      "El Wifaq",
+      "🔥 HOTSPOT"
     ];
 
     const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
@@ -461,7 +475,7 @@
 
     const ZONE_ROTATION_LIST = ["Temara - Oulad Mtaa", "Hay Riad - Soussi", "Agdal - Carrousel"];
 
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v6')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v7')) || {};
 
     function getMonday(d) {
       d = new Date(d);
@@ -495,7 +509,7 @@
       if (!headerRow) return;
       let html = `
         <th class="col-agent">Agent</th>
-        <th class="col-zone">Zone / Hotspot</th>
+        <th class="col-zone">Zone Principale</th>
       `;
 
       for (let i = 0; i < 7; i++) {
@@ -528,26 +542,27 @@
           currentZone = ZONE_ROTATION_LIST[zoneIndex];
         }
 
-        const shifts = [];
+        const daysData = [];
         for (let day = 0; day < 7; day++) {
           if (day === a.offDay) {
-            shifts.push("OFF");
+            daysData.push({ shift: "OFF", zone: "OFF" });
           } else {
+            let shiftVal = "10:00-17:00";
             if (a.isLeMarche || a.leMarcheModeIndex !== undefined) {
               const isIslam = a.name.includes("Islam");
               const effectiveMode = (a.leMarcheModeIndex + weekNumber) % 2;
               const isLilAgent = effectiveMode === 1 ? isIslam : !isIslam;
-
               const is8h = (day === 4 || day === 5);
 
               if (isLilAgent) {
-                shifts.push(is8h ? "17:00-01:00" : "17:00-00:00");
+                shiftVal = is8h ? "17:00-01:00" : "17:00-00:00";
               } else {
-                shifts.push(is8h ? "10:00-18:00" : "10:00-17:00");
+                shiftVal = is8h ? "10:00-18:00" : "10:00-17:00";
               }
             } else {
-              shifts.push(getShiftForDay(currentShiftType, day));
+              shiftVal = getShiftForDay(currentShiftType, day);
             }
+            daysData.push({ shift: shiftVal, zone: currentZone });
           }
         }
 
@@ -555,7 +570,7 @@
           name: a.name,
           zone: currentZone,
           shiftType: currentShiftType,
-          shifts: shifts,
+          days: daysData,
           isLeMarche: a.isLeMarche || a.leMarcheModeIndex !== undefined
         };
       });
@@ -608,7 +623,7 @@
 
         const moveUpDisabled = agentIdx === 0 || isLocked;
         const moveDownDisabled = agentIdx === agents.length - 1 || isLocked;
-        const isHotspotZone = agent.zone.includes("HOTSPOT");
+        const isHotspotGlobal = agent.zone.includes("HOTSPOT");
 
         let html = `
           <td class="cell-agent">
@@ -624,41 +639,36 @@
             </div>
           </td>
           <td class="cell-zone">
-            <div class="field-box" style="${isHotspotZone ? 'background:#ffedd5; border-color:#fdba74;' : ''}">
-              <span class="field-text ${isHotspotZone ? 'hotspot-txt' : 'zone-txt'}" title="${agent.zone}">${agent.zone}</span>
-              <button class="btn-edit-small" ${isLocked ? 'disabled' : ''} title="Changer zone / Hotspot" onclick="promptChangeZone('${weekKey}', ${agentIdx})">✏️</button>
+            <div class="field-box" style="${isHotspotGlobal ? 'background:#ffedd5; border-color:#fdba74;' : ''}">
+              <span class="field-text ${isHotspotGlobal ? 'hotspot-txt' : 'zone-txt'}" title="${agent.zone}">${agent.zone}</span>
+              <button class="btn-edit-small" ${isLocked ? 'disabled' : ''} title="Changer zone" onclick="promptChangeZone('${weekKey}', ${agentIdx})">✏️</button>
             </div>
           </td>
         `;
 
-        agent.shifts.forEach((shift, dayIdx) => {
-          let shiftClass = 'matin';
-          if (shift === 'OFF') shiftClass = 'off';
-          else if (shift === 'HOTSPOT') shiftClass = 'hotspot';
-          else if (shift.startsWith('17:') || shift.startsWith('18:') || shift.startsWith('12:')) shiftClass = 'soir';
-          else if (shift.startsWith('15:')) shiftClass = 'aprem';
+        agent.days.forEach((dayData, dayIdx) => {
+          const shift = dayData.shift;
+          const dayZone = dayData.zone || agent.zone;
+          
+          let badgeClass = 'matin';
+          if (shift === 'OFF') badgeClass = 'off';
+          else if (shift.includes("HOTSPOT") || dayZone.includes("HOTSPOT")) badgeClass = 'hotspot';
+          else if (shift.startsWith('17:') || shift.startsWith('18:') || shift.startsWith('12:')) badgeClass = 'soir';
+          else if (shift.startsWith('15:')) badgeClass = 'aprem';
 
-          let selectOptions = '';
-          SHIFT_GROUPS.forEach(grp => {
-            selectOptions += `<optgroup label="${grp.label}">`;
-            grp.items.forEach(opt => {
-              selectOptions += `<option value="${opt}" ${opt === shift ? 'selected' : ''}>${opt}</option>`;
-            });
-            selectOptions += `</optgroup>`;
-          });
-
-          selectOptions += `<optgroup label="✏️ MANUEL"><option value="CUSTOM_MANUAL">Saisir un horaire libre...</option></optgroup>`;
+          const isHot = dayZone.includes("HOTSPOT") || shift.includes("HOTSPOT");
 
           html += `
             <td>
-              <select class="shift-select ${shiftClass}" ${isLocked ? 'disabled' : ''} onchange="handleShiftSelectChange('${weekKey}', ${agentIdx}, ${dayIdx}, this)">
-                ${selectOptions}
-              </select>
+              <div class="shift-cell-container" ${isLocked ? '' : `onclick="openDayEditModal('${weekKey}', ${agentIdx},${dayIdx})"`} title="Cliquer pour modifier ce jour">
+                <span class="shift-badge ${badgeClass}">${shift}</span>
+                <span class="sub-zone-label ${isHot ? 'is-hotspot' : ''}">${dayZone}</span>
+              </div>
             </td>
           `;
         });
 
-        const totalHours = agent.shifts.reduce((sum, s) => sum + calculateHours(s), 0);
+        const totalHours = agent.days.reduce((sum, d) => sum + calculateHours(d.shift), 0);
         const isExact44 = totalHours === 44;
         const diff = Math.round((totalHours - 44) * 10) / 10;
         const badgeClass = isExact44 ? 'badge-ok' : 'badge-alert';
@@ -667,13 +677,11 @@
         let quickShiftOptions = `
           <option value="" disabled selected>⚡ Shift Ligne</option>
           <optgroup label="🔥 HOTSPOT">
-            <option value="HOTSPOT">🔥 🔥 HOTSPOT (Remplacement)</option>
+            <option value="HOTSPOT">🔥 Hotspot (Appui)</option>
           </optgroup>
-          <optgroup label="☀️ LE MARCHÉ SBAH">
+          <optgroup label="☀️ LE MARCHÉ">
             <option value="10:00-17:00">☀️ 10h-17h (7h)</option>
             <option value="10:00-18:00">☀️ 10h-18h (8h)</option>
-          </optgroup>
-          <optgroup label="🌙 LE MARCHÉ LIL">
             <option value="17:00-00:00">🌙 Lil 17h-00h (7h)</option>
             <option value="17:00-01:00">🌙 Lil 17h-01h (8h)</option>
           </optgroup>
@@ -683,7 +691,7 @@
           <td>
             <div class="total-action-box">
               <span class="hours-badge ${badgeClass}">${badgeText}</span>
-              <select class="btn-shift-choice" ${isLocked ? 'disabled' : ''} onchange="applyShiftChoice('${weekKey}', ${agentIdx}, this.value)">
+              <select class="btn-shift-choice" ${isLocked ? 'disabled' : ''} onchange="applyShiftChoiceToLine('${weekKey}', ${agentIdx}, this.value)">
                 ${quickShiftOptions}
               </select>
             </div>
@@ -693,6 +701,38 @@
 
         tr.innerHTML = html;
         tbody.appendChild(tr);
+      });
+    }
+
+    function openDayEditModal(weekKey, agentIdx, dayIdx) {
+      if (currentWeekOffset === 0 && !manualUnlock) return;
+      const agent = planningDB[weekKey][agentIdx];
+      const dayData = agent.days[dayIdx];
+
+      let zoneOptions = KNOWN_ZONES.map(z => `<option value="${z}" ${z === dayData.zone ? 'selected' : ''}>${z}</option>`).join('');
+
+      const bodyHTML = `
+        <label>Horaire / Shift :</label>
+        <input type="text" id="modal-edit-shift" value="${dayData.shift}" placeholder="Ex: 10:00-17:00, OFF, HOTSPOT..." />
+        
+        <label>Zone pour ce jour (si OFF ou Hotspot / Remplacement) :</label>
+        <select id="modal-edit-zone-select">${zoneOptions}</select>
+        
+        <label>Ou Zone personnalisée :</label>
+        <input type="text" id="modal-edit-zone-custom" placeholder="Autre zone..." value="${dayData.zone}" />
+      `;
+
+      openModal(`Modifier ${DAYS[dayIdx]} - ${agent.name}`, bodyHTML, () => {
+        const newShift = document.getElementById('modal-edit-shift').value.trim().toUpperCase();
+        const customZone = document.getElementById('modal-edit-zone-custom').value.trim();
+        const selectZone = document.getElementById('modal-edit-zone-select').value;
+        const finalZone = customZone !== "" ? customZone : selectZone;
+
+        if (newShift) {
+          agent.days[dayIdx] = { shift: newShift, zone: finalZone };
+          saveDB();
+          renderPlanningTable();
+        }
       });
     }
 
@@ -709,30 +749,6 @@
 
       saveDB();
       renderPlanningTable();
-    }
-
-    function handleShiftSelectChange(weekKey, agentIdx, dayIdx, selectEl) {
-      const val = selectEl.value;
-      if (val === "CUSTOM_MANUAL") {
-        promptManualShift(weekKey, agentIdx, dayIdx);
-      } else {
-        updateShift(weekKey, agentIdx, dayIdx, val);
-      }
-    }
-
-    function promptManualShift(weekKey, agentIdx, dayIdx) {
-      const currentVal = planningDB[weekKey][agentIdx].shifts[dayIdx];
-      const bodyHTML = `
-        <label>Entrer l'horaire ou le statut (Ex: 10:00-17:30, OFF, HOTSPOT) :</label>
-        <input type="text" id="manual-shift-input" value="${currentVal}" autofocus placeholder="Ex: 10:00-17:00 ou HOTSPOT" />
-      `;
-
-      openModal("Saisie Horaire / Hotspot Manuel", bodyHTML, () => {
-        const val = document.getElementById('manual-shift-input').value;
-        if (val && val.trim() !== "") {
-          updateShift(weekKey, agentIdx, dayIdx, val.trim().toUpperCase());
-        }
-      });
     }
 
     function openModal(title, bodyHTML, onSave) {
@@ -777,45 +793,44 @@
 
     function promptChangeZone(weekKey, agentIdx) {
       if (currentWeekOffset === 0 && !manualUnlock) return;
-      const currentZone = planningDB[weekKey][agentIdx].zone;
+      const agent = planningDB[weekKey][agentIdx];
       
-      let options = KNOWN_ZONES.map(z => `<option value="${z}" ${z === currentZone ? 'selected' : ''}>${z}</option>`).join('');
+      let options = KNOWN_ZONES.map(z => `<option value="${z}" ${z === agent.zone ? 'selected' : ''}>${z}</option>`).join('');
       
       const bodyHTML = `
-        <label>Sélectionner une zone ou Hotspot :</label>
+        <label>Sélectionner la zone principale :</label>
         <select id="edit-zone-select">${options}</select>
-        <label>Ou entrer une autre zone / Hotspot personnalisée :</label>
-        <input type="text" id="edit-zone-custom" placeholder="Ex: 🔥 HOTSPOT - Temara..." />
+        <label>Ou entrer une nouvelle zone :</label>
+        <input type="text" id="edit-zone-custom" placeholder="Autre zone..." />
       `;
 
-      openModal("Modifier Zone / Hotspot", bodyHTML, () => {
+      openModal("Modifier Zone Principale", bodyHTML, () => {
         const customVal = document.getElementById('edit-zone-custom').value;
         const selectVal = document.getElementById('edit-zone-select').value;
         const finalZone = (customVal && customVal.trim() !== "") ? customVal.trim() : selectVal;
 
         if (finalZone) {
-          planningDB[weekKey][agentIdx].zone = finalZone;
+          agent.zone = finalZone;
+          // Mettre à jour aussi les jours qui portaient l'ancienne zone principale
+          agent.days.forEach(d => {
+            if (d.zone !== "OFF") d.zone = finalZone;
+          });
           saveDB();
           renderPlanningTable();
         }
       });
     }
 
-    function applyShiftChoice(weekKey, agentIdx, shiftVal) {
+    function applyShiftChoiceToLine(weekKey, agentIdx, shiftVal) {
       if (currentWeekOffset === 0 && !manualUnlock) return;
       const agent = planningDB[weekKey][agentIdx];
 
-      for (let day = 0; day < 7; day++) {
-        if (agent.shifts[day] === "OFF") continue;
-        agent.shifts[day] = shiftVal;
-      }
-      saveDB();
-      renderPlanningTable();
-    }
-
-    function updateShift(weekKey, agentIdx, dayIdx, val) {
-      if (currentWeekOffset === 0 && !manualUnlock) return;
-      planningDB[weekKey][agentIdx].shifts[dayIdx] = val;
+      agent.days.forEach(d => {
+        if (d.shift !== "OFF") {
+          d.shift = shiftVal;
+          if (shiftVal === "HOTSPOT") d.zone = "🔥 HOTSPOT";
+        }
+      });
       saveDB();
       renderPlanningTable();
     }
@@ -852,9 +867,17 @@
 
       planningDB[weekKey].push({
         name: "Nouvel Agent",
-        zone: "🔥 HOTSPOT (Zone d'appui / Remplacement)",
+        zone: "🔥 HOTSPOT",
         shiftType: "matin",
-        shifts: ["HOTSPOT", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "OFF"]
+        days: [
+          { shift: "10:00-17:00", zone: "🔥 HOTSPOT" },
+          { shift: "10:00-17:00", zone: "🔥 HOTSPOT" },
+          { shift: "10:00-17:00", zone: "🔥 HOTSPOT" },
+          { shift: "10:00-17:00", zone: "🔥 HOTSPOT" },
+          { shift: "10:00-18:00", zone: "🔥 HOTSPOT" },
+          { shift: "10:00-18:00", zone: "🔥 HOTSPOT" },
+          { shift: "OFF", zone: "OFF" }
+        ]
       });
       saveDB();
       renderPlanningTable();
@@ -869,13 +892,13 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('shift_db_le_marche_v6');
+      localStorage.removeItem('shift_db_le_marche_v7');
       planningDB = {};
       renderPlanningTable();
     }
 
     function saveDB() {
-      localStorage.setItem('shift_db_le_marche_v6', JSON.stringify(planningDB));
+      localStorage.setItem('shift_db_le_marche_v7', JSON.stringify(planningDB));
     }
 
     renderPlanningTable();
