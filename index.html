@@ -334,7 +334,7 @@
         <div class="brand-icon">⚡</div>
         <div>
           <h1>Operational Shift Planning (44H)</h1>
-          <p>Le Marché (Wahad Lil w Wahad Sbah) • Rotation Temara/Riad/Agdal • Salé & Techno Fixes</p>
+          <p>Le Marché (Sbah / Lil) • Rotation Temara/Riad/Agdal • Salé & Techno Fixes</p>
         </div>
       </div>
 
@@ -400,33 +400,19 @@
       let endTotalMin = (endH * 60) + endM;
 
       if (endTotalMin <= startTotalMin) {
-        endTotalMin += 24 * 60;
+        endTotalMin += 24 * 60; // Gérer les shifts qui traversent minuit (ex: 17:00 - 01:00)
       }
 
       const diffHours = (endTotalMin - startTotalMin) / 60;
       return Math.round(diffHours * 10) / 10;
     }
 
-    const SHIFTS = {
-      "OFF": { hours: 0, class: "off" },
-      "10:00-17:00": { hours: 7, class: "matin" },
-      "10:00-18:00": { hours: 8, class: "matin" },
-      "17:00-01:00": { hours: 8, class: "soir" },
-      "15:00-22:00": { hours: 7, class: "aprem" },
-      "15:00-23:00": { hours: 8, class: "aprem" },
-      "18:00-01:00": { hours: 7, class: "soir" },
-      "18:00-02:00": { hours: 8, class: "soir" },
-      "12:00-19:00": { hours: 7, class: "soir" },
-      "12:00-20:00": { hours: 8, class: "soir" }
-    };
-
     const SHIFT_GROUPS = [
       { label: "🔴 REPOS", items: ["OFF"] },
-      { label: "☀️ LE MARCHÉ (SBAB / JOUR)", items: ["10:00-17:00", "10:00-18:00"] },
-      { label: "🌙 LE MARCHÉ LIL (17H - 01H)", items: ["17:00-01:00"] },
-      { label: "☀️ MATIN STANDARD (09H)", items: ["09:00-16:00", "09:00-17:00"] },
-      { label: "🌅 SOIR (15H)", items: ["15:00-22:00", "15:00-23:00"] },
-      { label: "🌙 SOIR (18H)", items: ["18:00-01:00", "18:00-02:00"] }
+      { label: "☀️ LE MARCHÉ (SBAH 7H / 8H)", items: ["10:00-17:00", "10:00-18:00"] },
+      { label: "🌙 LE MARCHÉ (LIL 7H / 8H)", items: ["17:00-00:00", "17:00-01:00"] },
+      { label: "☀️ MATIN STANDARD", items: ["09:00-16:00", "09:00-17:00"] },
+      { label: "🌅 SOIR", items: ["15:00-22:00", "15:00-23:00", "18:00-01:00", "18:00-02:00"] }
     ];
 
     const KNOWN_ZONES = [
@@ -461,7 +447,7 @@
 
     const ZONE_ROTATION_LIST = ["Temara - Oulad Mtaa", "Hay Riad - Soussi", "Agdal - Carrousel"];
 
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v3')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v4')) || {};
 
     function getMonday(d) {
       d = new Date(d);
@@ -482,7 +468,7 @@
     }
 
     function getShiftForDay(type, dayIdx) {
-      const is8h = (dayIdx === 4 || dayIdx === 5);
+      const is8h = (dayIdx === 4 || dayIdx === 5); // Jummu3a (4) w Sabt (5)
       if (type === "matin")  return is8h ? "10:00-18:00" : "10:00-17:00";
       if (type === "soir15") return is8h ? "15:00-23:00" : "15:00-22:00";
       if (type === "soir18") return is8h ? "18:00-02:00" : "18:00-01:00";
@@ -534,23 +520,18 @@
             shifts.push("OFF");
           } else {
             if (a.isLeMarche || a.leMarcheModeIndex !== undefined) {
-              // Rotation Lil / Sbah bin Derkaoui w Islam simana b simana
-              // Mode 0: Derkaoui Sbah, Islam Lil
-              // Mode 1: Islam Sbah, Derkaoui Lil
               const isIslam = a.name.includes("Islam");
               const effectiveMode = (a.leMarcheModeIndex + weekNumber) % 2;
               const isLilAgent = effectiveMode === 1 ? isIslam : !isIslam;
 
+              const is8h = (day === 4 || day === 5); // Jummu3a w Sabt 8h
+
               if (isLilAgent) {
-                // Shift d l-lil (17:00 - 01:00) 8h kol nhar lli machi OFF
-                shifts.push("17:00-01:00");
+                // Lil: Ayyam d 7h (17:00-00:00), Ayyam d 8h (17:00-01:00)
+                shifts.push(is8h ? "17:00-01:00" : "17:00-00:00");
               } else {
-                // Shift s-sbah / nhar: Tnin-Khmis (7h: 10-17), Jummu3a-Sabt (8h: 10-18), L-Ḥad (7h: 10-17)
-                if (day === 4 || day === 5) {
-                  shifts.push("10:00-18:00");
-                } else {
-                  shifts.push("10:00-17:00");
-                }
+                // Sbah / Nhar: Ayyam d 7h (10:00-17:00), Ayyam d 8h (10:00-18:00)
+                shifts.push(is8h ? "10:00-18:00" : "10:00-17:00");
               }
             } else {
               shifts.push(getShiftForDay(currentShiftType, day));
@@ -662,14 +643,13 @@
 
         let quickShiftOptions = `
           <option value="" disabled selected>⚡ Shift Ligne</option>
-          <optgroup label="☀️ LE MARCHÉ">
+          <optgroup label="☀️ LE MARCHÉ SBAH">
             <option value="10:00-17:00">☀️ 10h-17h (7h)</option>
             <option value="10:00-18:00">☀️ 10h-18h (8h)</option>
-            <option value="17:00-01:00">🌙 Lil 17h-01h (8h)</option>
           </optgroup>
-          <optgroup label="☀️ MATIN">
-            <option value="09:00-16:00">☀️ Matin 7h</option>
-            <option value="09:00-17:00">☀️ Matin 8h</option>
+          <optgroup label="🌙 LE MARCHÉ LIL">
+            <option value="17:00-00:00">🌙 Lil 17h-00h (7h)</option>
+            <option value="17:00-01:00">🌙 Lil 17h-01h (8h)</option>
           </optgroup>
         `;
 
@@ -702,8 +682,8 @@
     function promptManualShift(weekKey, agentIdx, dayIdx) {
       const currentVal = planningDB[weekKey][agentIdx].shifts[dayIdx];
       const bodyHTML = `
-        <label>Entrer l'horaire manuellement (Ex: 08:00-16:30 ou OFF) :</label>
-        <input type="text" id="manual-shift-input" value="${currentVal}" autofocus placeholder="Ex: 09:30-17:30" />
+        <label>Entrer l'horaire manuellement (Ex: 10:00-17:30 ou OFF) :</label>
+        <input type="text" id="manual-shift-input" value="${currentVal}" autofocus placeholder="Ex: 10:00-17:00" />
       `;
 
       openModal("Saisie Horaire Manuel", bodyHTML, () => {
@@ -833,7 +813,7 @@
         name: "Nouvel Agent",
         zone: "Temara - Oulad Mtaa",
         shiftType: "matin",
-        shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "17:00-01:00"]
+        shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "17:00-00:00"]
       });
       saveDB();
       renderPlanningTable();
@@ -848,13 +828,13 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('shift_db_le_marche_v3');
+      localStorage.removeItem('shift_db_le_marche_v4');
       planningDB = {};
       renderPlanningTable();
     }
 
     function saveDB() {
-      localStorage.setItem('shift_db_le_marche_v3', JSON.stringify(planningDB));
+      localStorage.setItem('shift_db_le_marche_v4', JSON.stringify(planningDB));
     }
 
     renderPlanningTable();
