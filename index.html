@@ -21,6 +21,7 @@
       --off-bg: #f8fafc; --off-txt: #94a3b8; --off-border: #e2e8f0;
       --ok-bg: #dcfce7; --ok-txt: #15803d; --ok-border: #86efac;
       --alert-bg: #fee2e2; --alert-txt: #b91c1c; --alert-border: #fca5a5;
+      --hotspot-bg: #ffedd5; --hotspot-txt: #c2410c; --hotspot-border: #fdba74;
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
@@ -207,7 +208,7 @@
     #view-planning th .day-date { display: block; font-size: 11px; font-weight: 500; color: #e9d5ff; margin-top: 3px; }
 
     #view-planning th.col-agent { width: 230px; text-align: left; padding-left: 20px; }
-    #view-planning th.col-zone { width: 200px; text-align: left; padding-left: 14px; }
+    #view-planning th.col-zone { width: 220px; text-align: left; padding-left: 14px; }
     #view-planning th.col-total { width: 240px; }
 
     #view-planning tbody tr {
@@ -246,6 +247,7 @@
       max-width: 120px;
     }
     #view-planning .field-text.zone-txt { color: #6b21a8; font-weight: 600; }
+    #view-planning .field-text.hotspot-txt { color: #c2410c; font-weight: 800; }
 
     .move-btns { display: inline-flex; gap: 2px; }
     .btn-move {
@@ -288,6 +290,7 @@
     #view-planning select.aprem { background: var(--aprem-bg); color: var(--aprem-txt); border-color: var(--aprem-border); }
     #view-planning select.soir { background: var(--soir-bg); color: var(--soir-txt); border-color: var(--soir-border); }
     #view-planning select.off { background: var(--off-bg); color: var(--off-txt); border-color: var(--off-border); }
+    #view-planning select.hotspot { background: var(--hotspot-bg); color: var(--hotspot-txt); border-color: var(--hotspot-border); }
 
     #view-planning select optgroup { font-weight: 800; color: #4c1d95; background: #ffffff; }
 
@@ -343,7 +346,7 @@
         <div class="brand-icon">⚡</div>
         <div>
           <h1>Operational Shift Planning (44H)</h1>
-          <p>Le Marché (Sbah / Lil) • Déplacement Lignes (Monter/Descendre) • Sauvegarde Permanente</p>
+          <p>Option Hotspot Intégrée • Gestion Zones & Remplacements • Sauvegarde Permanente</p>
         </div>
       </div>
 
@@ -395,7 +398,7 @@
     let manualUnlock = false;
 
     function calculateHours(shiftStr) {
-      if (!shiftStr || shiftStr === "OFF" || !shiftStr.includes("-")) return 0;
+      if (!shiftStr || shiftStr === "OFF" || shiftStr.includes("HOTSPOT") || !shiftStr.includes("-")) return 0;
       const parts = shiftStr.split("-");
       const start = parts[0].trim().split(":");
       const end = parts[1].trim().split(":");
@@ -417,6 +420,7 @@
     }
 
     const SHIFT_GROUPS = [
+      { label: "🔥 HOTSPOT (REMPLACEMENT / APPUI)", items: ["HOTSPOT"] },
       { label: "🔴 REPOS", items: ["OFF"] },
       { label: "☀️ LE MARCHÉ (SBAH 7H / 8H)", items: ["10:00-17:00", "10:00-18:00"] },
       { label: "🌙 LE MARCHÉ (LIL 7H / 8H)", items: ["17:00-00:00", "17:00-01:00"] },
@@ -425,6 +429,7 @@
     ];
 
     const KNOWN_ZONES = [
+      "🔥 HOTSPOT (Zone d'appui / Remplacement)",
       "Le Marché",
       "Temara - Oulad Mtaa",
       "Temara - Fouarat",
@@ -456,7 +461,7 @@
 
     const ZONE_ROTATION_LIST = ["Temara - Oulad Mtaa", "Hay Riad - Soussi", "Agdal - Carrousel"];
 
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v5')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v6')) || {};
 
     function getMonday(d) {
       d = new Date(d);
@@ -490,7 +495,7 @@
       if (!headerRow) return;
       let html = `
         <th class="col-agent">Agent</th>
-        <th class="col-zone">Zone</th>
+        <th class="col-zone">Zone / Hotspot</th>
       `;
 
       for (let i = 0; i < 7; i++) {
@@ -603,6 +608,7 @@
 
         const moveUpDisabled = agentIdx === 0 || isLocked;
         const moveDownDisabled = agentIdx === agents.length - 1 || isLocked;
+        const isHotspotZone = agent.zone.includes("HOTSPOT");
 
         let html = `
           <td class="cell-agent">
@@ -618,9 +624,9 @@
             </div>
           </td>
           <td class="cell-zone">
-            <div class="field-box">
-              <span class="field-text zone-txt" title="${agent.zone}">${agent.zone}</span>
-              <button class="btn-edit-small" ${isLocked ? 'disabled' : ''} title="Changer zone" onclick="promptChangeZone('${weekKey}', ${agentIdx})">✏️</button>
+            <div class="field-box" style="${isHotspotZone ? 'background:#ffedd5; border-color:#fdba74;' : ''}">
+              <span class="field-text ${isHotspotZone ? 'hotspot-txt' : 'zone-txt'}" title="${agent.zone}">${agent.zone}</span>
+              <button class="btn-edit-small" ${isLocked ? 'disabled' : ''} title="Changer zone / Hotspot" onclick="promptChangeZone('${weekKey}', ${agentIdx})">✏️</button>
             </div>
           </td>
         `;
@@ -628,6 +634,7 @@
         agent.shifts.forEach((shift, dayIdx) => {
           let shiftClass = 'matin';
           if (shift === 'OFF') shiftClass = 'off';
+          else if (shift === 'HOTSPOT') shiftClass = 'hotspot';
           else if (shift.startsWith('17:') || shift.startsWith('18:') || shift.startsWith('12:')) shiftClass = 'soir';
           else if (shift.startsWith('15:')) shiftClass = 'aprem';
 
@@ -659,6 +666,9 @@
 
         let quickShiftOptions = `
           <option value="" disabled selected>⚡ Shift Ligne</option>
+          <optgroup label="🔥 HOTSPOT">
+            <option value="HOTSPOT">🔥 🔥 HOTSPOT (Remplacement)</option>
+          </optgroup>
           <optgroup label="☀️ LE MARCHÉ SBAH">
             <option value="10:00-17:00">☀️ 10h-17h (7h)</option>
             <option value="10:00-18:00">☀️ 10h-18h (8h)</option>
@@ -713,11 +723,11 @@
     function promptManualShift(weekKey, agentIdx, dayIdx) {
       const currentVal = planningDB[weekKey][agentIdx].shifts[dayIdx];
       const bodyHTML = `
-        <label>Entrer l'horaire manuellement (Ex: 10:00-17:30 ou OFF) :</label>
-        <input type="text" id="manual-shift-input" value="${currentVal}" autofocus placeholder="Ex: 10:00-17:00" />
+        <label>Entrer l'horaire ou le statut (Ex: 10:00-17:30, OFF, HOTSPOT) :</label>
+        <input type="text" id="manual-shift-input" value="${currentVal}" autofocus placeholder="Ex: 10:00-17:00 ou HOTSPOT" />
       `;
 
-      openModal("Saisie Horaire Manuel", bodyHTML, () => {
+      openModal("Saisie Horaire / Hotspot Manuel", bodyHTML, () => {
         const val = document.getElementById('manual-shift-input').value;
         if (val && val.trim() !== "") {
           updateShift(weekKey, agentIdx, dayIdx, val.trim().toUpperCase());
@@ -772,13 +782,13 @@
       let options = KNOWN_ZONES.map(z => `<option value="${z}" ${z === currentZone ? 'selected' : ''}>${z}</option>`).join('');
       
       const bodyHTML = `
-        <label>Sélectionner une zone prédéfinie :</label>
+        <label>Sélectionner une zone ou Hotspot :</label>
         <select id="edit-zone-select">${options}</select>
-        <label>Ou entrer une nouvelle zone :</label>
-        <input type="text" id="edit-zone-custom" placeholder="Autre zone..." />
+        <label>Ou entrer une autre zone / Hotspot personnalisée :</label>
+        <input type="text" id="edit-zone-custom" placeholder="Ex: 🔥 HOTSPOT - Temara..." />
       `;
 
-      openModal("Modifier Zone", bodyHTML, () => {
+      openModal("Modifier Zone / Hotspot", bodyHTML, () => {
         const customVal = document.getElementById('edit-zone-custom').value;
         const selectVal = document.getElementById('edit-zone-select').value;
         const finalZone = (customVal && customVal.trim() !== "") ? customVal.trim() : selectVal;
@@ -842,9 +852,9 @@
 
       planningDB[weekKey].push({
         name: "Nouvel Agent",
-        zone: "Temara - Oulad Mtaa",
+        zone: "🔥 HOTSPOT (Zone d'appui / Remplacement)",
         shiftType: "matin",
-        shifts: ["OFF", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "17:00-00:00"]
+        shifts: ["HOTSPOT", "10:00-17:00", "10:00-17:00", "10:00-17:00", "10:00-18:00", "10:00-18:00", "OFF"]
       });
       saveDB();
       renderPlanningTable();
@@ -859,13 +869,13 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('shift_db_le_marche_v5');
+      localStorage.removeItem('shift_db_le_marche_v6');
       planningDB = {};
       renderPlanningTable();
     }
 
     function saveDB() {
-      localStorage.setItem('shift_db_le_marche_v5', JSON.stringify(planningDB));
+      localStorage.setItem('shift_db_le_marche_v6', JSON.stringify(planningDB));
     }
 
     renderPlanningTable();
