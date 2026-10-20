@@ -15,18 +15,16 @@
       --pl-text-main: #3b0764;
       --pl-text-muted: #6b21a8;
       
-      --matin-bg: #ede9fe; --matin-txt: #6d28d9; --matin-border: #c4b5fd;
-      --aprem-bg: #fae8ff; --aprem-txt: #86198f; --aprem-border: #f0abfc;
+      --matin-bg: #dcfce7; --matin-txt: #15803d; --matin-border: #86efac;
       --soir-bg: #e0e7ff; --soir-txt: #3730a3; --soir-border: #a5b4fc;
       --off-bg: #f8fafc; --off-txt: #94a3b8; --off-border: #e2e8f0;
+      --hotspot-bg: #ffedd5; --hotspot-txt: #c2410c; --hotspot-border: #fdba74;
       --ok-bg: #dcfce7; --ok-txt: #15803d; --ok-border: #86efac;
       --alert-bg: #fee2e2; --alert-txt: #b91c1c; --alert-border: #fca5a5;
-      --hotspot-bg: #ffedd5; --hotspot-txt: #c2410c; --hotspot-border: #fdba74;
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
     body { background: var(--pl-bg-gradient); color: #0f172a; min-height: 100vh; padding: 24px; font-size: 14px; display: flex; justify-content: center; align-items: flex-start; }
-    .hidden { display: none !important; }
 
     #view-planning {
       width: 100%;
@@ -273,7 +271,7 @@
     }
     #view-planning .btn-edit-small:disabled { cursor: not-allowed; opacity: 0.4; }
 
-    /* Design cellule shift avec Horaire en haut et Zone en bas (comme l'image demandée) */
+    /* Design cellule shift : Horaire en haut et Zone en bas */
     .shift-cell-container {
       display: flex;
       flex-direction: column;
@@ -298,7 +296,6 @@
       white-space: nowrap;
     }
     .shift-badge.matin { background: #dcfce7; color: #15803d; border: 1.5px solid #86efac; }
-    .shift-badge.aprem { background: #fae8ff; color: #86198f; border: 1.5px solid #f0abfc; }
     .shift-badge.soir  { background: #e0e7ff; color: #3730a3; border: 1.5px solid #a5b4fc; }
     .shift-badge.off   { background: #f8fafc; color: #94a3b8; border: 1.5px solid #e2e8f0; }
     .shift-badge.hotspot { background: #ffedd5; color: #c2410c; border: 1.5px solid #fdba74; }
@@ -369,7 +366,7 @@
         <div class="brand-icon">⚡</div>
         <div>
           <h1>Operational Shift Planning (44H)</h1>
-          <p>Affichage Heure + Zone en dessous • Gestion OFF & Hotspot Individualisée</p>
+          <p>Horaires Prêts + Saisie Manuelle Libre • Heure en haut & Zone en bas</p>
         </div>
       </div>
 
@@ -475,7 +472,7 @@
 
     const ZONE_ROTATION_LIST = ["Temara - Oulad Mtaa", "Hay Riad - Soussi", "Agdal - Carrousel"];
 
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v7')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v8')) || {};
 
     function getMonday(d) {
       d = new Date(d);
@@ -653,8 +650,7 @@
           let badgeClass = 'matin';
           if (shift === 'OFF') badgeClass = 'off';
           else if (shift.includes("HOTSPOT") || dayZone.includes("HOTSPOT")) badgeClass = 'hotspot';
-          else if (shift.startsWith('17:') || shift.startsWith('18:') || shift.startsWith('12:')) badgeClass = 'soir';
-          else if (shift.startsWith('15:')) badgeClass = 'aprem';
+          else if (shift.startsWith('17:') || shift.startsWith('18:') || shift.startsWith('12:') || shift.startsWith('15:')) badgeClass = 'soir';
 
           const isHot = dayZone.includes("HOTSPOT") || shift.includes("HOTSPOT");
 
@@ -679,11 +675,19 @@
           <optgroup label="🔥 HOTSPOT">
             <option value="HOTSPOT">🔥 Hotspot (Appui)</option>
           </optgroup>
-          <optgroup label="☀️ LE MARCHÉ">
+          <optgroup label="☀️ LE MARCHÉ SBAH">
             <option value="10:00-17:00">☀️ 10h-17h (7h)</option>
             <option value="10:00-18:00">☀️ 10h-18h (8h)</option>
+          </optgroup>
+          <optgroup label="🌙 LE MARCHÉ LIL">
             <option value="17:00-00:00">🌙 Lil 17h-00h (7h)</option>
             <option value="17:00-01:00">🌙 Lil 17h-01h (8h)</option>
+          </optgroup>
+          <optgroup label="☀️ STANDARD">
+            <option value="09:00-16:00">09:00-16:00 (7h)</option>
+            <option value="09:00-17:00">09:00-17:00 (8h)</option>
+            <option value="15:00-22:00">15:00-22:00 (7h)</option>
+            <option value="15:00-23:00">15:00-23:00 (8h)</option>
           </optgroup>
         `;
 
@@ -712,14 +716,35 @@
       let zoneOptions = KNOWN_ZONES.map(z => `<option value="${z}" ${z === dayData.zone ? 'selected' : ''}>${z}</option>`).join('');
 
       const bodyHTML = `
-        <label>Horaire / Shift :</label>
-        <input type="text" id="modal-edit-shift" value="${dayData.shift}" placeholder="Ex: 10:00-17:00, OFF, HOTSPOT..." />
+        <label>⚡ Horaires Prêts à Choisir :</label>
+        <select id="modal-preset-shift" onchange="document.getElementById('modal-edit-shift').value = this.value;">
+          <option value="" disabled selected>-- Choisir un horaire standard --</option>
+          <optgroup label="☀️ Le Marché Sbah">
+            <option value="10:00-17:00">10:00-17:00 (7h)</option>
+            <option value="10:00-18:00">10:00-18:00 (8h)</option>
+          </optgroup>
+          <optgroup label="🌙 Le Marché Lil">
+            <option value="17:00-00:00">17:00-00:00 (7h)</option>
+            <option value="17:00-01:00">17:00-01:00 (8h)</option>
+          </optgroup>
+          <optgroup label="☀️ Autres Horaires & Repos">
+            <option value="09:00-16:00">09:00-16:00 (7h)</option>
+            <option value="09:00-17:00">09:00-17:00 (8h)</option>
+            <option value="15:00-22:00">15:00-22:00 (7h)</option>
+            <option value="15:00-23:00">15:00-23:00 (8h)</option>
+            <option value="OFF">OFF (Repos)</option>
+            <option value="HOTSPOT">🔥 HOTSPOT</option>
+          </optgroup>
+        </select>
+
+        <label style="margin-top:12px;">✏️ Ou Saisie Manuelle (Horaire Libre) :</label>
+        <input type="text" id="modal-edit-shift" value="${dayData.shift}" placeholder="Ex: 10:00-17:30, OFF..." />
         
-        <label>Zone pour ce jour (si OFF ou Hotspot / Remplacement) :</label>
+        <label>📍 Zone pour ce jour :</label>
         <select id="modal-edit-zone-select">${zoneOptions}</select>
         
-        <label>Ou Zone personnalisée :</label>
-        <input type="text" id="modal-edit-zone-custom" placeholder="Autre zone..." value="${dayData.zone}" />
+        <label>Ou Zone / Hotspot Personnalisée :</label>
+        <input type="text" id="modal-edit-zone-custom" placeholder="Ex: Agdal, Hotspot..." value="${dayData.zone}" />
       `;
 
       openModal(`Modifier ${DAYS[dayIdx]} - ${agent.name}`, bodyHTML, () => {
@@ -811,7 +836,6 @@
 
         if (finalZone) {
           agent.zone = finalZone;
-          // Mettre à jour aussi les jours qui portaient l'ancienne zone principale
           agent.days.forEach(d => {
             if (d.zone !== "OFF") d.zone = finalZone;
           });
@@ -892,13 +916,13 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('shift_db_le_marche_v7');
+      localStorage.removeItem('shift_db_le_marche_v8');
       planningDB = {};
       renderPlanningTable();
     }
 
     function saveDB() {
-      localStorage.setItem('shift_db_le_marche_v7', JSON.stringify(planningDB));
+      localStorage.setItem('shift_db_le_marche_v8', JSON.stringify(planningDB));
     }
 
     renderPlanningTable();
