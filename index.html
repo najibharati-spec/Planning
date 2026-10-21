@@ -267,7 +267,7 @@
     }
     #view-planning .btn-edit-small:disabled { cursor: not-allowed; opacity: 0.4; }
 
-    /* Design cellule shift : Wadhin 100% (Matin Khdar Wadh, Soir Zraq Wadh, Hotspot Orange Wadh, OFF Rmadi Wadh) */
+    /* Design cellule shift : Wadhin 100% */
     .shift-cell-container {
       display: flex;
       flex-direction: column;
@@ -292,7 +292,6 @@
       white-space: nowrap;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
-    /* Couleurs ultra-clair et bien distinctes */
     .shift-badge.matin   { background: #dcfce7; color: #166534; border: 2px solid #4ade80; }
     .shift-badge.soir    { background: #dbeafe; color: #1e40af; border: 2px solid #60a5fa; }
     .shift-badge.off     { background: #f1f5f9; color: #64748b; border: 2px solid #cbd5e1; }
@@ -369,7 +368,7 @@
         <div class="brand-icon">⚡</div>
         <div>
           <h1>Operational Shift Planning (44H)</h1>
-          <p>Affichage Ultra Wadh (Couleurs Distinctes: Sbah / Soir / OFF / Hotspot)</p>
+          <p>Islam, Youssef & Zakaria (Fixes 100%) + Rotation Zones & Salé Appui</p>
         </div>
       </div>
 
@@ -461,20 +460,20 @@
       { name: "Mehdi Ait Jebour", zoneIndex: 0, offDay: 1, shiftType: "soir15" },
       { name: "Ayman Chlifane", zoneIndex: 0, offDay: 2, shiftType: "soir18" },
       { name: "Mourad Cherradi", zoneIndex: 1, offDay: 1, shiftType: "matin" },
-      { name: "Youssef Derkaoui", zoneIndex: 3, offDay: 1, fixedZone: true, leMarcheModeIndex: 0 },
-      { name: "Islam Elmardi", zoneIndex: 3, offDay: 2, fixedZone: true, leMarcheModeIndex: 1 },
+      { name: "Youssef Derkaoui", zoneIndex: 3, offDay: 1, fixedZone: true, leMarcheModeIndex: 0, isStrictFixed: true },
+      { name: "Islam Elmardi", zoneIndex: 3, offDay: 2, fixedZone: true, leMarcheModeIndex: 1, isStrictFixed: true },
       { name: "Ayoub Abssi", zoneIndex: 1, offDay: 3, shiftType: "soir18" },
-      { name: "Charaf Loummihi", zoneIndex: 4, offDay: 1, shiftType: "matin", fixedZone: true },
-      { name: "Hassan Azgoune", zoneIndex: 4, offDay: 2, shiftType: "soir15", fixedZone: true },
-      { name: "Ayoub Ben Malek", zoneIndex: 4, offDay: 0, shiftType: "soir18", fixedZone: true },
+      { name: "Charaf Loummihi", zoneIndex: 4, offDay: 1, shiftType: "matin", saleRotation: true, saleBaseIdx: 0 },
+      { name: "Hassan Azgoune", zoneIndex: 4, offDay: 2, shiftType: "soir15", saleRotation: true, saleBaseIdx: 1 },
+      { name: "Ayoub Ben Malek", zoneIndex: 4, offDay: 0, shiftType: "soir18", saleRotation: true, saleBaseIdx: 2 },
       { name: "Achraf Akhlij", zoneIndex: 2, offDay: 3, shiftType: "matin" },
       { name: "Oussama El Atrach", zoneIndex: 2, offDay: 0, shiftType: "soir18" },
-      { name: "Zakariae Benali", zoneIndex: 5, offDay: 0, shiftType: "techno", fixedZone: true }
+      { name: "Zakariae Benali", zoneIndex: 5, offDay: 0, shiftType: "techno", fixedZone: true, isStrictFixed: true }
     ];
 
     const ROTATION_ZONES = ["Temara - Oulad Mtaa", "Hay Riad - Soussi", "Agdal - Carrousel"];
 
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v10')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v12')) || {};
 
     function getMonday(d) {
       d = new Date(d);
@@ -534,8 +533,10 @@
 
       const generated = defaultAgents.map(a => {
         let currentZone = "";
-        if (a.fixedZone) {
+        if (a.fixedZone && !a.saleRotation) {
           currentZone = KNOWN_ZONES[a.zoneIndex];
+        } else if (a.saleRotation) {
+          currentZone = "Salé - Medina";
         } else {
           const shiftedIdx = (a.zoneIndex + weekNumber) % ROTATION_ZONES.length;
           currentZone = ROTATION_ZONES[shiftedIdx];
@@ -547,7 +548,9 @@
             daysData.push({ shift: "OFF", zone: "OFF" });
           } else {
             let shiftVal = "";
-            if (a.name.includes("Youssef") || a.name.includes("Islam")) {
+            let dayZone = currentZone;
+
+            if (a.isStrictFixed && (a.name.includes("Youssef") || a.name.includes("Islam"))) {
               const isIslam = a.name.includes("Islam");
               const effectiveMode = (a.leMarcheModeIndex + weekNumber) % 2;
               const isLilAgent = effectiveMode === 1 ? isIslam : !isIslam;
@@ -557,25 +560,39 @@
               } else {
                 shiftVal = is8h ? "10:00-18:00" : "10:00-17:00";
               }
+              dayZone = "Le Marché";
+            } else if (a.isStrictFixed && a.name.includes("Zakariae")) {
+              const is8h = (day === 4 || day === 5);
+              shiftVal = is8h ? "12:00-20:00" : "12:00-19:00";
+              dayZone = "Technopolis";
             } else {
               shiftVal = getShiftForDay(a.shiftType, day);
+              if (a.saleRotation) {
+                const appuiDayIdx = (a.saleBaseIdx + weekNumber) % 5;
+                if (day === appuiDayIdx) {
+                  const targetZone = ROTATION_ZONES[(weekNumber + a.saleBaseIdx) % ROTATION_ZONES.length];
+                  dayZone = targetZone + " (Appui Salé)";
+                }
+              }
             }
-            daysData.push({ shift: shiftVal, zone: currentZone });
+
+            daysData.push({ shift: shiftVal, zone: dayZone });
           }
         }
 
         return {
           name: a.name,
-          zone: currentZone,
+          zone: a.isStrictFixed ? (a.name.includes("Zakariae") ? "Technopolis" : "Le Marché") : (a.saleRotation ? "Salé - Medina (Rotation)" : currentZone),
           zoneIndex: a.zoneIndex,
           fixedZone: a.fixedZone || false,
+          isStrictFixed: a.isStrictFixed || false,
+          saleRotation: a.saleRotation || false,
           shiftType: a.shiftType || "matin",
-          days: daysData,
-          isLeMarche: a.isLeMarche || false
+          days: daysData
         };
       });
 
-      // Couverture automatique si OFF dans une zone à 2 agents
+      // Couverture automatique si OFF dans une zone à 2 agents (Sauf agents stricts Fixes)
       for (let day = 0; day < 7; day++) {
         let zoneCounts = {};
         ROTATION_ZONES.forEach(z => zoneCounts[z] = []);
@@ -593,7 +610,9 @@
 
         if (deficitZone && surplusZone && zoneCounts[surplusZone].length > 0) {
           let donorAgentIdx = zoneCounts[surplusZone][0];
-          generated[donorAgentIdx].days[day].zone = deficitZone + " (Appui)";
+          if (!generated[donorAgentIdx].days[day].zone.includes("Appui")) {
+            generated[donorAgentIdx].days[day].zone = deficitZone + " (Appui)";
+          }
         }
       }
 
@@ -645,7 +664,6 @@
 
         const moveUpDisabled = agentIdx === 0 || isLocked;
         const moveDownDisabled = agentIdx === agents.length - 1 || isLocked;
-        const isHotspotGlobal = agent.zone.includes("HOTSPOT");
 
         let html = `
           <td class="cell-agent">
@@ -936,13 +954,13 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('shift_db_le_marche_v10');
+      localStorage.removeItem('shift_db_le_marche_v12');
       planningDB = {};
       renderPlanningTable();
     }
 
     function saveDB() {
-      localStorage.setItem('shift_db_le_marche_v10', JSON.stringify(planningDB));
+      localStorage.setItem('shift_db_le_marche_v12', JSON.stringify(planningDB));
     }
 
     renderPlanningTable();
