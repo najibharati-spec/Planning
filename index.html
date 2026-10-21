@@ -368,7 +368,7 @@
         <div class="brand-icon">⚡</div>
         <div>
           <h1>Operational Shift Planning (44H)</h1>
-          <p>Islam, Youssef & Zakaria (Fixes 100%) + Rotation Zones & Salé Appui</p>
+          <p>Gestion Flexible des OFF & Shifting Matin/Soir • Islam, Youssef & Zakaria Fixes</p>
         </div>
       </div>
 
@@ -473,7 +473,7 @@
 
     const ROTATION_ZONES = ["Temara - Oulad Mtaa", "Hay Riad - Soussi", "Agdal - Carrousel"];
 
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v12')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v13')) || {};
 
     function getMonday(d) {
       d = new Date(d);
@@ -592,7 +592,7 @@
         };
       });
 
-      // Couverture automatique si OFF dans une zone à 2 agents (Sauf agents stricts Fixes)
+      // Couverture automatique si OFF dans une zone à 2 agents
       for (let day = 0; day < 7; day++) {
         let zoneCounts = {};
         ROTATION_ZONES.forEach(z => zoneCounts[z] = []);
@@ -753,7 +753,7 @@
       let zoneOptions = KNOWN_ZONES.map(z => `<option value="${z}" ${z === dayData.zone ? 'selected' : ''}>${z}</option>`).join('');
 
       const bodyHTML = `
-        <label>⚡ Horaires Prêts à Choisir :</label>
+        <label>⚡ Horaires Prêts à Choisir (Matin / Soir / OFF) :</label>
         <select id="modal-preset-shift" onchange="document.getElementById('modal-edit-shift').value = this.value;">
           <option value="" disabled selected>-- Choisir un horaire standard --</option>
           <optgroup label="☀️ Matin & Jour">
@@ -954,13 +954,13 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('shift_db_le_marche_v12');
+      localStorage.removeItem('shift_db_le_marche_v13');
       planningDB = {};
       renderPlanningTable();
     }
 
     function saveDB() {
-      localStorage.setItem('shift_db_le_marche_v12', JSON.stringify(planningDB));
+      localStorage.setItem('shift_db_le_marche_v13', JSON.stringify(planningDB));
     }
 
     renderPlanningTable();
