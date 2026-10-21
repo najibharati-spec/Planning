@@ -366,7 +366,7 @@
         <div class="brand-icon">⚡</div>
         <div>
           <h1>Operational Shift Planning (44H)</h1>
-          <p>Horaires Prêts + Saisie Manuelle Libre • Heure en haut & Zone en bas</p>
+          <p>Rotation Temara ⇄ Hay Riad ⇄ Agdal • Couverture Continue & Remplacement OFF</p>
         </div>
       </div>
 
@@ -440,12 +440,11 @@
     }
 
     const KNOWN_ZONES = [
-      "Le Marché",
       "Temara - Oulad Mtaa",
-      "Temara - Fouarat",
-      "Agdal - Carrousel",
-      "Salé - Medina",
       "Hay Riad - Soussi",
+      "Agdal - Carrousel",
+      "Le Marché",
+      "Salé - Medina",
       "Technopolis",
       "Harhoura",
       "El Wifaq",
@@ -455,24 +454,24 @@
     const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 
     const defaultAgents = [
-      { name: "Yahya Rhallab", zone: "Temara - Oulad Mtaa", offDay: 0, shiftType: "matin", zoneBaseIndex: 0 },
-      { name: "Mehdi Ait Jebour", zone: "Temara - Oulad Mtaa", offDay: 1, shiftType: "soir15", zoneBaseIndex: 0 },
-      { name: "Ayman Chlifane", zone: "Temara - Oulad Mtaa", offDay: 2, shiftType: "soir18", zoneBaseIndex: 0 },
-      { name: "Mourad Cherradi", zone: "Hay Riad - Soussi", offDay: 1, shiftType: "matin", zoneBaseIndex: 1 },
-      { name: "Youssef Derkaoui", zone: "Le Marché", offDay: 1, fixedZone: true, leMarcheModeIndex: 0 },
-      { name: "Islam Elmardi", zone: "Le Marché", offDay: 2, fixedZone: true, leMarcheModeIndex: 1 },
-      { name: "Ayoub Abssi", zone: "Hay Riad - Soussi", offDay: 3, shiftType: "soir18", zoneBaseIndex: 1 },
-      { name: "Charaf Loummihi", zone: "Salé - Medina", offDay: 1, shiftType: "matin", fixedZone: true },
-      { name: "Hassan Azgoune", zone: "Salé - Medina", offDay: 2, shiftType: "soir15", fixedZone: true },
-      { name: "Ayoub Ben Malek", zone: "Salé - Medina", offDay: 0, shiftType: "soir18", fixedZone: true },
-      { name: "Achraf Akhlij", zone: "Agdal - Carrousel", offDay: 3, shiftType: "matin", zoneBaseIndex: 2 },
-      { name: "Oussama El Atrach", zone: "Agdal - Carrousel", offDay: 0, shiftType: "soir18", zoneBaseIndex: 2 },
-      { name: "Zakariae Benali", zone: "Technopolis", offDay: 0, shiftType: "techno", fixedZone: true }
+      { name: "Yahya Rhallab", zoneIndex: 0, offDay: 0, shiftType: "matin" },
+      { name: "Mehdi Ait Jebour", zoneIndex: 0, offDay: 1, shiftType: "soir15" },
+      { name: "Ayman Chlifane", zoneIndex: 0, offDay: 2, shiftType: "soir18" },
+      { name: "Mourad Cherradi", zoneIndex: 1, offDay: 1, shiftType: "matin" },
+      { name: "Youssef Derkaoui", zoneIndex: 3, offDay: 1, fixedZone: true, leMarcheModeIndex: 0 },
+      { name: "Islam Elmardi", zoneIndex: 3, offDay: 2, fixedZone: true, leMarcheModeIndex: 1 },
+      { name: "Ayoub Abssi", zoneIndex: 1, offDay: 3, shiftType: "soir18" },
+      { name: "Charaf Loummihi", zoneIndex: 4, offDay: 1, shiftType: "matin", fixedZone: true },
+      { name: "Hassan Azgoune", zoneIndex: 4, offDay: 2, shiftType: "soir15", fixedZone: true },
+      { name: "Ayoub Ben Malek", zoneIndex: 4, offDay: 0, shiftType: "soir18", fixedZone: true },
+      { name: "Achraf Akhlij", zoneIndex: 2, offDay: 3, shiftType: "matin" },
+      { name: "Oussama El Atrach", zoneIndex: 2, offDay: 0, shiftType: "soir18" },
+      { name: "Zakariae Benali", zoneIndex: 5, offDay: 0, shiftType: "techno", fixedZone: true }
     ];
 
-    const ZONE_ROTATION_LIST = ["Temara - Oulad Mtaa", "Hay Riad - Soussi", "Agdal - Carrousel"];
+    const ROTATION_ZONES = ["Temara - Oulad Mtaa", "Hay Riad - Soussi", "Agdal - Carrousel"];
 
-    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v8')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('shift_db_le_marche_v9')) || {};
 
     function getMonday(d) {
       d = new Date(d);
@@ -494,11 +493,11 @@
 
     function getShiftForDay(type, dayIdx) {
       const is8h = (dayIdx === 4 || dayIdx === 5);
-      if (type === "matin")  return is8h ? "10:00-18:00" : "10:00-17:00";
+      if (type === "matin")  return is8h ? "09:00-17:00" : "09:00-16:00";
       if (type === "soir15") return is8h ? "15:00-23:00" : "15:00-22:00";
       if (type === "soir18") return is8h ? "18:00-02:00" : "18:00-01:00";
       if (type === "techno") return is8h ? "12:00-20:00" : "12:00-19:00";
-      return "OFF";
+      return "09:00-16:00";
     }
 
     function renderHeader(monday) {
@@ -531,12 +530,12 @@
       }
 
       const generated = defaultAgents.map(a => {
-        let currentShiftType = a.shiftType;
-        let currentZone = a.zone;
-
-        if (!a.fixedZone && a.zoneBaseIndex !== undefined) {
-          const zoneIndex = (a.zoneBaseIndex + weekNumber) % ZONE_ROTATION_LIST.length;
-          currentZone = ZONE_ROTATION_LIST[zoneIndex];
+        let currentZone = "";
+        if (a.fixedZone) {
+          currentZone = KNOWN_ZONES[a.zoneIndex];
+        } else {
+          const shiftedIdx = (a.zoneIndex + weekNumber) % ROTATION_ZONES.length;
+          currentZone = ROTATION_ZONES[shiftedIdx];
         }
 
         const daysData = [];
@@ -544,20 +543,19 @@
           if (day === a.offDay) {
             daysData.push({ shift: "OFF", zone: "OFF" });
           } else {
-            let shiftVal = "10:00-17:00";
-            if (a.isLeMarche || a.leMarcheModeIndex !== undefined) {
+            let shiftVal = "";
+            if (a.name.includes("Youssef") || a.name.includes("Islam")) {
               const isIslam = a.name.includes("Islam");
               const effectiveMode = (a.leMarcheModeIndex + weekNumber) % 2;
               const isLilAgent = effectiveMode === 1 ? isIslam : !isIslam;
               const is8h = (day === 4 || day === 5);
-
               if (isLilAgent) {
                 shiftVal = is8h ? "17:00-01:00" : "17:00-00:00";
               } else {
                 shiftVal = is8h ? "10:00-18:00" : "10:00-17:00";
               }
             } else {
-              shiftVal = getShiftForDay(currentShiftType, day);
+              shiftVal = getShiftForDay(a.shiftType, day);
             }
             daysData.push({ shift: shiftVal, zone: currentZone });
           }
@@ -566,11 +564,37 @@
         return {
           name: a.name,
           zone: currentZone,
-          shiftType: currentShiftType,
+          zoneIndex: a.zoneIndex,
+          fixedZone: a.fixedZone || false,
+          shiftType: a.shiftType || "matin",
           days: daysData,
-          isLeMarche: a.isLeMarche || a.leMarcheModeIndex !== undefined
+          isLeMarche: a.isLeMarche || false
         };
       });
+
+      // Assurer la couverture automatique : si une zone rotative a 2 agents et l'un est OFF, l'autre zone en a 3 -> envoyer un agent en appui
+      for (let day = 0; day < 7; day++) {
+        let zoneCounts = {};
+        ROTATION_ZONES.forEach(z => zoneCounts[z] = []);
+
+        generated.forEach((ag, agIdx) => {
+          if (!ag.fixedZone && ROTATION_ZONES.includes(ag.zone)) {
+            if (ag.days[day].shift !== "OFF") {
+              zoneCounts[ag.zone].push(agIdx);
+            }
+          }
+        });
+
+        // Vérifier si une zone a moins de 2 agents actifs et une autre en a plus de 2
+        let deficitZone = ROTATION_ZONES.find(z => zoneCounts[z].length < 2);
+        let surplusZone = ROTATION_ZONES.find(z => zoneCounts[z].length > 2);
+
+        if (deficitZone && surplusZone && zoneCounts[surplusZone].length > 0) {
+          // Prendre un agent en surplus pour couvrir la zone déficitaire ce jour-là
+          let donorAgentIdx = zoneCounts[surplusZone][0];
+          generated[donorAgentIdx].days[day].zone = deficitZone + " (Appui)";
+        }
+      }
 
       planningDB[weekKey] = generated;
       saveDB();
@@ -636,8 +660,8 @@
             </div>
           </td>
           <td class="cell-zone">
-            <div class="field-box" style="${isHotspotGlobal ? 'background:#ffedd5; border-color:#fdba74;' : ''}">
-              <span class="field-text ${isHotspotGlobal ? 'hotspot-txt' : 'zone-txt'}" title="${agent.zone}">${agent.zone}</span>
+            <div class="field-box">
+              <span class="field-text zone-txt" title="${agent.zone}">${agent.zone}</span>
               <button class="btn-edit-small" ${isLocked ? 'disabled' : ''} title="Changer zone" onclick="promptChangeZone('${weekKey}', ${agentIdx})">✏️</button>
             </div>
           </td>
@@ -652,7 +676,7 @@
           else if (shift.includes("HOTSPOT") || dayZone.includes("HOTSPOT")) badgeClass = 'hotspot';
           else if (shift.startsWith('17:') || shift.startsWith('18:') || shift.startsWith('12:') || shift.startsWith('15:')) badgeClass = 'soir';
 
-          const isHot = dayZone.includes("HOTSPOT") || shift.includes("HOTSPOT");
+          const isHot = dayZone.includes("HOTSPOT") || shift.includes("HOTSPOT") || dayZone.includes("Appui");
 
           html += `
             <td>
@@ -675,19 +699,13 @@
           <optgroup label="🔥 HOTSPOT">
             <option value="HOTSPOT">🔥 Hotspot (Appui)</option>
           </optgroup>
-          <optgroup label="☀️ LE MARCHÉ SBAH">
-            <option value="10:00-17:00">☀️ 10h-17h (7h)</option>
-            <option value="10:00-18:00">☀️ 10h-18h (8h)</option>
-          </optgroup>
-          <optgroup label="🌙 LE MARCHÉ LIL">
-            <option value="17:00-00:00">🌙 Lil 17h-00h (7h)</option>
-            <option value="17:00-01:00">🌙 Lil 17h-01h (8h)</option>
-          </optgroup>
-          <optgroup label="☀️ STANDARD">
+          <optgroup label="☀️ HORAIRES STANDARDS">
             <option value="09:00-16:00">09:00-16:00 (7h)</option>
             <option value="09:00-17:00">09:00-17:00 (8h)</option>
             <option value="15:00-22:00">15:00-22:00 (7h)</option>
             <option value="15:00-23:00">15:00-23:00 (8h)</option>
+            <option value="18:00-01:00">18:00-01:00 (7h)</option>
+            <option value="18:00-02:00">18:00-02:00 (8h)</option>
           </optgroup>
         `;
 
@@ -719,32 +737,34 @@
         <label>⚡ Horaires Prêts à Choisir :</label>
         <select id="modal-preset-shift" onchange="document.getElementById('modal-edit-shift').value = this.value;">
           <option value="" disabled selected>-- Choisir un horaire standard --</option>
-          <optgroup label="☀️ Le Marché Sbah">
+          <optgroup label="☀️ Matin & Jour">
+            <option value="09:00-16:00">09:00-16:00 (7h)</option>
+            <option value="09:00-17:00">09:00-17:00 (8h)</option>
             <option value="10:00-17:00">10:00-17:00 (7h)</option>
             <option value="10:00-18:00">10:00-18:00 (8h)</option>
           </optgroup>
-          <optgroup label="🌙 Le Marché Lil">
-            <option value="17:00-00:00">17:00-00:00 (7h)</option>
-            <option value="17:00-01:00">17:00-01:00 (8h)</option>
-          </optgroup>
-          <optgroup label="☀️ Autres Horaires & Repos">
-            <option value="09:00-16:00">09:00-16:00 (7h)</option>
-            <option value="09:00-17:00">09:00-17:00 (8h)</option>
+          <optgroup label="🌙 Soir & Lil">
             <option value="15:00-22:00">15:00-22:00 (7h)</option>
             <option value="15:00-23:00">15:00-23:00 (8h)</option>
+            <option value="17:00-00:00">17:00-00:00 (7h)</option>
+            <option value="17:00-01:00">17:00-01:00 (8h)</option>
+            <option value="18:00-01:00">18:00-01:00 (7h)</option>
+            <option value="18:00-02:00">18:00-02:00 (8h)</option>
+          </optgroup>
+          <optgroup label="🔴 Repos & Hotspot">
             <option value="OFF">OFF (Repos)</option>
             <option value="HOTSPOT">🔥 HOTSPOT</option>
           </optgroup>
         </select>
 
-        <label style="margin-top:12px;">✏️ Ou Saisie Manuelle (Horaire Libre) :</label>
-        <input type="text" id="modal-edit-shift" value="${dayData.shift}" placeholder="Ex: 10:00-17:30, OFF..." />
+        <label style="margin-top:12px;">✏️ Saisie Manuelle (Horaire Libre) :</label>
+        <input type="text" id="modal-edit-shift" value="${dayData.shift}" placeholder="Ex: 09:00-16:00, OFF..." />
         
         <label>📍 Zone pour ce jour :</label>
         <select id="modal-edit-zone-select">${zoneOptions}</select>
         
-        <label>Ou Zone / Hotspot Personnalisée :</label>
-        <input type="text" id="modal-edit-zone-custom" placeholder="Ex: Agdal, Hotspot..." value="${dayData.zone}" />
+        <label>Ou Zone / Appui Personnalisée :</label>
+        <input type="text" id="modal-edit-zone-custom" placeholder="Ex: Agdal (Appui)..." value="${dayData.zone}" />
       `;
 
       openModal(`Modifier ${DAYS[dayIdx]} - ${agent.name}`, bodyHTML, () => {
@@ -892,14 +912,13 @@
       planningDB[weekKey].push({
         name: "Nouvel Agent",
         zone: "🔥 HOTSPOT",
-        shiftType: "matin",
         days: [
-          { shift: "10:00-17:00", zone: "🔥 HOTSPOT" },
-          { shift: "10:00-17:00", zone: "🔥 HOTSPOT" },
-          { shift: "10:00-17:00", zone: "🔥 HOTSPOT" },
-          { shift: "10:00-17:00", zone: "🔥 HOTSPOT" },
-          { shift: "10:00-18:00", zone: "🔥 HOTSPOT" },
-          { shift: "10:00-18:00", zone: "🔥 HOTSPOT" },
+          { shift: "09:00-16:00", zone: "🔥 HOTSPOT" },
+          { shift: "09:00-16:00", zone: "🔥 HOTSPOT" },
+          { shift: "09:00-16:00", zone: "🔥 HOTSPOT" },
+          { shift: "09:00-16:00", zone: "🔥 HOTSPOT" },
+          { shift: "09:00-17:00", zone: "🔥 HOTSPOT" },
+          { shift: "09:00-17:00", zone: "🔥 HOTSPOT" },
           { shift: "OFF", zone: "OFF" }
         ]
       });
@@ -916,13 +935,13 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('shift_db_le_marche_v8');
+      localStorage.removeItem('shift_db_le_marche_v9');
       planningDB = {};
       renderPlanningTable();
     }
 
     function saveDB() {
-      localStorage.setItem('shift_db_le_marche_v8', JSON.stringify(planningDB));
+      localStorage.setItem('shift_db_le_marche_v9', JSON.stringify(planningDB));
     }
 
     renderPlanningTable();
