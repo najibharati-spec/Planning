@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - McDonald's & Zones Planning (44H)</title>
+  <title>FieldOps - McDonald's & Zones Planning (44H Décalé)</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -209,13 +209,13 @@
       display: inline-block;
       padding: 4px 8px;
       border-radius: 6px;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 800;
       white-space: nowrap;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .shift-badge.matin-soir { background: #fef3c7; color: #92400e; border: 2px solid #f59e0b; }
-    .shift-badge.off        { background: #f1f5f9; color: #64748b; border: 2px solid #cbd5e1; }
+    .shift-badge.decalé { background: #fef3c7; color: #92400e; border: 2px solid #f59e0b; }
+    .shift-badge.off    { background: #f1f5f9; color: #64748b; border: 2px solid #cbd5e1; }
 
     .sub-zone-label {
       font-size: 11px;
@@ -247,8 +247,8 @@
       <div class="brand-title">
         <div class="brand-icon">🍟</div>
         <div>
-          <h1>McDonald's & Zones Planning (44H)</h1>
-          <p>Tous les agents bénéficient de la rotation Sbah + Pause + Lil (Fin à 02:00)</p>
+          <h1>McDonald's & Zones Planning (44H - Horaires Décalés)</h1>
+          <p>Répartition Décalée (09h, 10h, 11h, 12h) avec Pause & Fin à 02:00</p>
         </div>
       </div>
 
@@ -291,18 +291,18 @@
     const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 
     const agentsList = [
-      { name: "Achraf Akhlij", offDay: 3 },
-      { name: "Youssef Derkaoui", offDay: 1 },
-      { name: "Aymane Chlifane", offDay: 2 },
-      { name: "Ayoub Abssi", offDay: 3 },
-      { name: "Mourad Cherradi", offDay: 1 },
-      { name: "Yahya Rhallab", offDay: 0 },
-      { name: "Hassan Azgoune", offDay: 2 },
-      { name: "Ayoub Ben Malek", offDay: 0 },
-      { name: "Charaf Loummihi", offDay: 1 },
-      { name: "Islam Elmardi", offDay: 2 },
-      { name: "Oussama El Atrach", offDay: 0 },
-      { name: "Najib Agent 12", offDay: 3 }
+      { name: "Achraf Akhlij", offDay: 3, shiftGroup: 0 }, // 09:00
+      { name: "Youssef Derkaoui", offDay: 1, shiftGroup: 0 }, // 09:00
+      { name: "Aymane Chlifane", offDay: 2, shiftGroup: 1 }, // 10:00
+      { name: "Ayoub Abssi", offDay: 3, shiftGroup: 1 }, // 10:00
+      { name: "Mourad Cherradi", offDay: 1, shiftGroup: 2 }, // 11:00
+      { name: "Yahya Rhallab", offDay: 0, shiftGroup: 2 }, // 11:00
+      { name: "Hassan Azgoune", offDay: 2, shiftGroup: 3 }, // 12:00
+      { name: "Ayoub Ben Malek", offDay: 0, shiftGroup: 3 }, // 12:00
+      { name: "Charaf Loummihi", offDay: 1, shiftGroup: 0 },
+      { name: "Islam Elmardi", offDay: 2, shiftGroup: 1 },
+      { name: "Oussama El Atrach", offDay: 0, shiftGroup: 2 },
+      { name: "Najib Agent 12", offDay: 3, shiftGroup: 3 }
     ];
 
     function getMonday(d) {
@@ -338,7 +338,7 @@
       headerRow.innerHTML = html;
     }
 
-    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_v2')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_v3')) || {};
 
     function generatePlanning(weekKey, weekNum) {
       if (planningDB[weekKey]) return planningDB[weekKey];
@@ -353,12 +353,19 @@
           if (isOffDay) {
             days.push({ shift: "OFF", zone: "REPOS" });
           } else {
-            // Appliquer le régime 09:00 avec pause pour tous les agents
-            if (d === 4) { // Vendredi
-              days.push({ shift: "09:00-13:00 / 16:00-02:00", zone: zoneAssigned }); // 4h sbah + 3h pose + 4h lil = 8h
-            } else {
-              days.push({ shift: "09:00-12:00 / 15:00-02:00", zone: zoneAssigned }); // 3h sbah + 3h pose + 4h lil = 7h
-            }
+            // Décalage des horaires selon le groupe (09:00, 10:00, 11:00, 12:00)
+            let startH = 9 + ag.shiftGroup; // 9, 10, 11, 12
+            let morningHours = 3;
+            if (d === 4) morningHours = 4; // Vendredi matin +1h
+
+            let morningEnd = startH + morningHours; // Ex: 9 + 3 = 12:00
+            let pauseStart = morningEnd;
+            let pauseDuration = 3;
+            let lilStart = pauseStart + pauseDuration; // Ex: 12 + 3 = 15:00
+            let lilEnd = 26; // 02:00 du matin (24 + 2)
+
+            let shiftStr = `${String(startH).padStart(2,'0')}:00-${String(morningEnd).padStart(2,'0')}:00 / ${String(lilStart).padStart(2,'0')}:00-02:00`;
+            days.push({ shift: shiftStr, zone: zoneAssigned });
           }
         }
 
@@ -370,15 +377,14 @@
       });
 
       planningDB[weekKey] = generated;
-      localStorage.setItem('mcd_plan_v2', JSON.stringify(planningDB));
+      localStorage.setItem('mcd_plan_v3', JSON.stringify(planningDB));
       return generated;
     }
 
     function calculateHours(shiftStr) {
       if (!shiftStr || shiftStr === "OFF") return 0;
-      if (shiftStr.includes("09:00-13:00")) return 8; // Vendredi
-      if (shiftStr.includes("09:00-12:00")) return 7; // Autres jours
-      return 7;
+      if (shiftStr.includes("-13:00")) return 8; // Vendredi
+      return 7; // Autres jours
     }
 
     function renderTable() {
@@ -410,7 +416,7 @@
         let totalH = 0;
         ag.days.forEach((day) => {
           totalH += calculateHours(day.shift);
-          let badgeClass = 'matin-soir';
+          let badgeClass = 'decalé';
           if (day.shift === 'OFF') badgeClass = 'off';
 
           html += `
@@ -449,7 +455,7 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('mcd_plan_v2');
+      localStorage.removeItem('mcd_plan_v3');
       planningDB = {};
       renderTable();
     }
