@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - Leader Najib Planning (7H & 8H Exact)</title>
+  <title>FieldOps - Leader Najib Planning (Horaires Flexibles & Décalés)</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -214,7 +214,7 @@
       white-space: nowrap;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .shift-badge.regime-3h { background: #fef3c7; color: #92400e; border: 2px solid #f59e0b; }
+    .shift-badge.flexible { background: #fef3c7; color: #92400e; border: 2px solid #f59e0b; }
     .shift-badge.off      { background: #f1f5f9; color: #64748b; border: 2px solid #cbd5e1; }
 
     .sub-zone-label {
@@ -247,8 +247,8 @@
       <div class="brand-title">
         <div class="brand-icon">👑</div>
         <div>
-          <h1>Leader Najib • McDonald's & Zones Planning (44H)</h1>
-          <p>7h (3h Sbah + 3h Pause + 4h Lil) | 8h (3h Sbah + 3h Pause + 5h Lil) • Fin à 01:00</p>
+          <h1>Leader Najib • McDonald's & Zones Planning (44H Flexible)</h1>
+          <p>Horaires Souples & Décalés (Début et Fin Variés par Agent) + Rotation McDo Stricte</p>
         </div>
       </div>
 
@@ -338,7 +338,7 @@
       headerRow.innerHTML = html;
     }
 
-    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_leader_najib_v4')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_leader_najib_v5')) || {};
 
     function generatePlanning(weekKey, weekNum) {
       if (planningDB[weekKey]) return planningDB[weekKey];
@@ -356,17 +356,22 @@
             let mcdoIdx = (idx + weekNum + d * 2) % MCDO_ZONES.length;
             let assignedMcDo = MCDO_ZONES[mcdoIdx];
 
-            // Jours de 8h (Jmou3=4, Sabt=5), les autres jours (Tnin, Tlat, Larba3, Khmiss, Had) de 7h
-            const is8h = (d === 4 || d === 5);
-            let lilHours = is8h ? 5 : 4; // 3h sbah + 3h pause + 4h lil (7h) / 5h lil (8h)
+            // Horaires flexibles et décalés (début et fin varient par agent et par jour)
+            const is8h = (d === 4 || d === 5); // Vendredi / Samedi (8h), autres (7h)
+            let sbahH = is8h ? 4 : 3;
+            let lilH = is8h ? 4 : 4;
 
-            // Décalage journalier (pour que l'agent ne commence pas à la même heure chaque jour)
-            let shiftGroup = (idx + d) % 5;
-            let startH = 9 + shiftGroup; // 09:00, 10:00, 11:00...
-            let sbahEnd = startH + 3; // 3h s-sbah
-            let pauseEnd = sbahEnd + 3; // 3h pause
+            let startH = 9 + ((idx * 2 + d) % 4); // Heures de début variées (09:00, 10:00, 11:00, 12:00)
+            let sbahEnd = startH + sbahH;
+            let pauseEnd = sbahEnd + 3; // 3h de pause
+            let endH = pauseEnd + (is8h ? 5 : 4); // Fin souple selon les heures du soir
 
-            let shiftStr = `${String(startH).padStart(2,'0')}:00-${String(sbahEnd).padStart(2,'0')}:00 / ${String(pauseEnd).padStart(2,'0')}:00-01:00`;
+            // Format d'affichage propre
+            let endStr = endH >= 24 ? `0${endH-24}:00` : `${String(endH).padStart(2,'0')}:00`;
+            if (endH === 24) endStr = "00:00";
+            if (endH > 24) endStr = `0${endH-24}:00`;
+
+            let shiftStr = `${String(startH).padStart(2,'0')}:00-${String(sbahEnd).padStart(2,'0')}:00 / ${String(pauseEnd).padStart(2,'0')}:00-${endStr}`;
             days.push({ shift: shiftStr, zone: assignedMcDo });
           }
         }
@@ -379,7 +384,7 @@
       });
 
       planningDB[weekKey] = generated;
-      localStorage.setItem('mcd_plan_leader_najib_v4', JSON.stringify(planningDB));
+      localStorage.setItem('mcd_plan_leader_najib_v5', JSON.stringify(planningDB));
       return generated;
     }
 
@@ -418,7 +423,7 @@
         let totalH = 0;
         ag.days.forEach((day, dIdx) => {
           totalH += calculateHours(day.shift, dIdx);
-          let badgeClass = 'regime-3h';
+          let badgeClass = 'flexible';
           if (day.shift === 'OFF') badgeClass = 'off';
 
           html += `
@@ -457,7 +462,7 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('mcd_plan_leader_najib_v4');
+      localStorage.removeItem('mcd_plan_leader_najib_v5');
       planningDB = {};
       renderTable();
     }
