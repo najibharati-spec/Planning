@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - Leader Najib Planning (1 OFF en Semaine - Hors Weekend)</title>
+  <title>FieldOps - Leader Najib Planning (Pause 4h pour 14:00)</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -245,8 +245,8 @@
       <div class="brand-title">
         <div class="brand-icon">👑</div>
         <div>
-          <h1>Leader Najib • McDonald's & Zones Planning (1 OFF / Semaine - Hors Weekend)</h1>
-          <p>Un seul OFF par agent, uniquement de Lundi à Jeudi (Pas de OFF Vendredi, Samedi ou Dimanche) + Fin à 01:00</p>
+          <h1>Leader Najib • McDonald's & Zones Planning (Pause 4h pour 14:00)</h1>
+          <p>Tranches 10h, 12h, 14h (Pause 4h pour 14h -> Fin 01:00) + 3 OFF en Semaine</p>
         </div>
       </div>
 
@@ -336,15 +336,14 @@
       headerRow.innerHTML = html;
     }
 
-    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_leader_najib_v12')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_leader_najib_v15')) || {};
 
     function generatePlanning(weekKey, weekNum) {
       if (planningDB[weekKey]) return planningDB[weekKey];
 
       const generated = agentsList.map((ag, idx) => {
         const primaryMcDo = MCDO_ZONES[(idx + weekNum) % MCDO_ZONES.length];
-        // Rotation des jours de OFF (0=Lundi, 1=Mardi, 2=Mercredi, 3=Jeudi) uniquement en semaine
-        let assignedOff = (ag.offDay + weekNum) % 4;
+        let assignedOff = (ag.offDay + weekNum) % 4; // OFF uniquement en semaine (Lun-Jeu)
         return {
           name: ag.name,
           baseZone: primaryMcDo,
@@ -357,13 +356,15 @@
         let availableMcDos = [...MCDO_ZONES];
         availableMcDos.sort(() => (Math.sin(weekNum + dIdx) > 0 ? 1 : -1));
 
-        const is8h = (dIdx === 4 || dIdx === 5); // 8h pour Vendredi/Samedi (9 agents), 7h les autres (8 agents)
+        const isWeekendOrFri = (dIdx === 4 || dIdx === 5 || dIdx === 6); // Vendredi, Samedi, Dimanche
         
         let startSlots = [];
-        if (is8h) {
-          startSlots = [11, 11, 12, 12, 12, 13, 13, 14, 14];
+        if (isWeekendOrFri) {
+          // Weekend: 3 (10h), 4 (12h), 5 (14h)
+          startSlots = [10, 10, 10, 12, 12, 12, 12, 14, 14, 14, 14, 14];
         } else {
-          startSlots = [9, 9, 11, 11, 12, 12, 13, 13];
+          // Semaine (Lun-Jeu): 3 (10h), 4 (12h), 2 (14h)
+          startSlots = [10, 10, 10, 12, 12, 12, 12, 14, 14];
         }
 
         let slotIndex = 0;
@@ -372,8 +373,7 @@
         generated.forEach((ag) => {
           if (!ag.assignedDays) ag.assignedDays = [];
           
-          // Le OFF est strictement entre Lundi (0) et Jeudi (3). Jamais Vendredi(4), Samedi(5) ou Dimanche(6).
-          const isOff = (dIdx === ag.offDay);
+          const isOff = (dIdx < 4 && dIdx === ag.offDay);
 
           if (isOff) {
             ag.assignedDays.push({ shift: "OFF", zone: "REPOS" });
@@ -384,22 +384,40 @@
             let startH = startSlots[slotIndex % startSlots.length];
             slotIndex++;
 
-            let sbahEnd = startH + 3;
-            let pauseEnd = sbahEnd + 3;
-            let workEvening = is8h ? 5 : 4;
-            let endH = pauseEnd + workEvening;
+            let shiftStr = "";
+            const is8hDay = (dIdx === 4 || dIdx === 5); // 8h (Vendredi/Samedi), 7h (autres)
 
-            let realEndH = endH >= 24 ? endH - 24 : endH;
-            let endStr = `${String(realEndH).padStart(2,'0')}:00`;
+            if (startH === 14) {
+              // Li kybdaou m3a 14h: 3h sbah (14-17), pause 4h (17-21), w ykammlo swayaç libqaw tal 01:00
+              let pauseEnd = 21;
+              let workEvening = is8hDay ? 5 : 4; // 4h le soir pour 7h, 5h pour 8h
+              let endH = pauseEnd + workEvening; // 21 + 4 = 25 (01:00) ou 21 + 5 = 26 (02:00 -> plafonné à 01:00)
+              if (endH > 25) endH = 25;
 
-            let shiftStr = `${String(startH).padStart(2,'0')}:00-${String(sbahEnd).padStart(2,'0')}:00 / ${String(pauseEnd).padStart(2,'0')}:00-${endStr}`;
+              let realEndH = endH >= 24 ? endH - 24 : endH;
+              let endStr = `${String(realEndH).padStart(2,'0')}:00`;
+
+              shiftStr = `14:00-17:00 / 21:00-${endStr}`;
+            } else {
+              // Tranches 10h et 12h: pause 3h classique
+              let sbahEnd = startH + 3;
+              let pauseEnd = sbahEnd + 3;
+              let workEvening = is8hDay ? 5 : 4;
+              let endH = pauseEnd + workEvening;
+
+              let realEndH = endH >= 24 ? endH - 24 : endH;
+              let endStr = `${String(realEndH).padStart(2,'0')}:00`;
+
+              shiftStr = `${String(startH).padStart(2,'0')}:00-${String(sbahEnd).padStart(2,'0')}:00 / ${String(pauseEnd).padStart(2,'0')}:00-${endStr}`;
+            }
+
             ag.assignedDays.push({ shift: shiftStr, zone: assignedMcDo });
           }
         });
       });
 
       planningDB[weekKey] = generated;
-      localStorage.setItem('mcd_plan_leader_najib_v12', JSON.stringify(planningDB));
+      localStorage.setItem('mcd_plan_leader_najib_v15', JSON.stringify(planningDB));
       return generated;
     }
 
@@ -477,7 +495,7 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('mcd_plan_leader_najib_v12');
+      localStorage.removeItem('mcd_plan_leader_najib_v15');
       planningDB = {};
       renderTable();
     }
