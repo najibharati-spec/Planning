@@ -97,20 +97,6 @@
       color: #7f1d1d;
     }
 
-    #view-planning .status-pill {
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 8px;
-    }
-    #view-planning .pill-locked { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-    #view-planning .pill-unlocked { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-
-    #view-planning .btn-group {
-      display: flex;
-      gap: 10px;
-    }
-
     #view-planning .btn-nav {
       background: #ffffff;
       color: #dc2626;
@@ -121,25 +107,7 @@
       font-weight: 700;
       cursor: pointer;
     }
-    #view-planning .btn-nav:hover {
-      background: #fef2f2;
-      color: #7f1d1d;
-    }
-
-    #view-planning .btn-primary {
-      background: linear-gradient(135deg, #dc2626, #b91c1c);
-      color: #ffffff;
-      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
-      padding: 9px 16px;
-      border: none;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    #view-planning .btn-primary:hover {
-      background: linear-gradient(135deg, #b91c1c, #7f1d1d);
-      transform: translateY(-1px);
-    }
+    #view-planning .btn-nav:hover { background: #fef2f2; color: #7f1d1d; }
 
     #view-planning .btn-reset {
       background: #ffffff;
@@ -150,10 +118,7 @@
       font-weight: 700;
       cursor: pointer;
     }
-    #view-planning .btn-reset:hover {
-      background: #fef2f2;
-      border-color: #fca5a5;
-    }
+    #view-planning .btn-reset:hover { background: #fef2f2; border-color: #fca5a5; }
 
     #view-planning .table-container {
       background: var(--pl-card-bg);
@@ -250,7 +215,6 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     .shift-badge.matin-soir { background: #fef3c7; color: #92400e; border: 2px solid #f59e0b; }
-    .shift-badge.soir       { background: #dbeafe; color: #1e40af; border: 2px solid #60a5fa; }
     .shift-badge.off        { background: #f1f5f9; color: #64748b; border: 2px solid #cbd5e1; }
 
     .sub-zone-label {
@@ -268,18 +232,12 @@
     }
 
     #view-planning .total-action-box { display: flex; align-items: center; justify-content: center; gap: 6px; }
-
     #view-planning .hours-badge {
       display: inline-flex; align-items: center; justify-content: center;
       padding: 6px 10px; border-radius: 16px; font-weight: 800; font-size: 11.5px; white-space: nowrap;
     }
     #view-planning .badge-ok { background: var(--ok-bg); color: var(--ok-txt); border: 1.5px solid var(--ok-border); }
     #view-planning .badge-alert { background: var(--alert-bg); color: var(--alert-txt); border: 1.5px solid var(--alert-border); }
-
-    #view-planning select.btn-shift-choice {
-      padding: 6px 8px; font-size: 11px; font-weight: 800; border-radius: 8px;
-      background: #fef2f2; color: #b91c1c; border: 1.5px solid #fca5a5; cursor: pointer; outline: none;
-    }
   </style>
 </head>
 <body>
@@ -289,8 +247,8 @@
       <div class="brand-title">
         <div class="brand-icon">🍟</div>
         <div>
-          <h1>McDonald's & Field Operations Planning (44H)</h1>
-          <p>3 Drari b 09:00 (Sbah + Pause + Lil hta 02:00) • Rotation MacDo & Zones</p>
+          <h1>McDonald's & Zones Planning (44H)</h1>
+          <p>Tous les agents bénéficient de la rotation Sbah + Pause + Lil (Fin à 02:00)</p>
         </div>
       </div>
 
@@ -333,18 +291,18 @@
     const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 
     const agentsList = [
-      { name: "Achraf Akhlij", type: "matin_soir", offDay: 3 }, // Jeudi OFF
-      { name: "Youssef Derkaoui", type: "matin_soir", offDay: 1 }, // Mardi OFF
-      { name: "Aymane Chlifane", type: "matin_soir", offDay: 2 }, // Mercredi OFF
-      { name: "Ayoub Abssi", type: "soir", offDay: 3 },
-      { name: "Mourad Cherradi", type: "soir", offDay: 1 },
-      { name: "Yahya Rhallab", type: "soir", offDay: 0 },
-      { name: "Hassan Azgoune", type: "soir", offDay: 2 },
-      { name: "Ayoub Ben Malek", type: "soir", offDay: 0 },
-      { name: "Charaf Loummihi", type: "soir", offDay: 1 },
-      { name: "Islam Elmardi", type: "soir", offDay: 2 },
-      { name: "Oussama El Atrach", type: "soir", offDay: 0 },
-      { name: "Najib Agent 12", type: "soir", offDay: 3 }
+      { name: "Achraf Akhlij", offDay: 3 },
+      { name: "Youssef Derkaoui", offDay: 1 },
+      { name: "Aymane Chlifane", offDay: 2 },
+      { name: "Ayoub Abssi", offDay: 3 },
+      { name: "Mourad Cherradi", offDay: 1 },
+      { name: "Yahya Rhallab", offDay: 0 },
+      { name: "Hassan Azgoune", offDay: 2 },
+      { name: "Ayoub Ben Malek", offDay: 0 },
+      { name: "Charaf Loummihi", offDay: 1 },
+      { name: "Islam Elmardi", offDay: 2 },
+      { name: "Oussama El Atrach", offDay: 0 },
+      { name: "Najib Agent 12", offDay: 3 }
     ];
 
     function getMonday(d) {
@@ -380,7 +338,7 @@
       headerRow.innerHTML = html;
     }
 
-    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_v1')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_v2')) || {};
 
     function generatePlanning(weekKey, weekNum) {
       if (planningDB[weekKey]) return planningDB[weekKey];
@@ -390,26 +348,16 @@
         const days = [];
 
         for (let d = 0; d < 7; d++) {
-          // Vendredi (4) w Samedi (5) OFF NO -> Ya3ni k-y-khdmo fihom
           const isOffDay = (d === ag.offDay);
 
           if (isOffDay) {
             days.push({ shift: "OFF", zone: "REPOS" });
           } else {
-            if (ag.type === "matin_soir") {
-              // 3 Drari li k-y-bdaou m3a 9H
-              if (d === 4) { // Vendredi
-                days.push({ shift: "09:00-13:00 / 16:00-02:00", zone: zoneAssigned }); // 4h sbah + 3h pose + 4h lil
-              } else {
-                days.push({ shift: "09:00-12:00 / 15:00-02:00", zone: zoneAssigned }); // 3h sbah + 3h pose + 4h lil
-              }
+            // Appliquer le régime 09:00 avec pause pour tous les agents
+            if (d === 4) { // Vendredi
+              days.push({ shift: "09:00-13:00 / 16:00-02:00", zone: zoneAssigned }); // 4h sbah + 3h pose + 4h lil = 8h
             } else {
-              // Bayn les agents d l-lil (Makibda McDo hta 12H, w k-ytsalaw m3a 02H)
-              if (d === 4 || d === 5) {
-                days.push({ shift: "12:00-20:00", zone: zoneAssigned }); // 8h
-              } else {
-                days.push({ shift: "12:00-19:00", zone: zoneAssigned }); // 7h
-              }
+              days.push({ shift: "09:00-12:00 / 15:00-02:00", zone: zoneAssigned }); // 3h sbah + 3h pose + 4h lil = 7h
             }
           }
         }
@@ -422,17 +370,14 @@
       });
 
       planningDB[weekKey] = generated;
-      localStorage.setItem('mcd_plan_v1', JSON.stringify(planningDB));
+      localStorage.setItem('mcd_plan_v2', JSON.stringify(planningDB));
       return generated;
     }
 
     function calculateHours(shiftStr) {
       if (!shiftStr || shiftStr === "OFF") return 0;
-      if (shiftStr.includes("/")) {
-        return 7; // 3h sbah + 4h lil = 7h (ola 8h f vendredi)
-      }
-      if (shiftStr.includes("12:00-20:00")) return 8;
-      if (shiftStr.includes("12:00-19:00")) return 7;
+      if (shiftStr.includes("09:00-13:00")) return 8; // Vendredi
+      if (shiftStr.includes("09:00-12:00")) return 7; // Autres jours
       return 7;
     }
 
@@ -465,9 +410,8 @@
         let totalH = 0;
         ag.days.forEach((day) => {
           totalH += calculateHours(day.shift);
-          let badgeClass = 'soir';
+          let badgeClass = 'matin-soir';
           if (day.shift === 'OFF') badgeClass = 'off';
-          else if (day.shift.includes('/')) badgeClass = 'matin-soir';
 
           html += `
             <td>
@@ -505,7 +449,7 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('mcd_plan_v1');
+      localStorage.removeItem('mcd_plan_v2');
       planningDB = {};
       renderTable();
     }
