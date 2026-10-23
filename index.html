@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - Leader Najib Planning (Fin 01:00)</title>
+  <title>FieldOps - Leader Najib Planning (Décalage Total & Vert Smaragd)</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --pl-bg-gradient: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
-      --pl-header-bg: linear-gradient(90deg, #991b1b 0%, #b91c1c 50%, #dc2626 100%);
+      --pl-bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      --pl-header-bg: linear-gradient(90deg, #065f46 0%, #047857 50%, #059669 100%);
       --pl-card-bg: #ffffff;
-      --pl-border-subtle: #fecdd3;
-      --pl-text-main: #7f1d1d;
+      --pl-border-subtle: #a7f3d0;
+      --pl-text-main: #064e3b;
       
       --ok-bg: #dcfce7; --ok-txt: #15803d; --ok-border: #86efac;
       --alert-bg: #fee2e2; --alert-txt: #b91c1c; --alert-border: #fca5a5;
@@ -27,7 +27,7 @@
       padding: 24px;
       border-radius: 18px;
       border: 1px solid var(--pl-border-subtle);
-      box-shadow: 0 20px 40px -15px rgba(185, 28, 28, 0.2);
+      box-shadow: 0 20px 40px -15px rgba(4, 120, 87, 0.2);
     }
 
     #view-planning .top-bar {
@@ -39,7 +39,7 @@
       background: var(--pl-card-bg);
       padding: 18px 28px;
       border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(185, 28, 28, 0.08);
+      box-shadow: 0 10px 25px -5px rgba(4, 120, 87, 0.08);
       border: 1px solid var(--pl-border-subtle);
       margin-bottom: 22px;
     }
@@ -53,20 +53,20 @@
     #view-planning .brand-icon {
       width: 44px;
       height: 44px;
-      background: linear-gradient(135deg, #991b1b, #b91c1c);
+      background: linear-gradient(135deg, #065f46, #047857);
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
       font-size: 22px;
-      box-shadow: 0 4px 12px rgba(153, 27, 27, 0.3);
+      box-shadow: 0 4px 12px rgba(6, 95, 70, 0.3);
     }
 
     #view-planning .brand-title h1 {
       font-size: 20px;
       font-weight: 800;
-      background: linear-gradient(90deg, #7f1d1d, #991b1b);
+      background: linear-gradient(90deg, #064e3b, #047857);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -0.5px;
@@ -74,7 +74,7 @@
 
     #view-planning .brand-title p {
       font-size: 12px;
-      color: #b91c1c;
+      color: #047857;
       font-weight: 600;
       margin-top: 2px;
     }
@@ -83,7 +83,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      background: #fff1f2;
+      background: #f0fdf4;
       padding: 6px 14px;
       border-radius: 12px;
       border: 1px solid var(--pl-border-subtle);
@@ -92,12 +92,12 @@
     #view-planning .week-nav span {
       font-weight: 700;
       font-size: 13.5px;
-      color: #7f1d1d;
+      color: #064e3b;
     }
 
     #view-planning .btn-nav {
       background: #ffffff;
-      color: #991b1b;
+      color: #047857;
       border: 1px solid var(--pl-border-subtle);
       padding: 6px 12px;
       font-size: 12px;
@@ -105,24 +105,24 @@
       font-weight: 700;
       cursor: pointer;
     }
-    #view-planning .btn-nav:hover { background: #fff1f2; color: #7f1d1d; }
+    #view-planning .btn-nav:hover { background: #f0fdf4; color: #064e3b; }
 
     #view-planning .btn-reset {
       background: #ffffff;
-      color: #991b1b;
+      color: #047857;
       border: 1px solid var(--pl-border-subtle);
       padding: 9px 16px;
       border-radius: 10px;
       font-weight: 700;
       cursor: pointer;
     }
-    #view-planning .btn-reset:hover { background: #fff1f2; border-color: #fca5a5; }
+    #view-planning .btn-reset:hover { background: #f0fdf4; border-color: #6ee7b7; }
 
     #view-planning .table-container {
       background: var(--pl-card-bg);
       border-radius: 18px;
       overflow-x: auto;
-      box-shadow: 0 12px 35px -10px rgba(185, 28, 28, 0.1);
+      box-shadow: 0 12px 35px -10px rgba(4, 120, 87, 0.1);
       border: 1px solid var(--pl-border-subtle);
     }
 
@@ -142,28 +142,28 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.6px;
-      border-bottom: 2px solid #7f1d1d;
+      border-bottom: 2px solid #064e3b;
     }
     #view-planning th:first-child { border-top-left-radius: 16px; }
     #view-planning th:last-child { border-top-right-radius: 16px; }
 
     #view-planning th .day-name { display: block; font-size: 13px; font-weight: 800; }
-    #view-planning th .day-date { display: block; font-size: 11px; font-weight: 500; color: #fecdd3; margin-top: 3px; }
+    #view-planning th .day-date { display: block; font-size: 11px; font-weight: 500; color: #a7f3d0; margin-top: 3px; }
 
     #view-planning th.col-agent { width: 220px; text-align: left; padding-left: 20px; }
     #view-planning th.col-zone { width: 240px; text-align: left; padding-left: 14px; }
     #view-planning th.col-total { width: 200px; }
 
     #view-planning tbody tr {
-      border-bottom: 1px solid #fecdd3;
+      border-bottom: 1px solid #a7f3d0;
       transition: background 0.15s ease;
     }
-    #view-planning tbody tr:hover { background: #fff1f2; }
+    #view-planning tbody tr:hover { background: #f0fdf4; }
 
     #view-planning td {
       padding: 10px 4px;
       font-size: 12px;
-      border-bottom: 1px solid #fecdd3;
+      border-bottom: 1px solid #a7f3d0;
       vertical-align: middle;
     }
     #view-planning td.cell-agent { text-align: left; padding-left: 16px; }
@@ -173,8 +173,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #fff1f2;
-      border: 1px solid #fecdd3;
+      background: #f0fdf4;
+      border: 1px solid #a7f3d0;
       border-radius: 8px;
       padding: 6px 10px;
       gap: 6px;
@@ -189,7 +189,7 @@
       text-overflow: ellipsis;
       max-width: 140px;
     }
-    #view-planning .field-text.zone-txt { color: #991b1b; font-weight: 600; font-size: 11px; }
+    #view-planning .field-text.zone-txt { color: #047857; font-weight: 600; font-size: 11px; }
 
     .shift-cell-container {
       display: flex;
@@ -201,7 +201,7 @@
       border-radius: 10px;
       transition: background 0.15s ease;
     }
-    .shift-cell-container:hover { background: #fee2e2; }
+    .shift-cell-container:hover { background: #e6f4ea; }
 
     .shift-badge {
       display: inline-block;
@@ -212,21 +212,21 @@
       white-space: nowrap;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .shift-badge.unique { background: #fef3c7; color: #92400e; border: 2px solid #f59e0b; }
-    .shift-badge.off    { background: #f1f5f9; color: #64748b; border: 2px solid #cbd5e1; }
+    .shift-badge.decali { background: #ecfdf5; color: #065f46; border: 2px solid #34d399; }
+    .shift-badge.off     { background: #f1f5f9; color: #64748b; border: 2px solid #cbd5e1; }
 
     .sub-zone-label {
       font-size: 10.5px;
       font-weight: 800;
-      color: #7f1d1d;
+      color: #064e3b;
       max-width: 110px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      background: #fecdd3;
+      background: #a7f3d0;
       padding: 2px 6px;
       border-radius: 6px;
-      border: 1px solid #fda4af;
+      border: 1px solid #6ee7b7;
     }
 
     #view-planning .total-action-box { display: flex; align-items: center; justify-content: center; gap: 6px; }
@@ -245,8 +245,8 @@
       <div class="brand-title">
         <div class="brand-icon">👑</div>
         <div>
-          <h1>Leader Najib • McDonald's & Zones Planning (Fin 01:00)</h1>
-          <p>Rotation Stricte des McDo + Horaires Équilibrés & Fin à 01:00 d l-lil</p>
+          <h1>Leader Najib • McDonald's & Zones Planning (Décalage Total)</h1>
+          <p>Horaires & Fins de Shift Totalement Décalés (Pas de même début ni même fin) + Thème Vert Smaragd</p>
         </div>
       </div>
 
@@ -336,7 +336,7 @@
       headerRow.innerHTML = html;
     }
 
-    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_leader_najib_v8')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_leader_najib_v9')) || {};
 
     function generatePlanning(weekKey, weekNum) {
       if (planningDB[weekKey]) return planningDB[weekKey];
@@ -365,19 +365,33 @@
             let assignedMcDo = availableMcDos[mcdoCounter % availableMcDos.length];
             mcdoCounter++;
 
-            let startH = 9 + ((ag.idx + dIdx) % 4); // 09:00, 10:00, 11:00, 12:00
-            let sbahEnd = startH + 3; // 3h s-sbah
-            let pauseEnd = sbahEnd + 3; // 3h pause
+            // Décalage total et varié par agent et par jour (pas de même début ni même fin fixe pour tout le monde)
+            const is8h = (dIdx === 4 || dIdx === 5); // 8h pour Vendredi/Samedi, 7h les autres jours
+            
+            // Variantes de début (09:00, 10:00, 11:00, 12:00, 13:00)
+            let startH = 9 + ((ag.idx * 3 + dIdx) % 5);
+            let sbahEnd = startH + 3; // 3h le matin
+            let pauseEnd = sbahEnd + 3; // 3h de pause
+            
+            let lilH = is8h ? (5 + ((ag.idx + dIdx) % 2)) : (4 + ((ag.idx + dIdx) % 2)); // Variantes de fin
+            let endH = pauseEnd + lilH;
 
-            // Fin fixe m3a 01:00 d l-lil b ḍabt lkolchi
-            let shiftStr = `${String(startH).padStart(2,'0')}:00-${String(sbahEnd).padStart(2,'0')}:00 / ${String(pauseEnd).padStart(2,'0')}:00-01:00`;
+            // Formattage de l'heure de fin variée (22:00, 23:00, 00:00, 01:00)
+            let realEndH = endH >= 24 ? endH - 24 : endH;
+            let endStr = `${String(realEndH).padStart(2,'0')}:00`;
+            if (endH >= 24) {
+              endStr = `0${realEndH}:00`;
+            }
+            if (realEndH > 2) endH = 24 + 1; // Plafond maximal de sécurité
+
+            let shiftStr = `${String(startH).padStart(2,'0')}:00-${String(sbahEnd).padStart(2,'0')}:00 / ${String(pauseEnd).padStart(2,'0')}:00-${endStr}`;
             ag.assignedDays.push({ shift: shiftStr, zone: assignedMcDo });
           }
         });
       });
 
       planningDB[weekKey] = generated;
-      localStorage.setItem('mcd_plan_leader_najib_v8', JSON.stringify(planningDB));
+      localStorage.setItem('mcd_plan_leader_najib_v9', JSON.stringify(planningDB));
       return generated;
     }
 
@@ -416,7 +430,7 @@
         let totalH = 0;
         ag.assignedDays.forEach((day, dIdx) => {
           totalH += calculateHours(day.shift, dIdx);
-          let badgeClass = 'unique';
+          let badgeClass = 'decali';
           if (day.shift === 'OFF') badgeClass = 'off';
 
           html += `
@@ -455,7 +469,7 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('mcd_plan_leader_najib_v8');
+      localStorage.removeItem('mcd_plan_leader_najib_v9');
       planningDB = {};
       renderTable();
     }
