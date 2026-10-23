@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - McDonald's & Zones Rotation (09:00 - 01:00)</title>
+  <title>FieldOps - Leader Najib Planning (12 Agents McDonald's)</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -209,7 +209,7 @@
       display: inline-block;
       padding: 4px 8px;
       border-radius: 6px;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 800;
       white-space: nowrap;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -245,10 +245,10 @@
   <div id="view-planning">
     <div class="top-bar">
       <div class="brand-title">
-        <div class="brand-icon">🍟</div>
+        <div class="brand-icon">👑</div>
         <div>
-          <h1>McDonald's & Zones Planning (09:00 - 01:00)</h1>
-          <p>Répartition Continue 09:00 à 01:00 + Rotation Stricte (Aucun agent ne répète le même McDo)</p>
+          <h1>Leader Najib • McDonald's & Zones Planning (44H)</h1>
+          <p>Gestion par Leader Najib • Horaires Décalés (Pas de même début chaque jour) + Rotation McDo Stricte</p>
         </div>
       </div>
 
@@ -290,19 +290,20 @@
 
     const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 
+    // Les 12 agents exacts que tu as fournis
     const agentsList = [
-      { name: "Achraf Akhlij", offDay: 3, shiftGroup: 0 },
-      { name: "Youssef Derkaoui", offDay: 1, shiftGroup: 1 },
-      { name: "Aymane Chlifane", offDay: 2, shiftGroup: 2 },
-      { name: "Ayoub Abssi", offDay: 3, shiftGroup: 3 },
-      { name: "Mourad Cherradi", offDay: 1, shiftGroup: 4 },
-      { name: "Yahya Rhallab", offDay: 0, shiftGroup: 5 },
-      { name: "Hassan Azgoune", offDay: 2, shiftGroup: 6 },
-      { name: "Ayoub Ben Malek", offDay: 0, shiftGroup: 7 },
-      { name: "Charaf Loummihi", offDay: 1, shiftGroup: 0 },
-      { name: "Islam Elmardi", offDay: 2, shiftGroup: 2 },
-      { name: "Oussama El Atrach", offDay: 0, shiftGroup: 4 },
-      { name: "Najib Agent 12", offDay: 3, shiftGroup: 6 }
+      { name: "Yahya Rhallah", offDay: 0 },
+      { name: "Youssef Derkaoui", offDay: 1 },
+      { name: "Aymane Chlifane", offDay: 2 },
+      { name: "Achraf Akhlij", offDay: 3 },
+      { name: "Islam Elmardi", offDay: 2 },
+      { name: "Oussama El Atrach", offDay: 0 },
+      { name: "Mehdi Ait Jebour", offDay: 1 },
+      { name: "Mourad Cherradi", offDay: 1 },
+      { name: "Ayoub Abssi", offDay: 3 },
+      { name: "Hassan Azgoune", offDay: 2 },
+      { name: "Ayoub Ben Malek", offDay: 0 },
+      { name: "Charaf Loummihi", offDay: 1 }
     ];
 
     function getMonday(d) {
@@ -326,7 +327,7 @@
     function renderHeader(monday) {
       const headerRow = document.getElementById('table-header');
       if (!headerRow) return;
-      let html = `<th class="col-agent">Agent</th><th class="col-zone">Base McDo (Rotation)</th>`;
+      let html = `<th class="col-agent">Agent (Leader: Najib)</th><th class="col-zone">Base McDo (Rotation)</th>`;
 
       for (let i = 0; i < 7; i++) {
         const current = new Date(monday);
@@ -338,7 +339,7 @@
       headerRow.innerHTML = html;
     }
 
-    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_v6')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_leader_najib_v1')) || {};
 
     function generatePlanning(weekKey, weekNum) {
       if (planningDB[weekKey]) return planningDB[weekKey];
@@ -346,7 +347,6 @@
       const generated = agentsList.map((ag, idx) => {
         const primaryMcDo = MCDO_ZONES[(idx + weekNum) % MCDO_ZONES.length];
         const days = [];
-        let usedMcDosToday = {};
 
         for (let d = 0; d < 7; d++) {
           const isOffDay = (d === ag.offDay);
@@ -354,17 +354,22 @@
           if (isOffDay) {
             days.push({ shift: "OFF", zone: "REPOS" });
           } else {
-            // Rotation stricte : pas de répétition du McDo pour le même agent dans la semaine
-            let mcdoIdx = (idx + weekNum + d * 3) % MCDO_ZONES.length;
+            // Rotation dynamique du McDo par jour (pas de répétition de zone/McDo fixe)
+            let mcdoIdx = (idx + weekNum + d * 2) % MCDO_ZONES.length;
             let assignedMcDo = MCDO_ZONES[mcdoIdx];
 
-            // Horaires de 09:00 jusqu'à 01:00 avec décalage continuel
-            let startH = 9 + (ag.shiftGroup % 6); // Décalage de 09:00 à 14:00
-            let sbahEnd = startH + 3;
-            let pauseEnd = sbahEnd + 3; // Pause de 3h
-            let lilEnd = 25; // 01:00 du matin (24 + 1)
+            // Décalage journalier des horaires (pour que l'agent ne commence pas à la même heure chaque jour)
+            let shiftGroup = (idx + d) % 5; // 5 groupes de décalage (09:00, 10:00, 11:00, 12:00, 13:00)
+            let startH = 9 + shiftGroup;
+            let sbahEnd = startH + 3; // 3h le matin
+            let pauseEnd = sbahEnd + 3; // 3h de pause
+            
+            const is8hDay = (d === 4 || d === 5); // Vendredi / Samedi
+            let lilH = is8hDay ? 5 : 4;
+            let lilEnd = pauseEnd + lilH;
+            if (lilEnd > 24) lilEnd = lilEnd - 24; // Format 01:00 du matin
 
-            let shiftStr = `${String(startH).padStart(2,'0')}:00-${String(sbahEnd).padStart(2,'0')}:00 / ${String(pauseEnd).padStart(2,'0')}:00-01:00`;
+            let shiftStr = `${String(startH).padStart(2,'0')}:00-${String(sbahEnd).padStart(2,'0')}:00 / ${String(pauseEnd).padStart(2,'0')}:00-${String(lilEnd).padStart(2,'0')}:00`;
             days.push({ shift: shiftStr, zone: assignedMcDo });
           }
         }
@@ -377,7 +382,7 @@
       });
 
       planningDB[weekKey] = generated;
-      localStorage.setItem('mcd_plan_v6', JSON.stringify(planningDB));
+      localStorage.setItem('mcd_plan_leader_najib_v1', JSON.stringify(planningDB));
       return generated;
     }
 
@@ -455,7 +460,7 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('mcd_plan_v6');
+      localStorage.removeItem('mcd_plan_leader_najib_v1');
       planningDB = {};
       renderTable();
     }
