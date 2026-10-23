@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - Leader Najib Planning (Répartition Exacte)</title>
+  <title>FieldOps - Leader Najib Planning (1 OFF en Semaine - Hors Weekend)</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -245,8 +245,8 @@
       <div class="brand-title">
         <div class="brand-icon">👑</div>
         <div>
-          <h1>Leader Najib • McDonald's & Zones Planning (Exact 01:00 Fin)</h1>
-          <p>Répartition Précise par Tranches d'Horaires (Fin à 01:00) + Thème Vert Smaragd</p>
+          <h1>Leader Najib • McDonald's & Zones Planning (1 OFF / Semaine - Hors Weekend)</h1>
+          <p>Un seul OFF par agent, uniquement de Lundi à Jeudi (Pas de OFF Vendredi, Samedi ou Dimanche) + Fin à 01:00</p>
         </div>
       </div>
 
@@ -293,14 +293,14 @@
       { name: "Youssef Derkaoui", offDay: 1 },
       { name: "Aymane Chlifane", offDay: 2 },
       { name: "Achraf Akhlij", offDay: 3 },
-      { name: "Islam Elmardi", offDay: 2 },
-      { name: "Oussama El Atrach", offDay: 0 },
-      { name: "Mehdi Ait Jebour", offDay: 1 },
-      { name: "Mourad Cherradi", offDay: 1 },
-      { name: "Ayoub Abssi", offDay: 3 },
-      { name: "Hassan Azgoune", offDay: 2 },
-      { name: "Ayoub Ben Malek", offDay: 0 },
-      { name: "Charaf Loummihi", offDay: 1 }
+      { name: "Islam Elmardi", offDay: 0 },
+      { name: "Oussama El Atrach", offDay: 1 },
+      { name: "Mehdi Ait Jebour", offDay: 2 },
+      { name: "Mourad Cherradi", offDay: 3 },
+      { name: "Ayoub Abssi", offDay: 0 },
+      { name: "Hassan Azgoune", offDay: 1 },
+      { name: "Ayoub Ben Malek", offDay: 2 },
+      { name: "Charaf Loummihi", offDay: 3 }
     ];
 
     function getMonday(d) {
@@ -336,17 +336,19 @@
       headerRow.innerHTML = html;
     }
 
-    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_leader_najib_v10')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_leader_najib_v12')) || {};
 
     function generatePlanning(weekKey, weekNum) {
       if (planningDB[weekKey]) return planningDB[weekKey];
 
       const generated = agentsList.map((ag, idx) => {
         const primaryMcDo = MCDO_ZONES[(idx + weekNum) % MCDO_ZONES.length];
+        // Rotation des jours de OFF (0=Lundi, 1=Mardi, 2=Mercredi, 3=Jeudi) uniquement en semaine
+        let assignedOff = (ag.offDay + weekNum) % 4;
         return {
           name: ag.name,
           baseZone: primaryMcDo,
-          offDay: ag.offDay,
+          offDay: assignedOff,
           idx: idx
         };
       });
@@ -355,11 +357,8 @@
         let availableMcDos = [...MCDO_ZONES];
         availableMcDos.sort(() => (Math.sin(weekNum + dIdx) > 0 ? 1 : -1));
 
-        const is8h = (dIdx === 4 || dIdx === 5); // Vendredi / Samedi = 8h (9 agents), Autres = 7h (8 agents)
+        const is8h = (dIdx === 4 || dIdx === 5); // 8h pour Vendredi/Samedi (9 agents), 7h les autres (8 agents)
         
-        // Définition exacte des heures de début selon votre règle:
-        // 8 agents: 2 (09h), 2 (11h), 2 (12h), 2 (13h -> fin 01:00)
-        // 9 agents: 2 (11h), 3 (12h), 2 (13h), 2 (14h -> fin 01:00)
         let startSlots = [];
         if (is8h) {
           startSlots = [11, 11, 12, 12, 12, 13, 13, 14, 14];
@@ -373,7 +372,10 @@
         generated.forEach((ag) => {
           if (!ag.assignedDays) ag.assignedDays = [];
           
-          if (dIdx === ag.offDay) {
+          // Le OFF est strictement entre Lundi (0) et Jeudi (3). Jamais Vendredi(4), Samedi(5) ou Dimanche(6).
+          const isOff = (dIdx === ag.offDay);
+
+          if (isOff) {
             ag.assignedDays.push({ shift: "OFF", zone: "REPOS" });
           } else {
             let assignedMcDo = availableMcDos[mcdoCounter % availableMcDos.length];
@@ -382,11 +384,8 @@
             let startH = startSlots[slotIndex % startSlots.length];
             slotIndex++;
 
-            let sbahEnd = startH + 3; // 3h le matin
-            let pauseEnd = sbahEnd + 3; // 3h de pause
-            
-            // Calcul de l'heure de fin pour atteindre exactement 7h ou 8h de travail effectif
-            // Fin = PauseEnd + Heures du soir (4h pour 7h total, 5h pour 8h total)
+            let sbahEnd = startH + 3;
+            let pauseEnd = sbahEnd + 3;
             let workEvening = is8h ? 5 : 4;
             let endH = pauseEnd + workEvening;
 
@@ -400,7 +399,7 @@
       });
 
       planningDB[weekKey] = generated;
-      localStorage.setItem('mcd_plan_leader_najib_v10', JSON.stringify(planningDB));
+      localStorage.setItem('mcd_plan_leader_najib_v12', JSON.stringify(planningDB));
       return generated;
     }
 
@@ -478,7 +477,7 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('mcd_plan_leader_najib_v10');
+      localStorage.removeItem('mcd_plan_leader_najib_v12');
       planningDB = {};
       renderTable();
     }
