@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - McDonald's & Zones Rotation (44H)</title>
+  <title>FieldOps - McDonald's & Zones Rotation (09:00 - 01:00)</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -247,8 +247,8 @@
       <div class="brand-title">
         <div class="brand-icon">🍟</div>
         <div>
-          <h1>McDonald's & Zones Rotation (44H)</h1>
-          <p>Rotation stricte des McDo entre tous les agents + Régime 3h Sbah / Pause / Lil</p>
+          <h1>McDonald's & Zones Planning (09:00 - 01:00)</h1>
+          <p>Répartition Continue 09:00 à 01:00 + Rotation Stricte (Aucun agent ne répète le même McDo)</p>
         </div>
       </div>
 
@@ -295,14 +295,14 @@
       { name: "Youssef Derkaoui", offDay: 1, shiftGroup: 1 },
       { name: "Aymane Chlifane", offDay: 2, shiftGroup: 2 },
       { name: "Ayoub Abssi", offDay: 3, shiftGroup: 3 },
-      { name: "Mourad Cherradi", offDay: 1, shiftGroup: 0 },
-      { name: "Yahya Rhallab", offDay: 0, shiftGroup: 1 },
-      { name: "Hassan Azgoune", offDay: 2, shiftGroup: 2 },
-      { name: "Ayoub Ben Malek", offDay: 0, shiftGroup: 3 },
+      { name: "Mourad Cherradi", offDay: 1, shiftGroup: 4 },
+      { name: "Yahya Rhallab", offDay: 0, shiftGroup: 5 },
+      { name: "Hassan Azgoune", offDay: 2, shiftGroup: 6 },
+      { name: "Ayoub Ben Malek", offDay: 0, shiftGroup: 7 },
       { name: "Charaf Loummihi", offDay: 1, shiftGroup: 0 },
-      { name: "Islam Elmardi", offDay: 2, shiftGroup: 1 },
-      { name: "Oussama El Atrach", offDay: 0, shiftGroup: 2 },
-      { name: "Najib Agent 12", offDay: 3, shiftGroup: 3 }
+      { name: "Islam Elmardi", offDay: 2, shiftGroup: 2 },
+      { name: "Oussama El Atrach", offDay: 0, shiftGroup: 4 },
+      { name: "Najib Agent 12", offDay: 3, shiftGroup: 6 }
     ];
 
     function getMonday(d) {
@@ -338,15 +338,15 @@
       headerRow.innerHTML = html;
     }
 
-    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_v5')) || {};
+    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_v6')) || {};
 
     function generatePlanning(weekKey, weekNum) {
       if (planningDB[weekKey]) return planningDB[weekKey];
 
       const generated = agentsList.map((ag, idx) => {
-        // Rotation stricte : chaque semaine l'agent change de McDo pour que ça tourne sur tous les agents
         const primaryMcDo = MCDO_ZONES[(idx + weekNum) % MCDO_ZONES.length];
         const days = [];
+        let usedMcDosToday = {};
 
         for (let d = 0; d < 7; d++) {
           const isOffDay = (d === ag.offDay);
@@ -354,19 +354,18 @@
           if (isOffDay) {
             days.push({ shift: "OFF", zone: "REPOS" });
           } else {
-            // Rotation journalière du McDo pour l'agent pendant sa semaine
-            const dailyMcDo = MCDO_ZONES[(idx + weekNum + d) % MCDO_ZONES.length];
+            // Rotation stricte : pas de répétition du McDo pour le même agent dans la semaine
+            let mcdoIdx = (idx + weekNum + d * 3) % MCDO_ZONES.length;
+            let assignedMcDo = MCDO_ZONES[mcdoIdx];
 
-            const is8hDay = (d === 4 || d === 5);
-            const lilH = is8hDay ? 5 : 4;
-
-            let startH = 9 + (ag.shiftGroup % 4);
+            // Horaires de 09:00 jusqu'à 01:00 avec décalage continuel
+            let startH = 9 + (ag.shiftGroup % 6); // Décalage de 09:00 à 14:00
             let sbahEnd = startH + 3;
-            let pauseEnd = sbahEnd + 3;
-            let lilEnd = pauseEnd + lilH;
+            let pauseEnd = sbahEnd + 3; // Pause de 3h
+            let lilEnd = 25; // 01:00 du matin (24 + 1)
 
-            let shiftStr = `${String(startH).padStart(2,'0')}:00-${String(sbahEnd).padStart(2,'0')}:00 / ${String(pauseEnd).padStart(2,'0')}:00-${lilEnd > 24 ? '0' + (lilEnd-24) : lilEnd}:00`;
-            days.push({ shift: shiftStr, zone: dailyMcDo });
+            let shiftStr = `${String(startH).padStart(2,'0')}:00-${String(sbahEnd).padStart(2,'0')}:00 / ${String(pauseEnd).padStart(2,'0')}:00-01:00`;
+            days.push({ shift: shiftStr, zone: assignedMcDo });
           }
         }
 
@@ -378,7 +377,7 @@
       });
 
       planningDB[weekKey] = generated;
-      localStorage.setItem('mcd_plan_v5', JSON.stringify(planningDB));
+      localStorage.setItem('mcd_plan_v6', JSON.stringify(planningDB));
       return generated;
     }
 
@@ -456,7 +455,7 @@
     }
 
     function resetToDefault() {
-      localStorage.removeItem('mcd_plan_v5');
+      localStorage.removeItem('mcd_plan_v6');
       planningDB = {};
       renderTable();
     }
