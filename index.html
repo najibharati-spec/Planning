@@ -50,7 +50,9 @@ td:first-child,th:first-child{position:sticky;left:0;background:var(--card);z-in
 td.o{background:var(--off);color:var(--mu);text-align:center;vertical-align:middle;font-weight:600;font-size:12px}
 .tt{display:flex;gap:4px;margin-bottom:4px}.tt input{width:50%;min-width:0;padding:3px 4px;font-size:12px;border-radius:8px}
 .c select{padding:3px 5px;font-size:12px;width:100%;border-radius:8px}
-.c.m{background:var(--ys)}
+.c.sm{background:var(--ys)}.c.sn{background:var(--ok)}.c.m{box-shadow:inset 0 0 0 2px var(--ac)}
+#t th{background:#262624;color:#fff;border-bottom:0}#t th.today{background:var(--y);color:#1d1d1b}
+.lgd{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 8px;font-size:12px;color:var(--mu)}.lgd i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:5px;vertical-align:-2px;border:1px solid var(--bd)}
 .ag{white-space:nowrap}.ag button{padding:0 7px;margin:3px 3px 0 0;font-size:12px}
 .bad{color:var(--bad);font-weight:700}
 .zr{display:grid;grid-template-columns:1fr 120px 36px;gap:6px;margin-bottom:6px}
@@ -59,7 +61,7 @@ td.o{background:var(--off);color:var(--mu);text-align:center;vertical-align:midd
 .cv table{min-width:800px}.cv td,.cv th{text-align:center;padding:5px 3px;font-size:12px}
 .cur{box-shadow:inset 0 0 0 2px var(--ac)}
 .hide{display:none}
-@media(max-width:640px){body{padding:10px}h1{font-size:18px}.tm{font-size:24px}.nav button{flex:1;padding:9px 6px}.ags{grid-template-columns:1fr}}
+@media(max-width:640px){body{padding:10px}h1{font-size:18px}.tm{font-size:24px}.nav button{flex:1;padding:9px 6px}.ags{grid-template-columns:1fr}th,td{padding:6px}.gn{font-size:11px}}
 </style></head><body>
 <div class="top"><div><h1><span class="logo"></span>Planning des agents</h1><div class="mu" id="sub"></div></div><span id="lv" class="live"></span></div>
 <div class="nav"><button id="nd" onclick="go('dashboard')">📊 Dashboard</button><button id="np" onclick="go('planning')">📅 Planning</button></div>
@@ -75,11 +77,12 @@ td.o{background:var(--off);color:var(--mu);text-align:center;vertical-align:midd
 
 <section id="pp" class="hide">
 <div class="row"><button onclick="setWk(wk-1)">◀</button><b id="wv"></b><button onclick="setWk(wk+1)">▶</button><button onclick="setWk(0)">Cette semaine</button></div>
-<div class="mu">Chaque semaine le planning change automatiquement. Les cases jaunes = modifiées à la main (↺ pour annuler).</div>
+<div class="mu">Le planning change automatiquement chaque semaine. Tu peux modifier les heures et les zones directement dans le tableau.</div>
 <div class="row"><input id="nn" placeholder="Nom de l’agent"><button class="p" onclick="add()">+ Ajouter un agent</button>
 <button onclick="S.week++;save()">↻ Autre rotation</button>
 <button onclick="clrWeek()">Effacer mes modifications de la semaine</button>
 <button onclick="if(confirm('Tout réinitialiser ?')){S=def();save()}">Réinitialiser tout</button></div>
+<div class="lgd"><span><i style="background:var(--ys)"></i>Matin (début avant 11h)</span><span><i style="background:var(--card)"></i>Journée</span><span><i style="background:var(--ok)"></i>Soir (début 16h ou après)</span><span><i style="box-shadow:inset 0 0 0 2px var(--ac)"></i>Modifié à la main (↺ pour annuler)</span></div>
 <div class="w"><table id="t"></table></div>
 
 <div class="sg" style="margin-top:14px">
@@ -95,11 +98,12 @@ td.o{background:var(--off);color:var(--mu);text-align:center;vertical-align:midd
 
 <script>
 var DAYS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"],GN=["A","B","C"];
-var NAMES=["Yahya Rhallah","Youssef Derkaoui","Aymane Chlifane","Achraf Akhlij","Islam Elmardi","Oussama El Atrach","Mehdi Ait Jebour","Mourad Cherradi","Ayoub Abssi","Hassan Azgoune","Ayoub Ben Malek","Charaf Loummihi","Mohamd Khalyl"];
+var NAMES=["Yahya Rhallah","Youssef Derkaoui","Aymane Chlifane","Islam Elmardi","Oussama El Atrach","Mehdi Ait Jebour","Mourad Cherradi","Ayoub Abssi","Hassan Azgoune","Ayoub Ben Malek","Charaf Loummihi","Mohamd Khalyl"];
 var ZN=[["McDo Medina",0],["McDo Bouragrag",0],["McDo Hay Chaou",0],["McDo Carrousel",1],["McDo LGV",1],["McDo Agdal",1],["Le Marché",2],["McDo Temara",2],["McDo Hay Riad",2]];
 function def(){return{agents:NAMES.map(function(n,i){return{id:i+1,n:n,off:i%4}}),ov:{},offOv:{},week:0,nid:100,zones:ZN.map(function(z){return{n:z[0],g:z[1]}}),len:[7,7,7,7,8,8,7],target:44,auto:true}}
 var S=def(),PLAN=[],PLANN=[],PLANV=[],live=true,sel=0,tm=12,flt="all",pg="dashboard",CW=0,wk=0,VW=0;
 try{var r=localStorage.getItem("pl2");if(r){var o=JSON.parse(r),D=def();for(var k in D)if(o[k]===undefined)o[k]=D[k];S=o}}catch(e){}
+S.agents=S.agents.filter(function(a){return a.n!=="Achraf Akhlij"});
 function save(){try{localStorage.setItem("pl2",JSON.stringify(S))}catch(e){}render()}
 function L(d){return S.len[d]}
 function fmt(h){h=h%24;return(h<10?"0":"")+h+":00"}
@@ -244,7 +248,7 @@ function render(){
  E("sub").textContent=S.target+"h / semaine · 09:00 → 02:00 · sans pause";
  E("wv").textContent=wlab(VW)+(wk===0?" (cette semaine)":"");
  var h="<tr><th>Agent</th><th>OFF</th>";
- DAYS.forEach(function(x,d){h+="<th>"+x+" <span class='mu'>("+L(d)+"h)</span></th>"});
+ var TD=VW===CW?nowInfo().d:-1;DAYS.forEach(function(x,d){h+="<th"+(d===TD?" class='today'":"")+">"+x+" <span style='opacity:.7;font-weight:500'>("+L(d)+"h)</span></th>"});
  h+="<th>Total</th></tr>";
  S.agents.forEach(function(a,i){
   var tot=0,eo=effOff(a,VW);
@@ -256,7 +260,7 @@ function render(){
    var c=PLANV[d][a.id];
    if(!c){h+="<td class='o'>OFF</td>";continue}
    tot+=c.e-c.s;var mod=S.ov[ovk(a.id,d)];
-   h+="<td class='c"+(mod?" m":"")+"'><div class='tt'><input type='time' value='"+ft(c.s)+"' onchange=\"setTime("+a.id+","+d+",'s',this.value)\"><input type='time' value='"+ft(c.e)+"' onchange=\"setTime("+a.id+","+d+",'e',this.value)\"></div><select onchange='setZ("+a.id+","+d+",this.value)'>"+zopts(c.z)+"</select>"+(mod?"<button style='padding:0 7px;margin-top:4px;font-size:12px' onclick='clr("+a.id+","+d+")'>↺</button>":"")+"</td>";
+   var sc=c.s<11?" sm":c.s>=16?" sn":"";h+="<td class='c"+sc+(mod?" m":"")+"'><div class='tt'><input type='time' value='"+ft(c.s)+"' onchange=\"setTime("+a.id+","+d+",'s',this.value)\"><input type='time' value='"+ft(c.e)+"' onchange=\"setTime("+a.id+","+d+",'e',this.value)\"></div><select onchange='setZ("+a.id+","+d+",this.value)'>"+zopts(c.z)+"</select>"+(mod?"<button style='padding:0 7px;margin-top:4px;font-size:12px' onclick='clr("+a.id+","+d+")'>↺</button>":"")+"</td>";
   }
   var over=tot>S.target+0.01;
   h+="<td class='"+(over?"bad":"")+"'"+(over?" style='background:var(--bads)'":"")+">"+r1(tot)+"h"+(over?" ⚠ +"+r1(tot-S.target)+"h":"")+"</td></tr>";
