@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps Command Center - Leader Najib (09:00 - 02:00)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>FieldOps HQ - Leader Najib (Smart Sector Pairing)</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -21,166 +21,162 @@
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
-    body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 20px; font-size: 13px; }
+    body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 12px; font-size: 12.5px; }
 
-    .app-container { max-width: 1850px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+    .app-container { max-width: 1920px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
 
     /* Header Bar */
     .top-bar {
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
-      background: var(--card-bg); padding: 20px 24px; border-radius: 16px; border: 1px solid var(--border-color);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+      background: var(--card-bg); padding: 14px 20px; border-radius: 14px; border: 1px solid var(--border-color);
       box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
-    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
     .brand-icon {
-      width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent-emerald), var(--accent-blue));
-      border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff;
+      width: 42px; height: 42px; background: linear-gradient(135deg, var(--accent-emerald), var(--accent-blue));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff;
       box-shadow: 0 4px 12px rgba(16,185,129,0.3);
     }
-    .brand h1 { font-size: 20px; font-weight: 800; color: #fff; }
-    .brand p { font-size: 12px; color: var(--text-sub); }
+    .brand h1 { font-size: 17px; font-weight: 800; color: #fff; }
+    .brand p { font-size: 11px; color: var(--text-sub); }
 
-    .nav-tabs { display: flex; gap: 10px; background: var(--card-inner); padding: 6px; border-radius: 12px; border: 1px solid var(--border-color); }
+    /* Navigation Tabs */
+    .nav-tabs { display: flex; gap: 6px; background: var(--card-inner); padding: 4px; border-radius: 10px; border: 1px solid var(--border-color); }
     .tab-btn {
-      background: transparent; border: none; color: var(--text-sub); padding: 10px 18px; border-radius: 8px;
-      font-weight: 800; font-size: 12.5px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+      background: transparent; border: none; color: var(--text-sub); padding: 8px 14px; border-radius: 6px;
+      font-weight: 800; font-size: 11.5px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
     }
     .tab-btn.active { background: var(--accent-blue); color: #fff; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
 
-    .action-group { display: flex; gap: 10px; align-items: center; }
+    .action-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
     .btn {
-      padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border-color); font-weight: 700;
-      cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; font-size: 12px;
+      padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); font-weight: 700;
+      cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 11px;
     }
     .btn-primary { background: linear-gradient(135deg, #059669, #10b981); color: #fff; border: none; }
-    .btn-primary:hover { opacity: 0.9; }
     .btn-secondary { background: #1e293b; color: #fff; }
-    .btn-secondary:hover { background: #334155; }
     .btn-danger { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
-    .btn-danger:hover { background: rgba(239, 68, 68, 0.25); }
 
-    .tab-content { display: none; flex-direction: column; gap: 20px; }
+    .tab-content { display: none; flex-direction: column; gap: 16px; }
     .tab-content.active { display: flex; }
 
     /* Control Bar */
     .control-bar {
-      background: var(--card-bg); padding: 16px 20px; border-radius: 14px; border: 1px solid var(--border-color);
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+      background: var(--card-bg); padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border-color);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
     }
-    .time-selector { display: flex; align-items: center; gap: 12px; }
+    .time-selector { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .time-selector select, .time-selector input {
-      background: var(--card-inner); border: 1px solid var(--border-color); padding: 8px 12px;
-      border-radius: 8px; color: #fff; font-weight: 800; font-size: 13px; outline: none;
+      background: var(--card-inner); border: 1px solid var(--border-color); padding: 6px 10px;
+      border-radius: 6px; color: #fff; font-weight: 800; font-size: 12px; outline: none;
     }
 
     /* KPI Grid */
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
     .kpi-card {
-      background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px 20px; border-radius: 14px;
+      background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 12px;
       display: flex; justify-content: space-between; align-items: center;
     }
-    .kpi-title { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; }
-    .kpi-value { font-size: 24px; font-weight: 800; margin-top: 4px; }
+    .kpi-title { font-size: 10px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; }
+    .kpi-value { font-size: 20px; font-weight: 800; margin-top: 2px; }
 
-    /* Tables */
+    /* Table & PC Full View Optimization */
     .table-wrapper {
-      background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border-color);
+      background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border-color);
       overflow-x: auto; box-shadow: 0 15px 30px rgba(0,0,0,0.3);
     }
-    table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1200px; text-align: left; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: center; }
     thead th {
-      background: #0b0f19; color: var(--text-sub); padding: 16px 14px; font-size: 11.5px; font-weight: 800;
-      text-transform: uppercase; border-bottom: 2px solid var(--border-color);
+      background: #0b0f19; color: var(--text-sub); padding: 12px 6px; font-size: 10.5px; font-weight: 800;
+      text-transform: uppercase; border-bottom: 2px solid var(--border-color); white-space: nowrap;
     }
     tbody tr { border-bottom: 1px solid var(--border-color); transition: background 0.15s; }
     tbody tr:hover { background: rgba(255,255,255,0.02); }
-    td { padding: 14px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+    td { padding: 6px 4px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
 
-    .agent-name-cell { font-weight: 800; color: #fff; font-size: 13.5px; }
-    .shift-hours-info { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
+    .agent-name-cell { font-weight: 800; color: #fff; font-size: 12px; text-align: left; }
+    .shift-hours-info { font-size: 10px; color: var(--text-sub); margin-top: 1px; }
 
-    /* Status Badges */
+    /* Badges */
     .badge-status {
-      display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px;
-      font-weight: 800; font-size: 11px; white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 14px;
+      font-weight: 800; font-size: 10px; white-space: nowrap;
     }
     .status-working  { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #059669; }
     .status-break    { background: rgba(245, 158, 11, 0.2); color: #fde047; border: 1px solid #d97706; }
-    .status-ending   { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 1px solid #ef4444; animation: pulseRed 1.2s infinite; }
+    .status-ending   { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 1px solid #ef4444; }
     .status-upcoming { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #2563eb; }
     .status-off      { background: rgba(148, 163, 184, 0.1); color: #64748b; border: 1px solid #334155; }
 
     .zone-badge {
       background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.4);
-      padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 11px; display: inline-block;
+      padding: 3px 6px; border-radius: 5px; font-weight: 800; font-size: 10px; display: inline-block;
     }
 
-    .time-remaining { font-weight: 800; font-size: 13px; color: #38bdf8; }
+    /* Shift Card Design */
+    .shift-card {
+      background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 8px; padding: 5px 6px;
+      display: flex; flex-direction: column; gap: 2px; align-items: center; cursor: pointer; transition: all 0.2s;
+    }
+    .shift-card:hover { border-color: var(--accent-blue); transform: translateY(-1px); }
+    .shift-time { font-size: 10px; font-weight: 800; color: #38bdf8; white-space: nowrap; }
+    .shift-pause { font-size: 9px; color: var(--accent-amber); font-weight: 700; white-space: nowrap; }
+    .shift-hours { font-size: 8.5px; color: var(--text-sub); font-weight: 700; }
+    
+    .zone-tag {
+      font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 4px; white-space: nowrap; max-width: 110px; overflow: hidden; text-overflow: ellipsis;
+    }
+    .zone-marche { background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.4); }
+    .zone-mcdo { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }
+    .zone-sale { background: rgba(245, 158, 11, 0.2); color: #fde047; border: 1px solid rgba(245,158,11,0.4); }
 
-    /* Zone Distribution Grid */
-    .zones-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .off-card {
+      background: #111827; border: 1px dashed #374151; color: #6b7280; padding: 10px 4px; border-radius: 8px; font-weight: 800; font-size: 10px; cursor: pointer; text-align: center;
+    }
+
+    .hours-indicator {
+      display: inline-flex; align-items: center; justify-content: center; padding: 4px 8px; border-radius: 14px;
+      font-weight: 800; font-size: 11px; white-space: nowrap;
+    }
+    .badge-ok { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #059669; }
+    .badge-over { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 2px solid #ef4444; }
+    .badge-under { background: rgba(245, 158, 11, 0.2); color: #fde047; border: 1px solid #d97706; }
+
+    /* Zones Grid */
+    .zones-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
     .zone-card {
-      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px;
-      display: flex; flex-direction: column; gap: 10px;
+      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px;
+      display: flex; flex-direction: column; gap: 6px;
     }
-    .zone-card-header { font-weight: 800; font-size: 13px; color: #fff; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
-    .zone-count { background: var(--accent-blue); color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10.5px; font-weight: 800; }
-    .agent-item { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; font-weight: 700; background: var(--card-inner); padding: 6px 10px; border-radius: 6px; }
-
-    @keyframes pulseRed {
-      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
-      70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-    }
+    .zone-card-header { font-weight: 800; font-size: 11.5px; color: #fff; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
+    .zone-count { background: var(--accent-blue); color: #fff; padding: 1px 6px; border-radius: 8px; font-size: 9.5px; font-weight: 800; }
+    .agent-item { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 700; background: var(--card-inner); padding: 4px 8px; border-radius: 5px; }
 
     /* Modal Styling */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
-      display: none; align-items: center; justify-content: center; z-index: 1000;
+      display: none; align-items: center; justify-content: center; z-index: 1000; padding: 12px;
     }
     .modal-container {
-      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 28px;
-      width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: 18px;
+      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px;
+      width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 14px;
     }
-    .modal-title { font-size: 18px; font-weight: 800; color: #fff; }
-    .input-group { display: flex; flex-direction: column; gap: 6px; }
-    .input-group label { font-size: 11.5px; font-weight: 700; color: var(--text-sub); }
+    .modal-title { font-size: 16px; font-weight: 800; color: #fff; }
+    .input-group { display: flex; flex-direction: column; gap: 4px; }
+    .input-group label { font-size: 10.5px; font-weight: 700; color: var(--text-sub); }
     .input-group input, .input-group select {
-      background: var(--card-inner); border: 1px solid var(--border-color); padding: 11px; border-radius: 10px;
-      color: #fff; font-size: 13px; outline: none;
-    }
-    .calc-preview {
-      background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3);
-      padding: 10px; border-radius: 10px; font-weight: 800; color: #38bdf8; text-align: center;
+      background: var(--card-inner); border: 1px solid var(--border-color); padding: 9px; border-radius: 8px;
+      color: #fff; font-size: 12px; outline: none;
     }
 
-    /* Shift Card in Schedule */
-    .shift-card {
-      background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 10px; padding: 8px;
-      display: flex; flex-direction: column; gap: 4px; align-items: center; cursor: pointer; transition: all 0.2s;
+    @media (max-width: 768px) {
+      .top-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+      .nav-tabs { justify-content: center; width: 100%; }
+      .action-group { justify-content: center; width: 100%; }
+      .control-bar { flex-direction: column; align-items: stretch; }
+      .time-selector { justify-content: space-between; }
+      table { min-width: 900px; }
     }
-    .shift-card:hover { border-color: var(--accent-blue); transform: translateY(-2px); }
-    .shift-time { font-size: 11px; font-weight: 800; color: #38bdf8; white-space: nowrap; }
-    .shift-pause { font-size: 10px; color: var(--accent-amber); font-weight: 700; white-space: nowrap; }
-    .shift-hours { font-size: 9.5px; color: var(--text-sub); font-weight: 700; }
-    
-    .zone-tag {
-      font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; white-space: nowrap; max-width: 130px; overflow: hidden; text-overflow: ellipsis;
-    }
-    .zone-marche { background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.4); }
-    .zone-mcdo { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }
-
-    .off-card {
-      background: #111827; border: 1px dashed #374151; color: #6b7280; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 11px; cursor: pointer; text-align: center;
-    }
-
-    .hours-indicator {
-      display: inline-flex; align-items: center; justify-content: center; padding: 6px 12px; border-radius: 20px;
-      font-weight: 800; font-size: 12px; white-space: nowrap;
-    }
-    .badge-ok { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #059669; }
-    .badge-over { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 2px solid #ef4444; animation: pulseRed 1.2s infinite; }
-    .badge-under { background: rgba(245, 158, 11, 0.2); color: #fde047; border: 1.5px solid #d97706; }
   </style>
 </head>
 <body>
@@ -191,21 +187,21 @@
       <div class="brand">
         <div class="brand-icon">👑</div>
         <div>
-          <h1>Leader Najib • Field Operational Command</h1>
-          <p>Suivi Terrain en Temps Réel (09:00 - 02:00) & Planning Hebdomadaire (44H)</p>
+          <h1>Leader Najib • Field Command HQ</h1>
+          <p>Equilibrage Salé (McDo Bouragrag / Hay Chaou Anti-Collision) | 44H Target</p>
         </div>
       </div>
 
       <!-- Navigation Tabs -->
       <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('tab-dashboard', this)">📍 Dashboard Suivi Temps Réel</button>
-        <button class="tab-btn" onclick="switchTab('tab-planning', this)">📅 Planning Hebdomadaire (44H)</button>
+        <button class="tab-btn active" onclick="switchTab('tab-dashboard', this)">📍 Suivi Temps Réel</button>
+        <button class="tab-btn" onclick="switchTab('tab-planning', this)">📅 Planning 44H Global</button>
       </div>
 
       <div class="action-group">
-        <button class="btn btn-secondary" onclick="addAgentModal()">➕ Ajouter Agent</button>
-        <button class="btn btn-primary" onclick="generatePlanning()">🔄 Recalculer Planning 44H</button>
-        <button class="btn btn-danger" onclick="resetApp()">🗑️ Réinitialiser Base</button>
+        <button class="btn btn-secondary" onclick="addAgentModal()">➕ Agent</button>
+        <button class="btn btn-primary" onclick="generatePlanning()">🔄 Recalculer 44H</button>
+        <button class="btn btn-danger" onclick="resetApp()">🗑️ Reset</button>
       </div>
     </div>
 
@@ -214,7 +210,7 @@
       <!-- Control & Time Simulator -->
       <div class="control-bar">
         <div class="time-selector">
-          <label>📅 Sélectionner le Jour :</label>
+          <label>📅 Jour :</label>
           <select id="daySelect" onchange="updateDashboardLive()">
             <option value="0">Lundi</option>
             <option value="1">Mardi</option>
@@ -225,12 +221,12 @@
             <option value="6">Dimanche</option>
           </select>
 
-          <label style="margin-left:12px;">⏰ Heure Actuelle (09:00 - 02:00) :</label>
+          <label style="margin-left:8px;">⏰ Heure (09:00 - 02:00) :</label>
           <input type="time" id="simTimeInput" value="12:30" onchange="updateDashboardLive()">
-          <button class="btn btn-secondary" onclick="setCurrentRealTime()">Heure Réelle Actuelle</button>
+          <button class="btn btn-secondary" onclick="setCurrentRealTime()">Heure Réelle</button>
         </div>
 
-        <div style="font-weight:800; color:#38bdf8; font-size:13px;" id="liveTimeHeader">
+        <div style="font-weight:800; color:#38bdf8; font-size:12px;" id="liveTimeHeader">
           Aperçu Opérationnel
         </div>
       </div>
@@ -239,34 +235,34 @@
       <div class="kpi-grid">
         <div class="kpi-card">
           <div>
-            <div class="kpi-title">En Service (Sur le Terrain)</div>
+            <div class="kpi-title">En Service</div>
             <div class="kpi-value" id="kpiWorking" style="color:#34d399;">0</div>
           </div>
-          <div style="font-size:26px;">🛵</div>
+          <div style="font-size:22px;">🛵</div>
         </div>
 
         <div class="kpi-card">
           <div>
-            <div class="kpi-title">En Pause Actuellement</div>
+            <div class="kpi-title">En Pause</div>
             <div class="kpi-value" id="kpiBreak" style="color:#fde047;">0</div>
           </div>
-          <div style="font-size:26px;">☕</div>
+          <div style="font-size:22px;">☕</div>
         </div>
 
         <div class="kpi-card">
           <div>
-            <div class="kpi-title">Fin Proche (&lt; 30 min)</div>
+            <div class="kpi-title">Fin Proche (&lt;30m)</div>
             <div class="kpi-value" id="kpiEnding" style="color:#fca5a5;">0</div>
           </div>
-          <div style="font-size:26px;">⌛</div>
+          <div style="font-size:22px;">⌛</div>
         </div>
 
         <div class="kpi-card">
           <div>
-            <div class="kpi-title">Repos / OFF Aujourd'hui</div>
+            <div class="kpi-title">Repos / OFF</div>
             <div class="kpi-value" id="kpiOff" style="color:#94a3b8;">0</div>
           </div>
-          <div style="font-size:26px;">🛋️</div>
+          <div style="font-size:22px;">🛋️</div>
         </div>
       </div>
 
@@ -275,11 +271,11 @@
         <table>
           <thead>
             <tr>
-              <th>Agent & Créneau</th>
-              <th>Zone d'Affectation</th>
-              <th>Statut en Temps Réel</th>
-              <th>Temps Restant Avant Fin Shift / Pause</th>
-              <th>Prochaine Étape</th>
+              <th style="text-align:left; padding-left:12px;">Agent & Créneau</th>
+              <th>Zone Attribuée</th>
+              <th>Statut Temps Réel</th>
+              <th>Temps Restant (Shift/Pause)</th>
+              <th style="text-align:left;">Prochaine Étape</th>
             </tr>
           </thead>
           <tbody id="liveTableBody"></tbody>
@@ -287,20 +283,20 @@
       </div>
 
       <!-- Zones Overview Grid -->
-      <div class="section-card" style="background:var(--card-bg); border:1px solid var(--border-color); border-radius:16px; padding:20px;">
-        <div style="font-size:15px; font-weight:800; color:#fff; margin-bottom:14px;">📍 Couverture par Zone (Nombre d'Agents Présents)</div>
+      <div class="section-card" style="background:var(--card-bg); border:1px solid var(--border-color); border-radius:14px; padding:16px;">
+        <div style="font-size:13px; font-weight:800; color:#fff; margin-bottom:10px;">📍 Couverture Terrain par Zone (Anti-Surcharge Salé Actif)</div>
         <div class="zones-grid" id="zonesOverviewGrid"></div>
       </div>
     </div>
 
-    <!-- TAB 2 : PLANNING HEBDOMADAIRE (44H) -->
+    <!-- TAB 2 : PLANNING HEBDOMADAIRE COMPLET -->
     <div id="tab-planning" class="tab-content">
       <div class="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th style="width:45px;">Ordre</th>
-              <th style="text-align:left; padding-left:18px; width:220px;">Nom de l'Agent</th>
+              <th style="width:30px;">#</th>
+              <th style="text-align:left; padding-left:12px; min-width:160px;">Nom de l'Agent</th>
               <th>Lundi (7h)</th>
               <th>Mardi (7h)</th>
               <th>Mercredi (7h)</th>
@@ -308,8 +304,8 @@
               <th>Vendredi (8h)</th>
               <th>Samedi (8h)</th>
               <th>Dimanche (7h)</th>
-              <th>Total Semaine</th>
-              <th style="width:80px;">Action</th>
+              <th>Total</th>
+              <th style="width:50px;">Act.</th>
             </tr>
           </thead>
           <tbody id="schedule-body"></tbody>
@@ -331,13 +327,13 @@
         </select>
       </div>
 
-      <div id="workingFields" style="display:flex; flex-direction:column; gap:14px;">
+      <div id="workingFields" style="display:flex; flex-direction:column; gap:10px;">
         <div class="input-group">
           <label>Zone Attribuée</label>
           <select id="modalZoneSelect"></select>
         </div>
         
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
           <div class="input-group">
             <label>Début Travail</label>
             <input type="time" id="timeStartWork" value="09:00" onchange="recalculateModalHours()">
@@ -348,7 +344,7 @@
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
           <div class="input-group">
             <label>Fin Pause</label>
             <input type="time" id="timeEndPause" value="15:00" onchange="recalculateModalHours()">
@@ -359,12 +355,12 @@
           </div>
         </div>
 
-        <div class="calc-preview" id="calculatedHoursDisplay">
+        <div style="background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); padding:8px; border-radius:8px; font-weight:800; color:#38bdf8; text-align:center;" id="calculatedHoursDisplay">
           ⏱️ Durée Effective : 7.0 Heures
         </div>
       </div>
 
-      <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:8px;">
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px;">
         <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
         <button class="btn btn-primary" onclick="saveShiftChanges()">Enregistrer</button>
       </div>
@@ -392,7 +388,6 @@
       "Ayoub Abssi", "Hassan Azgoune", "Ayoub Ben Malek", "Charaf Loummihi", "Mohamd khalyl"
     ];
 
-    // Shifts 7H avec support de fermeture à 02:00
     const SHIFTS_7H = [
       { startW: "09:00", startP: "13:00", endP: "15:00", endW: "18:00" },
       { startW: "11:00", startP: "14:00", endP: "17:00", endW: "21:00" },
@@ -401,7 +396,6 @@
       { startW: "18:00", startP: "21:00", endP: "22:00", endW: "02:00" }
     ];
 
-    // Shifts 8H avec support de fermeture à 02:00
     const SHIFTS_8H = [
       { startW: "09:00", startP: "13:00", endP: "15:00", endW: "19:00" },
       { startW: "10:00", startP: "14:00", endP: "17:00", endW: "21:00" },
@@ -410,7 +404,7 @@
       { startW: "17:00", startP: "20:00", endP: "21:00", endW: "02:00" }
     ];
 
-    let appData = JSON.parse(localStorage.getItem('najib_field_db_v9')) || null;
+    let appData = JSON.parse(localStorage.getItem('najib_field_db_v11')) || null;
 
     function timeToMinutes(t) {
       if (!t) return 0;
@@ -455,6 +449,7 @@
       }
     }
 
+    /* MATRICE D'AFFECTATION OPTIMISEE AVEC ANTI-COLLISION SALE (BOURAGRAG / HAY CHAOU) */
     function buildScheduleMatrix() {
       appData.agents.forEach((ag, agIdx) => {
         ag.schedule = [];
@@ -467,6 +462,7 @@
         const pool = is8hDay ? SHIFTS_8H : SHIFTS_7H;
 
         let occupiedPairs = {};
+        let saleSectorCount = { "McDo Bouragrag": 0, "McDo Hay Chaou": 0 };
 
         appData.agents.forEach((ag, agIdx) => {
           let prevZone = (dIdx > 0 && ag.schedule[dIdx - 1]) ? ag.schedule[dIdx - 1].zone : "";
@@ -482,6 +478,10 @@
               let candidateZone = ZONES[(agIdx + dIdx + zOffset) % ZONES.length];
               if (candidateZone === prevZone) continue;
 
+              // REGLE SALÉ: Ne pas surcharger Bouragrag et Hay Chaou simultanément
+              if (candidateZone === "McDo Bouragrag" && saleSectorCount["McDo Hay Chaou"] >= 2) continue;
+              if (candidateZone === "McDo Hay Chaou" && saleSectorCount["McDo Bouragrag"] >= 2) continue;
+
               for (let sOffset = 0; sOffset < pool.length; sOffset++) {
                 let candidateShift = pool[(agIdx * 2 + dIdx * 3 + sOffset) % pool.length];
                 if (candidateShift.startW === prevTime) continue;
@@ -491,6 +491,9 @@
                   chosenZone = candidateZone;
                   chosenShift = candidateShift;
                   occupiedPairs[pairKey] = true;
+                  if (chosenZone === "McDo Bouragrag" || chosenZone === "McDo Hay Chaou") {
+                    saleSectorCount[chosenZone]++;
+                  }
                   break;
                 }
               }
@@ -521,7 +524,7 @@
     }
 
     function persistData() {
-      localStorage.setItem('najib_field_db_v9', JSON.stringify(appData));
+      localStorage.setItem('najib_field_db_v11', JSON.stringify(appData));
       renderUI();
       updateDashboardLive();
     }
@@ -536,8 +539,6 @@
 
       appData.agents.forEach((ag, agIdx) => {
         const row = document.createElement('tr');
-        row.draggable = true;
-        row.dataset.index = agIdx;
 
         let totalWeeklyHours = 0;
         let daysMarkup = ag.schedule.map((slot, dIdx) => {
@@ -547,14 +548,14 @@
           if (slot.type === "OFF") {
             return `<td onclick="openModal(${agIdx}, ${dIdx})"><div class="off-card">OFF</div></td>`;
           } else {
-            let zoneClass = slot.zone === "Le Marché" ? "zone-marche" : "zone-mcdo";
+            let zoneClass = slot.zone === "Le Marché" ? "zone-marche" : (slot.zone.includes("Bouragrag") || slot.zone.includes("Chaou") ? "zone-sale" : "zone-mcdo");
             return `
               <td onclick="openModal(${agIdx}, ${dIdx})">
                 <div class="shift-card">
-                  <span class="shift-time">🕒 ${slot.startW} ➔ ${slot.endW}</span>
-                  <span class="shift-pause">☕ Pause: ${slot.startP}-${slot.endP}</span>
+                  <span class="shift-time">🕒 ${slot.startW}➔${slot.endW}</span>
+                  <span class="shift-pause">☕ ${slot.startP}-${slot.endP}</span>
                   <span class="zone-tag ${zoneClass}">📍 ${slot.zone}</span>
-                  <span class="shift-hours">⏱️ ${h}h de travail</span>
+                  <span class="shift-hours">⏱️ ${h}h</span>
                 </div>
               </td>
             `;
@@ -564,28 +565,27 @@
         totalWeeklyHours = parseFloat(totalWeeklyHours.toFixed(1));
 
         let badgeClass = 'badge-ok';
-        let badgeText = `${totalWeeklyHours}h / 44h`;
+        let badgeText = `${totalWeeklyHours}h`;
 
         if (totalWeeklyHours > 44) {
           badgeClass = 'badge-over';
-          badgeText = `⚠️ ${totalWeeklyHours}h / 44h (+${(totalWeeklyHours - 44).toFixed(1)}h)`;
+          badgeText = `⚠️ ${totalWeeklyHours}h (+${(totalWeeklyHours - 44).toFixed(1)})`;
         } else if (totalWeeklyHours < 44) {
           badgeClass = 'badge-under';
-          badgeText = `📉 ${totalWeeklyHours}h / 44h (-${(44 - totalWeeklyHours).toFixed(1)}h)`;
+          badgeText = `📉 ${totalWeeklyHours}h (-${(44 - totalWeeklyHours).toFixed(1)})`;
         }
 
         row.innerHTML = `
           <td style="color:var(--text-sub); font-weight:800;">☰</td>
-          <td style="text-align:left; padding-left:18px;">
-            <div style="font-weight:800; color:#fff; font-size:13.5px;">${ag.name}</div>
-            <div style="font-size:10.5px; color:var(--accent-emerald); font-weight:600;">Agent Terrain</div>
+          <td style="text-align:left; padding-left:12px;">
+            <div class="agent-name-cell">${ag.name}</div>
           </td>
           ${daysMarkup}
           <td>
             <span class="hours-indicator ${badgeClass}">${badgeText}</span>
           </td>
           <td>
-            <button class="btn btn-danger" style="padding:4px 8px; font-size:10px;" onclick="removeAgent(${agIdx})">🗑️</button>
+            <button class="btn btn-danger" style="padding:2px 5px; font-size:9px;" onclick="removeAgent(${agIdx})">🗑️</button>
           </td>
         `;
 
@@ -593,7 +593,7 @@
       });
     }
 
-    /* REAL-TIME DASHBOARD LOGIC FOR SHIFTS (09:00 AM - 02:00 AM) */
+    /* REAL-TIME DASHBOARD LOGIC */
     function setCurrentRealTime() {
       const now = new Date();
       let dayIdx = now.getDay(); 
@@ -611,7 +611,6 @@
       const timeStr = document.getElementById('simTimeInput').value;
       let currentMins = timeToMinutes(timeStr);
 
-      // Si l'heure courante est entre 00:00 et 02:00 s-sbah, on ajoute 24h (1440 min)
       if (currentMins < 5 * 60) {
         currentMins += 24 * 60;
       }
@@ -641,7 +640,6 @@
           let ep = timeToMinutes(slot.endP);
           let ew = timeToMinutes(slot.endW);
 
-          // Ajustements pour les heures qui dépassent minuit (ex: 01:00 ou 02:00)
           if (ew <= sw) ew += 24 * 60;
           if (ep < sw) ep += 24 * 60;
           if (sp < sw) sp += 24 * 60;
@@ -649,15 +647,15 @@
           if (currentMins < sw) {
             let diff = sw - currentMins;
             statusClass = 'status-upcoming';
-            statusText = '⏳ Pas Encore Commencé';
+            statusText = '⏳ Non Commencé';
             remainingText = `Début dans ${formatMinsToHHMM(diff)}`;
-            nextStepText = `Démarre le service à ${slot.startW}`;
+            nextStepText = `Démarre à ${slot.startW}`;
           } else if (currentMins >= sw && currentMins < sp) {
             let diffToPause = sp - currentMins;
             let netRemaining = (sp - currentMins) + (ew - ep);
             statusClass = 'status-working';
-            statusText = '🛵 En Service (Partie 1)';
-            remainingText = `<span class="time-remaining">${formatMinsToHHMM(netRemaining)}</span> restant`;
+            statusText = '🛵 Service (Partie 1)';
+            remainingText = `<span style="font-weight:800; color:#38bdf8;">${formatMinsToHHMM(netRemaining)}</span> restant`;
             nextStepText = `Pause à ${slot.startP} (dans ${formatMinsToHHMM(diffToPause)})`;
             kpiW++;
             zoneOccupancy[slot.zone].push({ name: ag.name, status: "En Service" });
@@ -666,29 +664,29 @@
             let netRemaining = ew - ep;
             statusClass = 'status-break';
             statusText = '☕ En Pause';
-            remainingText = `<span class="time-remaining">${formatMinsToHHMM(netRemaining)}</span> de travail restant`;
-            nextStepText = `Reprise du service à ${slot.endP} (dans ${formatMinsToHHMM(diffPauseEnd)})`;
+            remainingText = `<span style="font-weight:800; color:#38bdf8;">${formatMinsToHHMM(netRemaining)}</span> restant`;
+            nextStepText = `Reprise à ${slot.endP} (dans ${formatMinsToHHMM(diffPauseEnd)})`;
             kpiB++;
             zoneOccupancy[slot.zone].push({ name: ag.name, status: "En Pause" });
           } else if (currentMins >= ep && currentMins < ew) {
             let diffToEnd = ew - currentMins;
             if (diffToEnd <= 30) {
               statusClass = 'status-ending';
-              statusText = '⌛ Fin de Shift Proche';
+              statusText = '⌛ Fin Proche';
               kpiE++;
             } else {
               statusClass = 'status-working';
-              statusText = '🛵 En Service (Partie 2)';
+              statusText = '🛵 Service (Partie 2)';
             }
-            remainingText = `<span class="time-remaining">${formatMinsToHHMM(diffToEnd)}</span> restant`;
-            nextStepText = `Fin de service à ${slot.endW}`;
+            remainingText = `<span style="font-weight:800; color:#38bdf8;">${formatMinsToHHMM(diffToEnd)}</span> restant`;
+            nextStepText = `Fin à ${slot.endW}`;
             kpiW++;
             zoneOccupancy[slot.zone].push({ name: ag.name, status: "En Service" });
           } else {
             statusClass = 'status-off';
             statusText = '✅ Service Terminé';
             remainingText = '00h00m';
-            nextStepText = `A terminé à ${slot.endW}`;
+            nextStepText = `A fini à ${slot.endW}`;
           }
         } else {
           kpiO++;
@@ -696,22 +694,18 @@
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>
+          <td style="text-align:left; padding-left:12px;">
             <div class="agent-name-cell">${ag.name}</div>
-            <div class="shift-hours-info">${slot && slot.type === "WORK" ? `Shift: ${slot.startW} ➔ ${slot.endW} (Pause: ${slot.startP}-${slot.endP})` : 'Jour de Repos'}</div>
+            <div class="shift-hours-info">${slot && slot.type === "WORK" ? `${slot.startW}➔${slot.endW} (P:${slot.startP}-${slot.endP})` : 'Repos'}</div>
           </td>
           <td>
-            <span class="zone-badge">${slot && slot.type === "WORK" ? `📍 ${slot.zone}` : 'Non Assigné'}</span>
+            <span class="zone-badge">${slot && slot.type === "WORK" ? `📍 ${slot.zone}` : 'OFF'}</span>
           </td>
           <td>
             <span class="badge-status ${statusClass}">${statusText}</span>
           </td>
-          <td>
-            ${remainingText}
-          </td>
-          <td style="font-weight:700; color:#f1f5f9;">
-            ${nextStepText}
-          </td>
+          <td>${remainingText}</td>
+          <td style="text-align:left; font-weight:700; color:#f1f5f9;">${nextStepText}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -729,12 +723,12 @@
         let listHtml = ags.map(a => `
           <div class="agent-item">
             <span>👤 ${a.name}</span>
-            <span style="font-size:10px; color:${a.status === 'En Service' ? '#34d399' : '#fde047'};">(${a.status})</span>
+            <span style="font-size:9.5px; color:${a.status === 'En Service' ? '#34d399' : '#fde047'};">(${a.status})</span>
           </div>
         `).join('');
 
         if (ags.length === 0) {
-          listHtml = `<div style="font-size:11px; color:#64748b; font-style:italic; text-align:center;">Aucun agent présent</div>`;
+          listHtml = `<div style="font-size:10px; color:#64748b; font-style:italic; text-align:center;">Aucun agent</div>`;
         }
 
         card.innerHTML = `
@@ -742,7 +736,7 @@
             <span>📍 ${z}</span>
             <span class="zone-count">${ags.length} Agent(s)</span>
           </div>
-          <div style="display:flex; flex-direction:column; gap:6px;">${listHtml}</div>
+          <div style="display:flex; flex-direction:column; gap:4px;">${listHtml}</div>
         `;
         zonesContainer.appendChild(card);
       });
@@ -857,7 +851,7 @@
 
     function resetApp() {
       if (confirm("Réinitialiser toutes les données vers la configuration d'origine (13 agents b 44h) ?")) {
-        localStorage.removeItem('najib_field_db_v9');
+        localStorage.removeItem('najib_field_db_v11');
         appData = null;
         initSystem();
         renderUI();
