@@ -1,8 +1,8 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Planning Agents</title>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Planning Agents — Professional</title>
 <style>
-:root{--bg:#f6f7fb;--card:#fff;--tx:#243047;--mu:#7b8498;--bd:#e9ecf4;--ac:#6366f1;--acs:rgba(99,102,241,.1);--ok:rgba(52,211,153,.16);--okt:#0f8a63;--wa:rgba(251,191,36,.2);--wat:#a16207;--dn:rgba(148,163,184,.16);--bad:#e5484d;--bads:rgba(229,72,77,.12);--off:#f0f2f8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#12151d;--card:#1b1f2b;--tx:#e8ebf4;--mu:#9099ad;--bd:#2a3040;--ac:#8b8ff8;--acs:rgba(139,143,248,.14);--okt:#5fe0b0;--wat:#f6d36b;--bad:#ff7b80;--off:#222735}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#12151d;--card:#1b1f2b;--tx:#e8ebf4;--mu:#9099ad;--bd:#2a3040;--ac:#8b8ff8;--acs:rgba(139,143,248,.14);--okt:#5fe0b0;--wat:#f6d36b;--bad:#ff7b80;--off:#222735}
+:root{--bg:#f3f6f9;--card:#ffffff;--tx:#203247;--mu:#687b8f;--bd:#dce5ed;--ac:#00A082;--acs:rgba(0,160,130,.12);--ok:rgba(0,160,130,.15);--okt:#007F68;--wa:rgba(255,194,68,.22);--wat:#8A5A00;--dn:rgba(148,163,184,.16);--bad:#dc2626;--bads:rgba(220,38,38,.12);--off:#edf2f6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#10212b;--card:#18313c;--tx:#eaf2f5;--mu:#a5bac5;--bd:#294652;--ac:#36D6B5;--acs:rgba(54,214,181,.14);--okt:#6ee7b7;--wat:#ffd166;--bad:#f87171;--off:#20343d}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#10212b;--card:#18313c;--tx:#eaf2f5;--mu:#a5bac5;--bd:#294652;--ac:#36D6B5;--acs:rgba(54,214,181,.14);--okt:#6ee7b7;--wat:#ffd166;--bad:#f87171;--off:#20343d}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 "Inter",system-ui,-apple-system,"Segoe UI",sans-serif;padding:18px;max-width:1400px;margin:0 auto}
 h1{font-size:22px;margin:0;letter-spacing:-.3px}h2{font-size:15px;margin:26px 0 10px;font-weight:650}
@@ -13,7 +13,7 @@ h1{font-size:22px;margin:0;letter-spacing:-.3px}h2{font-size:15px;margin:26px 0 
 .card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px}
 button,select,input{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:6px 11px}
 button{cursor:pointer;transition:background .15s}button:hover{background:var(--acs)}
-button.p{background:var(--ac);border-color:var(--ac);color:#fff}
+button.p{background:var(--ac);border-color:var(--ac);color:#ffffff}
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 10px}
 .tabs button.a{background:var(--acs);border-color:var(--ac);color:var(--ac);font-weight:650}
 .tl{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:14px}
@@ -43,46 +43,114 @@ td.o{background:var(--off);color:var(--mu);text-align:center;vertical-align:midd
 .cv table{min-width:800px}.cv td,.cv th{text-align:center;padding:5px 3px;font-size:12px}
 .cur{box-shadow:inset 0 0 0 2px var(--ac)}
 .bar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+
+/* Vue compacte : planning visible sans défilement vertical */
+body{padding:8px;max-width:none;height:100vh;overflow:hidden}
+h1{font-size:19px}.top{gap:6px}.top .mu{font-size:11px}
+.tabs{margin:6px 0;gap:4px}.tabs button{padding:4px 9px;font-size:12px}
+.card{padding:8px;border-radius:10px}.tl{margin-bottom:6px;gap:7px}.tm{font-size:20px}
+.st{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:6px}.st div{padding:5px 8px;border-radius:8px}.st b{font-size:17px}
+.cols{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.col h3{margin-bottom:4px}.r{padding:4px 0}.grp{gap:6px;margin-top:6px}
+h2{font-size:14px;margin:7px 0 5px}
+.bar{gap:5px;margin:5px 0}.bar button,.bar input{padding:4px 7px;font-size:12px}
+.lg{gap:4px;margin:4px 0 6px}.z{font-size:10px;padding:1px 6px;margin-top:1px}
+.w{border-radius:10px;overflow:auto;max-height:calc(100vh - 220px)}
+table{min-width:930px}th,td{padding:3px 5px;font-size:11px}th{font-size:10px}
+.ag button{padding:0 5px;margin:1px 2px 0 0}.c input{min-width:90px!important;padding:3px 4px!important;font-size:11px!important}.c button{margin-top:2px!important;padding:3px 3px!important;font-size:10px!important}.c button small{display:none}
+#livePanel,#coveragePanel{display:none}.viewbar{display:flex;gap:5px;flex-wrap:wrap;margin:6px 0}.viewbar button{padding:5px 10px;font-size:12px}.viewbar button.active{background:var(--ac);color:#fff;border-color:var(--ac)}
+:root{--glovo-yellow:#FFC244}
+#dashboardPanel .dashgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:8px 0 12px}
+#dashboardPanel .metric{background:var(--card);border:1px solid var(--bd);border-top:4px solid var(--ac);border-radius:12px;padding:10px}
+#dashboardPanel .metric:nth-child(even){border-top-color:var(--glovo-yellow)}
+#dashboardPanel .metric b{display:block;font-size:24px;line-height:1.2}
+#dashboardPanel .dashcols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#dashboardPanel .dashlist{padding:7px 0;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;gap:8px}
+#dashboardPanel .dashlist:last-child{border-bottom:0}
+@media(max-width:900px){#dashboardPanel .dashgrid{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboardPanel .dashcols{grid-template-columns:1fr}}
+#planPanel{display:block}.w.cv{max-height:calc(100vh - 160px)}
+@media(max-width:900px){body{height:auto;min-height:100vh;overflow:auto}.w{max-height:none}.cols{grid-template-columns:1fr}.st{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style></head><body>
-<div class="top"><div><h1>Planning des agents</h1><div class="mu">44h/semaine · 09:00 → 02:00 · Ven/Sam 8h, autres jours 7h · sans pause · OFF du Lundi au Jeudi</div></div>
+<div class="top"><div><h1>Planning des agents</h1><div class="mu">44h/semaine · 09:00 → 02:00 · départs variables selon l’effectif · sans pause · OFF du Lundi au Jeudi · Oussama El Atrach OFF Jeudi</div></div>
 <div><span id="lv" class="live"></span></div></div>
 
-<div class="tabs" id="tabs"></div>
+<div class="viewbar"><button class="active" id="btnPlan" onclick="showView('plan')">Planning hebdomadaire</button><button id="btnDashboard" onclick="showView('dashboard')">Dashboard</button><button id="btnLive" onclick="showView('live')">Suivi en direct</button><button id="btnCoverage" onclick="showView('coverage')">Couverture par heure</button></div>
+<div id="dashboardPanel" style="display:none"><h2>Dashboard — Vue d’ensemble</h2><div class="mu">Indicateurs du planning · mise à jour automatique après modification des agents, des OFF ou des zones.</div><div class="dashgrid" id="dashMetrics"></div><div class="dashcols"><div class="card"><h2 style="margin-top:0">Répartition par zone</h2><div id="dashZones"></div></div><div class="card"><h2 style="margin-top:0">Résumé hebdomadaire</h2><div id="dashWeek"></div></div></div></div>
+<div id="livePanel"><div class="tabs" id="tabs"></div>
 <div class="card"><div class="tl"><div class="tm" id="tm"></div><input type="range" id="sl" min="9" max="26" step="0.25" oninput="setT(this.value)"><button onclick="goLive()">● Maintenant</button></div>
 <div class="st" id="st"></div>
 <div class="cols" id="cols"></div></div>
-<div class="grp" id="grp"></div>
+<div class="grp" id="grp"></div></div>
 
-<h2>Gestion</h2>
+<div id="planPanel"><h2>Planning de la semaine <span id="weekLabel" class="badge"></span></h2><div class="notice" style="margin:8px 0 12px;padding:10px 12px;border-radius:9px;background:var(--wa);border:1px solid var(--wat)">⚠️ <b>Semaine en cours :</b> toute modification du planning demandera une confirmation avant التطبيق.</div>
 <div class="bar"><input id="nn" placeholder="Nom de l’agent"><button class="p" onclick="add()">+ Ajouter un agent</button>
-<button onclick="S.week++;save()">↻ Régénérer la rotation</button>
-<button onclick="S.ov={};save()">Effacer les horaires manuels</button>
+<button onclick="nextWeek()">↻ Générer le planning de la semaine suivante</button>
+<button onclick="S.ov={};S.zoneOv={};S.timeOv={};save()">Effacer les changements manuels</button>
 <button onclick="if(confirm('Tout réinitialiser ?')){S=def();save()}">Réinitialiser</button></div>
 <div class="lg" id="lg"></div>
 <div class="w"><table id="t"></table></div>
 
-<h2>Couverture par heure</h2>
+</div><div id="coveragePanel"><h2>Couverture par heure</h2>
 <div class="mu" style="margin-bottom:8px">Total en gras, puis agents dans Groupe A · B · C (0 en rouge = groupe non couvert). Rush : 12h–15h et 18h–01h.</div>
-<div class="w cv"><table id="cv"></table></div>
+<div class="w cv"><table id="cv"></table></div></div>
 
 <script>
 var DAYS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
-var ZONES=[["McDo Medina","#8b5cf6"],["McDo Bouragrag","#a78bfa"],["McDo Hay Chaou","#d946ef"],["McDo Carrousel","#38bdf8"],["McDo LGV","#2dd4bf"],["McDo Agdal","#60a5fa"],["Le Marché","#fb7185"],["McDo Temara","#fb923c"],["McDo Hay Riad","#f5b53d"]];
-var CL=["#8b5cf6","#38bdf8","#fb923c"],GN=["A","B","C"];
+var ZONES=[["McDo Medina","#00A082"],["McDo Bouragrag","#FFC244"],["McDo Hay Chaou","#00A082"],["McDo Carrousel","#FFC244"],["McDo LGV","#00A082"],["McDo Agdal","#FFC244"],["Le Marché","#00A082"],["McDo Temara","#FFC244"],["McDo Hay Riad","#00A082"]];
+var CL=["#00A082","#FFC244","#00A082"],GN=["A","B","C"];
 var NAMES=["Yahya Rhallah","Youssef Derkaoui","Aymane Chlifane","Achraf Akhlij","Islam Elmardi","Oussama El Atrach","Mehdi Ait Jebour","Mourad Cherradi","Ayoub Abssi","Hassan Azgoune","Ayoub Ben Malek","Charaf Loummihi","Mohamd Khalyl"];
-function def(){return{agents:NAMES.map(function(n,i){return{id:i+1,n:n,off:i%4}}),ov:{},week:0,nid:100}}
+function showView(v){
+ document.getElementById('planPanel').style.display=v==='plan'?'block':'none';
+ document.getElementById('dashboardPanel').style.display=v==='dashboard'?'block':'none';
+ document.getElementById('livePanel').style.display=v==='live'?'block':'none';
+ document.getElementById('coveragePanel').style.display=v==='coverage'?'block':'none';
+ ['Plan','Dashboard','Live','Coverage'].forEach(function(k){var el=document.getElementById('btn'+k);if(el)el.classList.toggle('active',k.toLowerCase()===v)});
+}
+function def(){return{agents:NAMES.map(function(n,i){return{id:i+1,n:n,off:n==="Oussama El Atrach"?3:i%3}}),ov:{},zoneOv:{},timeOv:{},week:0,nid:100}}
+function normalizeThursdayOff(){
+ var th=S.agents.filter(function(a){return a.off===3;});
+ if(th.length!==3){
+  S.agents.forEach(function(a,i){if(a.n==="Oussama El Atrach")a.off=3;else if(a.off===3)a.off=(i%3);});
+  var others=S.agents.filter(function(a){return a.n!=="Oussama El Atrach";});
+  while(S.agents.filter(function(a){return a.off===3;}).length<3){var candidate=others.find(function(a){return a.off!==3;});if(!candidate)break;candidate.off=3;}
+  while(S.agents.filter(function(a){return a.off===3;}).length>3){var candidate=S.agents.slice().reverse().find(function(a){return a.off===3&&a.n!=="Oussama El Atrach";});if(!candidate)break;candidate.off=0;}
+ }
+}
 var S=def(),PLAN=[],live=true,sel=0,tm=12;
 try{var r=localStorage.getItem("pl1");if(r)S=JSON.parse(r)}catch(e){}
+if(!S.timeOv)S.timeOv={};normalizeThursdayOff();
+function confirmEdit(msg){return confirm("⚠️ La semaine a déjà commencé. "+msg+"\n\nVoulez-vous confirmer cette modification ?")}
+function nextWeek(){if(!confirm("Générer un nouveau planning pour la semaine suivante ? Les modifications manuelles actuelles seront effacées."))return;S.week++;S.ov={};S.zoneOv={};S.timeOv={};normalizeThursdayOff();save()}
 function save(){try{localStorage.setItem("pl1",JSON.stringify(S))}catch(e){}render()}
 function L(d){return d==4||d==5?8:7}
 function fmt(h){h=h%24;return(h<10?"0":"")+h+":00"}
 function ft(t){var h=Math.floor(t),m=Math.round((t-h)*60);if(m==60){h++;m=0}h=h%24;return(h<10?"0":"")+h+":"+(m<10?"0":"")+m}
 function dur(x){var m=Math.round(x*60),h=Math.floor(m/60);m=m%60;return(h?h+"h":"")+(m?(h?(m<10?"0":""):"")+m+(h?"":" min"):"")}
-function add(){var v=document.getElementById("nn").value.trim();if(!v)return;S.agents.push({id:S.nid++,n:v,off:S.agents.length%4});save()}
-function del(i){S.agents.splice(i,1);save()}
-function mv(i,k){var j=i+k,a=S.agents;if(j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t;save()}
-function setOff(i,v){S.agents[i].off=+v;save()}
+function add(){var v=document.getElementById("nn").value.trim();if(!v)return;if(!confirmEdit("Ajouter cet agent au planning."))return;S.agents.push({id:S.nid++,n:v,off:S.agents.length%3});document.getElementById("nn").value="";normalizeThursdayOff();save()}
+function del(i){if(!confirmEdit("Supprimer cet agent du planning."))return;S.agents.splice(i,1);normalizeThursdayOff();save()}
+function mv(i,k){var j=i+k,a=S.agents;if(j<0||j>=a.length)return;if(!confirmEdit("Changer l’ordre des agents."))return;var t=a[i];a[i]=a[j];a[j]=t;save()}
+function setOff(i,v){var a=S.agents[i],nv=+v;if(!confirmEdit("Changer le jour OFF de "+a.n+"."))return;if(a.n==="Oussama El Atrach"&&nv!==3){alert("Oussama El Atrach doit garder jeudi OFF.");render();return}if(nv===3&&a.off!==3&&S.agents.filter(function(x){return x.off===3}).length>=3){alert("Jeudi doit avoir exactement 3 agents OFF.");render();return}a.off=nv;normalizeThursdayOff();save()}
 function setOv(id,d,v){S.ov[id+"-"+d]=+v;save()}
+function setZoneOv(id,d,v){if(v===""){delete S.zoneOv[id+"-"+d]}else{S.zoneOv[id+"-"+d]=+v}save()}
+function cycleZone(id,d){
+ if(!confirmEdit("Changer la zone de cet agent."))return;
+ var key=id+"-"+d;
+ var current=(S.zoneOv[key]!==undefined)?+S.zoneOv[key]:((PLAN[d]&&PLAN[d][id])?PLAN[d][id].z:0);
+ S.zoneOv[key]=(current+1)%ZONES.length;
+ save();
+}
+function setTimeText(id,d,v){
+ if(!confirmEdit("Modifier l’horaire de cet agent.")){render();return}
+ if(!S.timeOv)S.timeOv={};
+ S.timeOv[id+"-"+d]=v.trim();
+ var m=v.trim().match(/^(\\d{1,2}):(\\d{2})\\s*(?:-|–|→|a|à)\\s*(\\d{1,2}):(\\d{2})$/i);
+ if(m){
+   var sh=+m[1]+(+m[2]/60),eh=+m[3]+(+m[4]/60);
+   if(eh<sh)eh+=24;
+   var duration=eh-sh;
+   if(sh>=9&&sh<=26-L(d)&&duration>0&&duration<=12){S.ov[id+"-"+d]=sh;}
+ }
+ save();
+}
 function chip(z){var c=ZONES[z][1];return"<span class='z' style='background:"+c+"26;border-color:"+c+"80;color:"+c+"'><span style='color:var(--tx)'>"+ZONES[z][0]+"</span></span>"}
 function gen(){
  var A=S.agents,plan=[],pS={},pZ={},hist={};
@@ -90,7 +158,11 @@ function gen(){
  for(var d=0;d<7;d++){
   var act=A.filter(function(a){return a.off!==d}),n=act.length,l=L(d),day={};
   if(!n){plan.push(day);continue}
-  var M=[12,14,16,18,18,10,12,18],slots=[9,19,9,19,9,19].slice(0,n);for(var m=0;slots.length<n;m++)slots.push(M[m%M.length]);slots.sort(function(a,b){return a-b});slots=slots.map(function(v){return Math.min(v,26-l)});
+  var pool=[9,10,11,12,12,13,14,15,16,17,18,18,19,20],slots=[];
+   /* Horaires de départ répartis selon l'effectif du jour : pas de quota fixe à 09h ou 19h. */
+   for(var j=0;j<n;j++){var ix=n===1?Math.floor(pool.length/2):Math.round(j*(pool.length-1)/(n-1));slots.push(pool[ix]);}
+   var rot=(d*2+S.week*3)%Math.max(1,slots.length);slots=slots.slice(rot).concat(slots.slice(0,rot));
+   slots.sort(function(a,b){return a-b});slots=slots.map(function(v){return Math.min(v,26-l)});
   var o=(d*3+S.week*5)%n,st={};
   act.forEach(function(a,j){st[a.id]=slots[(j+o)%n]});
   act.forEach(function(a){
@@ -178,6 +250,7 @@ function renderCv(){
 }
 function render(){
  PLAN=gen();
+ var wl=document.getElementById("weekLabel");if(wl)wl.textContent="Semaine "+(S.week+1);
  var h="<tr><th>Agent</th><th>OFF</th>";
  DAYS.forEach(function(x,d){h+="<th>"+x+" <span class='mu'>("+L(d)+"h)</span></th>"});
  h+="<th>Total</th></tr>";
@@ -191,16 +264,26 @@ function render(){
    var c=PLAN[d][a.id];
    if(!c){h+="<td class='o'>OFF</td>";continue}
    tot+=L(d);
-   h+="<td class='c'><select onchange='setOv("+a.id+","+d+",this.value)'>";
-   for(var s=9;s<=26-L(d);s++)h+="<option value='"+s+"'"+(s===c.s?" selected":"")+">"+fmt(s)+" → "+fmt(s+L(d))+"</option>";
-   h+="</select>"+chip(c.z)+"</td>";
+   var ovKey=a.id+"-"+d, savedTime=S.timeOv&&S.timeOv[ovKey], timeText=(savedTime!==undefined&&savedTime!==null)?savedTime:fmt(c.s)+" - "+fmt(c.e);
+   h+="<td class='c'><input type='text' aria-label='Horaire libre' placeholder='09:00 - 16:00' value='"+timeText+"' onchange='setTimeText("+a.id+","+d+",this.value)' style='width:100%;min-width:112px;padding:5px 6px;font-size:12px;font-weight:650;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx)'>";
+   h+="<button type='button' title='Cliquer pour changer de zone' onclick='cycleZone("+a.id+","+d+")' style='margin-top:5px;width:100%;padding:5px 4px;border-radius:8px;border:1px solid "+ZONES[c.z][1]+";background:"+ZONES[c.z][1]+"20;color:"+ZONES[c.z][1]+";font-size:11px;font-weight:700;white-space:normal'>"+ZONES[c.z][0]+"<br><small style='font-weight:500'>Cliquer pour changer</small></button></td>";
   }
   h+="<td class='"+(tot>44?"bad":"")+"'"+(tot>44?" style='background:var(--bads)'":"")+">"+tot+"h"+(tot>44?" ⚠ +"+(tot-44)+"h":"")+"</td></tr>";
  });
  document.getElementById("t").innerHTML=h;
  var g="";ZONES.forEach(function(z,i){if(i%3==0)g+="<span class='mu' style='width:100%'><b style='color:"+CL[i/3]+"'>Groupe "+GN[i/3]+"</b> : 3 zones proches, couvertes ensemble quand il y a peu d’agents.</span>";g+=chip(i)});
  document.getElementById("lg").innerHTML=g;
+ renderDashboard();
  tick();
+}
+function renderDashboard(){
+ var total=S.agents.length, zoneCounts=Array(9).fill(0), offCounts=Array(7).fill(0), hours=0, shifts=0, dayAgents=[];
+ for(var d=0;d<7;d++){var count=0; S.agents.forEach(function(a){var c=PLAN[d]&&PLAN[d][a.id];if(c){count++;shifts++;hours+=L(d);zoneCounts[c.z]++;}});dayAgents.push(count);}
+ S.agents.forEach(function(a){if(a.off>=0&&a.off<7)offCounts[a.off]++;});
+ var average=shifts?Math.round(hours/shifts*10)/10:0, peak=Math.max.apply(null,dayAgents), low=Math.min.apply(null,dayAgents);
+ document.getElementById("dashMetrics").innerHTML=[[total,"Agents au total"],[ZONES.length,"Zones suivies"],[hours+" h","Heures planifiées / semaine"],[average+" h","Durée moyenne par shift"]].map(function(x){return "<div class='metric'><span class='mu'>"+x[1]+"</span><b>"+x[0]+"</b></div>"}).join("");
+ document.getElementById("dashZones").innerHTML=ZONES.map(function(z,i){return "<div class='dashlist'><span><span style='display:inline-block;width:9px;height:9px;border-radius:50%;background:"+z[1]+";margin-right:7px'></span>"+z[0]+"</span><b>"+zoneCounts[i]+" shifts</b></div>"}).join("");
+ document.getElementById("dashWeek").innerHTML=DAYS.map(function(d,i){return "<div class='dashlist'><span>"+d+"</span><span><b>"+dayAgents[i]+"</b> agents · "+offCounts[i]+" OFF</span></div>"}).join("")+"<div class='mu' style='margin-top:10px'>Maximum présents : <b>"+peak+"</b> · Minimum présents : <b>"+low+"</b></div><div style='margin-top:10px;padding:9px;border-radius:8px;background:var(--wa)'>⚠ Les totaux d’heures utilisent la durée prévue par jour (7h ou 8h), indépendamment du texte saisi dans les horaires.</div>";
 }
 render();
 </script></body></html>
