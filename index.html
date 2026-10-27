@@ -3,279 +3,272 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FieldOps - Leader Najib Planning (Pause 4h pour 14:00)</title>
+  <title>FieldOps - Leader Najib (Smart Shift Manager & Smart Alert)</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --pl-bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-      --pl-header-bg: linear-gradient(90deg, #065f46 0%, #047857 50%, #059669 100%);
-      --pl-card-bg: #ffffff;
-      --pl-border-subtle: #a7f3d0;
-      --pl-text-main: #064e3b;
-      
-      --ok-bg: #dcfce7; --ok-txt: #15803d; --ok-border: #86efac;
-      --alert-bg: #fee2e2; --alert-txt: #b91c1c; --alert-border: #fca5a5;
+      --bg-main: #0b0f19;
+      --card-bg: #131b2e;
+      --card-inner: #0b0f19;
+      --accent-emerald: #10b981;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --border-color: #1e293b;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
-    body { background: var(--pl-bg-gradient); color: #0f172a; min-height: 100vh; padding: 24px; font-size: 14px; display: flex; justify-content: center; align-items: flex-start; }
+    body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 24px; font-size: 13px; }
 
-    #view-planning {
-      width: 100%;
-      max-width: 1750px;
-      background: var(--pl-bg-gradient);
-      padding: 24px;
-      border-radius: 18px;
-      border: 1px solid var(--pl-border-subtle);
-      box-shadow: 0 20px 40px -15px rgba(4, 120, 87, 0.2);
+    .app-container { max-width: 1850px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
+      background: var(--card-bg); padding: 22px 30px; border-radius: 18px; border: 1px solid var(--border-color);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    }
+    .brand-title { display: flex; align-items: center; gap: 16px; }
+    .brand-icon {
+      width: 50px; height: 50px; background: linear-gradient(135deg, var(--accent-emerald), var(--accent-blue));
+      border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #fff;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    }
+    .brand-title h1 { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+    .brand-title p { font-size: 12.5px; color: var(--text-sub); margin-top: 2px; }
+
+    .action-group { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn {
+      padding: 10px 18px; border-radius: 12px; border: 1px solid var(--border-color); font-weight: 700;
+      cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px;
+    }
+    .btn-primary { background: linear-gradient(135deg, #059669, #10b981); color: #fff; border: none; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-secondary { background: #1e293b; color: #fff; }
+    .btn-secondary:hover { background: #334155; }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
+    .btn-danger:hover { background: rgba(239, 68, 68, 0.25); }
+
+    /* Peak Hours Dashboard */
+    .peaks-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;
+    }
+    .peak-box {
+      background: var(--card-bg); padding: 16px 20px; border-radius: 14px; border: 1px solid var(--border-color);
+      display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .peak-box .time { font-weight: 800; font-size: 15px; color: #38bdf8; margin-top: 2px; }
+    .badge-status { font-weight: 700; padding: 4px 10px; border-radius: 8px; font-size: 11px; }
+    .status-active { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .status-calm { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+
+    /* Table Container */
+    .table-wrapper {
+      background: var(--card-bg); border-radius: 18px; border: 1px solid var(--border-color);
+      overflow-x: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1700px; }
+    
+    thead th {
+      background: #0b0f19; color: #cbd5e1; padding: 18px 12px; font-size: 12.5px; font-weight: 800;
+      text-align: center; border-bottom: 2px solid var(--border-color); letter-spacing: 0.5px;
+    }
+    thead th.col-drag { width: 50px; }
+    thead th.col-agent { text-align: left; padding-left: 20px; width: 220px; }
+    thead th.col-action { width: 90px; }
+
+    tbody tr { border-bottom: 1px solid var(--border-color); transition: background 0.15s; }
+    tbody tr:hover { background: #1a253a; }
+    tbody tr.dragging { opacity: 0.4; background: var(--accent-blue); }
+
+    td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); vertical-align: middle; text-align: center; }
+    
+    .handle-drag { cursor: grab; color: var(--text-sub); font-size: 18px; }
+    .handle-drag:active { cursor: grabbing; }
+
+    .agent-info { display: flex; flex-direction: column; gap: 2px; text-align: left; }
+    .agent-name { font-weight: 800; color: #f8fafc; font-size: 14px; }
+    .agent-role { font-size: 11px; color: var(--accent-emerald); font-weight: 600; }
+
+    /* Shift Card Design */
+    .shift-card {
+      background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 10px;
+      display: flex; flex-direction: column; gap: 5px; align-items: center; cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .shift-card:hover { border-color: var(--accent-blue); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(59,130,246,0.2); }
+    .shift-time { font-size: 11px; font-weight: 800; color: #38bdf8; white-space: nowrap; }
+    .shift-pause { font-size: 10px; color: var(--accent-amber); font-weight: 700; white-space: nowrap; }
+    
+    /* Zone Badges */
+    .zone-tag {
+      font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 6px; white-space: nowrap; max-width: 140px; overflow: hidden; text-overflow: ellipsis; border: 1px solid rgba(255,255,255,0.1);
+    }
+    .zone-marche { background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border-color: rgba(139,92,246,0.4); }
+    .zone-mcdo { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border-color: rgba(16,185,129,0.4); }
+
+    .off-card {
+      background: #111827; border: 1px dashed #374151; color: #6b7280; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 11.5px; cursor: pointer;
     }
 
-    #view-planning .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      background: var(--pl-card-bg);
-      padding: 18px 28px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(4, 120, 87, 0.08);
-      border: 1px solid var(--pl-border-subtle);
-      margin-bottom: 22px;
+    /* Hours Badges (Perfect 44h, Exceeded >44h, Under <44h) */
+    .hours-indicator {
+      display: inline-flex; align-items: center; justify-content: center; padding: 7px 14px; border-radius: 20px;
+      font-weight: 800; font-size: 12.5px; white-space: nowrap;
+    }
+    .badge-ok { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #059669; }
+    .badge-over { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 2px solid #ef4444; animation: pulseRed 1.2s infinite; }
+    .badge-under { background: rgba(245, 158, 11, 0.2); color: #fde047; border: 1.5px solid #d97706; }
+
+    @keyframes pulseRed {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
 
-    #view-planning .brand-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; z-index: 1000;
     }
-
-    #view-planning .brand-icon {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, #065f46, #047857);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 22px;
-      box-shadow: 0 4px 12px rgba(6, 95, 70, 0.3);
+    .modal-container {
+      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 28px;
+      width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
     }
-
-    #view-planning .brand-title h1 {
-      font-size: 20px;
-      font-weight: 800;
-      background: linear-gradient(90deg, #064e3b, #047857);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
+    .modal-title { font-size: 18px; font-weight: 800; color: #fff; }
+    .input-group { display: flex; flex-direction: column; gap: 6px; }
+    .input-group label { font-size: 11.5px; font-weight: 700; color: var(--text-sub); }
+    .input-group input, .input-group select {
+      background: var(--card-inner); border: 1px solid var(--border-color); padding: 11px; border-radius: 10px;
+      color: #fff; font-size: 13px; outline: none; transition: border-color 0.2s;
     }
-
-    #view-planning .brand-title p {
-      font-size: 12px;
-      color: #047857;
-      font-weight: 600;
-      margin-top: 2px;
-    }
-
-    #view-planning .week-nav {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #f0fdf4;
-      padding: 6px 14px;
-      border-radius: 12px;
-      border: 1px solid var(--pl-border-subtle);
-    }
-
-    #view-planning .week-nav span {
-      font-weight: 700;
-      font-size: 13.5px;
-      color: #064e3b;
-    }
-
-    #view-planning .btn-nav {
-      background: #ffffff;
-      color: #047857;
-      border: 1px solid var(--pl-border-subtle);
-      padding: 6px 12px;
-      font-size: 12px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    #view-planning .btn-nav:hover { background: #f0fdf4; color: #064e3b; }
-
-    #view-planning .btn-reset {
-      background: #ffffff;
-      color: #047857;
-      border: 1px solid var(--pl-border-subtle);
-      padding: 9px 16px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    #view-planning .btn-reset:hover { background: #f0fdf4; border-color: #6ee7b7; }
-
-    #view-planning .table-container {
-      background: var(--pl-card-bg);
-      border-radius: 18px;
-      overflow-x: auto;
-      box-shadow: 0 12px 35px -10px rgba(4, 120, 87, 0.1);
-      border: 1px solid var(--pl-border-subtle);
-    }
-
-    #view-planning table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      min-width: 1600px;
-      text-align: center;
-    }
-
-    #view-planning thead th {
-      background: var(--pl-header-bg);
-      color: #ffffff;
-      padding: 16px 8px;
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      border-bottom: 2px solid #064e3b;
-    }
-    #view-planning th:first-child { border-top-left-radius: 16px; }
-    #view-planning th:last-child { border-top-right-radius: 16px; }
-
-    #view-planning th .day-name { display: block; font-size: 13px; font-weight: 800; }
-    #view-planning th .day-date { display: block; font-size: 11px; font-weight: 500; color: #a7f3d0; margin-top: 3px; }
-
-    #view-planning th.col-agent { width: 220px; text-align: left; padding-left: 20px; }
-    #view-planning th.col-zone { width: 240px; text-align: left; padding-left: 14px; }
-    #view-planning th.col-total { width: 200px; }
-
-    #view-planning tbody tr {
-      border-bottom: 1px solid #a7f3d0;
-      transition: background 0.15s ease;
-    }
-    #view-planning tbody tr:hover { background: #f0fdf4; }
-
-    #view-planning td {
-      padding: 10px 4px;
-      font-size: 12px;
-      border-bottom: 1px solid #a7f3d0;
-      vertical-align: middle;
-    }
-    #view-planning td.cell-agent { text-align: left; padding-left: 16px; }
-    #view-planning td.cell-zone { text-align: left; padding-left: 12px; }
-
-    #view-planning .field-box {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #f0fdf4;
-      border: 1px solid #a7f3d0;
-      border-radius: 8px;
-      padding: 6px 10px;
-      gap: 6px;
-    }
-
-    #view-planning .field-text {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--pl-text-main);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 140px;
-    }
-    #view-planning .field-text.zone-txt { color: #047857; font-weight: 600; font-size: 11px; }
-
-    .shift-cell-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      cursor: pointer;
-      padding: 5px;
-      border-radius: 10px;
-      transition: background 0.15s ease;
-    }
-    .shift-cell-container:hover { background: #e6f4ea; }
-
-    .shift-badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 10px;
-      font-weight: 800;
-      white-space: nowrap;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .shift-badge.exact { background: #ecfdf5; color: #065f46; border: 2px solid #34d399; }
-    .shift-badge.off   { background: #f1f5f9; color: #64748b; border: 2px solid #cbd5e1; }
-
-    .sub-zone-label {
-      font-size: 10.5px;
-      font-weight: 800;
-      color: #064e3b;
-      max-width: 110px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      background: #a7f3d0;
-      padding: 2px 6px;
-      border-radius: 6px;
-      border: 1px solid #6ee7b7;
-    }
-
-    #view-planning .total-action-box { display: flex; align-items: center; justify-content: center; gap: 6px; }
-    #view-planning .hours-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      padding: 6px 10px; border-radius: 16px; font-weight: 800; font-size: 11.5px; white-space: nowrap;
-    }
-    #view-planning .badge-ok { background: var(--ok-bg); color: var(--ok-txt); border: 1.5px solid var(--ok-border); }
-    #view-planning .badge-alert { background: var(--alert-bg); color: var(--alert-txt); border: 1.5px solid var(--alert-border); }
+    .input-group input:focus, .input-group select:focus { border-color: var(--accent-blue); }
   </style>
 </head>
 <body>
 
-  <div id="view-planning">
+  <div class="app-container">
+    <!-- Top Header -->
     <div class="top-bar">
       <div class="brand-title">
         <div class="brand-icon">👑</div>
         <div>
-          <h1>Leader Najib • McDonald's & Zones Planning (Pause 4h pour 14:00)</h1>
-          <p>Tranches 10h, 12h, 14h (Pause 4h pour 14h -> Fin 01:00) + 3 OFF en Semaine</p>
+          <h1>Leader Najib • Operations Command Center</h1>
+          <p>13 Agents | 44h Target | Alerte Explicite f Depassement/Naqs (09:00 - 02:00)</p>
         </div>
       </div>
 
-      <div class="week-nav">
-        <button class="btn-nav" onclick="changeWeek(-1)">◀ Précédent</button>
-        <span id="current-week-label">Semaine ...</span>
-        <button class="btn-nav" onclick="changeWeek(1)">Suivant ▶</button>
-        <button class="btn-nav" style="margin-left: 6px;" onclick="goToCurrentWeek()">Aujourd'hui</button>
-      </div>
-
-      <div class="btn-group">
-        <button class="btn-reset" onclick="resetToDefault()">🔄 Réinitialiser</button>
+      <div class="action-group">
+        <button class="btn btn-secondary" onclick="addAgentModal()">➕ Add Agent</button>
+        <button class="btn btn-primary" onclick="generatePlanning()">🔄 Generate Schedule</button>
+        <button class="btn btn-danger" onclick="resetApp()">🗑️ Reset Data</button>
       </div>
     </div>
 
-    <div class="table-container">
+    <!-- Peak Hours Dashboard -->
+    <div class="peaks-grid">
+      <div class="peak-box">
+        <div>
+          <div style="font-size:11px; color:var(--text-sub);">Morning Shift</div>
+          <div class="time">09:00 - 11:00</div>
+        </div>
+        <span class="badge-status status-calm">Low Traffic</span>
+      </div>
+      <div class="peak-box">
+        <div>
+          <div style="font-size:11px; color:var(--text-sub);">Lunch Peak</div>
+          <div class="time">12:00 - 15:00</div>
+        </div>
+        <span class="badge-status status-active">High Priority</span>
+      </div>
+      <div class="peak-box">
+        <div>
+          <div style="font-size:11px; color:var(--text-sub);">Afternoon Lull</div>
+          <div class="time">15:00 - 18:00</div>
+        </div>
+        <span class="badge-status status-calm">Break Rotation</span>
+      </div>
+      <div class="peak-box">
+        <div>
+          <div style="font-size:11px; color:var(--text-sub);">Night Peak & Close</div>
+          <div class="time">18:00 - 02:00</div>
+        </div>
+        <span class="badge-status status-active">Max Capacity</span>
+      </div>
+    </div>
+
+    <!-- Master Schedule Table -->
+    <div class="table-wrapper">
       <table>
         <thead>
-          <tr id="table-header"></tr>
+          <tr>
+            <th class="col-drag">Order</th>
+            <th class="col-agent">Agent Name</th>
+            <th>Monday (7h)</th>
+            <th>Tuesday (7h)</th>
+            <th>Wednesday (7h)</th>
+            <th>Thursday (7h)</th>
+            <th>Friday (8h)</th>
+            <th>Saturday (8h)</th>
+            <th>Sunday (7h)</th>
+            <th>Weekly Total</th>
+            <th class="col-action">Action</th>
+          </tr>
         </thead>
-        <tbody id="planning-body"></tbody>
+        <tbody id="schedule-body"></tbody>
       </table>
     </div>
   </div>
 
-  <script>
-    let currentWeekOffset = 0;
+  <!-- Edit Shift Modal -->
+  <div class="modal-overlay" id="shiftModal">
+    <div class="modal-container">
+      <div class="modal-title" id="modalHeading">Edit Agent Shift</div>
+      
+      <div class="input-group">
+        <label>Shift Status</label>
+        <select id="modalType" onchange="toggleFields()">
+          <option value="WORK">Working Shift</option>
+          <option value="OFF">Day Off (REST)</option>
+        </select>
+      </div>
 
-    const MCDO_ZONES = [
+      <div id="workingFields" style="display:flex; flex-direction:column; gap:14px;">
+        <div class="input-group">
+          <label>Assigned Zone</label>
+          <select id="modalZoneSelect"></select>
+        </div>
+        <div class="input-group">
+          <label>Début Travail ➔ Début Pause (ex: 09:00 - 13:00)</label>
+          <input type="text" id="modalW1" placeholder="09:00-13:00">
+        </div>
+        <div class="input-group">
+          <label>Période de Pause (ex: 13:00 - 15:00)</label>
+          <input type="text" id="modalPause" placeholder="13:00-15:00">
+        </div>
+        <div class="input-group">
+          <label>Fin Pause ➔ Fin Travail (ex: 15:00 - 18:00)</label>
+          <input type="text" id="modalW2" placeholder="15:00-18:00">
+        </div>
+        <div class="input-group">
+          <label>Nombre d'Heures Effectives pour la Journée</label>
+          <input type="number" id="modalHours" min="1" max="12" placeholder="7">
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:8px;">
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveShiftChanges()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ZONES = [
+      "Le Marché",
       "McDo Temara",
       "McDo Hay Riad",
       "McDo Carrousel",
@@ -283,224 +276,319 @@
       "McDo Agdal",
       "McDo Medina",
       "McDo Bouragrag",
-      "McDo Hay Chamou"
+      "McDo Hay Chaou"
     ];
 
     const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 
-    const agentsList = [
-      { name: "Yahya Rhallah", offDay: 0 },
-      { name: "Youssef Derkaoui", offDay: 1 },
-      { name: "Aymane Chlifane", offDay: 2 },
-      { name: "Achraf Akhlij", offDay: 3 },
-      { name: "Islam Elmardi", offDay: 0 },
-      { name: "Oussama El Atrach", offDay: 1 },
-      { name: "Mehdi Ait Jebour", offDay: 2 },
-      { name: "Mourad Cherradi", offDay: 3 },
-      { name: "Ayoub Abssi", offDay: 0 },
-      { name: "Hassan Azgoune", offDay: 1 },
-      { name: "Ayoub Ben Malek", offDay: 2 },
-      { name: "Charaf Loummihi", offDay: 3 }
+    const DEFAULT_AGENTS = [
+      "Yahya Rhallah", "Youssef Derkaoui", "Aymane Chlifane", "Achraf Akhlij",
+      "Islam Elmardi", "Oussama El Atrach", "Mehdi Ait Jebour", "Mourad Cherradi",
+      "Ayoub Abssi", "Hassan Azgoune", "Ayoub Ben Malek", "Charaf Loummihi", "Mohamd khalyl"
     ];
 
-    function getMonday(d) {
-      d = new Date(d);
-      const day = d.getDay();
-      const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-      return new Date(d.setDate(diff));
-    }
+    const SHIFTS_7H = [
+      { w1: "09:00-13:00", pause: "13:00-15:00", w2: "15:00-18:00", h: 7 },
+      { w1: "11:00-15:00", pause: "15:00-18:00", w2: "18:00-21:00", h: 7 },
+      { w1: "12:00-15:00", pause: "15:00-18:00", w2: "18:00-22:00", h: 7 },
+      { w1: "14:00-17:00", pause: "17:00-21:00", w2: "21:00-01:00", h: 7 },
+      { w1: "17:00-20:00", pause: "20:00-21:00", w2: "21:00-01:00", h: 7 }
+    ];
 
-    function getWeekKey(monday) {
-      return `${monday.getFullYear()}-W${getWeekNumber(monday)}`;
-    }
+    const SHIFTS_8H = [
+      { w1: "09:00-13:00", pause: "13:00-15:00", w2: "15:00-19:00", h: 8 },
+      { w1: "11:00-15:00", pause: "15:00-18:00", w2: "18:00-22:00", h: 8 },
+      { w1: "12:00-16:00", pause: "16:00-19:00", w2: "19:00-01:00", h: 8 },
+      { w1: "13:00-17:00", pause: "17:00-20:00", w2: "20:00-01:00", h: 8 },
+      { w1: "16:00-20:00", pause: "20:00-21:00", w2: "21:00-01:00", h: 8 }
+    ];
 
-    function getWeekNumber(d) {
-      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-      d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-      return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-    }
+    let appData = JSON.parse(localStorage.getItem('najib_field_db_v4')) || null;
 
-    function renderHeader(monday) {
-      const headerRow = document.getElementById('table-header');
-      if (!headerRow) return;
-      let html = `<th class="col-agent">Agent (Leader: Najib)</th><th class="col-zone">Base McDo (Rotation)</th>`;
-
-      for (let i = 0; i < 7; i++) {
-        const current = new Date(monday);
-        current.setDate(monday.getDate() + i);
-        const dateStr = current.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
-        html += `<th><span class="day-name">${DAYS[i]}</span><span class="day-date">${dateStr}</span></th>`;
-      }
-      html += `<th class="col-total">Total Heures</th><th></th>`;
-      headerRow.innerHTML = html;
-    }
-
-    let planningDB = JSON.parse(localStorage.getItem('mcd_plan_leader_najib_v15')) || {};
-
-    function generatePlanning(weekKey, weekNum) {
-      if (planningDB[weekKey]) return planningDB[weekKey];
-
-      const generated = agentsList.map((ag, idx) => {
-        const primaryMcDo = MCDO_ZONES[(idx + weekNum) % MCDO_ZONES.length];
-        let assignedOff = (ag.offDay + weekNum) % 4; // OFF uniquement en semaine (Lun-Jeu)
-        return {
-          name: ag.name,
-          baseZone: primaryMcDo,
-          offDay: assignedOff,
-          idx: idx
+    function initSystem() {
+      if (!appData) {
+        appData = {
+          agents: DEFAULT_AGENTS.map((name, idx) => ({
+            id: 'ag_' + idx,
+            name: name,
+            offDay: idx % 4,
+            schedule: []
+          }))
         };
-      });
+        buildScheduleMatrix();
+      }
+    }
 
-      DAYS.forEach((_, dIdx) => {
-        let availableMcDos = [...MCDO_ZONES];
-        availableMcDos.sort(() => (Math.sin(weekNum + dIdx) > 0 ? 1 : -1));
+    function buildScheduleMatrix() {
+      appData.agents.forEach(ag => ag.schedule = []);
 
-        const isWeekendOrFri = (dIdx === 4 || dIdx === 5 || dIdx === 6); // Vendredi, Samedi, Dimanche
-        
-        let startSlots = [];
-        if (isWeekendOrFri) {
-          // Weekend: 3 (10h), 4 (12h), 5 (14h)
-          startSlots = [10, 10, 10, 12, 12, 12, 12, 14, 14, 14, 14, 14];
-        } else {
-          // Semaine (Lun-Jeu): 3 (10h), 4 (12h), 2 (14h)
-          startSlots = [10, 10, 10, 12, 12, 12, 12, 14, 14];
-        }
+      DAYS.forEach((day, dIdx) => {
+        const is8hDay = (dIdx === 4 || dIdx === 5);
+        const isOffAllowedDay = (dIdx < 4);
+        const pool = is8hDay ? SHIFTS_8H : SHIFTS_7H;
 
-        let slotIndex = 0;
-        let mcdoCounter = 0;
+        let occupiedPairs = {};
 
-        generated.forEach((ag) => {
-          if (!ag.assignedDays) ag.assignedDays = [];
-          
-          const isOff = (dIdx < 4 && dIdx === ag.offDay);
+        appData.agents.forEach((ag, agIdx) => {
+          let prevZone = (dIdx > 0 && ag.schedule[dIdx - 1]) ? ag.schedule[dIdx - 1].zone : "";
+          let prevTime = (dIdx > 0 && ag.schedule[dIdx - 1]) ? ag.schedule[dIdx - 1].w1 : "";
 
-          if (isOff) {
-            ag.assignedDays.push({ shift: "OFF", zone: "REPOS" });
+          if (isOffAllowedDay && (ag.offDay % 4 === dIdx)) {
+            ag.schedule.push({ type: "OFF", hours: 0 });
           } else {
-            let assignedMcDo = availableMcDos[mcdoCounter % availableMcDos.length];
-            mcdoCounter++;
+            let chosenZone = "";
+            let chosenShift = null;
 
-            let startH = startSlots[slotIndex % startSlots.length];
-            slotIndex++;
+            for (let zOffset = 0; zOffset < ZONES.length; zOffset++) {
+              let candidateZone = ZONES[(agIdx + dIdx + zOffset) % ZONES.length];
+              if (candidateZone === prevZone) continue;
 
-            let shiftStr = "";
-            const is8hDay = (dIdx === 4 || dIdx === 5); // 8h (Vendredi/Samedi), 7h (autres)
+              for (let sOffset = 0; sOffset < pool.length; sOffset++) {
+                let candidateShift = pool[(agIdx * 2 + dIdx * 3 + sOffset) % pool.length];
+                if (candidateShift.w1 === prevTime) continue;
 
-            if (startH === 14) {
-              // Li kybdaou m3a 14h: 3h sbah (14-17), pause 4h (17-21), w ykammlo swayaç libqaw tal 01:00
-              let pauseEnd = 21;
-              let workEvening = is8hDay ? 5 : 4; // 4h le soir pour 7h, 5h pour 8h
-              let endH = pauseEnd + workEvening; // 21 + 4 = 25 (01:00) ou 21 + 5 = 26 (02:00 -> plafonné à 01:00)
-              if (endH > 25) endH = 25;
-
-              let realEndH = endH >= 24 ? endH - 24 : endH;
-              let endStr = `${String(realEndH).padStart(2,'0')}:00`;
-
-              shiftStr = `14:00-17:00 / 21:00-${endStr}`;
-            } else {
-              // Tranches 10h et 12h: pause 3h classique
-              let sbahEnd = startH + 3;
-              let pauseEnd = sbahEnd + 3;
-              let workEvening = is8hDay ? 5 : 4;
-              let endH = pauseEnd + workEvening;
-
-              let realEndH = endH >= 24 ? endH - 24 : endH;
-              let endStr = `${String(realEndH).padStart(2,'0')}:00`;
-
-              shiftStr = `${String(startH).padStart(2,'0')}:00-${String(sbahEnd).padStart(2,'0')}:00 / ${String(pauseEnd).padStart(2,'0')}:00-${endStr}`;
+                let pairKey = `${candidateZone}_${candidateShift.w1}`;
+                if (!occupiedPairs[pairKey]) {
+                  chosenZone = candidateZone;
+                  chosenShift = candidateShift;
+                  occupiedPairs[pairKey] = true;
+                  break;
+                }
+              }
+              if (chosenZone !== "") break;
             }
 
-            ag.assignedDays.push({ shift: shiftStr, zone: assignedMcDo });
+            if (chosenZone === "") {
+              chosenZone = ZONES[(agIdx + dIdx) % ZONES.length];
+              chosenShift = pool[agIdx % pool.length];
+            }
+
+            ag.schedule.push({
+              type: "WORK",
+              zone: chosenZone,
+              w1: chosenShift.w1,
+              pause: chosenShift.pause,
+              w2: chosenShift.w2,
+              hours: chosenShift.h
+            });
           }
         });
       });
 
-      planningDB[weekKey] = generated;
-      localStorage.setItem('mcd_plan_leader_najib_v15', JSON.stringify(planningDB));
-      return generated;
+      persistData();
     }
 
-    function calculateHours(shiftStr, dIdx) {
-      if (!shiftStr || shiftStr === "OFF") return 0;
-      const is8h = (dIdx === 4 || dIdx === 5);
-      return is8h ? 8 : 7;
+    function persistData() {
+      localStorage.setItem('najib_field_db_v4', JSON.stringify(appData));
+      renderUI();
     }
 
-    function renderTable() {
-      const now = new Date();
-      const currentMonday = getMonday(now);
-      const viewedMonday = new Date(currentMonday);
-      viewedMonday.setDate(currentMonday.getDate() + (currentWeekOffset * 7));
-      
-      const weekNum = getWeekNumber(viewedMonday);
-      const weekKey = getWeekKey(viewedMonday);
-      const sunday = new Date(viewedMonday);
-      sunday.setDate(viewedMonday.getDate() + 6);
-
-      document.getElementById('current-week-label').innerText = `Semaine ${weekNum} (${viewedMonday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit'})} - ${sunday.toLocaleDateString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric'})})`;
-
-      renderHeader(viewedMonday);
-      const tbody = document.getElementById('planning-body');
+    function renderUI() {
+      const tbody = document.getElementById('schedule-body');
       tbody.innerHTML = '';
 
-      const agents = generatePlanning(weekKey, weekNum);
+      const zoneSelect = document.getElementById('modalZoneSelect');
+      zoneSelect.innerHTML = ZONES.map(z => `<option value="${z}">${z}</option>`).join('');
 
-      agents.forEach((ag) => {
-        const tr = document.createElement('tr');
-        let html = `
-          <td class="cell-agent"><div class="field-box"><span class="field-text">${ag.name}</span></div></td>
-          <td class="cell-zone"><div class="field-box"><span class="field-text zone-txt">Principal: ${ag.baseZone}</span></div></td>
-        `;
+      appData.agents.forEach((ag, agIdx) => {
+        const row = document.createElement('tr');
+        row.draggable = true;
+        row.dataset.index = agIdx;
 
-        let totalH = 0;
-        ag.assignedDays.forEach((day, dIdx) => {
-          totalH += calculateHours(day.shift, dIdx);
-          let badgeClass = 'exact';
-          if (day.shift === 'OFF') badgeClass = 'off';
+        row.addEventListener('dragstart', handleDragStart);
+        row.addEventListener('dragover', handleDragOver);
+        row.addEventListener('drop', handleDrop);
+        row.addEventListener('dragend', handleDragEnd);
 
-          html += `
-            <td>
-              <div class="shift-cell-container">
-                <span class="shift-badge ${badgeClass}">${day.shift}</span>
-                <span class="sub-zone-label">${day.zone}</span>
-              </div>
-            </td>
-          `;
-        });
+        let totalWeeklyHours = 0;
+        let daysMarkup = ag.schedule.map((slot, dIdx) => {
+          totalWeeklyHours += (slot.hours || 0);
+          if (slot.type === "OFF") {
+            return `<td onclick="openModal(${agIdx}, ${dIdx})"><div class="off-card">OFF</div></td>`;
+          } else {
+            let zoneClass = slot.zone === "Le Marché" ? "zone-marche" : "zone-mcdo";
+            return `
+              <td onclick="openModal(${agIdx}, ${dIdx})">
+                <div class="shift-card">
+                  <span class="shift-time">🕒 ${slot.w1 ? slot.w1.split('-')[0] : '09:00'} ➔ ${slot.w2 ? slot.w2.split('-')[1] : '18:00'}</span>
+                  <span class="shift-pause">☕ Break: ${slot.pause || '13:00-15:00'}</span>
+                  <span class="zone-tag ${zoneClass}">📍 ${slot.zone || 'McDo'}</span>
+                </div>
+              </td>
+            `;
+          }
+        }).join('');
 
-        const isOk = totalH === 44;
-        html += `
-          <td>
-            <div class="total-action-box">
-              <span class="hours-badge ${isOk ? 'badge-ok' : 'badge-alert'}">${totalH}h / 44h</span>
+        // Badges d'Alerte : Over (>44h), Under (<44h), Perfect (=44h)
+        let badgeClass = 'badge-ok';
+        let badgeText = `${totalWeeklyHours}h / 44h`;
+
+        if (totalWeeklyHours > 44) {
+          badgeClass = 'badge-over';
+          badgeText = `⚠️ ${totalWeeklyHours}h / 44h (+${totalWeeklyHours - 44}h)`;
+        } else if (totalWeeklyHours < 44) {
+          badgeClass = 'badge-under';
+          badgeText = `📉 ${totalWeeklyHours}h / 44h (-${44 - totalWeeklyHours}h)`;
+        }
+
+        row.innerHTML = `
+          <td><span class="handle-drag">☰</span></td>
+          <td class="col-agent">
+            <div class="agent-info">
+              <span class="agent-name">${ag.name}</span>
+              <span class="agent-role">Team Member</span>
             </div>
           </td>
-          <td></td>
+          ${daysMarkup}
+          <td>
+            <span class="hours-indicator ${badgeClass}">${badgeText}</span>
+          </td>
+          <td>
+            <button class="btn btn-danger" style="padding:5px 10px; font-size:11px;" onclick="removeAgent(${agIdx})">🗑️</button>
+          </td>
         `;
 
-        tr.innerHTML = html;
-        tbody.appendChild(tr);
+        tbody.appendChild(row);
       });
     }
 
-    function changeWeek(dir) {
-      currentWeekOffset += dir;
-      renderTable();
+    /* Modal Logic for Editing */
+    let activeAgentIdx = null;
+    let activeDayIdx = null;
+
+    function openModal(agIdx, dIdx) {
+      activeAgentIdx = agIdx;
+      activeDayIdx = dIdx;
+      
+      const item = appData.agents[agIdx].schedule[dIdx];
+      document.getElementById('modalHeading').innerText = `Edit (${appData.agents[agIdx].name} - ${DAYS[dIdx]})`;
+      document.getElementById('modalType').value = item.type;
+
+      if (item.type === "WORK") {
+        document.getElementById('modalZoneSelect').value = item.zone || ZONES[0];
+        document.getElementById('modalW1').value = item.w1 || "09:00-13:00";
+        document.getElementById('modalPause').value = item.pause || "13:00-15:00";
+        document.getElementById('modalW2').value = item.w2 || "15:00-18:00";
+        document.getElementById('modalHours').value = item.hours || (activeDayIdx === 4 || activeDayIdx === 5 ? 8 : 7);
+      }
+
+      toggleFields();
+      document.getElementById('shiftModal').style.display = 'flex';
     }
 
-    function goToCurrentWeek() {
-      currentWeekOffset = 0;
-      renderTable();
+    function toggleFields() {
+      const type = document.getElementById('modalType').value;
+      document.getElementById('workingFields').style.display = type === "WORK" ? 'flex' : 'none';
     }
 
-    function resetToDefault() {
-      localStorage.removeItem('mcd_plan_leader_najib_v15');
-      planningDB = {};
-      renderTable();
+    function closeModal() {
+      document.getElementById('shiftModal').style.display = 'none';
     }
 
-    renderTable();
+    function saveShiftChanges() {
+      const type = document.getElementById('modalType').value;
+      const agent = appData.agents[activeAgentIdx];
+
+      if (type === "OFF") {
+        agent.schedule[activeDayIdx] = { type: "OFF", hours: 0 };
+      } else {
+        const parsedHours = parseInt(document.getElementById('modalHours').value) || 7;
+        agent.schedule[activeDayIdx] = {
+          type: "WORK",
+          zone: document.getElementById('modalZoneSelect').value,
+          w1: document.getElementById('modalW1').value,
+          pause: document.getElementById('modalPause').value,
+          w2: document.getElementById('modalW2').value,
+          hours: parsedHours
+        };
+      }
+
+      // Check cumulative hours for alert message
+      let newTotal = agent.schedule.reduce((sum, slot) => sum + (slot.hours || 0), 0);
+
+      closeModal();
+      persistData();
+
+      // Trigger Alerte notification if > 44h or < 44h
+      setTimeout(() => {
+        if (newTotal > 44) {
+          alert(`⚠️ ALERTE ATTENTION ! \n\nL'agent ${agent.name} a dépassé les 44H cette semaine ! \nTotal Actuel : ${newTotal}H (+${newTotal - 44}H de surplus).`);
+        } else if (newTotal < 44) {
+          alert(`ℹ️ REPERE : \n\nL'agent ${agent.name} est à ${newTotal}H cette semaine (-${44 - newTotal}H en dessous de l'objectif 44H).`);
+        }
+      }, 100);
+    }
+
+    /* Global Actions */
+    function addAgentModal() {
+      const name = prompt("Enter Agent Full Name:");
+      if (name && name.trim() !== "") {
+        appData.agents.push({
+          id: 'ag_' + Date.now(),
+          name: name.trim(),
+          offDay: 0,
+          schedule: []
+        });
+        buildScheduleMatrix();
+      }
+    }
+
+    function removeAgent(idx) {
+      if (confirm(`Are you sure you want to delete ${appData.agents[idx].name}?`)) {
+        appData.agents.splice(idx, 1);
+        persistData();
+      }
+    }
+
+    function generatePlanning() {
+      if (confirm("Generate a fresh balanced schedule without collisions?")) {
+        buildScheduleMatrix();
+      }
+    }
+
+    function resetApp() {
+      if (confirm("Reset everything to default agents?")) {
+        localStorage.removeItem('najib_field_db_v4');
+        appData = null;
+        initSystem();
+        renderUI();
+      }
+    }
+
+    /* Drag and Drop Reordering */
+    let draggingSourceIdx = null;
+
+    function handleDragStart(e) {
+      draggingSourceIdx = this.dataset.index;
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(e) {
+      if (e.preventDefault) e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      return false;
+    }
+
+    function handleDrop(e) {
+      if (e.stopPropagation) e.stopPropagation();
+      const targetIdx = this.dataset.index;
+
+      if (draggingSourceIdx !== null && draggingSourceIdx !== targetIdx) {
+        const movedAgent = appData.agents.splice(draggingSourceIdx, 1)[0];
+        appData.agents.splice(targetIdx, 0, movedAgent);
+        persistData();
+      }
+      return false;
+    }
+
+    function handleDragEnd() {
+      this.classList.remove('dragging');
+    }
+
+    // Startup Execution
+    initSystem();
+    renderUI();
   </script>
 </body>
 </html>
