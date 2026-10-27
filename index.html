@@ -1,977 +1,206 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>FieldOps HQ - Leader Najib (Export & Capture Planning 44H)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-main: #060913;
-      --card-bg: #0f172a;
-      --card-inner: #1e293b;
-      --accent-emerald: #10b981;
-      --accent-blue: #3b82f6;
-      --accent-amber: #f59e0b;
-      --accent-purple: #8b5cf6;
-      --accent-red: #ef4444;
-      --border-color: #1e293b;
-      --text-main: #f8fafc;
-      --text-sub: #94a3b8;
-    }
-
-    * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
-    body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 12px; font-size: 12px; }
-
-    .app-container { max-width: 1920px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
-
-    /* Top Bar Header */
-    .top-bar {
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-      background: var(--card-bg); padding: 14px 20px; border-radius: 14px; border: 1px solid var(--border-color);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    }
-    .brand { display: flex; align-items: center; gap: 12px; }
-    .brand-icon {
-      width: 42px; height: 42px; background: linear-gradient(135deg, var(--accent-emerald), var(--accent-blue));
-      border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff;
-      box-shadow: 0 4px 12px rgba(16,185,129,0.3);
-    }
-    .brand h1 { font-size: 17px; font-weight: 800; color: #fff; }
-    .brand p { font-size: 11px; color: var(--text-sub); }
-
-    /* Navigation Tabs */
-    .nav-tabs { display: flex; gap: 6px; background: var(--card-inner); padding: 4px; border-radius: 10px; border: 1px solid var(--border-color); }
-    .tab-btn {
-      background: transparent; border: none; color: var(--text-sub); padding: 8px 14px; border-radius: 6px;
-      font-weight: 800; font-size: 11.5px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
-    }
-    .tab-btn.active { background: var(--accent-blue); color: #fff; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
-
-    .action-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    .btn {
-      padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); font-weight: 700;
-      cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 11px;
-    }
-    .btn-primary { background: linear-gradient(135deg, #059669, #10b981); color: #fff; border: none; }
-    .btn-secondary { background: #1e293b; color: #fff; }
-    .btn-capture { background: linear-gradient(135deg, #8b5cf6, #6366f1); color: #fff; border: none; box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
-    .btn-danger { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
-
-    .tab-content { display: none; flex-direction: column; gap: 16px; }
-    .tab-content.active { display: flex; }
-
-    /* Control Bar */
-    .control-bar {
-      background: var(--card-bg); padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border-color);
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-    }
-    .time-selector { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .time-selector select, .time-selector input {
-      background: var(--card-inner); border: 1px solid var(--border-color); padding: 6px 10px;
-      border-radius: 6px; color: #fff; font-weight: 800; font-size: 12px; outline: none;
-    }
-
-    /* KPI Grid */
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-    .kpi-card {
-      background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 12px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .kpi-title { font-size: 10px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; }
-    .kpi-value { font-size: 20px; font-weight: 800; margin-top: 2px; }
-
-    /* Table & PC Full View Optimization */
-    .table-wrapper {
-      background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border-color);
-      overflow-x: auto; box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-    }
-    table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: center; }
-    thead th {
-      background: #0b0f19; color: var(--text-sub); padding: 10px 4px; font-size: 10px; font-weight: 800;
-      text-transform: uppercase; border-bottom: 2px solid var(--border-color); white-space: nowrap;
-    }
-    tbody tr { border-bottom: 1px solid var(--border-color); transition: background 0.15s; }
-    tbody tr:hover { background: rgba(255,255,255,0.02); }
-    td { padding: 4px 3px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-
-    .agent-name-cell { font-weight: 800; color: #fff; font-size: 11.5px; text-align: left; }
-    .shift-hours-info { font-size: 9.5px; color: var(--text-sub); margin-top: 1px; }
-
-    /* Badges */
-    .badge-status {
-      display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px; border-radius: 12px;
-      font-weight: 800; font-size: 9.5px; white-space: nowrap;
-    }
-    .status-working  { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #059669; }
-    .status-break    { background: rgba(245, 158, 11, 0.2); color: #fde047; border: 1px solid #d97706; }
-    .status-ending   { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 1px solid #ef4444; }
-    .status-upcoming { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #2563eb; }
-    .status-off      { background: rgba(148, 163, 184, 0.1); color: #64748b; border: 1px solid #334155; }
-
-    .zone-badge {
-      background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.4);
-      padding: 3px 6px; border-radius: 5px; font-weight: 800; font-size: 9.5px; display: inline-block;
-    }
-
-    /* Shift Card Design compact for screen capture */
-    .shift-card {
-      background: var(--card-inner); border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 3px;
-      display: flex; flex-direction: column; gap: 2px; align-items: center; cursor: pointer; transition: all 0.2s;
-    }
-    .shift-card:hover { border-color: var(--accent-blue); transform: translateY(-1px); }
-    .shift-time { font-size: 9.5px; font-weight: 800; color: #38bdf8; white-space: nowrap; }
-    .shift-pause { font-size: 8.5px; color: var(--accent-amber); font-weight: 700; white-space: nowrap; }
-    .shift-hours { font-size: 8px; color: var(--text-sub); font-weight: 700; }
-    
-    .zone-tag {
-      font-size: 8.5px; font-weight: 800; padding: 1px 4px; border-radius: 4px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis;
-    }
-    .zone-marche { background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.4); }
-    .zone-mcdo { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }
-    .zone-sale { background: rgba(245, 158, 11, 0.2); color: #fde047; border: 1px solid rgba(245,158,11,0.4); }
-
-    .off-card {
-      background: #111827; border: 1px dashed #374151; color: #6b7280; padding: 8px 2px; border-radius: 6px; font-weight: 800; font-size: 9.5px; cursor: pointer; text-align: center;
-    }
-
-    .hours-indicator {
-      display: inline-flex; align-items: center; justify-content: center; padding: 3px 6px; border-radius: 12px;
-      font-weight: 800; font-size: 10px; white-space: nowrap;
-    }
-    .badge-ok { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #059669; }
-    .badge-over { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 2px solid #ef4444; }
-    .badge-under { background: rgba(245, 158, 11, 0.2); color: #fde047; border: 1px solid #d97706; }
-
-    /* Zones Grid */
-    .zones-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
-    .zone-card {
-      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px;
-      display: flex; flex-direction: column; gap: 6px;
-    }
-    .zone-card-header { font-weight: 800; font-size: 11px; color: #fff; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
-    .zone-count { background: var(--accent-blue); color: #fff; padding: 1px 6px; border-radius: 8px; font-size: 9px; font-weight: 800; }
-    .agent-item { display: flex; justify-content: space-between; align-items: center; font-size: 10px; font-weight: 700; background: var(--card-inner); padding: 4px 6px; border-radius: 5px; }
-
-    /* Modal Styling */
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
-      display: none; align-items: center; justify-content: center; z-index: 1000; padding: 12px;
-    }
-    .modal-container {
-      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px;
-      width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 14px;
-    }
-    .modal-title { font-size: 15px; font-weight: 800; color: #fff; }
-    .input-group { display: flex; flex-direction: column; gap: 4px; }
-    .input-group label { font-size: 10px; font-weight: 700; color: var(--text-sub); }
-    .input-group input, .input-group select {
-      background: var(--card-inner); border: 1px solid var(--border-color); padding: 8px; border-radius: 8px;
-      color: #fff; font-size: 11.5px; outline: none;
-    }
-
-    /* FULLSCREEN CAPTURE OVERLAY MODE */
-    #capture-mode-container {
-      display: none;
-      position: fixed; top:0; left:0; width:100vw; height:100vh;
-      background: #060913; z-index: 99999; padding: 16px;
-      overflow: auto;
-    }
-    #capture-mode-container.active { display: flex; flex-direction: column; gap: 12px; }
-
-    /* PRINT AND CLEAN CAPTURE FORMATTING */
-    @media print {
-      body { background: #fff !important; color: #000 !important; padding: 0 !important; }
-      .top-bar, .nav-tabs, .action-group, .control-bar, .btn, .modal-overlay { display: none !important; }
-      .app-container { max-width: 100% !important; margin: 0 !important; }
-      .table-wrapper { border: 1px solid #ccc !important; box-shadow: none !important; background: #fff !important; }
-      table { border-collapse: collapse !important; }
-      thead th { background: #f1f5f9 !important; color: #000 !important; border-bottom: 2px solid #000 !important; font-size: 9px !important; }
-      td { border: 1px solid #cbd5e1 !important; color: #000 !important; padding: 2px !important; }
-      .agent-name-cell { color: #000 !important; font-size: 10px !important; }
-      .shift-card { background: #f8fafc !important; border: 1px solid #cbd5e1 !important; }
-      .shift-time { color: #0284c7 !important; }
-      .shift-pause { color: #d97706 !important; }
-      .zone-tag { border: 1px solid #94a3b8 !important; }
-      .off-card { background: #f1f5f9 !important; border: 1px solid #cbd5e1 !important; color: #64748b !important; }
-    }
-
-    @media (max-width: 768px) {
-      .top-bar { flex-direction: column; align-items: stretch; gap: 10px; }
-      .nav-tabs { justify-content: center; width: 100%; }
-      .action-group { justify-content: center; width: 100%; }
-      .control-bar { flex-direction: column; align-items: stretch; }
-      .time-selector { justify-content: space-between; }
-      table { min-width: 850px; }
-    }
-  </style>
-</head>
-<body>
-
-  <div class="app-container">
-    <!-- Top Bar Header -->
-    <div class="top-bar">
-      <div class="brand">
-        <div class="brand-icon">👑</div>
-        <div>
-          <h1>Leader Najib • Field Command HQ</h1>
-          <p>Planning Hebdomadaire 44.0H • Exclusivité 1 Agent Max / Zone & Shift</p>
-        </div>
-      </div>
-
-      <!-- Navigation Tabs -->
-      <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('tab-dashboard', this)">📍 Suivi Temps Réel</button>
-        <button class="tab-btn" onclick="switchTab('tab-planning', this)">📅 Planning 44H Global</button>
-      </div>
-
-      <div class="action-group">
-        <button class="btn btn-capture" onclick="openCaptureView()">📸 Mode Capture HD</button>
-        <button class="btn btn-secondary" onclick="addAgentModal()">➕ Agent</button>
-        <button class="btn btn-primary" onclick="generatePlanning()">🔄 Recalculer 44H</button>
-        <button class="btn btn-danger" onclick="resetApp()">🗑️ Reset</button>
-      </div>
-    </div>
-
-    <!-- TAB 1 : DASHBOARD TEMPS REEL -->
-    <div id="tab-dashboard" class="tab-content active">
-      <!-- Control & Time Simulator -->
-      <div class="control-bar">
-        <div class="time-selector">
-          <label>📅 Jour :</label>
-          <select id="daySelect" onchange="updateDashboardLive()">
-            <option value="0">Lundi</option>
-            <option value="1">Mardi</option>
-            <option value="2">Mercredi</option>
-            <option value="3">Jeudi</option>
-            <option value="4">Vendredi</option>
-            <option value="5">Samedi</option>
-            <option value="6">Dimanche</option>
-          </select>
-
-          <label style="margin-left:8px;">⏰ Heure (09:00 - 02:00) :</label>
-          <input type="time" id="simTimeInput" value="12:30" onchange="updateDashboardLive()">
-          <button class="btn btn-secondary" onclick="setCurrentRealTime()">Heure Réelle</button>
-        </div>
-
-        <div style="font-weight:800; color:#38bdf8; font-size:12px;" id="liveTimeHeader">
-          Aperçu Opérationnel
-        </div>
-      </div>
-
-      <!-- KPI Summary -->
-      <div class="kpi-grid">
-        <div class="kpi-card">
-          <div>
-            <div class="kpi-title">En Service</div>
-            <div class="kpi-value" id="kpiWorking" style="color:#34d399;">0</div>
-          </div>
-          <div style="font-size:22px;">🛵</div>
-        </div>
-
-        <div class="kpi-card">
-          <div>
-            <div class="kpi-title">En Pause</div>
-            <div class="kpi-value" id="kpiBreak" style="color:#fde047;">0</div>
-          </div>
-          <div style="font-size:22px;">☕</div>
-        </div>
-
-        <div class="kpi-card">
-          <div>
-            <div class="kpi-title">Fin Proche (&lt;30m)</div>
-            <div class="kpi-value" id="kpiEnding" style="color:#fca5a5;">0</div>
-          </div>
-          <div style="font-size:22px;">⌛</div>
-        </div>
-
-        <div class="kpi-card">
-          <div>
-            <div class="kpi-title">Repos / OFF</div>
-            <div class="kpi-value" id="kpiOff" style="color:#94a3b8;">0</div>
-          </div>
-          <div style="font-size:22px;">🛋️</div>
-        </div>
-      </div>
-
-      <!-- Live Dashboard Table -->
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th style="text-align:left; padding-left:12px;">Agent & Créneau</th>
-              <th>Zone Attribuée</th>
-              <th>Statut Temps Réel</th>
-              <th>Temps Restant (Shift/Pause)</th>
-              <th style="text-align:left;">Prochaine Étape</th>
-            </tr>
-          </thead>
-          <tbody id="liveTableBody"></tbody>
-        </table>
-      </div>
-
-      <!-- Zones Overview Grid -->
-      <div class="section-card" style="background:var(--card-bg); border:1px solid var(--border-color); border-radius:14px; padding:16px;">
-        <div style="font-size:13px; font-weight:800; color:#fff; margin-bottom:10px;">📍 Couverture Terrain par Zone (Distribution Exclusive)</div>
-        <div class="zones-grid" id="zonesOverviewGrid"></div>
-      </div>
-    </div>
-
-    <!-- TAB 2 : PLANNING HEBDOMADAIRE COMPLET -->
-    <div id="tab-planning" class="tab-content">
-      <div class="table-wrapper" id="main-planning-table-wrapper">
-        <table id="main-schedule-table">
-          <thead>
-            <tr>
-              <th style="width:25px;">#</th>
-              <th style="text-align:left; padding-left:8px; min-width:140px;">Nom de l'Agent</th>
-              <th>Lundi (7h)</th>
-              <th>Mardi (7h)</th>
-              <th>Mercredi (7h)</th>
-              <th>Jeudi (7h)</th>
-              <th>Vendredi (8h)</th>
-              <th>Samedi (8h)</th>
-              <th>Dimanche (7h)</th>
-              <th>Total</th>
-              <th class="no-print" style="width:40px;">Act.</th>
-            </tr>
-          </thead>
-          <tbody id="schedule-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- FULLSCREEN CAPTURE CONTAINER (For flawless screenshots) -->
-  <div id="capture-mode-container">
-    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:12px 18px; border-radius:12px; border:1px solid var(--border-color);">
-      <div>
-        <h2 style="font-size:16px; font-weight:800; color:#fff;">📸 Mode Capture - Planning Hebdomadaire Leader Najib</h2>
-        <p style="font-size:11px; color:var(--text-sub);">Vue complète ajustée pour capture d'écran nette sans défilement ni coupures.</p>
-      </div>
-      <div style="display:flex; gap:8px;">
-        <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimer / PDF</button>
-        <button class="btn btn-secondary" onclick="closeCaptureView()">❌ Fermer</button>
-      </div>
-    </div>
-
-    <div class="table-wrapper" style="box-shadow:none; border:1px solid #334155;">
-      <table style="width:100%; border-collapse:collapse;">
-        <thead>
-          <tr>
-            <th style="width:25px;">#</th>
-            <th style="text-align:left; padding-left:8px;">Nom de l'Agent</th>
-            <th>LUN (7h)</th>
-            <th>MAR (7h)</th>
-            <th>MER (7h)</th>
-            <th>JEU (7h)</th>
-            <th>VEN (8h)</th>
-            <th>SAM (8h)</th>
-            <th>DIM (7h)</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody id="capture-schedule-body"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Modal Edit Shift -->
-  <div class="modal-overlay" id="shiftModal">
-    <div class="modal-container">
-      <div class="modal-title" id="modalHeading">Modifier le Shift</div>
-      
-      <div class="input-group">
-        <label>Statut de la Journée</label>
-        <select id="modalType" onchange="toggleFields()">
-          <option value="WORK">Shift de Travail</option>
-          <option value="OFF">Jour de Repos (OFF)</option>
-        </select>
-      </div>
-
-      <div id="workingFields" style="display:flex; flex-direction:column; gap:10px;">
-        <div class="input-group">
-          <label>Zone Attribuée</label>
-          <select id="modalZoneSelect"></select>
-        </div>
-        
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <div class="input-group">
-            <label>Début Travail</label>
-            <input type="time" id="timeStartWork" value="09:00" onchange="recalculateModalHours()">
-          </div>
-          <div class="input-group">
-            <label>Début Pause</label>
-            <input type="time" id="timeStartPause" value="13:00" onchange="recalculateModalHours()">
-          </div>
-        </div>
-
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <div class="input-group">
-            <label>Fin Pause</label>
-            <input type="time" id="timeEndPause" value="15:00" onchange="recalculateModalHours()">
-          </div>
-          <div class="input-group">
-            <label>Fin Travail</label>
-            <input type="time" id="timeEndWork" value="18:00" onchange="recalculateModalHours()">
-          </div>
-        </div>
-
-        <div style="background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); padding:8px; border-radius:8px; font-weight:800; color:#38bdf8; text-align:center;" id="calculatedHoursDisplay">
-          ⏱️ Durée Effective : 7.0 Heures
-        </div>
-      </div>
-
-      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px;">
-        <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
-        <button class="btn btn-primary" onclick="saveShiftChanges()">Enregistrer</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const ZONES = [
-      "Le Marché",
-      "McDo Temara",
-      "McDo Hay Riad",
-      "McDo Carrousel",
-      "McDo LGV",
-      "McDo Agdal",
-      "McDo Medina",
-      "McDo Bouragrag",
-      "McDo Hay Chaou"
-    ];
-
-    const DAYS = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
-
-    const DEFAULT_AGENTS = [
-      "Yahya Rhallah", "Youssef Derkaoui", "Aymane Chlifane", "Achraf Akhlij",
-      "Islam Elmardi", "Oussama El Atrach", "Mehdi Ait Jebour", "Mourad Cherradi",
-      "Ayoub Abssi", "Hassan Azgoune", "Ayoub Ben Malek", "Charaf Loummihi", "Mohamd khalyl"
-    ];
-
-    const SHIFTS_7H = [
-      { startW: "09:00", startP: "13:00", endP: "15:00", endW: "18:00" },
-      { startW: "11:00", startP: "14:00", endP: "17:00", endW: "21:00" },
-      { startW: "12:00", startP: "15:00", endP: "18:00", endW: "22:00" },
-      { startW: "14:00", startP: "17:00", endP: "21:00", endW: "01:00" },
-      { startW: "18:00", startP: "21:00", endP: "22:00", endW: "02:00" }
-    ];
-
-    const SHIFTS_8H = [
-      { startW: "09:00", startP: "13:00", endP: "15:00", endW: "19:00" },
-      { startW: "10:00", startP: "14:00", endP: "17:00", endW: "21:00" },
-      { startW: "12:00", startP: "16:00", endP: "19:00", endW: "01:00" },
-      { startW: "13:00", startP: "17:00", endP: "20:00", endW: "01:00" },
-      { startW: "17:00", startP: "20:00", endP: "21:00", endW: "02:00" }
-    ];
-
-    let appData = JSON.parse(localStorage.getItem('najib_field_db_v13')) || null;
-
-    function timeToMinutes(t) {
-      if (!t) return 0;
-      let [h, m] = t.split(':').map(Number);
-      return h * 60 + m;
-    }
-
-    function formatMinsToHHMM(mins) {
-      if (mins < 0) mins = 0;
-      let h = Math.floor(mins / 60);
-      let m = mins % 60;
-      return `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}m`;
-    }
-
-    function calculateNetHours(startW, startP, endP, endW) {
-      let tSW = timeToMinutes(startW);
-      let tSP = timeToMinutes(startP);
-      let tEP = timeToMinutes(endP);
-      let tEW = timeToMinutes(endW);
-
-      if (tEW <= tSW) tEW += 24 * 60;
-      if (tEP < tSW) tEP += 24 * 60;
-      if (tSP < tSW) tSP += 24 * 60;
-
-      let part1 = Math.max(0, tSP - tSW);
-      let part2 = Math.max(0, tEW - tEP);
-
-      return parseFloat(((part1 + part2) / 60).toFixed(1));
-    }
-
-    function initSystem() {
-      if (!appData) {
-        appData = {
-          agents: DEFAULT_AGENTS.map((name, idx) => ({
-            id: 'ag_' + idx,
-            name: name,
-            offDay: idx % 4,
-            schedule: []
-          }))
-        };
-        buildScheduleMatrix();
-      }
-    }
-
-    /* ALGORITHME STRICT : MAX 1 AGENT PAR ZONE ET SHIFT (EXCLUSIVITE TOTALE) */
-    function buildScheduleMatrix() {
-      appData.agents.forEach((ag, agIdx) => {
-        ag.schedule = [];
-        ag.offDay = agIdx % 4;
-      });
-
-      DAYS.forEach((day, dIdx) => {
-        const is8hDay = (dIdx === 4 || dIdx === 5);
-        const isOffAllowedDay = (dIdx < 4);
-        const pool = is8hDay ? SHIFTS_8H : SHIFTS_7H;
-
-        let occupiedZoneTime = {}; // Réservation exclusive
-
-        appData.agents.forEach((ag, agIdx) => {
-          let prevZone = (dIdx > 0 && ag.schedule[dIdx - 1]) ? ag.schedule[dIdx - 1].zone : "";
-          let prevTime = (dIdx > 0 && ag.schedule[dIdx - 1]) ? ag.schedule[dIdx - 1].startW : "";
-
-          if (isOffAllowedDay && (ag.offDay === dIdx)) {
-            ag.schedule.push({ type: "OFF", hours: 0 });
-          } else {
-            let chosenZone = "";
-            let chosenShift = null;
-
-            for (let zOffset = 0; zOffset < ZONES.length; zOffset++) {
-              let candidateZone = ZONES[(agIdx + dIdx + zOffset) % ZONES.length];
-              if (candidateZone === prevZone) continue; 
-
-              for (let sOffset = 0; sOffset < pool.length; sOffset++) {
-                let candidateShift = pool[(agIdx * 2 + dIdx * 3 + sOffset) % pool.length];
-                if (candidateShift.startW === prevTime) continue; 
-
-                let pairKey = `${candidateZone}_${candidateShift.startW}`;
-                
-                if (!occupiedZoneTime[pairKey]) {
-                  chosenZone = candidateZone;
-                  chosenShift = candidateShift;
-                  occupiedZoneTime[pairKey] = ag.name; 
-                  break;
-                }
-              }
-              if (chosenZone !== "") break;
-            }
-
-            if (chosenZone === "") {
-              for (let zOffset = 0; zOffset < ZONES.length; zOffset++) {
-                let candidateZone = ZONES[(agIdx + zOffset) % ZONES.length];
-                let candidateShift = pool[(agIdx + zOffset) % pool.length];
-                let pairKey = `${candidateZone}_${candidateShift.startW}`;
-
-                if (!occupiedZoneTime[pairKey]) {
-                  chosenZone = candidateZone;
-                  chosenShift = candidateShift;
-                  occupiedZoneTime[pairKey] = ag.name;
-                  break;
-                }
-              }
-            }
-
-            if (chosenZone === "") {
-              chosenZone = ZONES[agIdx % ZONES.length];
-              chosenShift = pool[agIdx % pool.length];
-            }
-
-            let netH = is8hDay ? 8.0 : 7.0;
-
-            ag.schedule.push({
-              type: "WORK",
-              zone: chosenZone,
-              startW: chosenShift.startW,
-              startP: chosenShift.startP,
-              endP: chosenShift.endP,
-              endW: chosenShift.endW,
-              hours: netH
-            });
-          }
-        });
-      });
-
-      persistData();
-    }
-
-    function persistData() {
-      localStorage.setItem('najib_field_db_v13', JSON.stringify(appData));
-      renderUI();
-      updateDashboardLive();
-    }
-
-    function renderUI() {
-      const tbody = document.getElementById('schedule-body');
-      const captureTbody = document.getElementById('capture-schedule-body');
-      if (!tbody) return;
-
-      tbody.innerHTML = '';
-      if (captureTbody) captureTbody.innerHTML = '';
-
-      const zoneSelect = document.getElementById('modalZoneSelect');
-      zoneSelect.innerHTML = ZONES.map(z => `<option value="${z}">${z}</option>`).join('');
-
-      appData.agents.forEach((ag, agIdx) => {
-        const row = document.createElement('tr');
-        const captureRow = document.createElement('tr');
-
-        let totalWeeklyHours = 0;
-        let daysMarkup = ag.schedule.map((slot, dIdx) => {
-          let h = slot.hours || 0;
-          totalWeeklyHours += h;
-
-          if (slot.type === "OFF") {
-            return `<td onclick="openModal(${agIdx}, ${dIdx})"><div class="off-card">OFF</div></td>`;
-          } else {
-            let zoneClass = slot.zone === "Le Marché" ? "zone-marche" : (slot.zone.includes("Bouragrag") || slot.zone.includes("Chaou") ? "zone-sale" : "zone-mcdo");
-            return `
-              <td onclick="openModal(${agIdx}, ${dIdx})">
-                <div class="shift-card">
-                  <span class="shift-time">🕒 ${slot.startW}➔${slot.endW}</span>
-                  <span class="shift-pause">☕ ${slot.startP}-${slot.endP}</span>
-                  <span class="zone-tag ${zoneClass}">📍 ${slot.zone}</span>
-                  <span class="shift-hours">⏱️ ${h}h</span>
-                </div>
-              </td>
-            `;
-          }
-        }).join('');
-
-        let captureDaysMarkup = ag.schedule.map((slot) => {
-          if (slot.type === "OFF") {
-            return `<td><div class="off-card">OFF</div></td>`;
-          } else {
-            let zoneClass = slot.zone === "Le Marché" ? "zone-marche" : (slot.zone.includes("Bouragrag") || slot.zone.includes("Chaou") ? "zone-sale" : "zone-mcdo");
-            return `
-              <td>
-                <div class="shift-card">
-                  <span class="shift-time">${slot.startW}-${slot.endW}</span>
-                  <span class="zone-tag ${zoneClass}">${slot.zone}</span>
-                </div>
-              </td>
-            `;
-          }
-        }).join('');
-
-        totalWeeklyHours = parseFloat(totalWeeklyHours.toFixed(1));
-
-        let badgeClass = 'badge-ok';
-        let badgeText = `${totalWeeklyHours}h`;
-
-        if (totalWeeklyHours > 44) {
-          badgeClass = 'badge-over';
-          badgeText = `⚠️ ${totalWeeklyHours}h`;
-        } else if (totalWeeklyHours < 44) {
-          badgeClass = 'badge-under';
-          badgeText = `📉 ${totalWeeklyHours}h`;
-        }
-
-        row.innerHTML = `
-          <td style="color:var(--text-sub); font-weight:800;">${agIdx + 1}</td>
-          <td style="text-align:left; padding-left:8px;">
-            <div class="agent-name-cell">${ag.name}</div>
-          </td>
-          ${daysMarkup}
-          <td>
-            <span class="hours-indicator ${badgeClass}">${badgeText}</span>
-          </td>
-          <td class="no-print">
-            <button class="btn btn-danger" style="padding:2px 5px; font-size:9px;" onclick="removeAgent(${agIdx})">🗑️</button>
-          </td>
-        `;
-
-        captureRow.innerHTML = `
-          <td style="color:var(--text-sub); font-weight:800;">${agIdx + 1}</td>
-          <td style="text-align:left; padding-left:8px;">
-            <div class="agent-name-cell">${ag.name}</div>
-          </td>
-          ${captureDaysMarkup}
-          <td>
-            <span class="hours-indicator ${badgeClass}">${badgeText}</span>
-          </td>
-        `;
-
-        tbody.appendChild(row);
-        if (captureTbody) captureTbody.appendChild(captureRow);
-      });
-    }
-
-    /* CAPTURE MODE OVERLAY LOGIC */
-    function openCaptureView() {
-      document.getElementById('capture-mode-container').classList.add('active');
-    }
-
-    function closeCaptureView() {
-      document.getElementById('capture-mode-container').classList.remove('active');
-    }
-
-    /* REAL-TIME DASHBOARD LOGIC */
-    function setCurrentRealTime() {
-      const now = new Date();
-      let dayIdx = now.getDay(); 
-      let dayMap = [6, 0, 1, 2, 3, 4, 5]; 
-      document.getElementById('daySelect').value = dayMap[dayIdx];
-
-      let hh = String(now.getHours()).padStart(2, '0');
-      let mm = String(now.getMinutes()).padStart(2, '0');
-      document.getElementById('simTimeInput').value = `${hh}:${mm}`;
-      updateDashboardLive();
-    }
-
-    function updateDashboardLive() {
-      const dayIdx = parseInt(document.getElementById('daySelect').value) || 0;
-      const timeStr = document.getElementById('simTimeInput').value;
-      let currentMins = timeToMinutes(timeStr);
-
-      if (currentMins < 5 * 60) {
-        currentMins += 24 * 60;
-      }
-
-      const tbody = document.getElementById('liveTableBody');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-
-      const zonesContainer = document.getElementById('zonesOverviewGrid');
-      zonesContainer.innerHTML = '';
-
-      let kpiW = 0, kpiB = 0, kpiE = 0, kpiO = 0;
-      let zoneOccupancy = {};
-      ZONES.forEach(z => zoneOccupancy[z] = []);
-
-      appData.agents.forEach((ag) => {
-        const slot = ag.schedule ? ag.schedule[dayIdx] : null;
-
-        let statusClass = 'status-off';
-        let statusText = 'OFF / Repos';
-        let remainingText = '—';
-        let nextStepText = 'Journée de Repos';
-
-        if (slot && slot.type === "WORK") {
-          let sw = timeToMinutes(slot.startW);
-          let sp = timeToMinutes(slot.startP);
-          let ep = timeToMinutes(slot.endP);
-          let ew = timeToMinutes(slot.endW);
-
-          if (ew <= sw) ew += 24 * 60;
-          if (ep < sw) ep += 24 * 60;
-          if (sp < sw) sp += 24 * 60;
-
-          if (currentMins < sw) {
-            let diff = sw - currentMins;
-            statusClass = 'status-upcoming';
-            statusText = '⏳ Non Commencé';
-            remainingText = `Début dans ${formatMinsToHHMM(diff)}`;
-            nextStepText = `Démarre à ${slot.startW}`;
-          } else if (currentMins >= sw && currentMins < sp) {
-            let diffToPause = sp - currentMins;
-            let netRemaining = (sp - currentMins) + (ew - ep);
-            statusClass = 'status-working';
-            statusText = '🛵 Service (Partie 1)';
-            remainingText = `<span style="font-weight:800; color:#38bdf8;">${formatMinsToHHMM(netRemaining)}</span> restant`;
-            nextStepText = `Pause à ${slot.startP} (dans ${formatMinsToHHMM(diffToPause)})`;
-            kpiW++;
-            zoneOccupancy[slot.zone].push({ name: ag.name, status: "En Service" });
-          } else if (currentMins >= sp && currentMins < ep) {
-            let diffPauseEnd = ep - currentMins;
-            let netRemaining = ew - ep;
-            statusClass = 'status-break';
-            statusText = '☕ En Pause';
-            remainingText = `<span style="font-weight:800; color:#38bdf8;">${formatMinsToHHMM(netRemaining)}</span> restant`;
-            nextStepText = `Reprise à ${slot.endP} (dans ${formatMinsToHHMM(diffPauseEnd)})`;
-            kpiB++;
-            zoneOccupancy[slot.zone].push({ name: ag.name, status: "En Pause" });
-          } else if (currentMins >= ep && currentMins < ew) {
-            let diffToEnd = ew - currentMins;
-            if (diffToEnd <= 30) {
-              statusClass = 'status-ending';
-              statusText = '⌛ Fin Proche';
-              kpiE++;
-            } else {
-              statusClass = 'status-working';
-              statusText = '🛵 Service (Partie 2)';
-            }
-            remainingText = `<span style="font-weight:800; color:#38bdf8;">${formatMinsToHHMM(diffToEnd)}</span> restant`;
-            nextStepText = `Fin à ${slot.endW}`;
-            kpiW++;
-            zoneOccupancy[slot.zone].push({ name: ag.name, status: "En Service" });
-          } else {
-            statusClass = 'status-off';
-            statusText = '✅ Service Terminé';
-            remainingText = '00h00m';
-            nextStepText = `A fini à ${slot.endW}`;
-          }
-        } else {
-          kpiO++;
-        }
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td style="text-align:left; padding-left:12px;">
-            <div class="agent-name-cell">${ag.name}</div>
-            <div class="shift-hours-info">${slot && slot.type === "WORK" ? `${slot.startW}➔${slot.endW} (P:${slot.startP}-${slot.endP})` : 'Repos'}</div>
-          </td>
-          <td>
-            <span class="zone-badge">${slot && slot.type === "WORK" ? `📍 ${slot.zone}` : 'OFF'}</span>
-          </td>
-          <td>
-            <span class="badge-status ${statusClass}">${statusText}</span>
-          </td>
-          <td>${remainingText}</td>
-          <td style="text-align:left; font-weight:700; color:#f1f5f9;">${nextStepText}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      document.getElementById('kpiWorking').innerText = kpiW;
-      document.getElementById('kpiBreak').innerText = kpiB;
-      document.getElementById('kpiEnding').innerText = kpiE;
-      document.getElementById('kpiOff').innerText = kpiO;
-
-      ZONES.forEach((z) => {
-        const ags = zoneOccupancy[z] || [];
-        const card = document.createElement('div');
-        card.className = 'zone-card';
-
-        let listHtml = ags.map(a => `
-          <div class="agent-item">
-            <span>👤 ${a.name}</span>
-            <span style="font-size:9px; color:${a.status === 'En Service' ? '#34d399' : '#fde047'};">(${a.status})</span>
-          </div>
-        `).join('');
-
-        if (ags.length === 0) {
-          listHtml = `<div style="font-size:9.5px; color:#64748b; font-style:italic; text-align:center;">Aucun agent</div>`;
-        }
-
-        card.innerHTML = `
-          <div class="zone-card-header">
-            <span>📍 ${z}</span>
-            <span class="zone-count">${ags.length} Agent(s)</span>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:4px;">${listHtml}</div>
-        `;
-        zonesContainer.appendChild(card);
-      });
-    }
-
-    /* Modal Editing Logic */
-    let activeAgentIdx = null;
-    let activeDayIdx = null;
-
-    function openModal(agIdx, dIdx) {
-      activeAgentIdx = agIdx;
-      activeDayIdx = dIdx;
-      
-      const item = appData.agents[agIdx].schedule[dIdx];
-      document.getElementById('modalHeading').innerText = `Modifier Shift (${appData.agents[agIdx].name} - ${DAYS[dIdx]})`;
-      document.getElementById('modalType').value = item.type;
-
-      if (item.type === "WORK") {
-        document.getElementById('modalZoneSelect').value = item.zone || ZONES[0];
-        document.getElementById('timeStartWork').value = item.startW || "09:00";
-        document.getElementById('timeStartPause').value = item.startP || "13:00";
-        document.getElementById('timeEndPause').value = item.endP || "15:00";
-        document.getElementById('timeEndWork').value = item.endW || "18:00";
-      }
-
-      toggleFields();
-      recalculateModalHours();
-      document.getElementById('shiftModal').style.display = 'flex';
-    }
-
-    function recalculateModalHours() {
-      let sw = document.getElementById('timeStartWork').value;
-      let sp = document.getElementById('timeStartPause').value;
-      let ep = document.getElementById('timeEndPause').value;
-      let ew = document.getElementById('timeEndWork').value;
-
-      let netH = calculateNetHours(sw, sp, ep, ew);
-      document.getElementById('calculatedHoursDisplay').innerText = `⏱️ Durée Effective : ${netH} Heures`;
-      return netH;
-    }
-
-    function toggleFields() {
-      const type = document.getElementById('modalType').value;
-      document.getElementById('workingFields').style.display = type === "WORK" ? 'flex' : 'none';
-    }
-
-    function closeModal() {
-      document.getElementById('shiftModal').style.display = 'none';
-    }
-
-    function saveShiftChanges() {
-      const type = document.getElementById('modalType').value;
-      const agent = appData.agents[activeAgentIdx];
-
-      if (type === "OFF") {
-        agent.schedule[activeDayIdx] = { type: "OFF", hours: 0 };
-      } else {
-        let sw = document.getElementById('timeStartWork').value;
-        let sp = document.getElementById('timeStartPause').value;
-        let ep = document.getElementById('timeEndPause').value;
-        let ew = document.getElementById('timeEndWork').value;
-        let netH = calculateNetHours(sw, sp, ep, ew);
-
-        agent.schedule[activeDayIdx] = {
-          type: "WORK",
-          zone: document.getElementById('modalZoneSelect').value,
-          startW: sw,
-          startP: sp,
-          endP: ep,
-          endW: ew,
-          hours: netH
-        };
-      }
-
-      closeModal();
-      persistData();
-    }
-
-    function switchTab(tabId, btn) {
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      btn.classList.add('active');
-      if (tabId === 'tab-dashboard') updateDashboardLive();
-    }
-
-    function addAgentModal() {
-      const name = prompt("Entrez le Nom Complet de l'Agent :");
-      if (name && name.trim() !== "") {
-        appData.agents.push({
-          id: 'ag_' + Date.now(),
-          name: name.trim(),
-          offDay: 0,
-          schedule: []
-        });
-        buildScheduleMatrix();
-      }
-    }
-
-    function removeAgent(idx) {
-      if (confirm(`Êtes-vous sûr de vouloir supprimer l'agent ${appData.agents[idx].name} ?`)) {
-        appData.agents.splice(idx, 1);
-        persistData();
-      }
-    }
-
-    function generatePlanning() {
-      if (confirm("Régénérer un nouveau planning 100% équilibré à 44.0H pour tous les agents ?")) {
-        buildScheduleMatrix();
-      }
-    }
-
-    function resetApp() {
-      if (confirm("Réinitialiser toutes les données vers la configuration d'origine (13 agents b 44h) ?")) {
-        localStorage.removeItem('najib_field_db_v13');
-        appData = null;
-        initSystem();
-        renderUI();
-      }
-    }
-
-    initSystem();
-    renderUI();
-    setCurrentRealTime();
-  </script>
-</body>
-</html>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Planning Agents</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#243047;--mu:#7b8498;--bd:#e9ecf4;--ac:#6366f1;--acs:rgba(99,102,241,.1);--ok:rgba(52,211,153,.16);--okt:#0f8a63;--wa:rgba(251,191,36,.2);--wat:#a16207;--dn:rgba(148,163,184,.16);--bad:#e5484d;--bads:rgba(229,72,77,.12);--off:#f0f2f8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#12151d;--card:#1b1f2b;--tx:#e8ebf4;--mu:#9099ad;--bd:#2a3040;--ac:#8b8ff8;--acs:rgba(139,143,248,.14);--okt:#5fe0b0;--wat:#f6d36b;--bad:#ff7b80;--off:#222735}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#12151d;--card:#1b1f2b;--tx:#e8ebf4;--mu:#9099ad;--bd:#2a3040;--ac:#8b8ff8;--acs:rgba(139,143,248,.14);--okt:#5fe0b0;--wat:#f6d36b;--bad:#ff7b80;--off:#222735}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 "Inter",system-ui,-apple-system,"Segoe UI",sans-serif;padding:18px;max-width:1400px;margin:0 auto}
+h1{font-size:22px;margin:0;letter-spacing:-.3px}h2{font-size:15px;margin:26px 0 10px;font-weight:650}
+.mu{color:var(--mu);font-size:12px}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.live{display:inline-flex;align-items:center;gap:6px;background:var(--ok);color:var(--okt);border-radius:99px;padding:3px 11px;font-size:12px;font-weight:600}
+.live.m{background:var(--wa);color:var(--wat)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px}
+button,select,input{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:6px 11px}
+button{cursor:pointer;transition:background .15s}button:hover{background:var(--acs)}
+button.p{background:var(--ac);border-color:var(--ac);color:#fff}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 10px}
+.tabs button.a{background:var(--acs);border-color:var(--ac);color:var(--ac);font-weight:650}
+.tl{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:14px}
+.tl input[type=range]{flex:1;min-width:200px;padding:0;accent-color:var(--ac)}
+.tm{font-size:26px;font-weight:700;letter-spacing:-1px;min-width:74px}
+.st{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+.st div{border-radius:14px;padding:10px 14px}.st b{display:block;font-size:24px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.col h3{margin:0 0 10px;font-size:13px;display:flex;justify-content:space-between}
+.r{padding:9px 0;border-top:1px solid var(--bd)}.r:first-of-type{border-top:0}
+.r .n{font-weight:600}
+.bg{height:6px;background:var(--dn);border-radius:9px;margin:6px 0 2px;overflow:hidden}.bg i{display:block;height:100%;background:var(--ac);opacity:.6;border-radius:9px}
+.z{display:inline-flex;align-items:center;gap:5px;border:1px solid;border-radius:99px;padding:1px 9px 1px 6px;font-size:11px;font-weight:550;color:var(--tx);margin-top:3px}
+.z:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.badge{display:inline-block;border-radius:99px;padding:1px 9px;font-size:11px;font-weight:600}
+.grp{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:12px}
+.w{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:16px}
+table{border-collapse:collapse;width:100%;min-width:1000px}
+th,td{padding:8px;border-bottom:1px solid var(--bd);text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-size:12px;color:var(--mu);font-weight:600}
+td.o{background:var(--off);color:var(--mu);text-align:center;vertical-align:middle;font-weight:600;font-size:12px}
+.c select{padding:3px 5px;font-size:12px;font-weight:600;width:100%;border-radius:8px}
+.ag{white-space:nowrap}.ag button{padding:0 7px;margin:3px 3px 0 0;font-size:12px}
+.bad{color:var(--bad);font-weight:700}
+.lg{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
+.cv table{min-width:800px}.cv td,.cv th{text-align:center;padding:5px 3px;font-size:12px}
+.cur{box-shadow:inset 0 0 0 2px var(--ac)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+</style></head><body>
+<div class="top"><div><h1>Planning des agents</h1><div class="mu">44h/semaine · 09:00 → 02:00 · Ven/Sam 8h, autres jours 7h · sans pause · OFF du Lundi au Jeudi</div></div>
+<div><span id="lv" class="live"></span></div></div>
+
+<div class="tabs" id="tabs"></div>
+<div class="card"><div class="tl"><div class="tm" id="tm"></div><input type="range" id="sl" min="9" max="26" step="0.25" oninput="setT(this.value)"><button onclick="goLive()">● Maintenant</button></div>
+<div class="st" id="st"></div>
+<div class="cols" id="cols"></div></div>
+<div class="grp" id="grp"></div>
+
+<h2>Gestion</h2>
+<div class="bar"><input id="nn" placeholder="Nom de l’agent"><button class="p" onclick="add()">+ Ajouter un agent</button>
+<button onclick="S.week++;save()">↻ Régénérer la rotation</button>
+<button onclick="S.ov={};save()">Effacer les horaires manuels</button>
+<button onclick="if(confirm('Tout réinitialiser ?')){S=def();save()}">Réinitialiser</button></div>
+<div class="lg" id="lg"></div>
+<div class="w"><table id="t"></table></div>
+
+<h2>Couverture par heure</h2>
+<div class="mu" style="margin-bottom:8px">Total en gras, puis agents dans Groupe A · B · C (0 en rouge = groupe non couvert). Rush : 12h–15h et 18h–01h.</div>
+<div class="w cv"><table id="cv"></table></div>
+
+<script>
+var DAYS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+var ZONES=[["McDo Medina","#8b5cf6"],["McDo Bouragrag","#a78bfa"],["McDo Hay Chaou","#d946ef"],["McDo Carrousel","#38bdf8"],["McDo LGV","#2dd4bf"],["McDo Agdal","#60a5fa"],["Le Marché","#fb7185"],["McDo Temara","#fb923c"],["McDo Hay Riad","#f5b53d"]];
+var CL=["#8b5cf6","#38bdf8","#fb923c"],GN=["A","B","C"];
+var NAMES=["Yahya Rhallah","Youssef Derkaoui","Aymane Chlifane","Achraf Akhlij","Islam Elmardi","Oussama El Atrach","Mehdi Ait Jebour","Mourad Cherradi","Ayoub Abssi","Hassan Azgoune","Ayoub Ben Malek","Charaf Loummihi","Mohamd Khalyl"];
+function def(){return{agents:NAMES.map(function(n,i){return{id:i+1,n:n,off:i%4}}),ov:{},week:0,nid:100}}
+var S=def(),PLAN=[],live=true,sel=0,tm=12;
+try{var r=localStorage.getItem("pl1");if(r)S=JSON.parse(r)}catch(e){}
+function save(){try{localStorage.setItem("pl1",JSON.stringify(S))}catch(e){}render()}
+function L(d){return d==4||d==5?8:7}
+function fmt(h){h=h%24;return(h<10?"0":"")+h+":00"}
+function ft(t){var h=Math.floor(t),m=Math.round((t-h)*60);if(m==60){h++;m=0}h=h%24;return(h<10?"0":"")+h+":"+(m<10?"0":"")+m}
+function dur(x){var m=Math.round(x*60),h=Math.floor(m/60);m=m%60;return(h?h+"h":"")+(m?(h?(m<10?"0":""):"")+m+(h?"":" min"):"")}
+function add(){var v=document.getElementById("nn").value.trim();if(!v)return;S.agents.push({id:S.nid++,n:v,off:S.agents.length%4});save()}
+function del(i){S.agents.splice(i,1);save()}
+function mv(i,k){var j=i+k,a=S.agents;if(j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t;save()}
+function setOff(i,v){S.agents[i].off=+v;save()}
+function setOv(id,d,v){S.ov[id+"-"+d]=+v;save()}
+function chip(z){var c=ZONES[z][1];return"<span class='z' style='background:"+c+"26;border-color:"+c+"80;color:"+c+"'><span style='color:var(--tx)'>"+ZONES[z][0]+"</span></span>"}
+function gen(){
+ var A=S.agents,plan=[],pS={},pZ={},hist={};
+ A.forEach(function(a){hist[a.id]={}});
+ for(var d=0;d<7;d++){
+  var act=A.filter(function(a){return a.off!==d}),n=act.length,l=L(d),day={};
+  if(!n){plan.push(day);continue}
+  var M=[12,14,16,18,18,10,12,18],slots=[9,19,9,19,9,19].slice(0,n);for(var m=0;slots.length<n;m++)slots.push(M[m%M.length]);slots.sort(function(a,b){return a-b});slots=slots.map(function(v){return Math.min(v,26-l)});
+  var o=(d*3+S.week*5)%n,st={};
+  act.forEach(function(a,j){st[a.id]=slots[(j+o)%n]});
+  act.forEach(function(a){
+   if(st[a.id]===pS[a.id]){
+    for(var k=0;k<act.length;k++){var b=act[k];
+     if(b!==a&&st[b.id]!==pS[a.id]&&st[a.id]!==pS[b.id]&&st[b.id]!==st[a.id]){var t=st[a.id];st[a.id]=st[b.id];st[b.id]=t;break}}}
+  });
+  act.forEach(function(a){var v=S.ov[a.id+"-"+d];if(v)st[a.id]=Math.min(v,26-l)});
+  var ord=act.slice().sort(function(a,b){return st[a.id]-st[b.id]}),ZC=[],CC=[[],[],[]];
+  ord.forEach(function(a,j){
+   var s0=st[a.id],e0=s0+l,best=0,bs=1e9,q;
+   for(var z=0;z<9;z++){
+    var c0=Math.floor(z/3),sc=(z===pZ[a.id]?1e6:0)+(hist[a.id][z]||0)*3+((z-j-d+90)%9)*0.1;
+    for(q=s0;q<e0;q++){var zn=(ZC[z]&&ZC[z][q])||0,cn=CC[c0][q]||0;sc+=zn*3+cn+(cn===0?-20:0)}
+    if(sc<bs){bs=sc;best=z}}
+   if(!ZC[best])ZC[best]=[];
+   for(q=s0;q<e0;q++){ZC[best][q]=(ZC[best][q]||0)+1;CC[Math.floor(best/3)][q]=(CC[Math.floor(best/3)][q]||0)+1}
+   hist[a.id][best]=(hist[a.id][best]||0)+1;
+   day[a.id]={s:s0,e:e0,z:best};pZ[a.id]=best;pS[a.id]=s0;
+  });
+  plan.push(day);
+ }
+ return plan;
+}
+function nowInfo(){var n=new Date(),h=n.getHours()+n.getMinutes()/60,d=(n.getDay()+6)%7;if(h<2){h+=24;d=(d+6)%7}return{d:d,t:h}}
+function goLive(){live=true;tick()}
+function setT(v){live=false;tm=+v;renderLive()}
+function setD(d){live=false;sel=d;renderLive()}
+function tick(){if(live){var i=nowInfo();sel=i.d;tm=i.t}renderLive()}
+setInterval(tick,30000);
+function renderLive(){
+ var d=sel,t=tm,on=[],soon=[],done=[],off=[];
+ S.agents.forEach(function(a){var c=PLAN[d]&&PLAN[d][a.id];
+  if(!c){off.push(a);return}
+  var o={a:a,c:c};if(t>=c.s&&t<c.e)on.push(o);else if(t<c.s)soon.push(o);else done.push(o)});
+ on.sort(function(x,y){return x.c.e-y.c.e});soon.sort(function(x,y){return x.c.s-y.c.s});done.sort(function(x,y){return y.c.e-x.c.e});
+ document.getElementById("lv").className="live"+(live?"":" m");
+ document.getElementById("lv").textContent=live?"● En direct":"Mode manuel";
+ var tb="";DAYS.forEach(function(x,i){tb+="<button class='"+(i===d?"a":"")+"' onclick='setD("+i+")'>"+x+"</button>"});
+ document.getElementById("tabs").innerHTML=tb;
+ document.getElementById("tm").textContent=ft(t);
+ document.getElementById("sl").value=Math.min(Math.max(t,9),26);
+ document.getElementById("st").innerHTML=
+  "<div style='background:var(--ok)'><b style='color:var(--okt)'>"+on.length+"</b>En service</div>"+
+  "<div style='background:var(--wa)'><b style='color:var(--wat)'>"+soon.length+"</b>Pas encore commencé</div>"+
+  "<div style='background:var(--dn)'><b>"+done.length+"</b>Terminé</div>"+
+  "<div style='background:var(--off)'><b>"+off.length+"</b>OFF aujourd’hui</div>";
+ var h1="",h2="",h3="";
+ on.forEach(function(o){var p=Math.round((t-o.c.s)/(o.c.e-o.c.s)*100);
+  h1+="<div class='r'><div class='n'>"+o.a.n+"</div>"+chip(o.c.z)+"<div class='bg'><i style='width:"+p+"%'></i></div><div class='mu'>"+ft(o.c.s)+" → "+ft(o.c.e)+" · reste "+dur(o.c.e-t)+"</div></div>"});
+ soon.forEach(function(o){var w=o.c.s-t;
+  h2+="<div class='r'><div class='n'>"+o.a.n+(w<=1?" <span class='badge' style='background:var(--wa);color:var(--wat)'>Bientôt</span>":"")+"</div>"+chip(o.c.z)+"<div class='mu'>Commence à "+ft(o.c.s)+" (dans "+dur(w)+") · fini à "+ft(o.c.e)+"</div></div>"});
+ done.forEach(function(o){h3+="<div class='r'><div class='n'>"+o.a.n+"</div>"+chip(o.c.z)+"<div class='mu'>"+ft(o.c.s)+" → "+ft(o.c.e)+" · terminé</div></div>"});
+ var em="<div class='mu'>Personne</div>",offh=off.map(function(a){return a.n}).join(", ");
+ document.getElementById("cols").innerHTML=
+  "<div class='col'><h3>🟢 En service <span class='mu'>"+on.length+"</span></h3>"+(h1||em)+"</div>"+
+  "<div class='col'><h3>🟡 Pas encore commencé <span class='mu'>"+soon.length+"</span></h3>"+(h2||em)+"</div>"+
+  "<div class='col'><h3>⚪ Terminé <span class='mu'>"+done.length+"</span></h3>"+(h3||em)+(offh?"<div class='mu' style='margin-top:12px'><b>OFF :</b> "+offh+"</div>":"")+"</div>";
+ var g="";
+ for(var k=0;k<3;k++){
+  var m=on.filter(function(o){return Math.floor(o.c.z/3)===k}),b;
+  if(!m.length)b="<span class='badge' style='background:var(--bads);color:var(--bad)'>Non couvert</span>";
+  else if(m.length<3)b="<span class='badge' style='background:var(--wa);color:var(--wat)'>"+m.length+" agent"+(m.length>1?"s":"")+" : zones couvertes ensemble</span>";
+  else b="<span class='badge' style='background:var(--ok);color:var(--okt)'>Chaque zone a son agent</span>";
+  g+="<div class='card' style='border-top:4px solid "+CL[k]+"88'><div style='display:flex;justify-content:space-between;align-items:center'><b>Groupe "+GN[k]+"</b>"+b+"</div><div class='mu' style='margin:4px 0 6px'>"+ZONES[k*3][0]+" · "+ZONES[k*3+1][0]+" · "+ZONES[k*3+2][0]+"</div>"+
+   (m.map(function(o){return"<div style='margin-top:4px'>"+o.a.n+" "+chip(o.c.z)+"</div>"}).join("")||"")+"</div>";
+ }
+ document.getElementById("grp").innerHTML=g;
+ renderCv();
+}
+function renderCv(){
+ var v="<tr><th>Jour</th>";
+ for(var x=9;x<26;x++){var rush=(x>=12&&x<15)||(x>=18&&x<25);v+="<th style='color:"+(rush?"var(--ac)":"var(--mu)")+"'>"+(x%24)+"h</th>"}
+ v+="</tr>";
+ for(var d=0;d<7;d++){
+  v+="<tr><th>"+DAYS[d]+"</th>";
+  for(var x=9;x<26;x++){
+   var n=0,cc=[0,0,0];for(var id in PLAN[d]){var c=PLAN[d][id];if(c.s<=x&&x<c.e){n++;cc[Math.floor(c.z/3)]++}}
+   var rush=(x>=12&&x<15)||(x>=18&&x<25),cur=(d===sel&&Math.floor(tm)===x);
+   v+="<td class='"+(cur?"cur":"")+"' style='background:rgba(99,102,241,"+Math.min(n/10,1)*(rush?0.2:0.07)+")'><b>"+n+"</b><br>"+cc.map(function(k,i){return"<span style='color:"+(k?CL[i]:"var(--bad)")+";font-weight:700'>"+k+"</span>"}).join("·")+"</td>";
+  }
+  v+="</tr>";
+ }
+ document.getElementById("cv").innerHTML=v;
+}
+function render(){
+ PLAN=gen();
+ var h="<tr><th>Agent</th><th>OFF</th>";
+ DAYS.forEach(function(x,d){h+="<th>"+x+" <span class='mu'>("+L(d)+"h)</span></th>"});
+ h+="<th>Total</th></tr>";
+ S.agents.forEach(function(a,i){
+  var tot=0;
+  h+="<tr><td class='ag'><b>"+(i+1)+". "+a.n+"</b><br><button onclick='mv("+i+",-1)'>↑</button><button onclick='mv("+i+",1)'>↓</button><button onclick='del("+i+")'>×</button></td>";
+  h+="<td><select onchange='setOff("+i+",this.value)'>";
+  for(var k=0;k<4;k++)h+="<option value='"+k+"'"+(a.off===k?" selected":"")+">"+DAYS[k]+"</option>";
+  h+="<option value='-1'"+(a.off<0?" selected":"")+">Aucun</option></select></td>";
+  for(var d=0;d<7;d++){
+   var c=PLAN[d][a.id];
+   if(!c){h+="<td class='o'>OFF</td>";continue}
+   tot+=L(d);
+   h+="<td class='c'><select onchange='setOv("+a.id+","+d+",this.value)'>";
+   for(var s=9;s<=26-L(d);s++)h+="<option value='"+s+"'"+(s===c.s?" selected":"")+">"+fmt(s)+" → "+fmt(s+L(d))+"</option>";
+   h+="</select>"+chip(c.z)+"</td>";
+  }
+  h+="<td class='"+(tot>44?"bad":"")+"'"+(tot>44?" style='background:var(--bads)'":"")+">"+tot+"h"+(tot>44?" ⚠ +"+(tot-44)+"h":"")+"</td></tr>";
+ });
+ document.getElementById("t").innerHTML=h;
+ var g="";ZONES.forEach(function(z,i){if(i%3==0)g+="<span class='mu' style='width:100%'><b style='color:"+CL[i/3]+"'>Groupe "+GN[i/3]+"</b> : 3 zones proches, couvertes ensemble quand il y a peu d’agents.</span>";g+=chip(i)});
+ document.getElementById("lg").innerHTML=g;
+ tick();
+}
+render();
+</script></body></html>
