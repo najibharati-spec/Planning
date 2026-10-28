@@ -10493,7 +10493,7 @@ renderProfiles();
 .pro .p-t td select{width:100%;font-size:14px;font-weight:700;border-left:6px solid var(--y);padding:6px 8px}
 .pro .p-ag{white-space:nowrap}.pro .p-ag b{font-size:15px}.pro .p-ag button{padding:0 7px;margin:3px 3px 0 0;font-size:12px}
 .pro .p-bad{color:var(--bad);font-weight:800}.pro .p-t td.p-bad{background:rgba(220,38,38,.14)}.pro .p-alert{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:12px;padding:10px 14px;margin:10px 0;color:#991b1b;font-size:13px;line-height:1.6}
-.pro .p-zr{display:grid;grid-template-columns:1fr 120px 36px;gap:6px;margin-bottom:6px}
+.pro .p-zr{display:grid;grid-template-columns:1fr 105px 150px 36px;gap:6px;margin-bottom:6px}
 .pro .p-dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}.pro .p-dl input{width:100%}
 .pro .p-sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:14px}
 .pro .p-cv table{border-collapse:collapse;width:100%;min-width:800px}.pro .p-cv td,.pro .p-cv th{text-align:center;padding:5px 3px;font-size:12px;border-bottom:1px solid var(--b)}
@@ -10504,14 +10504,17 @@ renderProfiles();
 </style>
 <script>
 (function(){
-var DAYS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"],GN=["A","B","C"],GC=["#FFC244","#00A082","#3a3a37"],GT=["#1d1d1b","#fff","#fff"];
-var NAMES=["Yahya Rhallah","Youssef Derkaoui","Aymane Chlifane","Islam Elmardi","Oussama El Atrach","Mehdi Ait Jebour","Mourad Cherradi","Ayoub Abssi","Hassan Azgoune","Ayoub Ben Malek","Charaf Loummihi","Mohamd Khalyl"];
-var ZN=[["McDo Medina",0],["McDo Bouragrag",0],["McDo Hay Chaou",0],["McDo Carrousel",1],["McDo LGV",1],["McDo Agdal",1],["Le Marché",2],["McDo Temara",2],["McDo Hay Riad",2]];
-function def(){return{agents:NAMES.map(function(n,i){return{id:i+1,n:n,off:i%4}}),ov:{},offOv:{},week:0,nid:100,zones:ZN.map(function(z){return{n:z[0],g:z[1]}}),len:[7,7,7,7,8,8,7],target:44,auto:true,open:9,close:26,nOpen:3,nClose:3}}
+var DAYS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"],GN=["A","B","C","D"],GC=["#FFC244","#00A082","#3a3a37","#B9800E"],GT=["#1d1d1b","#fff","#fff","#fff"];
+var NAMES=["Yahya Rhallah","Youssef Derkaoui","Aymane Chlifane","Islam Elmardi","Oussama El Atrach","Mehdi Ait Jebour","Mourad Cherradi","Ayoub Abssi","Hassan Azgoune","Ayoub Ben Malek","Charaf Loummihi","Mohamd Khalyl","Zakariae Benali"];
+var ZN=[["McDo Medina",0],["McDo Bouragrag",0],["McDo Hay Chaou",0],["McDo Carrousel",1],["McDo LGV",1],["McDo Agdal",1],["Le Marché",2],["McDo Temara",2],["McDo Hay Riad",2],["Technopolis",3]];
+function def(){return{agents:NAMES.map(function(n,i){return{id:i+1,n:n,off:i%4}}),ov:{},offOv:{},week:0,nid:100,zones:ZN.map(function(z){return z[1]===3?{n:z[0],g:3,fix:13}:{n:z[0],g:z[1]}}),len:[7,7,7,7,8,8,7],target:44,auto:true,open:9,close:26,nOpen:3,nClose:3}}
 var S=def(),PLAN=[],PLANN=[],PLANV=[],live=true,sel=0,tm=12,flt="all",CW=0,wk=0,VW=0,ref=null,started=false;
 var $=function(i){return document.getElementById(i)};
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
-function load(o){var D=def();for(var k in D)if(o[k]===undefined)o[k]=D[k];S=o}
+function load(o){var D=def();for(var k in D)if(o[k]===undefined)o[k]=D[k];S=o;migrate()}
+function migrate(){var z=null,ag=null;S.zones.forEach(function(x){if(x.n==="Technopolis")z=x});S.agents.forEach(function(a){if(a.n==="Zakariae Benali")ag=a});
+ if(!ag){ag={id:S.nid++,n:"Zakariae Benali",off:S.agents.length%4};S.agents.push(ag)}
+ if(!z)S.zones.push({n:"Technopolis",g:3,fix:ag.id});else if(z.fix==null){z.fix=ag.id;z.g=3}}
 function save(){try{localStorage.setItem("pro1",JSON.stringify(S))}catch(e){}if(ref)ref.set({json:JSON.stringify(S)}).catch(function(e){console.error(e)});render()}
 function L(d){return S.len[d]}
 function fmt(h){h=h%24;return(h<10?"0":"")+h+":00"}
@@ -10525,21 +10528,23 @@ function gen(wi){
  var A=S.agents,plan=[],pS={},pZ={},hist={},N=S.zones.length,seed=wi+S.week;
  A.forEach(function(a){hist[a.id]={}});
  for(var d=0;d<7;d++){
-  var act=A.filter(function(a){return effOff(a,wi)!==d}),n=act.length,l=L(d),day={};
-  if(!n){plan.push(day);continue}
+  var act=A.filter(function(a){return effOff(a,wi)!==d}),isFx=function(a){return S.zones.some(function(z){return z.fix===a.id})},fx=act.filter(isFx),rot=act.filter(function(a){return!isFx(a)}),n=rot.length,l=L(d),day={};
+  if(!act.length){plan.push(day);continue}
   var O=S.open,C=S.close,M=[12,14,16,18,18,10,12,18],slots=[],ne=S.nOpen,nc=S.nClose;
   while((ne>0||nc>0)&&slots.length<n){if(ne>0){slots.push(O);ne--}if(nc>0&&slots.length<n){slots.push(C-l);nc--}}
   for(var m=0;slots.length<n;m++)slots.push(M[m%M.length]);
   slots.sort(function(a,b){return a-b});slots=slots.map(function(v){return Math.max(O,Math.min(v,C-l))});
-  var o=(d*3+seed*5)%n,st={},en={};
-  act.forEach(function(a,j){st[a.id]=slots[(j+o)%n]});
-  act.forEach(function(a){if(st[a.id]===pS[a.id]){for(var k=0;k<act.length;k++){var b=act[k];if(b!==a&&st[b.id]!==pS[a.id]&&st[a.id]!==pS[b.id]&&st[b.id]!==st[a.id]){var t=st[a.id];st[a.id]=st[b.id];st[b.id]=t;break}}}});
+  var o=n?(d*3+seed*5)%n:0,st={},en={};
+  rot.forEach(function(a,j){st[a.id]=slots[(j+o)%n]});
+  fx.forEach(function(a){st[a.id]=Math.max(O,Math.min(d%2?11:12,C-l))});
+  rot.forEach(function(a){if(st[a.id]===pS[a.id]){for(var k=0;k<rot.length;k++){var b=rot[k];if(b!==a&&st[b.id]!==pS[a.id]&&st[a.id]!==pS[b.id]&&st[b.id]!==st[a.id]){var t=st[a.id];st[a.id]=st[b.id];st[b.id]=t;break}}}});
   act.forEach(function(a){var v=S.ov[wi+"-"+a.id+"-"+d]||{};if(v.s!=null)st[a.id]=v.s;en[a.id]=st[a.id]+l;if(v.e!=null)en[a.id]=v.e});
-  var ord=act.slice().sort(function(a,b){return st[a.id]-st[b.id]}),ZC=[],CC=[[],[],[]];
+  var ord=act.slice().sort(function(a,b){return st[a.id]-st[b.id]}),ZC=[],CC=[[],[],[],[]];
   ord.forEach(function(a,j){
    var v=S.ov[wi+"-"+a.id+"-"+d]||{},s0=st[a.id],e0=en[a.id],best=0,bs=1e9,q;
-   if(v.z!=null&&v.z<N)best=v.z;
-   else for(var z=0;z<N;z++){
+   var fz=-1;S.zones.forEach(function(zz,zi){if(zz.fix===a.id)fz=zi});
+   if(fz>=0)best=fz;else if(v.z!=null&&v.z<N&&S.zones[v.z].fix==null)best=v.z;
+   else for(var z=0;z<N;z++){if(S.zones[z].fix!=null)continue;
     var sc=(z===pZ[a.id]?1e6:0)+(hist[a.id][z]||0)*3+((z-j-d-seed+900)%N)*0.1,g=S.zones[z].g;
     for(q=Math.floor(s0);q<e0;q++){var zn=(ZC[z]&&ZC[z][q])||0,cn=CC[g][q]||0;sc+=zn*3+cn+(cn===0?-20:0)}
     if(sc<bs){bs=sc;best=z}}
@@ -10565,13 +10570,14 @@ function renderLive(){
  var sc=function(c,l,v){return"<div class='stat-card "+c+"'><div class='label'>"+l+"</div><div class='value'>"+v+"</div></div>"};
  $("p-st").innerHTML=sc("accent-green","En service",cnt.on)+sc("accent-amber","Pas encore commencé",cnt.soon)+sc("","Terminé",cnt.done)+sc("accent-purple","OFF",cnt.off);
  var g="";
- for(var k=0;k<3;k++){
+ for(var k=0;k<4;k++){
   var zs=S.zones.filter(function(z){return z.g===k});if(!zs.length)continue;
   var m=on.filter(function(o){return S.zones[o.c.z].g===k}),b;
-  if(!m.length)b="<span class='p-bd' style='background:rgba(220,38,38,.12);color:#DC2626'>Non couvert</span>";
+  if(k===3)b=m.length?"<span class='p-bd' style='background:var(--gs);color:#007A63'>En service</span>":"<span class='p-bd' style='background:rgba(110,110,104,.14);color:#6B5D3D'>Hors service</span>";
+  else if(!m.length)b="<span class='p-bd' style='background:rgba(220,38,38,.12);color:#DC2626'>Non couvert</span>";
   else if(m.length<zs.length)b="<span class='p-bd' style='background:var(--ys);color:#8a5a00'>"+m.length+" agent"+(m.length>1?"s":"")+" · couvrent ensemble</span>";
   else b="<span class='p-bd' style='background:var(--gs);color:#007A63'>1 agent / zone</span>";
-  g+="<div class='card' style='padding:14px;border-top:4px solid "+GC[k]+"'><div class='p-h'><b>Groupe "+GN[k]+"</b>"+b+"</div><div class='mu' style='margin:4px 0 6px'>"+zs.map(function(z){return esc(z.n)}).join(" · ")+"</div>"+m.map(function(o){return"<div style='margin-top:4px'>"+esc(o.a.n)+" "+chip(o.c.z)+"</div>"}).join("")+"</div>";
+  g+="<div class='card' style='padding:14px;border-top:4px solid "+GC[k]+"'><div class='p-h'><b>"+(k===3?"Zone fixe":"Groupe "+GN[k])+"</b>"+b+"</div><div class='mu' style='margin:4px 0 6px'>"+zs.map(function(z){return esc(z.n)}).join(" · ")+"</div>"+m.map(function(o){return"<div style='margin-top:4px'>"+esc(o.a.n)+" "+chip(o.c.z)+"</div>"}).join("")+"</div>";
  }
  $("p-grp").innerHTML=g;
  var O=S.open,NH=Math.ceil(S.close-S.open);$("p-gt").style.setProperty("--nh",NH);
@@ -10612,15 +10618,15 @@ function renderCv(){
  for(var d=0;d<7;d++){
   v+="<tr><th>"+DAYS[d]+"</th>";
   for(var x=Math.floor(S.open);x<S.close;x++){
-   var n=0,cc=[0,0,0];for(var id in PLANV[d]){var c=PLANV[d][id];if(c.s<=x+.01&&x<c.e){n++;cc[S.zones[c.z].g]++}}
+   var n=0,cc=[0,0,0,0];for(var id in PLANV[d]){var c=PLANV[d][id];if(c.s<=x+.01&&x<c.e){n++;cc[S.zones[c.z].g]++}}
    var rush=(x>=12&&x<15)||(x>=18&&x<25),cur=(VW===CW&&d===sel&&Math.floor(tm)===x);
-   v+="<td class='"+(cur?"p-cur":"")+"' style='background:rgba(0,160,130,"+Math.min(n/10,1)*(rush?.25:.08)+")'><b>"+n+"</b><br>"+cc.map(function(k){return"<span style='"+(k?"color:#6B5D3D":"color:#DC2626;font-weight:700")+"'>"+k+"</span>"}).join("·")+"</td>";
+   v+="<td class='"+(cur?"p-cur":"")+"' style='background:rgba(0,160,130,"+Math.min(n/10,1)*(rush?.25:.08)+")'><b>"+n+"</b><br>"+cc.map(function(k,i){return"<span style='"+(k||i>2?"color:#6B5D3D":"color:#DC2626;font-weight:700")+"'>"+k+"</span>"}).join("·")+"</td>";
   }
   v+="</tr>";
  }
  $("p-cv").innerHTML=v;
 }
-function zopts(z){return S.zones.map(function(q,i){return"<option value='"+i+"'"+(i===z?" selected":"")+">"+GN[q.g]+" · "+esc(q.n)+"</option>"}).join("")}
+function zopts(z,id){var fx=null;S.zones.forEach(function(q,i){if(q.fix===id)fx=i});return S.zones.map(function(q,i){if(fx!==null?i!==fx:q.fix!=null)return"";return"<option value='"+i+"'"+(i===z?" selected":"")+">"+GN[q.g]+" · "+esc(q.n)+"</option>"}).join("")}
 function ovk(id,d){return VW+"-"+id+"-"+d}
 function render(){
  if(!started)return;
@@ -10636,15 +10642,15 @@ function render(){
   for(var d=0;d<7;d++){
    var c=PLANV[d][a.id];if(!c){h+="<td class='o'>OFF</td>";continue}
    tot+=c.e-c.s;var mod=S.ov[ovk(a.id,d)],sc=c.s<11?" sm":c.s>=16?" sn":" c";
-   h+="<td class='"+sc+(mod?" m":"")+"'><div class='p-tt'><input type='time' value='"+ft(c.s)+"' onchange=\"PRO.setTime("+a.id+","+d+",'s',this.value)\"><input type='time' value='"+ft(c.e)+"' onchange=\"PRO.setTime("+a.id+","+d+",'e',this.value)\"></div><select style='border-left-color:"+GC[S.zones[c.z].g]+"' onchange='PRO.setZ("+a.id+","+d+",this.value)'>"+zopts(c.z)+"</select>"+(mod?"<button style='padding:0 7px;margin-top:4px;font-size:12px' onclick='PRO.clr("+a.id+","+d+")'>↺</button>":"")+"</td>";
+   h+="<td class='"+sc+(mod?" m":"")+"'><div class='p-tt'><input type='time' value='"+ft(c.s)+"' onchange=\"PRO.setTime("+a.id+","+d+",'s',this.value)\"><input type='time' value='"+ft(c.e)+"' onchange=\"PRO.setTime("+a.id+","+d+",'e',this.value)\"></div><select style='border-left-color:"+GC[S.zones[c.z].g]+"' onchange='PRO.setZ("+a.id+","+d+",this.value)'>"+zopts(c.z,a.id)+"</select>"+(mod?"<button style='padding:0 7px;margin-top:4px;font-size:12px' onclick='PRO.clr("+a.id+","+d+")'>↺</button>":"")+"</td>";
   }
   var df=tot-S.target,over=Math.abs(df)>.01;
   h+="<td class='"+(over?"p-bad":"")+"'>"+r1(tot)+"h"+(over?" ⚠ "+(df>0?"+":"")+r1(df)+"h":"")+"</td></tr>";
  });
  $("p-t").innerHTML=h;
- var zg="";for(var gk=0;gk<3;gk++){var zz=[];S.zones.forEach(function(z,i){if(z.g===gk)zz.push(i)});if(zz.length)zg+="<span style='display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center'><b>Groupe "+GN[gk]+" :</b> "+zz.map(chip).join(" ")+"</span>"}
+ var zg="";for(var gk=0;gk<4;gk++){var zz=[];S.zones.forEach(function(z,i){if(z.g===gk)zz.push(i)});if(zz.length)zg+="<span style='display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center'><b>"+(gk===3?"Zone fixe":"Groupe "+GN[gk])+" :</b> "+zz.map(chip).join(" ")+"</span>"}
  $("p-zg").innerHTML=zg;
- var zl="";S.zones.forEach(function(z,i){zl+="<div class='p-zr'><input value=\""+esc(z.n)+"\" onchange='PRO.zName("+i+",this.value)'><select onchange='PRO.zGrp("+i+",this.value)'>"+[0,1,2].map(function(g){return"<option value='"+g+"'"+(z.g===g?" selected":"")+">Groupe "+GN[g]+"</option>"}).join("")+"</select><button onclick='PRO.zDel("+i+")'>×</button></div>"});
+ var zl="";S.zones.forEach(function(z,i){zl+="<div class='p-zr'><input value=\""+esc(z.n)+"\" onchange='PRO.zName("+i+",this.value)'><select onchange='PRO.zGrp("+i+",this.value)'>"+[0,1,2,3].map(function(g){return"<option value='"+g+"'"+(z.g===g?" selected":"")+">"+(g===3?"Zone fixe":"Groupe "+GN[g])+"</option>"}).join("")+"</select><select onchange='PRO.zFix("+i+",this.value)'><option value=''>Fixe : personne</option>"+S.agents.map(function(a){return"<option value='"+a.id+"'"+(z.fix===a.id?" selected":"")+">Fixe : "+esc(a.n)+"</option>"}).join("")+"</select><button onclick='PRO.zDel("+i+")'>×</button></div>"});
  $("p-zl").innerHTML=zl;
  $("p-dl").innerHTML=DAYS.map(function(x,d){return"<label class='mu'>"+x+"<input type='number' step='0.5' value='"+S.len[d]+"' onchange='PRO.setLen("+d+",this.value)'></label>"}).join("");
  $("p-tg").value=S.target;$("p-au").checked=!!S.auto;$("p-so").value=ft(S.open);$("p-sc").value=ft(S.close);$("p-no").value=S.nOpen;$("p-nc").value=S.nClose;
@@ -10674,7 +10680,7 @@ var PRO={
  clr:function(id,d){change(function(){delete S.ov[ovk(id,d)]},id)},
  clrWeek:function(){change(function(){for(var k in S.ov)if(k.indexOf(VW+"-")===0)delete S.ov[k];for(var k in S.offOv)if(k.indexOf(VW+"-")===0)delete S.offOv[k]},0)},
  regen:function(){S.week++;save()},reset:function(){if(confirm("Tout réinitialiser ?")){S=def();save()}},
- zName:function(i,v){if(v.trim())S.zones[i].n=v.trim();save()},zGrp:function(i,v){S.zones[i].g=+v;save()},
+ zName:function(i,v){if(v.trim())S.zones[i].n=v.trim();save()},zGrp:function(i,v){S.zones[i].g=+v;save()},zFix:function(i,v){var z=S.zones[i];z.fix=v===""?null:+v;if(z.fix!=null)z.g=3;save()},
  zDel:function(i){if(S.zones.length>1){S.zones.splice(i,1);save()}},zAdd:function(){S.zones.push({n:"Nouvelle zone",g:0});save()},
  setLen:function(d,v){S.len[d]=Math.max(1,Math.min(17,+v||7));save()},
  setTarget:function(v){S.target=+v||44;save()},setAuto:function(c){S.auto=c;save()},
@@ -10684,7 +10690,7 @@ var PRO={
 };
 window.PRO=PRO;
 var DASH='<div class="card" style="padding:16px"><div class="p-tl"><div class="p-tm" id="p-tm"></div><input type="range" id="p-sl" step="0.25" oninput="PRO.setT(this.value)"><button class="btn-ghost" onclick="PRO.live()">● Maintenant</button><span id="p-lv" class="p-live"></span></div><div class="p-row" id="p-tabs"></div><div class="mu" id="p-wl"></div></div><div class="stat-grid" id="p-st" style="margin-top:16px"></div><div id="p-alert2"></div><div class="section-title">Groupes de zones</div><div class="p-grp" id="p-grp"></div><div class="section-title">Journée complète</div><div class="p-w"><div class="p-gi" id="p-gt"></div></div><div class="section-title">Tous les agents</div><div class="p-row" id="p-fl"></div><div class="p-ags" id="p-ags"></div>';
-var PLN='<div class="planning-header"><div class="week-nav"><button class="icon-btn-lg" onclick="PRO.wk(-1)">‹</button><div class="week-label"><b id="p-wv"></b><span id="p-ws"></span></div><button class="icon-btn-lg" onclick="PRO.wk(1)">›</button><button class="btn-ghost" style="border:1px solid var(--b)" onclick="PRO.wk(0)">Cette semaine</button></div><div class="planning-actions"><input id="p-nn" placeholder="Nom de l’agent"><button class="btn-primary" onclick="PRO.add()">+ Ajouter un agent</button><button class="btn-ghost" style="border:1px solid var(--b)" onclick="PRO.regen()">↻ Autre rotation</button><button class="btn-ghost" style="border:1px solid var(--b)" onclick="PRO.clrWeek()">Effacer mes modifications</button><button class="btn-ghost" style="border:1px solid var(--b)" onclick="PRO.reset()">Réinitialiser</button></div></div><div class="mu">Le planning change automatiquement chaque semaine. Modifie les heures, la zone ou le jour OFF directement dans le tableau.</div><div class="p-lgd"><span><i style="background:rgba(255,194,68,.5)"></i>Matin (avant 11h)</span><span><i style="background:rgba(120,105,60,.1)"></i>Journée</span><span><i style="background:rgba(0,160,130,.24)"></i>Soir (16h ou après)</span><span><i style="box-shadow:inset 0 0 0 2px #00A082"></i>Modifié à la main (↺ pour annuler)</span></div><div id="p-alert"></div><div class="p-row" id="p-zg" style="gap:8px 14px"></div><div class="p-w"><table class="p-t" id="p-t"></table></div><div class="p-sg"><div class="card" style="padding:14px"><b>Zones</b><div class="mu" style="margin:2px 0 8px">Change le nom, le groupe (zones proches) ou ajoute/supprime une zone.</div><div id="p-zl"></div><button onclick="PRO.zAdd()">+ Ajouter une zone</button></div><div class="card" style="padding:14px"><b>Heures</b><div class="mu" style="margin:2px 0 8px">Ouverture/fermeture, agents à l’ouverture et à la fermeture, durée du shift par jour, total par semaine.</div><div class="p-row"><label>Ouverture <input type="time" id="p-so" onchange="PRO.setSvc()"></label><label>Fermeture <input type="time" id="p-sc" onchange="PRO.setSvc()"></label><label>Agents ouverture <input type="number" min="0" id="p-no" style="width:64px" onchange="PRO.setN()"></label><label>Agents fermeture <input type="number" min="0" id="p-nc" style="width:64px" onchange="PRO.setN()"></label></div><div class="p-dl" id="p-dl"></div><div class="p-row"><label>Total / semaine <input id="p-tg" type="number" step="0.5" style="width:80px" onchange="PRO.setTarget(this.value)"></label><label><input type="checkbox" id="p-au" onchange="PRO.setAuto(this.checked)" style="width:auto"> Changer les OFF chaque semaine</label></div></div></div><div class="section-title">Couverture par heure</div><div class="mu" style="margin-bottom:8px">Total en gras, puis agents dans Groupe A · B · C (0 en rouge = groupe non couvert).</div><div class="p-w p-cv"><table id="p-cv"></table></div>';
+var PLN='<div class="planning-header"><div class="week-nav"><button class="icon-btn-lg" onclick="PRO.wk(-1)">‹</button><div class="week-label"><b id="p-wv"></b><span id="p-ws"></span></div><button class="icon-btn-lg" onclick="PRO.wk(1)">›</button><button class="btn-ghost" style="border:1px solid var(--b)" onclick="PRO.wk(0)">Cette semaine</button></div><div class="planning-actions"><input id="p-nn" placeholder="Nom de l’agent"><button class="btn-primary" onclick="PRO.add()">+ Ajouter un agent</button><button class="btn-ghost" style="border:1px solid var(--b)" onclick="PRO.regen()">↻ Autre rotation</button><button class="btn-ghost" style="border:1px solid var(--b)" onclick="PRO.clrWeek()">Effacer mes modifications</button><button class="btn-ghost" style="border:1px solid var(--b)" onclick="PRO.reset()">Réinitialiser</button></div></div><div class="mu">Le planning change automatiquement chaque semaine. Modifie les heures, la zone ou le jour OFF directement dans le tableau.</div><div class="p-lgd"><span><i style="background:rgba(255,194,68,.5)"></i>Matin (avant 11h)</span><span><i style="background:rgba(120,105,60,.1)"></i>Journée</span><span><i style="background:rgba(0,160,130,.24)"></i>Soir (16h ou après)</span><span><i style="box-shadow:inset 0 0 0 2px #00A082"></i>Modifié à la main (↺ pour annuler)</span></div><div id="p-alert"></div><div class="p-row" id="p-zg" style="gap:8px 14px"></div><div class="p-w"><table class="p-t" id="p-t"></table></div><div class="p-sg"><div class="card" style="padding:14px"><b>Zones</b><div class="mu" style="margin:2px 0 8px">Change le nom, le groupe (zones proches) ou ajoute/supprime une zone.</div><div id="p-zl"></div><button onclick="PRO.zAdd()">+ Ajouter une zone</button></div><div class="card" style="padding:14px"><b>Heures</b><div class="mu" style="margin:2px 0 8px">Ouverture/fermeture, agents à l’ouverture et à la fermeture, durée du shift par jour, total par semaine.</div><div class="p-row"><label>Ouverture <input type="time" id="p-so" onchange="PRO.setSvc()"></label><label>Fermeture <input type="time" id="p-sc" onchange="PRO.setSvc()"></label><label>Agents ouverture <input type="number" min="0" id="p-no" style="width:64px" onchange="PRO.setN()"></label><label>Agents fermeture <input type="number" min="0" id="p-nc" style="width:64px" onchange="PRO.setN()"></label></div><div class="p-dl" id="p-dl"></div><div class="p-row"><label>Total / semaine <input id="p-tg" type="number" step="0.5" style="width:80px" onchange="PRO.setTarget(this.value)"></label><label><input type="checkbox" id="p-au" onchange="PRO.setAuto(this.checked)" style="width:auto"> Changer les OFF chaque semaine</label></div></div></div><div class="section-title">Couverture par heure</div><div class="mu" style="margin-bottom:8px">Total en gras, puis agents dans Groupe A · B · C · D-fixe (0 en rouge = groupe non couvert).</div><div class="p-w p-cv"><table id="p-cv"></table></div>';
 function mount(){
  var dash=$("view-dashboard"),main=dash.parentNode,banner=$("dashboardNewRapportsBanner");
  var box=document.createElement("div");box.className="pro";box.innerHTML=DASH;
