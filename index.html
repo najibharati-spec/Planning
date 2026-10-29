@@ -10506,19 +10506,20 @@ renderProfiles();
 (function(){
 var DAYS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"],GN=["A","B","C","D"],GC=["#FFC244","#00A082","#3a3a37","#B9800E"],GT=["#1d1d1b","#fff","#fff","#fff"];
 var TPL8=[[10,"McDo Hay Chaou"],[15,"Le Marché"],[10,"McDo Temara"],[15,"McDo Hay Chaou"],[16,"McDo Carrousel"],[18,"McDo Agdal"],[18,"McDo Temara"],[11,"McDo Agdal"],[10,"McDo Hay Riad"],[18,"McDo Bouragrag"],[12,"McDo Medina"],[10,"McDo Bouragrag"]];
-var TPL7=[[10,"McDo Bouragrag"],[11,"McDo Temara"],[18,"McDo Bouragrag"],[18,"McDo Hay Riad"],[18,"McDo Agdal"],[18,"McDo Temara"],[18,"Le Marché"],[11,"McDo Agdal"],[10,"McDo Hay Riad"],[10,"McDo Hay Chaou"],[15,"Le Marché"],[16,"McDo Carrousel"]];
+var TPL7=[[10,"McDo Bouragrag"],[18,"McDo Bouragrag"],[11,"McDo Temara"],[18,"McDo Temara"],[10,"McDo Hay Riad"],[18,"McDo Hay Riad"],[11,"McDo Agdal"],[18,"McDo Agdal"],[18,"Le Marché"],[10,"McDo Hay Chaou"],[15,"Le Marché"],[16,"McDo Carrousel"]];
 function mkT(a){return a.map(function(x){return{s:x[0],z:x[1]}})}
 var PRIZ=["McDo Bouragrag","McDo Temara","McDo Hay Riad","McDo Agdal"];
 var NAMES=["Yahya Rhallah","Youssef Derkaoui","Aymane Chlifane","Islam Elmardi","Oussama El Atrach","Mehdi Ait Jebour","Mourad Cherradi","Ayoub Abssi","Hassan Azgoune","Ayoub Ben Malek","Charaf Loummihi","Mohamd Khalyl","Zakariae Benali"];
 var ZN=[["McDo Medina",0],["McDo Bouragrag",0],["McDo Hay Chaou",0],["McDo Carrousel",1],["McDo LGV",1],["McDo Agdal",1],["Le Marché",2],["McDo Temara",2],["McDo Hay Riad",2],["Technopolis",3]];
-function def(){return{agents:NAMES.map(function(n,i){var o={id:i+1,n:n,off:i%4};if(n==="Oussama El Atrach"){o.fo=3;o.fw=nowInfo().wi+1}return o}),ov:{},offOv:{},week:0,nid:100,zones:ZN.map(function(z){return z[1]===3?{n:z[0],g:3,fix:13}:{n:z[0],g:z[1],pri:PRIZ.indexOf(z[0])>=0}}),priFrom:null,tm:true,tplFrom:null,tpl:{t7:mkT(TPL7),t8:mkT(TPL8)},len:[7,7,7,7,8,8,7],target:44,auto:true,open:9,close:26,nOpen:3,nClose:3}}
+function def(){return{agents:NAMES.map(function(n,i){var o={id:i+1,n:n,off:i%4};if(n==="Oussama El Atrach"){o.fo=3;o.fw=nowInfo().wi+1}return o}),ov:{},offOv:{},week:0,nid:100,zones:ZN.map(function(z){return z[1]===3?{n:z[0],g:3,fix:13}:{n:z[0],g:z[1],pri:PRIZ.indexOf(z[0])>=0}}),priFrom:null,tm:true,tplFrom:null,tpl:{t7:mkT(TPL7),t8:mkT(TPL8)},tplv:2,len:[7,7,7,7,8,8,7],target:44,auto:true,open:9,close:26,nOpen:3,nClose:3}}
 var S=def(),PLAN=[],PLANN=[],PLANV=[],live=true,sel=0,tm=12,flt="all",CW=0,wk=0,VW=0,ref=null,started=false;
 var $=function(i){return document.getElementById(i)};
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 var needSave=false;
-function load(o){var leg=o.agents&&o.priFrom===undefined,leg2=o.agents&&o.tpl===undefined,D=def();for(var k in D)if(o[k]===undefined)o[k]=D[k];S=o;
+function load(o){var leg=o.agents&&o.priFrom===undefined,leg2=o.agents&&o.tpl===undefined,leg3=o.agents&&o.tpl!==undefined&&o.tplv!==2,D=def();for(var k in D)if(o[k]===undefined)o[k]=D[k];S=o;
  if(leg){S.priFrom=nowInfo().wi+1;S.zones.forEach(function(z){if(PRIZ.indexOf(z.n)>=0&&z.pri===undefined)z.pri=true});needSave=true}
  if(leg2){S.tplFrom=nowInfo().wi+1;needSave=true}
+ if(leg3){S.tpl={t7:mkT(TPL7),t8:mkT(TPL8)};S.tplv=2;needSave=true}
  migrate()}
 function migrate(){var z=null,ag=null;S.agents.forEach(function(a){if(a.n==="Oussama El Atrach"&&a.fo===undefined){a.fo=3;a.fw=nowInfo().wi+1}});S.zones.forEach(function(x){if(x.n==="Technopolis")z=x});S.agents.forEach(function(a){if(a.n==="Zakariae Benali")ag=a});
  if(!ag){ag={id:S.nid++,n:"Zakariae Benali",off:S.agents.length%4};S.agents.push(ag)}
